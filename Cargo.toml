@@ -9,4 +9,5 @@ members = [
     "crates/ipfs-bitswap",
     "crates/ipfs-unixfs",
     "crates/ehr-core",
+    "tests/test-runner",
 ]
