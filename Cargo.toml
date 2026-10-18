@@ -1,0 +1,12 @@
+[workspace]
+resolver = "3"
+
+members = [
+    "apps/ehr-cli",
+    "crates/ipfs-cid",
+    "crates/ipfs-store",
+    "crates/ipfs-network",
+    "crates/ipfs-bitswap",
+    "crates/ipfs-unixfs",
+    "crates/ehr-core",
+]

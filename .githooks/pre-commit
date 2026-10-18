@@ -1,0 +1,26 @@
+
+#!/bin/sh
+set -eu
+
+echo "=================================="
+echo " EHR-IPFS: pre-commit checks"
+echo "=================================="
+
+echo ""
+echo "[1/4] Sprawdzanie formatowania..."
+cargo fmt --all -- --check
+
+echo ""
+echo "[2/4] Sprawdzanie kompilacji..."
+cargo check --workspace --all-targets
+
+echo ""
+echo "[3/4] Uruchamianie Clippy..."
+cargo clippy --workspace --all-targets -- -D warnings
+
+echo ""
+echo "[4/4] Uruchamianie test�w..."
+cargo test --workspace
+
+echo ""
+echo "Wszystkie kontrole zakonczone pomyslnie."
