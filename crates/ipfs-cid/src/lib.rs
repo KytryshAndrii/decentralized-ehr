@@ -1,3 +1,9 @@
+pub mod cid;
+pub mod consts;
+pub mod error;
+pub mod models;
+pub mod multihash;
+
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
 }

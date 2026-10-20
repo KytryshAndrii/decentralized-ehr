@@ -19,7 +19,7 @@ echo "[3/4] Uruchamianie Clippy..."
 cargo clippy --workspace --all-targets -- -D warnings
 
 echo ""
-echo "[4/4] Uruchamianie test�w..."
+echo "[4/4] Uruchamianie testów..."
 cargo test --workspace
 
 echo ""
