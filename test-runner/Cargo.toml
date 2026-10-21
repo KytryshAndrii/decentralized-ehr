@@ -1,0 +1,19 @@
+[package]
+name = "test-runner"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ipfs-cid = { path = "../crates/ipfs-cid" }
+multibase = "0.9"
+
+[dev-dependencies]
+serial_test = "3.1"
+
+[[test]]
+name = "integration"
+path = "tests/integration/cid_integration.rs"
+
+[[test]]
+name = "interop"
+path = "tests/interoperability/cid_interop.rs"

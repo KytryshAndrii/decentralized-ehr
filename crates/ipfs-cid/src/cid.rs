@@ -5,7 +5,7 @@ use crate::models::Multihash;
 
 impl Cid {
     /// Tworzy nowy obiekt CIDv1.
-    pub fn new_v1(codec: u64, hash: Multihash) -> Self {
+    pub fn new_cid(codec: u64, hash: Multihash) -> Self {
         Self {
             version: CID_V1,
             codec,
@@ -35,7 +35,7 @@ impl Cid {
 
     /// Dekoduje strukturę CID z postaci binarnej.
     /// Zgodnie ze specyfikacją, funkcja odrzuca nadmiarowe bajty (TrailingBytes).
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self, CidError> {
+    pub fn decode_from_bytes(bytes: &[u8]) -> Result<Self, CidError> {
         let (version, rem) =
             unsigned_varint::decode::u64(bytes).map_err(|_| CidError::VarintDecodeError)?;
 
@@ -79,10 +79,22 @@ impl Cid {
     }
 
     /// Dekoduje CID ze stringa zapisanego w dowolnym formacie Multibase.
-    pub fn from_string(cid_str: &str) -> Result<Self, CidError> {
+    pub fn decode_from_string(cid_str: &str) -> Result<Self, CidError> {
         let (_, bytes) =
             multibase::decode(cid_str).map_err(|e| CidError::MultibaseParseError(e.to_string()))?;
 
-        Self::from_bytes(&bytes)
+        Self::decode_from_bytes(&bytes)
+    }
+
+    /// Weryfikuje, czy podane surowe dane po zahashowaniu pasują do tego CID.
+    /// Zwraca `true`, jeśli dane są autentyczne i zgodne z identyfikatorem.
+    pub fn verify_block(&self, data: &[u8]) -> bool {
+        match Multihash::compute(data, self.multihash.code) {
+            Ok(computed_hash) => computed_hash.digest == self.multihash.digest,
+            Err(_) => {
+                // Zwracamy false w przypadku nieobsługiwanego algorytmu lub błędu
+                false
+            }
+        }
     }
 }

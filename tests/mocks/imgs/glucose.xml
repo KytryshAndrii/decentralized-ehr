@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Observation xmlns="http://hl7.org/fhir">
-  <id value="test-glucose"/>
-  <status value="final"/>
-  <code><coding><system value="http://loinc.org"/><code value="2345-7"/><display value="Glucose [Mass/volume] in Serum or Plasma"/></coding></code>
-  <subject><reference value="Patient/test-patient-001"/></subject>
-  <effectiveDateTime value="2026-01-15T10:00:00Z"/>
-  <valueQuantity><value value="92"/><unit value="mg/dL"/><system value="http://unitsofmeasure.org"/><code value="mg/dL"/></valueQuantity>
-</Observation>
