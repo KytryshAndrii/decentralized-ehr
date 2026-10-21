@@ -12,7 +12,7 @@ pub enum CidError {
     UnsupportedHashAlgorithm(u64),
 
     #[error("Błąd dekodowania varint: nieprawidłowy format.")]
-    VarintDecodeError(u64),
+    VarintDecodeError,
 
     #[error("CID zwiera dodatkowe, nieoczekiwane bajty na końcu.")]
     TrailingBytes,
