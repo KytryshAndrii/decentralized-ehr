@@ -97,4 +97,11 @@ impl Cid {
             }
         }
     }
+    /// Tworzy nowy identyfikator CID bezpośrednio z dostarczonych bajtów danych.
+    pub fn generate_from_data(data: &[u8], codec: u64, hash_algo: u64) -> Result<Self, CidError> {
+        let hash = Multihash::compute(data, hash_algo)
+            .map_err(|_| CidError::UnsupportedHashAlgorithm(hash_algo))?;
+
+        Ok(Self::new_cid(codec, hash))
+    }
 }

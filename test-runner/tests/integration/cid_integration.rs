@@ -97,6 +97,10 @@ fn test_end_to_end_with_json_mock() {
 
     let hash = Multihash::compute(&file_content, SHA2_256).unwrap();
     let cid = Cid::new_cid(CODEC_JSON, hash);
+    println!(
+        "Wygenerowany CID dla pliku JSON: {}",
+        cid.to_string_base32()
+    );
 
     let cid_text = cid.to_string_base32();
     let parsed_cid = Cid::decode_from_string(&cid_text).unwrap();

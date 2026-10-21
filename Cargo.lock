@@ -115,6 +115,9 @@ dependencies = [
 [[package]]
 name = "ehr-cli"
 version = "0.1.0"
+dependencies = [
+ "ipfs-cid",
+]
 
 [[package]]
 name = "ehr-core"
