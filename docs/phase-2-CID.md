@@ -68,3 +68,14 @@ Traktują moduł jako "czarną skrzynkę", testując współpracę komponentów.
 Uruchamiają zewnętrzny proces demona Kubo, aby udowodnić faktyczną kompatybilność.
 *   **Testowanie wieloformatowe:** Wykorzystano atrapy z folderu `mocks`. Moduł w Rust generuje CID dla plików w formatach XML, TTL, BMP, SVG, TIFF, TXT (traktowanych przez IPFS jako `CODEC_RAW`) oraz plików JSON (obsługiwanych natywnie jako `CODEC_JSON`).
 *   **Weryfikacja CLI:** Systematyczne porównywanie wyniku tekstowego z kodem Rust z wyjściem systemowej komendy: `ipfs block put --cid-codec=<codec> --mhtype=sha2-256 --offline <file_path>`. Wszystkie testy wykazują 100% zgodności znaków.
+
+
+Conversion from CIDv1 to CIDv0 is only possible when the CIDv1 uses the dag-pb codec (0x70), as CIDv0 only supports dag-pb. CIDs using other codecs like raw (0x55), dag-cbor (0x71), or dag-json (0x0129) cannot be converted to CIDv0.
+
+TIP
+
+Subdomain gateways convert paths with custom bases like base16 to base32 or base36, in an effort to fit a CID in a DNS label:
+
+    dweb.link/ipfs/f01701220c3c4733ec8affd06cf9e9ff50ffc6bcd2ec85a6170004bb709669c31de94391a
+
+(opens new window) returns a HTTP 301 redirect: → bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi.ipfs.dweb.link

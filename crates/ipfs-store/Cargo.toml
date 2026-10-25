@@ -4,3 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+ipfs-cid= {path = "../ipfs-cid"}
+rusty-leveldb = "=4.0.2"
+thiserror = "2.0.21"
+unsigned-varint = "0.8"
+
+[[test]]
+name = "store-unit-test"
+path = "tests/store-unit-test.rs"

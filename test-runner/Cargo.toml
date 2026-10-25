@@ -5,14 +5,21 @@ edition = "2024"
 
 [dependencies]
 ipfs-cid = { path = "../crates/ipfs-cid" }
+ipfs-store = { path = "../crates/ipfs-store" }
+tempfile = "3.3"
 multibase = "0.9"
 
 [dev-dependencies]
-serial_test = "3.1"
+serial_test = "4.0.1"
 
 [[test]]
-name = "integration"
+name = "integration-cid"
 path = "tests/integration/cid_integration.rs"
+
+
+[[test]]
+name = "integration-store"
+path = "tests/integration/store_integration.rs"
 
 [[test]]
 name = "interop"
