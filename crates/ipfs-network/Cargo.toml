@@ -4,3 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+libp2p = {version = "0.57.1", features = ["tokio", "tcp", "noise", "yamux", "identify", "ping", "macros"]}
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "signal"] }
+futures = "0.3"
+thiserror = "2"
+
+[[test]]
+name = "network-unit-test"
+path = "tests/network-unit-test.rs"

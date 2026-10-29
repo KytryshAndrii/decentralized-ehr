@@ -22,5 +22,15 @@ name = "integration-store"
 path = "tests/integration/store_integration.rs"
 
 [[test]]
-name = "interop"
+name = "integration-network"
+path = "tests/integration/network_integration.rs"
+
+
+[[test]]
+name = "interop-cid"
 path = "tests/interoperability/cid_interop.rs"
+
+
+[[test]]
+name = "interop-network"
+path = "tests/interoperability/network_interop.rs"
