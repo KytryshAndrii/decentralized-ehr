@@ -1,46 +1,53 @@
-use ipfs_store::{Blockstore, Datastore, LevelDbDatastore, StoreError};
-use std::sync::Arc;
-use std::thread;
+use ipfs_store::{
+    Datastore, PersistentBlockstore, StoreError, consts::LEVELDB_DIR_NAME, models::LevelDbDatastore,
+};
+use std::{sync::Arc, thread};
 use tempfile::tempdir;
 
-fn store_at(path: &std::path::Path) -> Blockstore<LevelDbDatastore> {
-    Blockstore::new_blockstore(LevelDbDatastore::open(path).unwrap())
+fn isolated_store(root: &std::path::Path) -> PersistentBlockstore {
+    PersistentBlockstore::open_in(root).unwrap()
+}
+
+#[test]
+fn fixed_directory_name_is_used_in_tests() {
+    let root = tempdir().unwrap();
+    {
+        let store = isolated_store(root.path());
+        store.put(b"Hi!").unwrap();
+    }
+    assert!(root.path().join(LEVELDB_DIR_NAME).is_dir());
 }
 
 #[test]
 fn persists_data_across_close_and_reopen() {
-    let temp = tempdir().unwrap();
-    let id = {
-        let store = store_at(temp.path());
+    let root = tempdir().unwrap();
+    let cid = {
+        let store = isolated_store(root.path());
         store.put(b"Hi!").unwrap()
     };
-    let store = store_at(temp.path());
-    assert!(store.has(&id).unwrap());
-    assert_eq!(store.get_block(&id).unwrap().unwrap(), b"Hi!");
+    let store = isolated_store(root.path());
+    assert!(store.has(&cid).unwrap());
+    assert_eq!(store.get_block(&cid).unwrap().unwrap(), b"Hi!");
 }
 
 #[test]
 fn database_backend_rejects_corrupted_existing_entry() {
-    let temp = tempdir().unwrap();
-    let store = store_at(temp.path());
-    let id = store.put(b"Hi!").unwrap();
-    let key = {
-        let mut key = b"/blocks/".to_vec();
-        key.extend_from_slice(&[0x12, 0x20]);
-        key.extend_from_slice(&id.multihash.digest);
-        key
-    };
-    // Celowe obejście Blockstore: wyłącznie do testu korupcji backendu.
+    let root = tempdir().unwrap();
+    let store = isolated_store(root.path());
+    let cid = store.put(b"Hi!").unwrap();
+    let key = ipfs_store::utils::get_multihash_key(&cid.multihash);
+    // Celowe obejście walidacji tylko w teście awarii backendu.
     store.datastore().put(&key, b"corrupted").unwrap();
     assert!(matches!(
-        store.get_block(&id),
+        store.get_block(&cid),
         Err(StoreError::IntegrityMismatch)
     ));
 }
+
 #[test]
-fn database_leveldb_put_if_absent_is_atomic_for_shared_handle() {
-    let temp = tempdir().unwrap();
-    let store = Arc::new(store_at(temp.path()));
+fn leveldb_put_if_absent_is_atomic_for_shared_handle() {
+    let root = tempdir().unwrap();
+    let store = Arc::new(isolated_store(root.path()));
     let handles: Vec<_> = (0..12)
         .map(|_| {
             let store = Arc::clone(&store);
@@ -51,94 +58,97 @@ fn database_leveldb_put_if_absent_is_atomic_for_shared_handle() {
         .into_iter()
         .map(|h| h.join().unwrap().unwrap())
         .collect();
-    for id in &ids {
-        assert_eq!(id, &ids[0]);
-    }
+    assert!(ids.iter().all(|cid| cid == &ids[0]));
     assert_eq!(store.get_block(&ids[0]).unwrap().unwrap(), b"Hi!");
 }
+
 #[test]
 fn leveldb_explicit_flush_keeps_data() {
-    let temp = tempdir().unwrap();
-    let id = {
-        let store = store_at(temp.path());
-        let id = store.put(b"persist").unwrap();
+    let root = tempdir().unwrap();
+    let cid = {
+        let store = isolated_store(root.path());
+        let cid = store.put(b"persist").unwrap();
         store.datastore().flush().unwrap();
-        id
+        cid
     };
     assert_eq!(
-        store_at(temp.path()).get_block(&id).unwrap().unwrap(),
+        isolated_store(root.path())
+            .get_block(&cid)
+            .unwrap()
+            .unwrap(),
         b"persist"
     );
 }
+
 #[test]
 fn fixture_bytes_roundtrip_without_parsing() {
-    let temp = tempdir().unwrap();
-    let store = store_at(temp.path());
-    // Spróbuj prawdziwych fixtures repo, a w ostateczności użyj lokalnej atrapy.
-    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .unwrap();
-    let mocks = root.join("tests/mocks");
-    let mut count = 0;
-    fn visit(path: &std::path::Path, files: &mut Vec<std::path::PathBuf>) {
-        if let Ok(items) = std::fs::read_dir(path) {
-            for entry in items.flatten() {
+    let root = tempdir().unwrap();
+    let store = isolated_store(root.path());
+    let fixture_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("mocks");
+    fn visit(root: &std::path::Path, files: &mut Vec<std::path::PathBuf>) {
+        if let Ok(entries) = std::fs::read_dir(root) {
+            for entry in entries.flatten() {
                 let p = entry.path();
                 if p.is_dir() {
-                    visit(&p, files)
+                    visit(&p, files);
                 } else if p.is_file() {
-                    files.push(p)
+                    files.push(p);
                 }
             }
         }
     }
     let mut files = Vec::new();
-    visit(&mocks, &mut files);
-    for file in files.into_iter().filter(|p| {
+    visit(&fixture_root, &mut files);
+    let mut checked = 0;
+    for path in files.into_iter().filter(|p| {
         matches!(
-            p.extension().and_then(|x| x.to_str()).unwrap_or(""),
-            "json"
-                | "xml"
-                | "ttl"
-                | "jpg"
-                | "jpeg"
-                | "png"
-                | "webp"
-                | "bmp"
-                | "tiff"
-                | "svg"
-                | "txt"
+            p.extension().and_then(|e| e.to_str()),
+            Some(
+                "json"
+                    | "xml"
+                    | "ttl"
+                    | "jpg"
+                    | "jpeg"
+                    | "png"
+                    | "webp"
+                    | "bmp"
+                    | "tiff"
+                    | "svg"
+                    | "txt"
+            )
         )
     }) {
-        let bytes = std::fs::read(&file).unwrap();
-        if bytes.len() > 2 * 1024 * 1024 {
+        let bytes = std::fs::read(&path).unwrap();
+        if bytes.len() > ipfs_store::consts::MAX_BLOCK_BYTES {
             continue;
         }
         let cid = store.put(&bytes).unwrap();
         assert_eq!(
             store.get_block(&cid).unwrap().unwrap(),
             bytes,
-            "fixture {:?}",
-            file
+            "fixture {path:?}"
         );
-        count += 1;
+        checked += 1;
     }
-    if count == 0 {
+    if checked == 0 {
         let bytes = br#"{"resourceType":"Patient","id":"synthetic"}"#;
         let cid = store.put(bytes).unwrap();
         assert_eq!(store.get_block(&cid).unwrap().unwrap(), bytes);
     }
 }
+
 #[test]
-fn cannot_open_same_leveldb_directory_twice_at_same_time() {
-    let temp = tempdir().unwrap();
-    let first = LevelDbDatastore::open(temp.path()).unwrap();
-    // Zachowanie locka katalogu zależy od backendu/systemu.
-    let second = LevelDbDatastore::open(temp.path());
-    assert!(
-        second.is_err(),
-        "LevelDB should lock an already-open database directory"
-    );
+fn same_leveldb_directory_cannot_be_opened_twice() {
+    let root = tempdir().unwrap();
+    let db_path = root.path().join(LEVELDB_DIR_NAME);
+    let first = LevelDbDatastore::open(&db_path).unwrap();
+    let second = LevelDbDatastore::open(&db_path);
+    assert!(second.is_err());
     drop(first);
-    assert!(LevelDbDatastore::open(temp.path()).is_ok());
+    assert!(LevelDbDatastore::open(&db_path).is_ok());
+}
+
+#[test]
+fn default_path_constant_is_in_sync_with_database_name() {
+    assert!(ipfs_store::consts::DEFAULT_DB_PATH.ends_with(LEVELDB_DIR_NAME));
 }

@@ -102,6 +102,17 @@ impl Cid {
         let hash = Multihash::compute(data, hash_algo)
             .map_err(|_| CidError::UnsupportedHashAlgorithm(hash_algo))?;
 
-        Ok(Self::new_cid(codec, hash))
+        let cid = Self::new_cid(codec, hash);
+
+        eprintln!(
+            "[ipfs-cid] CREATED version={} codec={:#x} hash={:#x} size={}B cid={}",
+            cid.version,
+            cid.codec,
+            cid.multihash.code,
+            data.len(),
+            cid.to_string_base32()
+        );
+
+        Ok(cid)
     }
 }

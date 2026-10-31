@@ -8,4 +8,4 @@ pub mod utils;
 
 pub use datastore::Datastore;
 pub use error::StoreError;
-pub use models::{Blockstore, LevelDbDatastore};
+pub use models::{Blockstore, PersistentBlockstore};

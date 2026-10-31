@@ -142,6 +142,65 @@ Pełny CIDv1 ma pola wersji, kodeka i multihash. Klucz lokalnego magazynu opiera
 2. Testy integracyjne z LevelDB: zamknięcie i ponowne otwarcie bazy, równoległy zapis, błędy otwierania, odczyt atrap binarnych EHR bez ich interpretowania.
 3. Interoperacyjność Kubo: Rust → Kubo oraz Kubo → Rust przy porównaniu surowych bajtów i CID, bez kopiowania plików LevelDB.
 
+
+# Refaktoryzacja M2: stała baza LevelDB wewnątrz ipfs-store
+
+## Założenia
+
+- `ehr-cli` importuje **tylko** `PersistentBlockstore`, bez `LevelDbDatastore` i bez ścieżki bazy.
+- `PersistentBlockstore` jest aliasem `Blockstore<LevelDbDatastore>`, aby zachować generyczny Blockstore na potrzeby unit tests i mocków.
+- `PersistentBlockstore::open_default()` sam otwiera LevelDB przez `ipfs-store`.
+- `DEFAULT_DB_PATH = "data/ehr-blockstore.leveldb"` oraz `LEVELDB_DIR_NAME = "ehr-blockstore.leveldb"` znajdują się wyłącznie w `crates/ipfs-store/src/consts.rs`.
+- **Uwaga:** stała ścieżka jest *względna do katalogu bieżącego procesu*; aby używać zawsze tej samej bazy, uruchamiaj CLI z katalogu repozytorium. Jeśli chcesz niezależność od CWD, zamień `DEFAULT_DB_PATH` na absolutną lokalizację odpowiednią dla obu urządzeń lub skorzystaj z aplikacyjnego katalogu danych.
+- `open_in(root)` to funkcja pomocnicza dla testów integracyjnych: nazwa bazy jest niezmienna, zmienia się jedynie nadrzędny katalog `tempdir()`. Dzięki temu testy nie kolidują z prawdziwą bazą i mogą działać równolegle.
+- Unit tests w `crates/ipfs-store/tests/store-unit-test.rs` pozostają **bez zmian**: korzystają z MemoryDatastore, nie otwierają LevelDB i nie odwołują się do nazwy bazy.
+- Testy integracyjne infrastruktury nadal mogą świadomie sięgać do `models::LevelDbDatastore` w scenariuszu sprawdzającym blokadę jednoczesnego otwarcia (lub do `datastore()` w testach korupcji). Kod aplikacji tego nie robi.
+
+## Instalacja
+
+Zrób commit bieżących zmian; rozpakuj ZIP w katalogu głównym repozytorium. Sprawdź diff, zwłaszcza `apps/ehr-cli/src/main.rs`, aby zachować swoje niezacommitowane funkcje.
+
+```
+cd ~/ipfs_prototype
+unzip -o ~/Downloads/ipfs_store_refactor_patch.zip -d .
+cargo fmt --all
+cargo check --workspace
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test -p ipfs-store
+cargo test -p test-runner --test integration-store -- --test-threads=1
+cargo build -p ehr-cli
+```
+
+Nazwa targetu integracyjnego może się różnić: sprawdź `test-runner/Cargo.toml`.
+
+## CLI
+
+```
+printf '{"resourceType":"Patient","id":"synthetic"}\n' > /tmp/patient.json
+cargo run -p ehr-cli -- cid /tmp/patient.json
+cargo run -p ehr-cli -- put /tmp/patient.json
+cargo run -p ehr-cli -- has <PEŁNY_CID>
+cargo run -p ehr-cli -- get <PEŁNY_CID> /tmp/recovered.json
+cmp /tmp/patient.json /tmp/recovered.json && echo PASS
+ls -lah data/ehr-blockstore.leveldb
+```
+
+Wszystkie `put/has/get` trzeba uruchamiać z tego samego katalogu. Pojedynczy proces otwiera i zamyka bazę po wykonaniu polecenia; nie otwieraj jej równolegle dwoma procesami.
+
+## Uwaga o ograniczeniach
+
+- `get` eksportuje *lokalny* blok, nie pobiera go przez Bitswap.
+- Duże pliki ponad 2 MiB nie są w tej fazie obsługiwane jako jeden blok; potrzebny będzie UnixFS.
+- `has` potwierdza obecność klucza, nie jest pełną weryfikacją integralności.
+- `flush()` nie oznacza automatycznie gwarancji odporności na nagły zanik zasilania.
+- Nie dodawaj rzeczywistych danych pacjentów do repo ani do zrzutów ekranu.
+- W `.gitignore` dopisz `/data/`, aby nie commitować plików LevelDB.
+
+## Dlaczego nie usuwamy konstruktorów generycznych?
+
+Usunięcie `new_blockstore(D)` wymagałoby przepisywania testów jednostkowych oraz zamknęłoby możliwość testowania logiki Blockstore w pamięci. Fasada aplikacyjna `PersistentBlockstore::open_default()` spełnia wymóg enkapsulacji backendu bez pogorszenia testowalności.
+
+
 ## Literatura
 
 - [Boxo Blockstore](https://github.com/ipfs/boxo/tree/main/blockstore)

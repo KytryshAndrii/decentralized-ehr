@@ -79,6 +79,15 @@ Ważne: oba węzły mogą inicjować połączenie. Jeśli chcesz, aby A automaty
 6. Przy dużej liczbie peerów warto dodać losowy jitter, limity połączeń, trwałe adresy, tracing i rejestr peerów.
 7. Możliwa konieczność dostosowania szczegółów API do istniejącego `Cargo.lock`; przed scaleniem kompilacja i testy na maszynie użytkownika są obowiązkowe.
 
+
+## Polecenia
+Polecenie	Działanie
+./ehr-cli --help	Wyświetla pomoc
+./ehr-cli node identity <plik>	Tworzy lub odczytuje PeerId
+./ehr-cli node start <plik> <adres>	Uruchamia węzeł nasłuchujący
+./ehr-cli node start <plik> <adres> <bootstrap>	Uruchamia węzeł i inicjuje połączenie
+
+
 ## Literatura
 
 1. https://github.com/KytryshAndrii/ipfs_prototype/issues/5

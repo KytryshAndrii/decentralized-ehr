@@ -644,7 +644,9 @@ dependencies = [
 name = "ehr-cli"
 version = "0.1.0"
 dependencies = [
+ "ipfs-cid",
  "ipfs-network",
+ "ipfs-store",
  "tokio",
 ]
 

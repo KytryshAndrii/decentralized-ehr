@@ -5,7 +5,8 @@ use crate::{
     identity,
 };
 use futures::StreamExt;
-use libp2p::{Multiaddr, PeerId, SwarmBuilder, identify, ping, swarm::SwarmEvent};
+use libp2p::swarm::dial_opts::DialOpts;
+use libp2p::{PeerId, SwarmBuilder, identify, ping, swarm::SwarmEvent};
 use std::{collections::HashMap, time::Instant};
 
 impl NetworkNode {
@@ -90,15 +91,25 @@ impl NetworkNode {
 
     fn attempt_connections(&mut self) {
         let now = Instant::now();
+
         for state in self.retries.values_mut() {
             if state.connected || state.dialing || now < state.next_attempt {
                 continue;
             }
-            let mut addr: Multiaddr = state.peer.address.clone();
-            addr.push(libp2p::multiaddr::Protocol::P2p(state.peer.peer_id));
+
+            let peer_id = state.peer.peer_id;
+            let address = state.peer.address.clone();
+
+            println!("DIAL EXPECTED: {peer_id}");
+            println!("DIAL ADDRESS:  {address}");
+
+            let options = DialOpts::peer_id(peer_id).addresses(vec![address]).build();
+
             state.dialing = true;
-            if let Err(error) = self.swarm.dial(addr) {
-                eprintln!("dial {}: {error}", state.peer.peer_id);
+
+            if let Err(error) = self.swarm.dial(options) {
+                eprintln!("DIAL_FAILED {peer_id}: {error}");
+
                 state.dialing = false;
                 state.next_attempt = now + state.delay;
                 state.delay = state.delay.saturating_mul(2).min(self.config.retry_max);
@@ -147,7 +158,16 @@ impl NetworkNode {
                 error,
                 ..
             } => {
-                eprintln!("DIAL_FAILED {peer_id}: {error}");
+                if let libp2p::swarm::DialError::WrongPeerId { obtained, address } = &error {
+                    eprintln!("WRONG PEER ID:");
+                    eprintln!("  Expected: {peer_id}");
+                    eprintln!("  Obtained: {obtained}");
+                    eprintln!("  Match:    {}", peer_id == *obtained);
+                    eprintln!("  Address:  {address}");
+                } else {
+                    eprintln!("DIAL_FAILED {peer_id}: {error}");
+                }
+
                 self.schedule_retry(peer_id);
             }
             SwarmEvent::OutgoingConnectionError {

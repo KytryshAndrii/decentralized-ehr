@@ -5,4 +5,6 @@ edition = "2024"
 
 [dependencies]
 ipfs-network = { path = "../../crates/ipfs-network" }
+ipfs-cid = { path = "../../crates/ipfs-cid" }
+ipfs-store = { path = "../../crates/ipfs-store" }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal"] }
