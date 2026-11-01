@@ -5,10 +5,8 @@ set -euo pipefail
 # associated with IPFS_PATH on exit, including an already running daemon.
 # Use a dedicated test repo, never your everyday ~/.ipfs.
 CLI="${EHR_CLI_BIN:-target/debug/ehr-cli}"
-
-# Default dedicated Kubo test repository.
-# Can be overridden using IPFS_PATH.
-export IPFS_PATH="${IPFS_PATH:-$HOME/ipfs-lab/node-a}"
+CLI="$(realpath "$CLI")"
+: "${IPFS_PATH:?Set IPFS_PATH to a dedicated Kubo test repository}"
 command -v ipfs >/dev/null || { echo 'ERROR: ipfs missing' >&2; exit 1; }
 [[ -f "$IPFS_PATH/config" ]] || { echo "ERROR: missing repo: $IPFS_PATH" >&2; exit 1; }
 [[ -x "$CLI" ]] || { echo 'ERROR: cargo build -p ehr-cli first' >&2; exit 1; }
@@ -78,7 +76,7 @@ KUBO_ADDR=$(IPFS_PATH="$IPFS_PATH" ipfs swarm addrs listen | grep -E '^/ip4/127\
 [[ -n "$KUBO_ADDR" ]] || { echo 'Kubo needs a 127.0.0.1 TCP swarm listener' >&2; exit 1; }
 echo "Kubo: ${KUBO_ADDR}/p2p/${KUBO_ID}"
 
-"$CLI" node start "$TMP/rust.key.pb" /ip4/127.0.0.1/tcp/0 "${KUBO_ADDR}/p2p/${KUBO_ID}" >"$TMP/rust.log" 2>&1 &
+( cd "$TMP" && "$CLI" node start /ip4/127.0.0.1/tcp/0 --bootstrap "${KUBO_ADDR}/p2p/${KUBO_ID}" ) >"$TMP/rust.log" 2>&1 &
 NODE_PID=$!
 RUST_ADDR=''
 for _ in $(seq 1 40); do

@@ -9,11 +9,6 @@ use libp2p::{Multiaddr, multiaddr::Protocol};
 use std::{path::PathBuf, time::Duration};
 
 impl BootstrapPeer {
-    /// Returns the optional default bootstrap peer.
-    pub fn default_bootstrap() -> Result<Self, NetworkError> {
-        Self::parse(DEFAULT_BOOTSTRAP_MULTIADDR)
-    }
-
     pub fn parse(value: &str) -> Result<Self, NetworkError> {
         let mut address: Multiaddr = value.parse().map_err(|e| NetworkError::InvalidAddress {
             value: value.into(),
@@ -36,14 +31,17 @@ impl BootstrapPeer {
         }
         Ok(Self { peer_id, address })
     }
+
+    /// Opt-in bootstrap contact; NetworkConfig::default() remains bootstrap-free.
+    pub fn default_bootstrap() -> Result<Self, NetworkError> {
+        Self::parse(DEFAULT_BOOTSTRAP_MULTIADDR)
+    }
 }
 
 impl Default for NetworkConfig {
     fn default() -> Self {
         Self {
-            listen: DEFAULT_LISTEN_MULTIADDR
-                .parse()
-                .expect("valid default listen multiaddr"),
+            listen: DEFAULT_LISTEN_MULTIADDR.parse().expect("static address"),
             identity_path: PathBuf::from(DEFAULT_IDENTITY_PATH),
             bootstrap: Vec::new(),
             retry_initial: Duration::from_secs(RETRY_INITIAL_SECS),

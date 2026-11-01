@@ -3,11 +3,7 @@ mod services;
 use ipfs_cid::models::Cid;
 use ipfs_network::{BootstrapPeer, NetworkConfig, NetworkNode};
 use services::IpfsService;
-use std::{
-    env,
-    error::Error,
-    path::{Path, PathBuf},
-};
+use std::{env, error::Error, path::Path};
 
 type CliResult<T> = Result<T, Box<dyn Error>>;
 
@@ -15,14 +11,16 @@ fn usage() {
     eprintln!(
         "EHR CLI\n\n\
 Usage:\n\
-  ehr-cli node identity <identity-file>\n\
-  ehr-cli node start <identity-file> <listen-multiaddr>\n\
-  ehr-cli node start <identity-file> <listen-multiaddr> --default-bootstrap\n\
-  ehr-cli node start <identity-file> <listen-multiaddr> --bootstrap <multiaddr/p2p/PeerId>\n\
+  ehr-cli help\n\
+  ehr-cli node identity\n\
+  ehr-cli node start <listen-multiaddr>\n\
+  ehr-cli node start <listen-multiaddr> --default-bootstrap\n\
+  ehr-cli node start <listen-multiaddr> --bootstrap <multiaddr/p2p/PeerId>\n\
   ehr-cli cid <absolute-file-path>\n\
   ehr-cli put <absolute-file-path>\n\
   ehr-cli has <CID>\n\
   ehr-cli get <CID> <absolute-output-path>\n\n\
+Identity: ./tmp/node-key.pb (auto-created or reused).\n\
 Note: --default-bootstrap and --bootstrap cannot be combined.\n"
     );
 }
@@ -74,20 +72,21 @@ fn configure_bootstrap(config: &mut NetworkConfig, extra: &[String]) -> CliResul
 async fn node_command(args: &[String]) -> CliResult<()> {
     match arg(args, 2, "node subcommand")? {
         "identity" => {
-            exact_args(args, 4)?;
-            let key = ipfs_network::identity::load_or_create(Path::new(arg(args, 3, "key path")?))?;
+            exact_args(args, 3)?;
+            let key_path = NetworkConfig::default().identity_path;
+            let key = ipfs_network::identity::load_or_create(&key_path)?;
             println!("LOCAL_PEER_ID {}", ipfs_network::peer_id_from_keypair(&key));
         }
         "start" => {
-            if args.len() < 5 {
-                return Err("node start requires identity path and listen address".into());
+            if args.len() < 4 {
+                return Err("node start requires listen address".into());
             }
             let mut config = NetworkConfig {
-                identity_path: PathBuf::from(&args[3]),
-                listen: args[4].parse()?,
+                listen: args[3].parse()?,
                 ..NetworkConfig::default()
             };
-            configure_bootstrap(&mut config, &args[5..])?;
+            configure_bootstrap(&mut config, &args[4..])?;
+            println!("[NETWORK] IDENTITY_PATH {}", config.identity_path.display());
             println!("[NETWORK] LISTEN {}", config.listen);
             if let Some(peer) = config.bootstrap.first() {
                 println!("[NETWORK] BOOTSTRAP {}/p2p/{}", peer.address, peer.peer_id);
@@ -148,7 +147,11 @@ async fn main() -> CliResult<()> {
     match args.get(1).map(String::as_str) {
         Some("node") => node_command(&args).await,
         Some("cid" | "put" | "has" | "get") => storage_command(&args),
-        Some("--help" | "-h" | "help") => {
+        Some("--help" | "-h" | "help") if args.len() == 2 => {
+            usage();
+            Ok(())
+        }
+        None => {
             usage();
             Ok(())
         }

@@ -1,10 +1,11 @@
-//! Process-level integration tests. Build first: cargo build -p ehr-cli
-//! Then: cargo test -p test-runner --test integration_network -- --test-threads=1 --nocapture
-use std::path::{Path, PathBuf};
+//! Integration: identity persistence, argument validation, connectivity and reconnect.
+//! cargo build -p ehr-cli
+//! cargo test -p test-runner --test integration-network -- --test-threads=1 --nocapture
 use std::{
     fs,
     io::{BufRead, BufReader},
     net::TcpListener,
+    path::{Path, PathBuf},
     process::{Child, Command, Stdio},
     sync::{
         atomic::{AtomicU64, Ordering},
@@ -13,7 +14,6 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
-
 static SEQ: AtomicU64 = AtomicU64::new(0);
 struct Workspace(PathBuf);
 impl Workspace {
@@ -26,8 +26,8 @@ impl Workspace {
         fs::create_dir_all(&dir).unwrap();
         Self(dir)
     }
-    fn path(&self, name: &str) -> PathBuf {
-        self.0.join(name)
+    fn path(&self) -> &Path {
+        &self.0
     }
 }
 impl Drop for Workspace {
@@ -35,34 +35,35 @@ impl Drop for Workspace {
         let _ = fs::remove_dir_all(&self.0);
     }
 }
-
 fn cli() -> PathBuf {
     if let Some(path) = std::env::var_os("EHR_CLI_BIN") {
-        return path.into();
+        return fs::canonicalize(path).expect("EHR_CLI_BIN must point to a built executable");
     }
-    // cargo test target/debug/deps/test_binary -> target/debug/ehr-cli
     let mut path = std::env::current_exe().expect("test binary path");
     path.pop();
     path.pop();
     path.push(format!("ehr-cli{}", std::env::consts::EXE_SUFFIX));
     assert!(
         path.is_file(),
-        "Build the CLI first: cargo build -p ehr-cli; expected {}",
-        path.display()
+        "Build the CLI first: cargo build -p ehr-cli"
     );
     path
 }
 fn free_port() -> u16 {
-    let l = TcpListener::bind("127.0.0.1:0").unwrap();
-    l.local_addr().unwrap().port()
+    TcpListener::bind("127.0.0.1:0")
+        .unwrap()
+        .local_addr()
+        .unwrap()
+        .port()
 }
 struct NodeProcess {
     child: Child,
     lines: Receiver<String>,
 }
 impl NodeProcess {
-    fn start(args: &[String]) -> Self {
+    fn start(cwd: &Path, args: &[String]) -> Self {
         let mut child = Command::new(cli())
+            .current_dir(cwd)
             .args(args)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -93,31 +94,33 @@ impl NodeProcess {
                 .recv_timeout(deadline.saturating_duration_since(Instant::now()))
             {
                 Ok(line) => {
-                    for (i, pattern) in patterns.iter().enumerate() {
+                    for (index, pattern) in patterns.iter().enumerate() {
                         if line.contains(pattern) {
-                            seen[i] = true;
+                            seen[index] = true;
                         }
                     }
-                    if seen.iter().all(|ok| *ok) {
+                    if seen.iter().all(|v| *v) {
                         return;
                     }
                 }
                 Err(_) => break,
             }
         }
-        panic!("timed out waiting for {patterns:?}; observed {seen:?}");
+        panic!("timeout waiting for {patterns:?}; observed {seen:?}");
     }
     fn until(&self, text: &str, secs: u64) -> String {
         let deadline = Instant::now() + Duration::from_secs(secs);
         while Instant::now() < deadline {
-            let remaining = deadline.saturating_duration_since(Instant::now());
-            match self.lines.recv_timeout(remaining) {
+            match self
+                .lines
+                .recv_timeout(deadline.saturating_duration_since(Instant::now()))
+            {
                 Ok(line) if line.contains(text) => return line,
                 Ok(_) => {}
                 Err(_) => break,
             }
         }
-        panic!("timed out waiting for output containing {text:?}");
+        panic!("timeout waiting for {text:?}");
     }
 }
 impl Drop for NodeProcess {
@@ -126,112 +129,121 @@ impl Drop for NodeProcess {
         let _ = self.child.wait();
     }
 }
-fn start_args(key: &Path, port: u16, bootstrap: Option<String>) -> Vec<String> {
+fn start_args(port: u16, bootstrap: Option<String>) -> Vec<String> {
     let mut args = vec![
         "node".into(),
         "start".into(),
-        key.display().to_string(),
         format!("/ip4/127.0.0.1/tcp/{port}"),
     ];
-    if let Some(b) = bootstrap {
-        args.push(b);
+    if let Some(peer) = bootstrap {
+        args.push("--bootstrap".into());
+        args.push(peer);
     }
     args
 }
-
-fn identity(key: &Path) -> String {
+fn identity(dir: &Path) -> String {
     let output = Command::new(cli())
-        .args(["node", "identity", &key.display().to_string()])
+        .current_dir(dir)
+        .args(["node", "identity"])
         .output()
         .expect("failed to run ehr-cli");
-
     assert!(
         output.status.success(),
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
-
-    let stdout = String::from_utf8(output.stdout).expect("CLI output is not valid UTF-8");
-
+    let stdout = String::from_utf8(output.stdout).expect("identity output is not UTF-8");
     stdout
         .trim()
         .strip_prefix("LOCAL_PEER_ID")
         .expect("missing LOCAL_PEER_ID prefix")
         .trim()
-        .to_string()
+        .to_owned()
 }
-
 #[test]
 fn identity_persists_between_processes() {
-    let w = Workspace::new();
-    assert_eq!(
-        identity(&w.path("node.key.pb")),
-        identity(&w.path("node.key.pb"))
-    );
-    assert_ne!(identity(&w.path("a.key.pb")), identity(&w.path("b.key.pb")));
+    let a = Workspace::new();
+    let b = Workspace::new();
+    assert_eq!(identity(a.path()), identity(a.path()));
+    assert_ne!(identity(a.path()), identity(b.path()));
+    assert!(a.path().join("tmp/node-key.pb").is_file());
+    assert!(b.path().join("tmp/node-key.pb").is_file());
 }
 #[test]
 fn invalid_cli_arguments_fail() {
-    assert!(
-        !Command::new(cli())
-            .arg("node")
-            .arg("start")
-            .status()
-            .unwrap()
-            .success()
-    );
-    assert!(
-        !Command::new(cli())
-            .args(["unknown"])
-            .status()
-            .unwrap()
-            .success()
-    );
-    assert!(
-        Command::new(cli())
-            .arg("--help")
-            .status()
-            .unwrap()
-            .success()
-    );
+    let w = Workspace::new();
+    for args in [
+        vec!["node", "start"],
+        vec!["node", "identity", "old-key.pb"],
+        vec![
+            "node",
+            "start",
+            "/ip4/127.0.0.1/tcp/0",
+            "--default-bootstrap",
+            "--bootstrap",
+            "/ip4/127.0.0.1/tcp/4101/p2p/INVALID",
+        ],
+        vec!["unknown"],
+    ] {
+        assert!(
+            !Command::new(cli())
+                .current_dir(w.path())
+                .args(args)
+                .status()
+                .unwrap()
+                .success()
+        );
+    }
+    for args in [vec!["help"], vec!["--help"], vec!["-h"]] {
+        assert!(
+            Command::new(cli())
+                .current_dir(w.path())
+                .args(args)
+                .status()
+                .unwrap()
+                .success()
+        );
+    }
 }
 #[test]
 fn two_rust_nodes_connect_identify_and_ping() {
-    let w = Workspace::new();
-    let a_key = w.path("a.key.pb");
-    let b_key = w.path("b.key.pb");
-    let a_id = identity(&a_key);
+    let a = Workspace::new();
+    let b = Workspace::new();
+    let a_id = identity(a.path());
     let port_a = free_port();
     let port_b = free_port();
-    let a = NodeProcess::start(&start_args(&a_key, port_a, None));
-    a.until("LISTEN", 10);
-    let b = NodeProcess::start(&start_args(
-        &b_key,
-        port_b,
-        Some(format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}")),
-    ));
-    b.until_all(&["CONNECTED", "IDENTIFY", "PING"], 30);
+    let host_a = NodeProcess::start(a.path(), &start_args(port_a, None));
+    host_a.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
+    let host_b = NodeProcess::start(
+        b.path(),
+        &start_args(
+            port_b,
+            Some(format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}")),
+        ),
+    );
+    host_b.until_all(&["CONNECTED", "IDENTIFY", "PING"], 30);
 }
 #[test]
 fn rust_reconnects_after_peer_restart() {
-    let w = Workspace::new();
-    let a_key = w.path("a.key.pb");
-    let b_key = w.path("b.key.pb");
-    let id_a = identity(&a_key);
+    let a = Workspace::new();
+    let b = Workspace::new();
+    let a_id = identity(a.path());
     let port_a = free_port();
     let port_b = free_port();
-    let a = NodeProcess::start(&start_args(&a_key, port_a, None));
-    a.until("LISTEN", 10);
-    let b = NodeProcess::start(&start_args(
-        &b_key,
-        port_b,
-        Some(format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{id_a}")),
-    ));
-    b.until("CONNECTED", 15);
-    drop(a);
-    b.until("DISCONNECTED", 15);
-    let a2 = NodeProcess::start(&start_args(&a_key, port_a, None));
-    a2.until("LISTEN", 10);
-    b.until("CONNECTED", 45);
-    assert_eq!(identity(&a_key), id_a);
+    let host_a = NodeProcess::start(a.path(), &start_args(port_a, None));
+    host_a.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
+    let host_b = NodeProcess::start(
+        b.path(),
+        &start_args(
+            port_b,
+            Some(format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}")),
+        ),
+    );
+    host_b.until("CONNECTED", 15);
+    drop(host_a);
+    host_b.until("DISCONNECTED", 15);
+    let host_a_again = NodeProcess::start(a.path(), &start_args(port_a, None));
+    host_a_again.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
+    host_b.until("CONNECTED", 45);
+    assert_eq!(identity(a.path()), a_id);
 }
