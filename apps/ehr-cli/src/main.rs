@@ -13,15 +13,17 @@ type CliResult<T> = Result<T, Box<dyn Error>>;
 
 fn usage() {
     eprintln!(
-        "EHR CLI \n\n\
+        "EHR CLI\n\n\
 Usage:\n\
   ehr-cli node identity <identity-file>\n\
-  ehr-cli node start <identity-file> <listen-multiaddr> [bootstrap-multiaddr/p2p/<PeerId> ...]\n\
+  ehr-cli node start <identity-file> <listen-multiaddr>\n\
+  ehr-cli node start <identity-file> <listen-multiaddr> --default-bootstrap\n\
+  ehr-cli node start <identity-file> <listen-multiaddr> --bootstrap <multiaddr/p2p/PeerId>\n\
   ehr-cli cid <absolute-file-path>\n\
   ehr-cli put <absolute-file-path>\n\
   ehr-cli has <CID>\n\
-  ehr-cli get <CID> <absolute-output-path>\n\n
-  "
+  ehr-cli get <CID> <absolute-output-path>\n\n\
+Note: --default-bootstrap and --bootstrap cannot be combined.\n"
     );
 }
 
@@ -44,6 +46,31 @@ fn exact_args(args: &[String], expected: usize) -> CliResult<()> {
     Ok(())
 }
 
+/// Exactly one of: listen only, default bootstrap, or custom bootstrap.
+/// The legacy positional multiaddr remains an alias for custom bootstrap,
+/// preserving existing integration tests without adding a fourth mode.
+fn configure_bootstrap(config: &mut NetworkConfig, extra: &[String]) -> CliResult<()> {
+    match extra {
+        [] => Ok(()),
+        [flag] if flag == "--default-bootstrap" => {
+            config.bootstrap.push(BootstrapPeer::default_bootstrap()?);
+            Ok(())
+        }
+        [flag, address] if flag == "--bootstrap" => {
+            config.bootstrap.push(BootstrapPeer::parse(address)?);
+            Ok(())
+        }
+        [address] if address.starts_with('/') => {
+            config.bootstrap.push(BootstrapPeer::parse(address)?);
+            Ok(())
+        }
+        _ => Err(
+            "Choose only one mode: listen only, --default-bootstrap, or --bootstrap <address>"
+                .into(),
+        ),
+    }
+}
+
 async fn node_command(args: &[String]) -> CliResult<()> {
     match arg(args, 2, "node subcommand")? {
         "identity" => {
@@ -60,8 +87,12 @@ async fn node_command(args: &[String]) -> CliResult<()> {
                 listen: args[4].parse()?,
                 ..NetworkConfig::default()
             };
-            for bootstrap in args.iter().skip(5) {
-                config.bootstrap.push(BootstrapPeer::parse(bootstrap)?);
+            configure_bootstrap(&mut config, &args[5..])?;
+            println!("[NETWORK] LISTEN {}", config.listen);
+            if let Some(peer) = config.bootstrap.first() {
+                println!("[NETWORK] BOOTSTRAP {}/p2p/{}", peer.address, peer.peer_id);
+            } else {
+                println!("[NETWORK] LISTEN ONLY (no bootstrap)");
             }
             NetworkNode::new_network_node(config)?.run().await?;
         }
