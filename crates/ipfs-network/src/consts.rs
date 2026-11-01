@@ -1,7 +1,7 @@
 //This is a libp2p network identity, not a medical authorization role.
 pub const DEFAULT_BOOTSTRAP_MULTIADDR: &str = concat!(
     "/ip4/192.168.1.125/tcp/4101/p2p/",
-    "12D3KooWCgpCbyPXZZGwYvF88KhTtkWaB6urT6rrX6MnSpmnBWPf"
+    "12D3KooWNX5AdkfjZ6nSWD8x7Cci1nuNtpXnj1AL42BXi7M9GENS"
 );
 
 // Local defaults.

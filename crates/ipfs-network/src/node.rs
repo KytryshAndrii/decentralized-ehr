@@ -105,6 +105,11 @@ impl NetworkNode {
 
             let options = DialOpts::peer_id(peer_id).addresses(vec![address]).build();
 
+            if self.swarm.is_connected(&peer_id) {
+                state.connected = true;
+                state.dialing = false;
+                continue;
+            }
             state.dialing = true;
 
             if let Err(error) = self.swarm.dial(options) {
