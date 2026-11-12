@@ -1,30 +1,39 @@
 mod services;
 
 use ipfs_cid::models::Cid;
-use ipfs_network::{BootstrapPeer, NetworkConfig, NetworkNode};
+use ipfs_network::{BootstrapPeer, DhtMode, NetworkCommand, NetworkConfig, NetworkNode};
 use services::IpfsService;
-use std::{env, error::Error, path::Path};
+use std::{
+    env,
+    error::Error,
+    io::{self, BufRead},
+    path::Path,
+};
 
 type CliResult<T> = Result<T, Box<dyn Error>>;
-
 fn usage() {
     eprintln!(
         "EHR CLI\n\n\
 Usage:\n\
   ehr-cli help\n\
   ehr-cli node identity\n\
-  ehr-cli node start <listen-multiaddr>\n\
-  ehr-cli node start <listen-multiaddr> --default-bootstrap\n\
-  ehr-cli node start <listen-multiaddr> --bootstrap <multiaddr/p2p/PeerId>\n\
+  ehr-cli node start [--dht-server]\n\
+  ehr-cli node start \"\" [--dht-server]\n\
+  ehr-cli node start <bootstrap-multiaddr/p2p/PeerId> [--dht-server]\n\
+  ehr-cli node start <listen-multiaddr> [--dht-server]\n\
+  ehr-cli node start <listen-multiaddr> --default-bootstrap [--dht-server]\n\
+  ehr-cli node start <listen-multiaddr> --bootstrap <multiaddr/p2p/PeerId> [--dht-server]\n\
+  ehr-cli node start <listen-multiaddr> \"\" [--dht-server]\n\
   ehr-cli cid <absolute-file-path>\n\
   ehr-cli put <absolute-file-path>\n\
   ehr-cli has <CID>\n\
   ehr-cli get <CID> <absolute-output-path>\n\n\
 Identity: ./tmp/node-key.pb (auto-created or reused).\n\
-Note: --default-bootstrap and --bootstrap cannot be combined.\n"
+DHT: LAN only; Client by default, Server with --dht-server.\n\
+During node start: peers, bootstrap, provide <CID>, find <CID>, stop <CID>, quit.\n\
+Note: a listen address alone preserves the original listen-only behaviour.\n"
     );
 }
-
 fn arg<'a>(args: &'a [String], index: usize, description: &str) -> CliResult<&'a str> {
     Ok(args
         .get(index)
@@ -43,7 +52,6 @@ fn exact_args(args: &[String], expected: usize) -> CliResult<()> {
     }
     Ok(())
 }
-
 /// Exactly one of: listen only, default bootstrap, or custom bootstrap.
 /// The legacy positional multiaddr remains an alias for custom bootstrap,
 /// preserving existing integration tests without adding a fourth mode.
@@ -69,6 +77,72 @@ fn configure_bootstrap(config: &mut NetworkConfig, extra: &[String]) -> CliResul
     }
 }
 
+fn configure_node_start(config: &mut NetworkConfig, extra: &[String]) -> CliResult<()> {
+    match extra {
+        [] => config.bootstrap.push(BootstrapPeer::default_bootstrap()?),
+        [address] if address.is_empty() => {}
+        [flag] if flag == "--default-bootstrap" => configure_bootstrap(config, extra)?,
+        [flag, _] if flag == "--bootstrap" => configure_bootstrap(config, extra)?,
+        [address] if address.starts_with('/') && address.contains("/p2p/") => {
+            configure_bootstrap(config, extra)?;
+        }
+        [listen, remaining @ ..] => {
+            config.listen = listen.parse()?;
+            if remaining.len() == 1 && remaining[0].is_empty() {
+                return Ok(());
+            }
+            configure_bootstrap(config, remaining)?;
+        }
+    }
+    Ok(())
+}
+
+fn stdin_commands(sender: tokio::sync::mpsc::UnboundedSender<NetworkCommand>) {
+    for line in io::stdin().lock().lines() {
+        let Ok(line) = line else { break };
+        let mut parts = line.split_whitespace();
+        let Some(command) = parts.next() else {
+            continue;
+        };
+        let argument = parts.next();
+        let parsed = match (command, argument, parts.next()) {
+            ("peers", None, None) => Ok(NetworkCommand::ListPeers),
+            ("bootstrap", None, None) => Ok(NetworkCommand::Bootstrap),
+            ("quit", None, None) => Ok(NetworkCommand::Quit),
+            ("provide", Some(cid), None) => Cid::decode_from_string(cid)
+                .map(NetworkCommand::StartProviding)
+                .map_err(|error| error.to_string()),
+            ("find", Some(cid), None) => Cid::decode_from_string(cid)
+                .map(NetworkCommand::GetProviders)
+                .map_err(|error| error.to_string()),
+            ("stop", Some(cid), None) => Cid::decode_from_string(cid)
+                .map(NetworkCommand::StopProviding)
+                .map_err(|error| error.to_string()),
+            _ => Err("Use peers, bootstrap, provide <CID>, find <CID>, stop <CID> or quit".into()),
+        };
+        match parsed {
+            Ok(NetworkCommand::StartProviding(cid)) => {
+                match IpfsService::new().and_then(|service| service.has_block(&cid)) {
+                    Ok(true) => {
+                        if sender.send(NetworkCommand::StartProviding(cid)).is_err() {
+                            break;
+                        }
+                    }
+                    Ok(false) => eprintln!("DHT_PROVIDE_FAILED block is not in local Blockstore"),
+                    Err(error) => eprintln!("DHT_PROVIDE_FAILED {error}"),
+                }
+            }
+            Ok(command) => {
+                let quit = matches!(command, NetworkCommand::Quit);
+                if sender.send(command).is_err() || quit {
+                    break;
+                }
+            }
+            Err(error) => eprintln!("DHT_COMMAND_ERROR {error}"),
+        }
+    }
+}
+
 async fn node_command(args: &[String]) -> CliResult<()> {
     match arg(args, 2, "node subcommand")? {
         "identity" => {
@@ -78,14 +152,23 @@ async fn node_command(args: &[String]) -> CliResult<()> {
             println!("LOCAL_PEER_ID {}", ipfs_network::peer_id_from_keypair(&key));
         }
         "start" => {
-            if args.len() < 4 {
-                return Err("node start requires listen address".into());
+            let server_flag_count = args[3..]
+                .iter()
+                .filter(|argument| *argument == "--dht-server")
+                .count();
+            if server_flag_count > 1 {
+                return Err("--dht-server may be specified once".into());
             }
-            let mut config = NetworkConfig {
-                listen: args[3].parse()?,
-                ..NetworkConfig::default()
-            };
-            configure_bootstrap(&mut config, &args[4..])?;
+            let remaining: Vec<String> = args[3..]
+                .iter()
+                .filter(|argument| argument.as_str() != "--dht-server")
+                .cloned()
+                .collect();
+            let mut config = NetworkConfig::default();
+            if server_flag_count == 1 {
+                config.dht_mode = DhtMode::Server;
+            }
+            configure_node_start(&mut config, &remaining)?;
             println!("[NETWORK] IDENTITY_PATH {}", config.identity_path.display());
             println!("[NETWORK] LISTEN {}", config.listen);
             if let Some(peer) = config.bootstrap.first() {
@@ -93,13 +176,17 @@ async fn node_command(args: &[String]) -> CliResult<()> {
             } else {
                 println!("[NETWORK] LISTEN ONLY (no bootstrap)");
             }
-            NetworkNode::new_network_node(config)?.run().await?;
+            println!("[DHT] LAN {:?}", config.dht_mode);
+            let (sender, receiver) = tokio::sync::mpsc::unbounded_channel();
+            std::thread::spawn(move || stdin_commands(sender));
+            NetworkNode::new_network_node(config)?
+                .run_with_commands(receiver)
+                .await?;
         }
         _ => return Err("Unknown node command".into()),
     }
     Ok(())
 }
-
 fn storage_command(args: &[String]) -> CliResult<()> {
     match arg(args, 1, "storage command")? {
         "cid" => {
@@ -140,7 +227,6 @@ fn storage_command(args: &[String]) -> CliResult<()> {
     }
     Ok(())
 }
-
 #[tokio::main]
 async fn main() -> CliResult<()> {
     let args: Vec<String> = env::args().collect();

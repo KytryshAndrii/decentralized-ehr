@@ -34,3 +34,7 @@ path = "tests/interoperability/cid_interop.rs"
 [[test]]
 name = "interop-network"
 path = "tests/interoperability/network_interop.rs"
+
+[[test]]
+name = "interop-dht"
+path = "tests/interoperability/dht_interop.rs"

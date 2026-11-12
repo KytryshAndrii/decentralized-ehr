@@ -173,7 +173,7 @@ fn identity_persists_between_processes() {
 fn invalid_cli_arguments_fail() {
     let w = Workspace::new();
     for args in [
-        vec!["node", "start"],
+        vec!["node", "start", "invalid-address"],
         vec!["node", "identity", "old-key.pb"],
         vec![
             "node",

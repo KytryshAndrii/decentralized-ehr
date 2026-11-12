@@ -7,7 +7,6 @@ pub const DEFAULT_BOOTSTRAP_MULTIADDR: &str = concat!(
 // Local defaults.
 pub const DEFAULT_LISTEN_MULTIADDR: &str = "/ip4/127.0.0.1/tcp/0";
 pub const DEFAULT_IDENTITY_PATH: &str = "./tmp/node-key.pb";
-
 // Reconnect configuration.
 pub const RETRY_INITIAL_SECS: u64 = 2;
 pub const RETRY_MAX_SECS: u64 = 30;
@@ -16,3 +15,5 @@ pub const MAINTENANCE_TICK_SECS: u64 = 1;
 // Protocol configuration.
 pub const PING_INTERVAL_SECS: u64 = 15;
 pub const IDLE_TIMEOUT_SECS: u64 = 90;
+pub const LAN_DHT_PROTOCOL: &str = "/ipfs/lan/kad/1.0.0";
+pub const DHT_QUERY_TIMEOUT_SECS: u64 = 30;

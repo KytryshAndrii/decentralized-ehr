@@ -1,6 +1,8 @@
 use crate::behaviour::NetworkBehaviour;
-use libp2p::{Multiaddr, PeerId, Swarm};
-use std::collections::HashMap;
+use crate::dht::DhtMode;
+use ipfs_cid::models::Cid;
+use libp2p::{Multiaddr, PeerId, Swarm, kad};
+use std::collections::{HashMap, HashSet};
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
@@ -11,11 +13,12 @@ pub(crate) struct RetryState {
     pub(crate) next_attempt: Instant,
     pub(crate) delay: Duration,
 }
-
 pub struct NetworkNode {
     pub(crate) swarm: Swarm<NetworkBehaviour>,
     pub(crate) config: NetworkConfig,
     pub(crate) retries: HashMap<PeerId, RetryState>,
+    pub(crate) dht_bootstrap_started: bool,
+    pub(crate) pending_provider_queries: HashMap<kad::QueryId, HashSet<PeerId>>,
 }
 
 /// Peers from this list are direct addresses, not DHT-discovered peers.
@@ -24,7 +27,6 @@ pub struct BootstrapPeer {
     pub peer_id: PeerId,
     pub address: Multiaddr,
 }
-
 #[derive(Clone, Debug)]
 pub struct NetworkConfig {
     pub listen: Multiaddr,
@@ -35,4 +37,15 @@ pub struct NetworkConfig {
     pub maintenance_tick: Duration,
     pub ping_interval: Duration,
     pub idle_timeout: Duration,
+    pub dht_mode: DhtMode,
+}
+
+#[derive(Debug)]
+pub enum NetworkCommand {
+    StartProviding(Cid),
+    GetProviders(Cid),
+    StopProviding(Cid),
+    Bootstrap,
+    ListPeers,
+    Quit,
 }

@@ -4,11 +4,17 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-libp2p = {version = "0.57.1", features = ["tokio", "tcp", "noise", "yamux", "identify", "ping", "macros"]}
-tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "signal"] }
+libp2p = {version = "0.57.1", features = ["tokio", "tcp", "noise", "yamux", "identify", "ping", "kad", "macros"]}
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "signal", "sync"] }
 futures = "0.3"
 thiserror = "2"
+ipfs-cid = { path = "../ipfs-cid" }
+unsigned-varint = "0.8"
 
 [[test]]
 name = "network-unit-test"
 path = "tests/network-unit-test.rs"
+
+[[test]]
+name = "dht-unit-test"
+path = "tests/dht-unit-test.rs"
