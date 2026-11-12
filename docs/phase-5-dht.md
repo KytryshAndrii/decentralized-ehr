@@ -1,6 +1,6 @@
 # Phase 5 — Kademlia DHT: routing i provider discovery (M5, Issues #6 i #7)
 
-> **Stan dokumentacji:** 11.11.2026. Opis odnosi się do przygotowanej paczki `m5_kademlia_lan_full_files.zip` oraz dotychczasowego Etapu 4. Przygotowanie kodu i testów nie oznacza, że kompilacja lub scenariusze sieciowe już się powiodły.
+> **Stan dokumentacji:** 12.11.2026. Opis odpowiada kodowi na gałęzi `master` (commit `d005c75` „#dht added DHT and Kademilia to nodes”). Testy jednostkowe, integracyjne (regresja M4) oraz interoperacyjności Rust ↔ Kubo zostały uruchomione i **zakończyły się powodzeniem**.
 
 ## 1. Cel i zakres
 
@@ -100,18 +100,18 @@ Istniejący NetworkNode / event loop
 |---|---|
 | `crates/ipfs-network/Cargo.toml` | Feature `kad` i zależności potrzebne do klucza providera. |
 | `src/consts.rs` | Stałe protokołu LAN DHT i timeoutu zapytania; zachowany dotychczasowy domyślny bootstrap i tożsamość. |
-| `src/dht.rs` | `DhtMode`, `KademliaBehaviour`, `build_kademlia`, `provider_key`. Bez testów w tym pliku. |
+| `src/dht.rs` | `DhtMode`, `KademliaBehaviour`, `build_kademlia`, `provider_key`. Bez testów w tym pliku (testy w `tests/dht-unit-test.rs`). |
 | `src/behaviour.rs` | Pole `kad` oraz `NetworkEvent::Kad` obok Identify i Ping. |
 | `src/models.rs` | `dht_mode`, stan zapytań providerów, `NetworkCommand`. |
 | `src/config.rs` | Domyślny `DhtMode::Client`; konfiguracja biblioteki pozostaje bez bootstrapu dopóki CLI go nie wskaże. |
 | `src/node.rs` | Integracja Kademlia z istniejącym Swarm, routing, Identify, bootstrap DHT, komendy, wyniki zapytań. |
 | `src/lib.rs` | Eksport modułu DHT i typów potrzebnych CLI. |
+| `crates/ipfs-network/Cargo.toml` (testy) | Rejestracja targetu `[[test]] dht-unit-test`. |
 | `crates/ipfs-network/tests/dht-unit-test.rs` | Testy trybów, protokołu, konstrukcji Kademlia i klucza providera. |
-| `apps/ehr-cli/src/main.rs` | Ustalona składnia startu, `--dht-server`, interaktywne komendy DHT. |
-| `apps/ehr-cli/src/node_start_unit_tests.rs` | Testy parsowania CLI; z `main.rs` włączane przez `#[cfg(test)]`. |
-| `test-runner/tests/interoperability/dht_interop.rs` | Test Rust uruchamiający skrypt interoperacyjności Kubo (`#[ignore]`). |
-| `scripts/testing/m5-three-rust-nodes.sh` | Scenariusz trzech procesów Rust na jednym komputerze. |
-| `scripts/testing/kubo-dht-interop.sh` | Scenariusze Rust ↔ Kubo i Rust ↔ Rust przez Kubo. |
+| `apps/ehr-cli/src/main.rs` | Ustalona składnia startu, `--dht-server`, interaktywne komendy DHT (wątek stdin → `mpsc` → `NetworkNode`). |
+| `test-runner/Cargo.toml` | Nowy target `[[test]] interop-dht`. |
+| `test-runner/tests/interoperability/dht_interop.rs` | Test Rust uruchamiający skrypt interoperacyjności z Kubo. |
+| `scripts/testing/test-kubo-dht-interop.sh` | Scenariusze A/B/C: Rust → Kubo, Kubo → Rust, Rust → Rust przez sieć DHT z Kubo. |
 | `test-runner/tests/integration/network_integration.rs` | Korekta wcześniejszego przypadku, który traktował `node start` bez argumentów jako błąd. |
 
 Pliki `identity.rs`, `error.rs`, `utils.rs` oraz kod Blockstore i Bitswap nie są częścią zmian M5.
@@ -390,27 +390,35 @@ cargo run -p ehr-cli -- node start /ip4/192.168.1.125/tcp/4101 "" --dht-server
 cargo fmt --all
 cargo check --workspace --all-targets
 cargo test -p ipfs-network --test dht-unit-test
-cargo test -p ehr-cli --bin ehr-cli
 ```
 
-Oddzielny `dht-unit-test.rs` sprawdza protokół LAN, ustawienia Client/Server, budowę Kademlia i kodowanie klucza providera. `node_start_unit_tests.rs` sprawdza domyślny, pusty i niestandardowy bootstrap, zgodność starej składni oraz domyślny Client. Moduł testowy dołączony przez `#[cfg(test)]` w `main.rs` **nie jest wykonywany w normalnym uruchomieniu**.
+`dht-unit-test.rs` sprawdza:
 
-### 9.2. Trzy procesy Rust na jednym komputerze
+| Test | Co weryfikuje |
+|---|---|
+| `dht_uses_lan_protocol` | Identyfikator `/ipfs/lan/kad/1.0.0` i dodatni timeout zapytań |
+| `client_is_default_and_server_can_be_selected` | `NetworkConfig::default()` → Client; mapowanie na `kad::Mode` |
+| `kademlia_can_be_built_in_both_modes` | Budowa `kad::Behaviour` w trybie Client i Server |
+| `provider_key_is_multihash_without_cid_prefix` | Klucz = 34 B: `0x12 0x20` + digest SHA-256 |
+| `different_cid_codecs_share_provider_key_if_multihash_matches` | `raw` i `dag-pb` z tym samym multihashem → ten sam klucz |
+| `invalid_multihash_length_is_rejected` | Odrzucenie niespójnego `size` multihasha |
 
-```bash
-bash scripts/testing/m5-three-rust-nodes.sh
-```
+Parsowanie opcji `node start` jest weryfikowane procesowo w `integration-network` (§9.4), bez osobnego modułu testów w `ehr-cli`.
 
-Skrypt tworzy osobne katalogi robocze, osobne klucze i Blockstore, uruchamia trzy węzły, sprawdza ich połączenia oraz odnalezienie dostawcy. To test rzeczywistej wymiany komunikatów sieciowych, a nie duplikat testu jednostkowego parsera.
+### 9.2. Kilka procesów Rust
+
+Scenariusz wielu węzłów Rust na jednym komputerze realizuje skrypt z §9.3 (scenariusz **C**: dwa niezależne procesy Rust z osobnymi katalogami roboczymi, kluczami i Blockstore oraz węzeł Kubo jako DHT Server). Scenariusz trzech fizycznych komputerów opisano w §8.
 
 ### 9.3. Interoperacyjność Rust ↔ Kubo
 
 ```bash
-bash scripts/testing/kubo-dht-interop.sh
+bash scripts/testing/test-kubo-dht-interop.sh
 
 # Alternatywnie test Rust uruchamiający ten sam skrypt:
-cargo test -p test-runner --test interop-dht -- --ignored --nocapture --test-threads=1
+cargo test -p test-runner --test interop-dht -- --nocapture --test-threads=1
 ```
+
+Zmienne środowiskowe skryptu: `M5_TEST_IP` (domyślnie `127.0.0.1`), `M5_KUBO_PORT` (`4201`), `M5_RUST_PORT` (`4301`). Węzły Rust startują z `--dht-server` i bootstrapem do Kubo; skrypt czeka na `CONNECTED <KUBO_ID>` i `DHT_BOOTSTRAP_STARTED`, a komendy podaje przez FIFO na stdin.
 
 Scenariusze:
 
@@ -418,7 +426,7 @@ Scenariusze:
 - **B:** Kubo ogłasza blok, Rust odnajduje `PeerId` Kubo.
 - **C:** Drugi Rust odnajduje pierwszego Rusta przez sieć DHT z Kubo.
 
-Test Rust znajduje się w `test-runner/tests/interoperability/dht_interop.rs` i ma `#[ignore]`, aby zwykłe `cargo test --workspace` nie uruchamiało zewnętrznego demona. Skrypt używa tymczasowego repozytorium Kubo, a dla testów `127.0.0.1` ustawia `Routing.LoopbackAddressesOnLanDHT=true`. Konfiguracja `Routing.Type=custom` i `Routing.Routers` jest oznaczona w Kubo jako **eksperymentalna** i może wymagać dostosowania do konkretnej wersji Kubo.
+Test Rust znajduje się w `test-runner/tests/interoperability/dht_interop.rs` i wymaga `ipfs` (Kubo) w `PATH`. Skrypt używa tymczasowego repozytorium Kubo, a dla testów `127.0.0.1` ustawia `Routing.LoopbackAddressesOnLanDHT=true`. Konfiguracja `Routing.Type=custom` i `Routing.Routers` jest oznaczona w Kubo jako **eksperymentalna** i może wymagać dostosowania do konkretnej wersji Kubo.
 
 ### 9.4. Regresja Etapu 4
 
@@ -430,19 +438,19 @@ Zmiana `node start` bez argumentów wymagała aktualizacji starszego testu, któ
 
 ## 10. Definition of Done i status
 
-| Kryterium | Stan na dzień przygotowania paczki |
+| Kryterium | Stan (12.11.2026) |
 |---|---|
-| Kademlia w istniejącym `NetworkBehaviour` | Kod przygotowany |
-| Bootstrap i zdarzenia tablic routingu | Kod przygotowany |
-| Client domyślny / Server flagą | Kod przygotowany |
-| Provider discovery po multihash | Kod przygotowany |
-| Testy jednostkowe DHT i CLI | Testy napisane, **wyniki niezweryfikowane** |
-| Test trzech węzłów Rust | Skrypt napisany, **wynik niezweryfikowany** |
-| Test interoperacyjności z Kubo | Skrypt i wrapper Rust napisane, **wynik niezweryfikowany** |
-| Regresja M4 | Do wykonania |
-| Rzeczywiste pobieranie bloków od zdalnego peera | Poza M5, planowane w M6/M7 |
+| Kademlia w istniejącym `NetworkBehaviour` | **Zrobione** |
+| Bootstrap i zdarzenia tablic routingu | **Zrobione** |
+| Client domyślny / Server flagą | **Zrobione** |
+| Provider discovery po multihash | **Zrobione** |
+| Testy jednostkowe DHT (`dht-unit-test`) | **PASS** |
+| Wiele węzłów Rust (scenariusz C) | **PASS** |
+| Interoperacyjność z Kubo (`interop-dht`, scenariusze A, B, C) | **PASS** |
+| Regresja M4 (`integration-network`, `interop-network`) | **PASS** |
+| Rzeczywiste pobieranie bloków od zdalnego peera | Poza M5, planowane w M6/M7 (Bitswap) |
 
-Kompilacja, testy i interoperacyjność muszą zostać uruchomione lokalnie. Status `PASS` można wpisać dopiero po zapisaniu rzeczywistych wyników poleceń.
+Issues #6 i #7 zostały zamknięte. Przy cytowaniu wyników w pracy należy podać hash commita (`git rev-parse HEAD`) i wersję Kubo (`ipfs version`).
 
 ## 11. Ograniczenia i ryzyka
 
@@ -468,7 +476,7 @@ Kompilacja, testy i interoperacyjność muszą zostać uruchomione lokalnie. Sta
 | **S5** | C: `DHT_PROVIDER` i osobno `[BLOCKSTORE] HAS false` | DHT znajduje dostawcę, ale nie pobiera bloku |
 | **S6** | B: reconnect; A: identyczny `LOCAL_PEER_ID` po restarcie | Stabilna tożsamość i reconnect z M4 |
 | **S7** | Konsola testów jednostkowych zakończonych `ok` | Poprawność lokalnej logiki |
-| **S8** | Wyjście `kubo-dht-interop.sh` zakończone `PASS` | Interoperacyjność z Kubo, jeśli test rzeczywiście przejdzie |
+| **S8** | Wyjście `test-kubo-dht-interop.sh` zakończone `PASS: Rust <-> Kubo LAN DHT provider discovery` | Interoperacyjność z Kubo |
 
 W podpisach zdjęć podaj adresy prywatne i skrócone `PeerId`; nie prezentuj żadnych danych pacjenta.
 
