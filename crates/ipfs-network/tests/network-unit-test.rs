@@ -85,9 +85,9 @@ fn bootstrap_malformed_address_is_rejected() {
     assert!(BootstrapPeer::parse("not-a-multiaddr").is_err());
 }
 #[test]
-fn default_config_uses_loopback_and_backoff() {
+fn default_config_listens_on_all_interfaces_and_backoff() {
     let cfg = NetworkConfig::default();
-    assert_eq!(cfg.listen.to_string(), "/ip4/127.0.0.1/tcp/0");
+    assert_eq!(cfg.listen.to_string(), "/ip4/0.0.0.0/tcp/4101");
     assert!(cfg.bootstrap.is_empty());
     assert!(cfg.retry_initial < cfg.retry_max);
 }

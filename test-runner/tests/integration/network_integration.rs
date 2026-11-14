@@ -61,9 +61,10 @@ struct NodeProcess {
     lines: Receiver<String>,
 }
 impl NodeProcess {
-    fn start(cwd: &Path, args: &[String]) -> Self {
+    fn start(cwd: &Path, port: u16, args: &[String]) -> Self {
         let mut child = Command::new(cli())
             .current_dir(cwd)
+            .env("EHR_LISTEN_PORT", port.to_string())
             .args(args)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -129,15 +130,14 @@ impl Drop for NodeProcess {
         let _ = self.child.wait();
     }
 }
-fn start_args(port: u16, bootstrap: Option<String>) -> Vec<String> {
-    let mut args = vec![
-        "node".into(),
-        "start".into(),
-        format!("/ip4/127.0.0.1/tcp/{port}"),
-    ];
-    if let Some(peer) = bootstrap {
-        args.push("--bootstrap".into());
-        args.push(peer);
+fn start_args(bootstrap: Option<String>) -> Vec<String> {
+    let mut args = vec!["node".into(), "start".into()];
+    match bootstrap {
+        Some(peer) => {
+            args.push("--bootstrap".into());
+            args.push(peer);
+        }
+        None => args.push(String::new()),
     }
     args
 }
@@ -174,12 +174,17 @@ fn invalid_cli_arguments_fail() {
     let w = Workspace::new();
     for args in [
         vec!["node", "start", "invalid-address"],
+        vec!["node", "start", "/ip4/127.0.0.1/tcp/0"],
+        vec![
+            "node",
+            "start",
+            "/ip4/127.0.0.1/tcp/4101/p2p/12D3KooWNSJcGB7bK5Kg1gWvyckQ2LbgXB5bMdTUv3Gnji6n8FUz",
+        ],
         vec!["node", "identity", "old-key.pb"],
         vec![
             "node",
             "start",
-            "/ip4/127.0.0.1/tcp/0",
-            "--default-bootstrap",
+            "",
             "--bootstrap",
             "/ip4/127.0.0.1/tcp/4101/p2p/INVALID",
         ],
@@ -212,14 +217,12 @@ fn two_rust_nodes_connect_identify_and_ping() {
     let a_id = identity(a.path());
     let port_a = free_port();
     let port_b = free_port();
-    let host_a = NodeProcess::start(a.path(), &start_args(port_a, None));
+    let host_a = NodeProcess::start(a.path(), port_a, &start_args(None));
     host_a.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
     let host_b = NodeProcess::start(
         b.path(),
-        &start_args(
-            port_b,
-            Some(format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}")),
-        ),
+        port_b,
+        &start_args(Some(format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}"))),
     );
     host_b.until_all(&["CONNECTED", "IDENTIFY", "PING"], 30);
 }
@@ -230,19 +233,17 @@ fn rust_reconnects_after_peer_restart() {
     let a_id = identity(a.path());
     let port_a = free_port();
     let port_b = free_port();
-    let host_a = NodeProcess::start(a.path(), &start_args(port_a, None));
+    let host_a = NodeProcess::start(a.path(), port_a, &start_args(None));
     host_a.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
     let host_b = NodeProcess::start(
         b.path(),
-        &start_args(
-            port_b,
-            Some(format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}")),
-        ),
+        port_b,
+        &start_args(Some(format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}"))),
     );
     host_b.until("CONNECTED", 15);
     drop(host_a);
     host_b.until("DISCONNECTED", 15);
-    let host_a_again = NodeProcess::start(a.path(), &start_args(port_a, None));
+    let host_a_again = NodeProcess::start(a.path(), port_a, &start_args(None));
     host_a_again.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
     host_b.until("CONNECTED", 45);
     assert_eq!(identity(a.path()), a_id);

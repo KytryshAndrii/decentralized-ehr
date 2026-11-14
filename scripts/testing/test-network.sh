@@ -76,11 +76,11 @@ KUBO_ADDR=$(IPFS_PATH="$IPFS_PATH" ipfs swarm addrs listen | grep -E '^/ip4/127\
 [[ -n "$KUBO_ADDR" ]] || { echo 'Kubo needs a 127.0.0.1 TCP swarm listener' >&2; exit 1; }
 echo "Kubo: ${KUBO_ADDR}/p2p/${KUBO_ID}"
 
-( cd "$TMP" && "$CLI" node start /ip4/127.0.0.1/tcp/0 --bootstrap "${KUBO_ADDR}/p2p/${KUBO_ID}" ) >"$TMP/rust.log" 2>&1 &
+( cd "$TMP" && EHR_LISTEN_PORT=0 "$CLI" node start --bootstrap "${KUBO_ADDR}/p2p/${KUBO_ID}" ) >"$TMP/rust.log" 2>&1 &
 NODE_PID=$!
 RUST_ADDR=''
 for _ in $(seq 1 40); do
-  RUST_ADDR=$(sed -n 's/^LISTEN //p' "$TMP/rust.log" | head -n 1)
+  RUST_ADDR=$(sed -n 's/^LISTEN \(\/ip4\/127\.0\.0\.1\/\)/\1/p' "$TMP/rust.log" | head -n 1)
   [[ -z "$RUST_ADDR" ]] || break
   kill -0 "$NODE_PID" 2>/dev/null || { echo 'Rust node exited' >&2; exit 1; }
   sleep 0.5

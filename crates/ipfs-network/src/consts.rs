@@ -5,7 +5,11 @@ pub const DEFAULT_BOOTSTRAP_MULTIADDR: &str = concat!(
 );
 
 // Local defaults.
-pub const DEFAULT_LISTEN_MULTIADDR: &str = "/ip4/127.0.0.1/tcp/0";
+// Every node listens on all IPv4 interfaces on the same port as DEFAULT_BOOTSTRAP,
+// so a node started with --dht-server is reachable as a bootstrap peer.
+pub const DEFAULT_LISTEN_MULTIADDR: &str = "/ip4/0.0.0.0/tcp/4101";
+// Overrides only the TCP port; meant for running several nodes on one host (tests).
+pub const LISTEN_PORT_ENV: &str = "EHR_LISTEN_PORT";
 pub const DEFAULT_IDENTITY_PATH: &str = "./tmp/node-key.pb";
 // Reconnect configuration.
 pub const RETRY_INITIAL_SECS: u64 = 2;

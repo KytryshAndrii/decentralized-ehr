@@ -1,6 +1,6 @@
 # Phase 5 — Kademlia DHT: routing i provider discovery (M5, Issues #6 i #7)
 
-> **Stan dokumentacji:** 11.11.2026. Opis odnosi się do przygotowanej paczki `m5_kademlia_lan_full_files.zip` oraz dotychczasowego Etapu 4. Przygotowanie kodu i testów nie oznacza, że kompilacja lub scenariusze sieciowe już się powiodły.
+> **Stan dokumentacji:** 12.11.2026. Opis odpowiada kodowi na gałęzi `master` (commit `d005c75` „#dht added DHT and Kademilia to nodes”). Testy jednostkowe, integracyjne (regresja M4) oraz interoperacyjności Rust ↔ Kubo zostały uruchomione i **zakończyły się powodzeniem**.
 
 ## 1. Cel i zakres
 
@@ -100,18 +100,18 @@ Istniejący NetworkNode / event loop
 |---|---|
 | `crates/ipfs-network/Cargo.toml` | Feature `kad` i zależności potrzebne do klucza providera. |
 | `src/consts.rs` | Stałe protokołu LAN DHT i timeoutu zapytania; zachowany dotychczasowy domyślny bootstrap i tożsamość. |
-| `src/dht.rs` | `DhtMode`, `KademliaBehaviour`, `build_kademlia`, `provider_key`. Bez testów w tym pliku. |
+| `src/dht.rs` | `DhtMode`, `KademliaBehaviour`, `build_kademlia`, `provider_key`. Bez testów w tym pliku (testy w `tests/dht-unit-test.rs`). |
 | `src/behaviour.rs` | Pole `kad` oraz `NetworkEvent::Kad` obok Identify i Ping. |
 | `src/models.rs` | `dht_mode`, stan zapytań providerów, `NetworkCommand`. |
 | `src/config.rs` | Domyślny `DhtMode::Client`; konfiguracja biblioteki pozostaje bez bootstrapu dopóki CLI go nie wskaże. |
 | `src/node.rs` | Integracja Kademlia z istniejącym Swarm, routing, Identify, bootstrap DHT, komendy, wyniki zapytań. |
 | `src/lib.rs` | Eksport modułu DHT i typów potrzebnych CLI. |
+| `crates/ipfs-network/Cargo.toml` (testy) | Rejestracja targetu `[[test]] dht-unit-test`. |
 | `crates/ipfs-network/tests/dht-unit-test.rs` | Testy trybów, protokołu, konstrukcji Kademlia i klucza providera. |
-| `apps/ehr-cli/src/main.rs` | Ustalona składnia startu, `--dht-server`, interaktywne komendy DHT. |
-| `apps/ehr-cli/src/node_start_unit_tests.rs` | Testy parsowania CLI; z `main.rs` włączane przez `#[cfg(test)]`. |
-| `test-runner/tests/interoperability/dht_interop.rs` | Test Rust uruchamiający skrypt interoperacyjności Kubo (`#[ignore]`). |
-| `scripts/testing/m5-three-rust-nodes.sh` | Scenariusz trzech procesów Rust na jednym komputerze. |
-| `scripts/testing/kubo-dht-interop.sh` | Scenariusze Rust ↔ Kubo i Rust ↔ Rust przez Kubo. |
+| `apps/ehr-cli/src/main.rs` | Ustalona składnia startu, `--dht-server`, interaktywne komendy DHT (wątek stdin → `mpsc` → `NetworkNode`). |
+| `test-runner/Cargo.toml` | Nowy target `[[test]] interop-dht`. |
+| `test-runner/tests/interoperability/dht_interop.rs` | Test Rust uruchamiający skrypt interoperacyjności z Kubo. |
+| `scripts/testing/test-kubo-dht-interop.sh` | Scenariusze A/B/C: Rust → Kubo, Kubo → Rust, Rust → Rust przez sieć DHT z Kubo. |
 | `test-runner/tests/integration/network_integration.rs` | Korekta wcześniejszego przypadku, który traktował `node start` bez argumentów jako błąd. |
 
 Pliki `identity.rs`, `error.rs`, `utils.rs` oraz kod Blockstore i Bitswap nie są częścią zmian M5.
@@ -202,9 +202,14 @@ Przełączanie odbywa się **przy uruchomieniu**. Aktualna wersja M5 nie ma Auto
 
 ```text
 DEFAULT_IDENTITY_PATH = ./tmp/node-key.pb
-DEFAULT_LISTEN_MULTIADDR = /ip4/127.0.0.1/tcp/0
+DEFAULT_LISTEN_MULTIADDR = /ip4/0.0.0.0/tcp/4101
 DEFAULT_BOOTSTRAP_MULTIADDR = /ip4/192.168.1.125/tcp/4101/p2p/<ZAPISANY_PEER_ID>
+LISTEN_PORT_ENV = EHR_LISTEN_PORT
 ```
+
+Adres nasłuchu **nie jest parametrem CLI**. Każde `node start` nasłuchuje na `/ip4/0.0.0.0/tcp/4101`, czyli na wszystkich interfejsach IPv4 (loopback, LAN, mostki Dockera), więc węzeł jest osiągalny z sieci LAN bez podawania własnego IP. Port `4101` jest taki sam jak w `DEFAULT_BOOTSTRAP_MULTIADDR`, dzięki czemu węzeł uruchomiony z `--dht-server` może pełnić rolę bootstrapu dla innych.
+
+Zmienna środowiskowa `EHR_LISTEN_PORT` nadpisuje **wyłącznie port TCP** (adres pozostaje `0.0.0.0`). Służy do uruchamiania kilku węzłów na **jednym komputerze** (testy integracyjne, skrypty Kubo); przy jednym węźle na komputer nie należy jej ustawiać. Przykład: `EHR_LISTEN_PORT=4102 ehr-cli node start ""`.
 
 Wartości pochodzą z `crates/ipfs-network/src/consts.rs`. Domyślny bootstrap zawiera **konkretny PeerId**: węzeł pod wskazanym IP musi używać odpowiadającego mu klucza. Jeżeli testowy serwer używa innego PeerId, na pozostałych urządzeniach należy wskazać jego rzeczywisty adres `--bootstrap`.
 
@@ -214,16 +219,24 @@ Nie dodajemy flagi `--identity-path`. Plik klucza jest odczytywany lub tworzony 
 
 | Polecenie | Zachowanie |
 |---|---|
-| `node start` | Domyślny nasłuch, domyślny bootstrap, DHT Client. |
-| `node start --dht-server` | Domyślny nasłuch, domyślny bootstrap, DHT Server. |
-| `node start "" --dht-server` | Domyślny nasłuch, brak bootstrapu, DHT Server. |
-| `node start <listen> "" --dht-server` | Wskazany nasłuch, brak bootstrapu; pierwszy Server w sieci. |
-| `node start <listen>` | **Zgodność z M4:** tylko nasłuch, bez bootstrapu. |
-| `node start <bootstrap/p2p/PeerId>` | Domyślny nasłuch, wskazany bootstrap. |
-| `node start <listen> --bootstrap <bootstrap/p2p/PeerId>` | Wskazany nasłuch i wskazany bootstrap. |
-| `node start <listen> --default-bootstrap` | Wskazany nasłuch i zahardkodowany bootstrap. |
+We wszystkich wariantach węzeł nasłuchuje na `/ip4/0.0.0.0/tcp/4101` (§7.1); argumenty wybierają wyłącznie bootstrap.
 
-Flaga `--dht-server` może być dodana do odpowiedniego polecenia. Nie ma flag WAN, LAN, AutoNAT ani osobnej flagi tożsamości. Na trzech urządzeniach testowych jawnie ustawiamy adres LAN do nasłuchu.
+| Polecenie | Zachowanie |
+|---|---|
+| `node start` | Domyślny bootstrap (`DEFAULT_BOOTSTRAP_MULTIADDR`), DHT Client. |
+| `node start --dht-server` | Domyślny bootstrap, DHT Server. |
+| `node start ""` | Brak bootstrapu (tylko nasłuch), DHT Client. |
+| `node start "" --dht-server` | Brak bootstrapu, DHT Server; pierwszy Server w sieci. |
+| `node start --bootstrap <multiaddr/p2p/PeerId>` | Wskazany bootstrap, DHT Client. |
+| `node start --bootstrap <multiaddr/p2p/PeerId> --dht-server` | Wskazany bootstrap, DHT Server. |
+
+Format własnego adresu bootstrap: `/ip4/<IPv4>/tcp/<port>/p2p/<PeerId>`, np. `/ip4/192.168.1.125/tcp/4101/p2p/12D3KooW...`. PeerId węzła wypisuje `ehr-cli node identity`. Adres bez końcowego `/p2p/<PeerId>` jest odrzucany.
+
+Usunięto wcześniejsze warianty: pozycyjny adres nasłuchu (`node start <listen> ...`), pozycyjny adres bootstrap bez flagi (`node start <bootstrap/p2p/PeerId>`) oraz `--default-bootstrap` (równoważny `node start` bez argumentów). Tryb „tylko nasłuch" z M4 odpowiada teraz `node start ""`. Jeśli domyślny bootstrap wskazuje na własny PeerId węzła, dial do samego siebie jest pomijany.
+
+Flaga `--dht-server` może być dodana do każdego wariantu. Nie ma flag WAN, LAN, AutoNAT ani osobnej flagi tożsamości.
+
+Wywołanie `ehr-cli` bez argumentów wypisuje jedynie podpowiedź `use --help flag to see available commands`; pełną listę poleceń pokazuje `ehr-cli --help` (także `-h`, `help`).
 
 ### 7.3. Polecenia w działającym procesie `node start`
 
@@ -243,7 +256,7 @@ Komendy są przekazywane z terminala przez kanał `tokio::sync::mpsc` do istniej
 1. Zainstaluj Rust/Cargo na komputerach A, B i C, skopiuj tę samą wersję kodu i wykonaj `cargo build -p ehr-cli`.
 2. Połącz urządzenia z **tą samą siecią LAN**. Wyłącz izolację klientów Wi-Fi (AP/client isolation), jeżeli router ją stosuje.
 3. Ustal adresy IPv4. Poniżej używamy **przykładów**: A=`192.168.1.125`, B=`192.168.1.126`, C=`192.168.1.127`. Podstaw rzeczywiste adresy swoich urządzeń.
-4. Dopuść połączenia TCP na porcie `4101` pomiędzy urządzeniami (firewall). Ten sam port może być używany na trzech różnych komputerach.
+4. Dopuść połączenia TCP na porcie `4101` pomiędzy urządzeniami (firewall). Każdy węzeł nasłuchuje na `0.0.0.0:4101`, więc ten sam port jest używany na trzech różnych komputerach, a własnego IP nie podaje się w poleceniu.
 5. Każdy komputer uruchamia proces z katalogu głównego **własnej** kopii repozytorium. W ten sposób `./tmp/node-key.pb` pozostaje niezależne.
 6. Nie używaj rzeczywistych danych pacjentów. Utwórz fikcyjny plik testowy.
 
@@ -261,18 +274,21 @@ Zapisz `CID` z wyniku `[BLOCKSTORE] PUT CID=...`.
 Uruchom serwer **A**:
 
 ```bash
-cargo run -p ehr-cli -- node start /ip4/192.168.1.125/tcp/4101 "" --dht-server
+cargo run -p ehr-cli -- node start "" --dht-server
 ```
 
 Zapisz `LOCAL_PEER_ID` jako `PEER_A`. Oczekiwane elementy logu:
 
 ```text
-[NETWORK] LISTEN /ip4/192.168.1.125/tcp/4101
+[NETWORK] LISTEN /ip4/0.0.0.0/tcp/4101
 [NETWORK] LISTEN ONLY (no bootstrap)
 [DHT] LAN Server
 LOCAL_PEER_ID <PEER_A>
+LISTEN /ip4/127.0.0.1/tcp/4101/p2p/<PEER_A>
 LISTEN /ip4/192.168.1.125/tcp/4101/p2p/<PEER_A>
 ```
+
+Linii `LISTEN` jest tyle, ile interfejsów IPv4 ma komputer; do bootstrapu pozostałych węzłów używa się adresu LAN (`192.168.1.125`).
 
 **Zrzut S1:** A działa jako Server, ma stabilny PeerId i nie korzysta z bootstrapu.
 
@@ -281,7 +297,7 @@ LISTEN /ip4/192.168.1.125/tcp/4101/p2p/<PEER_A>
 Na komputerze **B**:
 
 ```bash
-cargo run -p ehr-cli -- node start /ip4/192.168.1.126/tcp/4101 \
+cargo run -p ehr-cli -- node start \
   --bootstrap /ip4/192.168.1.125/tcp/4101/p2p/PEER_A \
   --dht-server
 ```
@@ -306,7 +322,7 @@ Na **A** może pojawić się `CONNECTED <PEER_B>` i `DHT_ROUTING_UPDATED <PEER_B
 Na komputerze **C**:
 
 ```bash
-cargo run -p ehr-cli -- node start /ip4/192.168.1.127/tcp/4101 \
+cargo run -p ehr-cli -- node start \
   --bootstrap /ip4/192.168.1.126/tcp/4101/p2p/PEER_B
 ```
 
@@ -375,7 +391,7 @@ Oczekiwane `HAS false` pokazuje, że `find` nie pobrało bloku z A. To **prawid�
 Na A zakończ proces poleceniem `quit`, pozostawiając B uruchomiony. Obserwuj `DISCONNECTED <PEER_A>` i zaplanowany retry na B. Uruchom A ponownie **z tego samego katalogu** i z tą samą domyślną tożsamością:
 
 ```bash
-cargo run -p ehr-cli -- node start /ip4/192.168.1.125/tcp/4101 "" --dht-server
+cargo run -p ehr-cli -- node start "" --dht-server
 ```
 
 `LOCAL_PEER_ID` A powinien być taki sam jak przed restartem. Na B oczekuj ponownego `CONNECTED <PEER_A>`. Po restarcie A **ponów `provide <CID>`**: używany `MemoryStore` nie zachowuje lokalnie ogłaszanych CID po restarcie.
@@ -390,27 +406,35 @@ cargo run -p ehr-cli -- node start /ip4/192.168.1.125/tcp/4101 "" --dht-server
 cargo fmt --all
 cargo check --workspace --all-targets
 cargo test -p ipfs-network --test dht-unit-test
-cargo test -p ehr-cli --bin ehr-cli
 ```
 
-Oddzielny `dht-unit-test.rs` sprawdza protokół LAN, ustawienia Client/Server, budowę Kademlia i kodowanie klucza providera. `node_start_unit_tests.rs` sprawdza domyślny, pusty i niestandardowy bootstrap, zgodność starej składni oraz domyślny Client. Moduł testowy dołączony przez `#[cfg(test)]` w `main.rs` **nie jest wykonywany w normalnym uruchomieniu**.
+`dht-unit-test.rs` sprawdza:
 
-### 9.2. Trzy procesy Rust na jednym komputerze
+| Test | Co weryfikuje |
+|---|---|
+| `dht_uses_lan_protocol` | Identyfikator `/ipfs/lan/kad/1.0.0` i dodatni timeout zapytań |
+| `client_is_default_and_server_can_be_selected` | `NetworkConfig::default()` → Client; mapowanie na `kad::Mode` |
+| `kademlia_can_be_built_in_both_modes` | Budowa `kad::Behaviour` w trybie Client i Server |
+| `provider_key_is_multihash_without_cid_prefix` | Klucz = 34 B: `0x12 0x20` + digest SHA-256 |
+| `different_cid_codecs_share_provider_key_if_multihash_matches` | `raw` i `dag-pb` z tym samym multihashem → ten sam klucz |
+| `invalid_multihash_length_is_rejected` | Odrzucenie niespójnego `size` multihasha |
 
-```bash
-bash scripts/testing/m5-three-rust-nodes.sh
-```
+Parsowanie opcji `node start` jest weryfikowane procesowo w `integration-network` (§9.4), bez osobnego modułu testów w `ehr-cli`.
 
-Skrypt tworzy osobne katalogi robocze, osobne klucze i Blockstore, uruchamia trzy węzły, sprawdza ich połączenia oraz odnalezienie dostawcy. To test rzeczywistej wymiany komunikatów sieciowych, a nie duplikat testu jednostkowego parsera.
+### 9.2. Kilka procesów Rust
+
+Kilka węzłów na jednym komputerze wymaga różnych portów: testy i skrypty ustawiają `EHR_LISTEN_PORT` osobno dla każdego procesu (§7.1). Scenariusz wielu węzłów Rust na jednym komputerze realizuje skrypt z §9.3 (scenariusz **C**: dwa niezależne procesy Rust z osobnymi katalogami roboczymi, kluczami i Blockstore oraz węzeł Kubo jako DHT Server). Scenariusz trzech fizycznych komputerów opisano w §8.
 
 ### 9.3. Interoperacyjność Rust ↔ Kubo
 
 ```bash
-bash scripts/testing/kubo-dht-interop.sh
+bash scripts/testing/test-kubo-dht-interop.sh
 
 # Alternatywnie test Rust uruchamiający ten sam skrypt:
-cargo test -p test-runner --test interop-dht -- --ignored --nocapture --test-threads=1
+cargo test -p test-runner --test interop-dht -- --nocapture --test-threads=1
 ```
+
+Zmienne środowiskowe skryptu: `M5_TEST_IP` (domyślnie `127.0.0.1`), `M5_KUBO_PORT` (`4201`), `M5_RUST_PORT` (`4301`). Węzły Rust startują z `--dht-server` i bootstrapem do Kubo; skrypt czeka na `CONNECTED <KUBO_ID>` i `DHT_BOOTSTRAP_STARTED`, a komendy podaje przez FIFO na stdin.
 
 Scenariusze:
 
@@ -418,7 +442,7 @@ Scenariusze:
 - **B:** Kubo ogłasza blok, Rust odnajduje `PeerId` Kubo.
 - **C:** Drugi Rust odnajduje pierwszego Rusta przez sieć DHT z Kubo.
 
-Test Rust znajduje się w `test-runner/tests/interoperability/dht_interop.rs` i ma `#[ignore]`, aby zwykłe `cargo test --workspace` nie uruchamiało zewnętrznego demona. Skrypt używa tymczasowego repozytorium Kubo, a dla testów `127.0.0.1` ustawia `Routing.LoopbackAddressesOnLanDHT=true`. Konfiguracja `Routing.Type=custom` i `Routing.Routers` jest oznaczona w Kubo jako **eksperymentalna** i może wymagać dostosowania do konkretnej wersji Kubo.
+Test Rust znajduje się w `test-runner/tests/interoperability/dht_interop.rs` i wymaga `ipfs` (Kubo) w `PATH`. Skrypt używa tymczasowego repozytorium Kubo, a dla testów `127.0.0.1` ustawia `Routing.LoopbackAddressesOnLanDHT=true`. Konfiguracja `Routing.Type=custom` i `Routing.Routers` jest oznaczona w Kubo jako **eksperymentalna** i może wymagać dostosowania do konkretnej wersji Kubo.
 
 ### 9.4. Regresja Etapu 4
 
@@ -430,19 +454,19 @@ Zmiana `node start` bez argumentów wymagała aktualizacji starszego testu, któ
 
 ## 10. Definition of Done i status
 
-| Kryterium | Stan na dzień przygotowania paczki |
+| Kryterium | Stan (12.11.2026) |
 |---|---|
-| Kademlia w istniejącym `NetworkBehaviour` | Kod przygotowany |
-| Bootstrap i zdarzenia tablic routingu | Kod przygotowany |
-| Client domyślny / Server flagą | Kod przygotowany |
-| Provider discovery po multihash | Kod przygotowany |
-| Testy jednostkowe DHT i CLI | Testy napisane, **wyniki niezweryfikowane** |
-| Test trzech węzłów Rust | Skrypt napisany, **wynik niezweryfikowany** |
-| Test interoperacyjności z Kubo | Skrypt i wrapper Rust napisane, **wynik niezweryfikowany** |
-| Regresja M4 | Do wykonania |
-| Rzeczywiste pobieranie bloków od zdalnego peera | Poza M5, planowane w M6/M7 |
+| Kademlia w istniejącym `NetworkBehaviour` | **Zrobione** |
+| Bootstrap i zdarzenia tablic routingu | **Zrobione** |
+| Client domyślny / Server flagą | **Zrobione** |
+| Provider discovery po multihash | **Zrobione** |
+| Testy jednostkowe DHT (`dht-unit-test`) | **PASS** |
+| Wiele węzłów Rust (scenariusz C) | **PASS** |
+| Interoperacyjność z Kubo (`interop-dht`, scenariusze A, B, C) | **PASS** |
+| Regresja M4 (`integration-network`, `interop-network`) | **PASS** |
+| Rzeczywiste pobieranie bloków od zdalnego peera | Poza M5, planowane w M6/M7 (Bitswap) |
 
-Kompilacja, testy i interoperacyjność muszą zostać uruchomione lokalnie. Status `PASS` można wpisać dopiero po zapisaniu rzeczywistych wyników poleceń.
+Issues #6 i #7 zostały zamknięte. Przy cytowaniu wyników w pracy należy podać hash commita (`git rev-parse HEAD`) i wersję Kubo (`ipfs version`).
 
 ## 11. Ograniczenia i ryzyka
 
@@ -468,7 +492,7 @@ Kompilacja, testy i interoperacyjność muszą zostać uruchomione lokalnie. Sta
 | **S5** | C: `DHT_PROVIDER` i osobno `[BLOCKSTORE] HAS false` | DHT znajduje dostawcę, ale nie pobiera bloku |
 | **S6** | B: reconnect; A: identyczny `LOCAL_PEER_ID` po restarcie | Stabilna tożsamość i reconnect z M4 |
 | **S7** | Konsola testów jednostkowych zakończonych `ok` | Poprawność lokalnej logiki |
-| **S8** | Wyjście `kubo-dht-interop.sh` zakończone `PASS` | Interoperacyjność z Kubo, jeśli test rzeczywiście przejdzie |
+| **S8** | Wyjście `test-kubo-dht-interop.sh` zakończone `PASS: Rust <-> Kubo LAN DHT provider discovery` | Interoperacyjność z Kubo |
 
 W podpisach zdjęć podaj adresy prywatne i skrócone `PeerId`; nie prezentuj żadnych danych pacjenta.
 
