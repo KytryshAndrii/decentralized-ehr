@@ -21,3 +21,8 @@ pub const PING_INTERVAL_SECS: u64 = 15;
 pub const IDLE_TIMEOUT_SECS: u64 = 90;
 pub const LAN_DHT_PROTOCOL: &str = "/ipfs/lan/kad/1.0.0";
 pub const DHT_QUERY_TIMEOUT_SECS: u64 = 30;
+
+pub const REPROVIDE_INTERVAL_SECS: u64 = 12 * 60 * 60;
+pub const BOOTSTRAP_LIST_SEPARATOR: char = ',';
+pub const PROVIDER_RECORD_TTL_SECS: u64 = 48 * 60 * 60;
+pub const PROVIDER_PERSIST_REFRESH_SECS: u64 = 60 * 60;

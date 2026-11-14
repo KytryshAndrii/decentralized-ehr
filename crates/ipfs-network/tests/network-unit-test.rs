@@ -85,6 +85,28 @@ fn bootstrap_malformed_address_is_rejected() {
     assert!(BootstrapPeer::parse("not-a-multiaddr").is_err());
 }
 #[test]
+fn bootstrap_list_parses_several_peers_and_drops_duplicates() {
+    let (first, second) = (id(), id());
+    let input = format!(
+        "/ip4/127.0.0.1/tcp/4101/p2p/{first}, /ip4/127.0.0.1/tcp/4102/p2p/{second},/ip4/10.0.0.1/tcp/4101/p2p/{first}"
+    );
+    let parsed = BootstrapPeer::parse_list(&input).unwrap();
+    assert_eq!(parsed.len(), 2);
+    assert_eq!(parsed[0].peer_id, first);
+    assert_eq!(parsed[0].address.to_string(), "/ip4/127.0.0.1/tcp/4101");
+    assert_eq!(parsed[1].peer_id, second);
+}
+#[test]
+fn bootstrap_list_with_invalid_item_is_rejected() {
+    let input = format!("/ip4/127.0.0.1/tcp/4101/p2p/{},not-a-multiaddr", id());
+    assert!(BootstrapPeer::parse_list(&input).is_err());
+    assert!(BootstrapPeer::parse_list("").is_err());
+}
+#[test]
+fn default_config_has_no_state_directory() {
+    assert!(NetworkConfig::default().state_directory.is_none());
+}
+#[test]
 fn default_config_listens_on_all_interfaces_and_backoff() {
     let cfg = NetworkConfig::default();
     assert_eq!(cfg.listen.to_string(), "/ip4/0.0.0.0/tcp/4101");

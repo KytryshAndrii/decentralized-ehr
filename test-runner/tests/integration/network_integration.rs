@@ -59,6 +59,7 @@ fn free_port() -> u16 {
 struct NodeProcess {
     child: Child,
     lines: Receiver<String>,
+    stdin: Option<std::process::ChildStdin>,
 }
 impl NodeProcess {
     fn start(cwd: &Path, port: u16, args: &[String]) -> Self {
@@ -66,10 +67,12 @@ impl NodeProcess {
             .current_dir(cwd)
             .env("EHR_LISTEN_PORT", port.to_string())
             .args(args)
+            .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()
             .expect("launch ehr-cli");
+        let stdin = child.stdin.take();
         let (tx, rx) = mpsc::channel();
         let stdout = child.stdout.take().unwrap();
         thread::spawn(move || {
@@ -84,7 +87,17 @@ impl NodeProcess {
                 eprintln!("[node-err] {line}");
             }
         });
-        Self { child, lines: rx }
+        Self {
+            child,
+            lines: rx,
+            stdin,
+        }
+    }
+    fn send(&mut self, command: &str) {
+        use std::io::Write;
+        let stdin = self.stdin.as_mut().expect("stdin is piped");
+        writeln!(stdin, "{command}").expect("write node command");
+        stdin.flush().expect("flush node command");
     }
     fn until_all(&self, patterns: &[&str], secs: u64) {
         let deadline = Instant::now() + Duration::from_secs(secs);
@@ -188,6 +201,8 @@ fn invalid_cli_arguments_fail() {
             "--bootstrap",
             "/ip4/127.0.0.1/tcp/4101/p2p/INVALID",
         ],
+        vec!["node", "start", "--bootstrap-list", "not-a-multiaddr"],
+        vec!["node", "start", "--bootstrap-list"],
         vec!["unknown"],
     ] {
         assert!(
@@ -247,4 +262,133 @@ fn rust_reconnects_after_peer_restart() {
     host_a_again.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
     host_b.until("CONNECTED", 45);
     assert_eq!(identity(a.path()), a_id);
+}
+
+/// Po restarcie: węzeł bez bootstrapu odnajduje sieć z zapisanych peerów,
+/// sam wznawia providing, a klient z listą bootstrap łączy się z oboma serwerami.
+#[test]
+fn known_peers_and_providing_survive_restart() {
+    let a = Workspace::new();
+    let b = Workspace::new();
+    let c = Workspace::new();
+    let (a_id, b_id) = (identity(a.path()), identity(b.path()));
+    let (port_a, port_b) = (free_port(), free_port());
+    let a_addr = format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}");
+    let b_addr = format!("/ip4/127.0.0.1/tcp/{port_b}/p2p/{b_id}");
+    let server = |bootstrap: Option<String>| {
+        let mut args = start_args(bootstrap);
+        args.push("--dht-server".into());
+        args
+    };
+
+    let file = b.path().join("record.txt");
+    std::fs::write(&file, b"synthetic record for reprovide test").unwrap();
+    let output = Command::new(cli())
+        .current_dir(b.path())
+        .args(["put", file.to_str().unwrap()])
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    let cid = stdout
+        .lines()
+        .find_map(|line| line.strip_prefix("[BLOCKSTORE] PUT CID="))
+        .expect("CID in put output")
+        .trim()
+        .to_owned();
+
+    {
+        let host_a = NodeProcess::start(a.path(), port_a, &server(None));
+        host_a.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
+        let mut host_b = NodeProcess::start(b.path(), port_b, &server(Some(a_addr.clone())));
+        host_b.until(&format!("KNOWN_PEER_SAVED {a_id}"), 30);
+        host_a.until(&format!("KNOWN_PEER_SAVED {b_id}"), 30);
+        host_b.send(&format!("provide {cid}"));
+        host_b.until("DHT_PROVIDING_STARTED", 30);
+    }
+
+    let host_a = NodeProcess::start(a.path(), port_a, &server(None));
+    host_a.until(&format!("KNOWN_PEER_RESTORED {b_id}"), 10);
+    // B startuje BEZ bootstrapu: zna A wyłącznie z magazynu stanu.
+    let host_b = NodeProcess::start(b.path(), port_b, &server(None));
+    host_b.until_all(
+        &[
+            &format!("KNOWN_PEER_RESTORED {a_id}"),
+            "DHT_REPROVIDE count=1",
+            &format!("CONNECTED {a_id}"),
+        ],
+        30,
+    );
+    host_b.until("DHT_PROVIDING_STARTED", 30);
+
+    let mut host_c = NodeProcess::start(
+        c.path(),
+        free_port(),
+        &[
+            "node".into(),
+            "start".into(),
+            "--bootstrap-list".into(),
+            format!("{a_addr},{b_addr}"),
+        ],
+    );
+    host_c.until_all(
+        &[
+            &format!("CONNECTED {a_id}"),
+            &format!("CONNECTED {b_id}"),
+            "DHT_BOOTSTRAP_STARTED",
+        ],
+        30,
+    );
+    host_c.send(&format!("find {cid}"));
+    host_c.until(&format!("DHT_PROVIDER {b_id}"), 30);
+}
+
+/// Serwer DHT pamięta po restarcie rekord „peer B ma blok X”,
+/// nawet gdy B jest już wyłączony i nie może ogłosić go ponownie.
+#[test]
+fn remote_provider_records_survive_server_restart() {
+    let a = Workspace::new();
+    let b = Workspace::new();
+    let c = Workspace::new();
+    let (a_id, b_id) = (identity(a.path()), identity(b.path()));
+    let (port_a, port_b) = (free_port(), free_port());
+    let a_addr = format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}");
+    let server = |bootstrap: Option<String>| {
+        let mut args = start_args(bootstrap);
+        args.push("--dht-server".into());
+        args
+    };
+
+    let file = b.path().join("record.txt");
+    std::fs::write(&file, b"synthetic record for provider persistence test").unwrap();
+    let output = Command::new(cli())
+        .current_dir(b.path())
+        .args(["put", file.to_str().unwrap()])
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    let cid = stdout
+        .lines()
+        .find_map(|line| line.strip_prefix("[BLOCKSTORE] PUT CID="))
+        .expect("CID in put output")
+        .trim()
+        .to_owned();
+
+    {
+        let host_a = NodeProcess::start(a.path(), port_a, &server(None));
+        host_a.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
+        let mut host_b = NodeProcess::start(b.path(), port_b, &server(Some(a_addr.clone())));
+        host_b.until("DHT_BOOTSTRAP_PROGRESS", 30);
+        host_b.send(&format!("provide {cid}"));
+        host_a.until(&format!("DHT_PROVIDER_RECORD_SAVED {b_id}"), 30);
+    }
+
+    // Startuje tylko A; B pozostaje wyłączony.
+    let host_a = NodeProcess::start(a.path(), port_a, &server(None));
+    host_a.until("DHT_PROVIDER_RECORDS_RESTORED count=1", 10);
+    let mut host_c = NodeProcess::start(c.path(), free_port(), &start_args(Some(a_addr)));
+    host_c.until("DHT_BOOTSTRAP_STARTED", 30);
+    host_c.send(&format!("find {cid}"));
+    host_c.until(&format!("DHT_PROVIDER {b_id}"), 30);
 }

@@ -1,7 +1,11 @@
-use crate::consts::MAX_BLOCK_BYTES;
+use crate::consts::{
+    MAX_BLOCK_BYTES, PEER_DHT_CLIENT_MARKER, PEER_DHT_SERVER_MARKER, PROVIDER_EXPIRES_FIELD,
+};
 use crate::error::StoreError;
+use crate::models::{KnownPeer, Namespace, RemoteProvider};
 use ipfs_cid::consts::{CID_V1, SHA2_256, SHA2_512};
 use ipfs_cid::models::{Cid, Multihash};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn validate_block_size(bytes: &[u8]) -> Result<(), StoreError> {
     if bytes.len() > MAX_BLOCK_BYTES {
@@ -35,16 +39,156 @@ pub fn validate_cid(cid: &Cid) -> Result<(), StoreError> {
     Ok(())
 }
 
-/// Prefiks stanowi naszą lokalną przestrzeń nazw LevelDB, a za nim idzie
-/// kompletny multihash
-pub fn get_multihash_key(multihash: &Multihash) -> Vec<u8> {
-    let mut key = b"/blocks/".to_vec();
+pub fn multihash_bytes(multihash: &Multihash) -> Vec<u8> {
+    let mut bytes = Vec::with_capacity(multihash.digest.len() + 4);
     let mut buf = unsigned_varint::encode::u64_buffer();
-    key.extend_from_slice(unsigned_varint::encode::u64(multihash.code, &mut buf));
-    key.extend_from_slice(unsigned_varint::encode::u64(
+    bytes.extend_from_slice(unsigned_varint::encode::u64(multihash.code, &mut buf));
+    bytes.extend_from_slice(unsigned_varint::encode::u64(
         multihash.digest.len() as u64,
         &mut buf,
     ));
-    key.extend_from_slice(&multihash.digest);
-    key
+    bytes.extend_from_slice(&multihash.digest);
+    bytes
+}
+
+pub fn get_multihash_key(multihash: &Multihash) -> Vec<u8> {
+    get_namespaced_multihash_key(Namespace::Blocks, multihash)
+}
+
+pub fn get_namespaced_multihash_key(namespace: Namespace, multihash: &Multihash) -> Vec<u8> {
+    namespace.key(&multihash_bytes(multihash))
+}
+
+/// Klucz wpisu peera: przestrzeń nazw `Peers` + tekstowy PeerId.
+pub fn get_peer_key(peer_id: &str) -> Vec<u8> {
+    Namespace::Peers.key(peer_id.as_bytes())
+}
+
+/// PeerId i adresy trafiają do formatu liniowego, więc nie mogą zawierać białych znaków.
+fn is_token(value: &str) -> bool {
+    !value.is_empty() && !value.contains(char::is_whitespace)
+}
+
+pub fn validate_known_peer(peer: &KnownPeer) -> Result<(), StoreError> {
+    if !is_token(&peer.peer_id) {
+        return Err(StoreError::InvalidPeer("pusty lub błędny PeerId".into()));
+    }
+    if let Some(address) = peer
+        .addresses
+        .iter()
+        .find(|address| !is_token(address.as_str()))
+    {
+        return Err(StoreError::InvalidPeer(format!(
+            "błędny adres: {address:?}"
+        )));
+    }
+    Ok(())
+}
+
+pub fn encode_known_peer(peer: &KnownPeer) -> Vec<u8> {
+    let marker = if peer.dht_server {
+        PEER_DHT_SERVER_MARKER
+    } else {
+        PEER_DHT_CLIENT_MARKER
+    };
+    let mut lines = vec![marker];
+    lines.extend(peer.addresses.iter().map(String::as_str));
+    lines.join("\n").into_bytes()
+}
+
+pub fn decode_known_peer(peer_id: &str, value: &[u8]) -> Result<KnownPeer, StoreError> {
+    let corrupt = || StoreError::CorruptRecord(format!("peer {peer_id}"));
+    let text = std::str::from_utf8(value).map_err(|_| corrupt())?;
+    let mut lines = text.lines();
+    let dht_server = match lines.next() {
+        Some(PEER_DHT_SERVER_MARKER) => true,
+        Some(PEER_DHT_CLIENT_MARKER) => false,
+        _ => return Err(corrupt()),
+    };
+    Ok(KnownPeer {
+        peer_id: peer_id.to_string(),
+        addresses: lines.map(str::to_string).collect(),
+        dht_server,
+    })
+}
+
+/// Bieżący czas jako sekundy od epoki Unix. Epoka Unix jest zdefiniowana w UTC,
+/// więc wynik nie zależy od strefy czasowej urządzenia.
+pub fn utc_now_secs() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|elapsed| elapsed.as_secs())
+        .unwrap_or_default()
+}
+
+/// Długość kanonicznego multihash na początku `bytes` (varint code + varint len + digest).
+pub fn multihash_prefix_len(bytes: &[u8]) -> Option<usize> {
+    let (_, rest) = unsigned_varint::decode::u64(bytes).ok()?;
+    let (digest_len, rest) = unsigned_varint::decode::u64(rest).ok()?;
+    let digest_len = usize::try_from(digest_len).ok()?;
+    if digest_len == 0 || rest.len() < digest_len {
+        return None;
+    }
+    Some(bytes.len() - rest.len() + digest_len)
+}
+
+pub fn validate_remote_provider(provider: &RemoteProvider) -> Result<(), StoreError> {
+    if multihash_prefix_len(&provider.multihash) != Some(provider.multihash.len()) {
+        return Err(StoreError::InvalidProvider("błędny multihash".into()));
+    }
+    if !is_token(&provider.peer_id) {
+        return Err(StoreError::InvalidProvider(
+            "pusty lub błędny PeerId".into(),
+        ));
+    }
+    if let Some(address) = provider
+        .addresses
+        .iter()
+        .find(|address| !is_token(address.as_str()))
+    {
+        return Err(StoreError::InvalidProvider(format!(
+            "błędny adres: {address:?}"
+        )));
+    }
+    Ok(())
+}
+
+/// Klucz rekordu: przestrzeń `RemoteProviders` + multihash + tekstowy PeerId.
+/// Multihash sam określa swoją długość, więc klucz da się jednoznacznie rozdzielić.
+pub fn get_remote_provider_key(multihash: &[u8], peer_id: &str) -> Vec<u8> {
+    let mut id = multihash.to_vec();
+    id.extend_from_slice(peer_id.as_bytes());
+    Namespace::RemoteProviders.key(&id)
+}
+
+pub fn encode_remote_provider(provider: &RemoteProvider) -> Vec<u8> {
+    let mut lines = vec![format!(
+        "{PROVIDER_EXPIRES_FIELD}{}",
+        provider.expires_at_utc
+    )];
+    lines.extend(provider.addresses.iter().cloned());
+    lines.join("\n").into_bytes()
+}
+
+pub fn decode_remote_provider(key: &[u8], value: &[u8]) -> Result<RemoteProvider, StoreError> {
+    let corrupt = || StoreError::CorruptRecord("rekord providera".into());
+    let id = key
+        .strip_prefix(Namespace::RemoteProviders.prefix())
+        .ok_or_else(corrupt)?;
+    let multihash_len = multihash_prefix_len(id).ok_or_else(corrupt)?;
+    let (multihash, peer_id) = id.split_at(multihash_len);
+    let peer_id = std::str::from_utf8(peer_id).map_err(|_| corrupt())?;
+    let text = std::str::from_utf8(value).map_err(|_| corrupt())?;
+    let mut lines = text.lines();
+    let expires_at_utc = lines
+        .next()
+        .and_then(|line| line.strip_prefix(PROVIDER_EXPIRES_FIELD))
+        .and_then(|secs| secs.parse().ok())
+        .ok_or_else(corrupt)?;
+    Ok(RemoteProvider {
+        multihash: multihash.to_vec(),
+        peer_id: peer_id.to_string(),
+        addresses: lines.map(str::to_string).collect(),
+        expires_at_utc,
+    })
 }

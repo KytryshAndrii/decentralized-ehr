@@ -394,7 +394,7 @@ Na A zakończ proces poleceniem `quit`, pozostawiając B uruchomiony. Obserwuj `
 cargo run -p ehr-cli -- node start "" --dht-server
 ```
 
-`LOCAL_PEER_ID` A powinien być taki sam jak przed restartem. Na B oczekuj ponownego `CONNECTED <PEER_A>`. Po restarcie A **ponów `provide <CID>`**: używany `MemoryStore` nie zachowuje lokalnie ogłaszanych CID po restarcie.
+`LOCAL_PEER_ID` A powinien być taki sam jak przed restartem. Na B oczekuj ponownego `CONNECTED <PEER_A>`. Po restarcie A sam wznawia ogłaszanie (`DHT_REPROVIDE count=N`), bo lista ogłaszanych CID jest zapisana w magazynie stanu (zob. sekcja „Trwały stan węzła”).
 
 **Zrzut S6:** B ponownie łączy się z A, PeerId A pozostaje niezmieniony. To weryfikuje kompatybilność M5 z reconnect z M4.
 
@@ -470,7 +470,7 @@ Issues #6 i #7 zostały zamknięte. Przy cytowaniu wyników w pracy należy poda
 
 ## 11. Ograniczenia i ryzyka
 
-1. **`MemoryStore`:** rekordy lokalne nie przeżywają restartu procesu. Obecna wersja nie wykonuje automatycznego `announce_all` po enumeracji Blockstore. Po restarcie ponownie wywołujemy `provide`.
+1. **`MemoryStore`:** rekordy Kademlii nadal żyją tylko w RAM. Węzeł odtwarza własne ogłoszenia z magazynu stanu i ponawia je co 12 godzin, więc serwer, który stracił rekordy po restarcie, odzyska je najpóźniej po tym czasie. Ponowne ogłoszenie następuje też zawsze po starcie węzła B. Ogłaszane są tylko CID podane w `provide`, a nie cała zawartość Blockstore.
 2. **DHT nie oznacza transferu:** wyszukanie `PeerId` nie gwarantuje posiadania bloku ani pobrania go. Bitswap dopiero M6/M7.
 3. **Brak mDNS:** bez bootstrapu pierwszy serwer sam nie skanuje urządzeń w LAN.
 4. **Adresy i firewall:** nasłuchiwanie na `127.0.0.1` nie wystarczy innym komputerom; wymagane są poprawne adresy LAN i otwarte porty.
@@ -480,6 +480,52 @@ Issues #6 i #7 zostały zamknięte. Przy cytowaniu wyników w pracy należy poda
 8. **Tryb Server:** określa obsługę żądań DHT, a nie to, czy TCP działa dwukierunkowo. Client również ma transport libp2p.
 9. **Kubo custom routing:** konfiguracja LAN w skrypcie jest przeznaczona do testów i opiera się na eksperymentalnych opcjach Kubo.
 10. **Pełna topologia:** sama obecność peera w `k-bucket` nie oznacza, że aplikacja ma już bezpośrednio otwarte połączenie TCP do każdego wpisu w tablicy.
+
+## 11a. Trwały stan węzła: znane peery, wznowienie providingu, lista bootstrap
+
+Stan: kod i testy uruchomione lokalnie 14.11.2026 (`network-unit-test` 15/15, `integration-network` 6/6, `interop-dht` i `interop-network` PASS). Zmiany nie są jeszcze w commicie.
+
+### Znane peery
+
+- Po każdym `IDENTIFY` węzeł zapisuje peera (PeerId, adresy nasłuchu bez `0.0.0.0`, informację o trybie DHT Server) w magazynie `ipfs-store`. Zapis następuje tylko przy zmianie danych. Log: `KNOWN_PEER_SAVED <PeerId> dht_server=<bool>`.
+- Po starcie węzeł wczytuje zapisane peery (`KNOWN_PEER_RESTORED`, `KNOWN_PEERS_RESTORED count=N`). Peery z trybem Server trafiają do tablicy routingu Kademlii. Do każdego peera spoza listy bootstrap wykonywana jest **jedna** próba połączenia, bez mechanizmu retry.
+- Skutek: węzeł uruchomiony bez bootstrapu (`node start ""`) wraca do sieci, jeśli działa choć jeden zapamiętany peer. Bootstrap przestaje być pojedynczym punktem wejścia.
+
+### Wznowienie providingu
+
+- `provide <CID>` zapisuje CID w przestrzeni `Provides`, a `stop <CID>` go usuwa.
+- Węzeł ogłasza zapisane CID ponownie w trzech momentach: zaraz po starcie (rekord lokalny), po pierwszym zakończonym bootstrapie DHT (rekordy trafiają do sieci) oraz okresowo co `REPROVIDE_INTERVAL_SECS = 12 * 60 * 60` s. Log: `DHT_REPROVIDE count=N`.
+- Krótki okres jest konieczny, bo serwery DHT trzymają rekordy w `MemoryStore` i tracą je po restarcie. Kubo ogłasza ponownie co 22 h, ale przechowuje rekordy trwale.
+
+### Rekordy obcych providerów („peer B ma blok X”)
+
+- Kademlia działa w trybie `StoreInserts::FilterBoth`: przychodzące `ADD_PROVIDER` nie trafia od razu do `MemoryStore`, tylko jako zdarzenie `InboundRequest::AddProvider` do `NetworkNode`.
+- Węzeł dodaje rekord do `MemoryStore` i zapisuje go w przestrzeni `RemoteProviders` razem z adresami providera i terminem ważności. Log: `DHT_PROVIDER_RECORD_SAVED <PeerId> expires_utc=<sekundy>`.
+- Termin ważności to czas otrzymania + TTL Kademlii (48 h), zapisany jako sekundy Unix w **UTC**. libp2p liczy termin na zegarze monotonicznym, który nie przetrwa restartu, dlatego na dysku jest czas UTC, a przy starcie jest on przeliczany z powrotem.
+- Każde ponowne ogłoszenie przesuwa termin. Zapis na dysk następuje dopiero, gdy termin przesunie się o co najmniej `PROVIDER_PERSIST_REFRESH_SECS = 3600` s, żeby reprovide nie powodował ciągłych zapisów.
+- Po starcie węzeł usuwa rekordy przeterminowane (`DHT_PROVIDER_RECORDS_EXPIRED count=N`) i wkłada ważne do `MemoryStore` (`DHT_PROVIDER_RECORDS_RESTORED count=N`). Serwer po restarcie od razu odpowiada na `find`, bez czekania na ponowne ogłoszenie.
+- **Brak synchronizacji zegarów między węzłami.** Serwer C nie otrzymuje od A terminu ważności: protokół Kademlii przekazuje tylko PeerId i adresy providera. Każdy serwer liczy TTL na własnym zegarze monotonicznym, więc różnica zegarów między maszynami nie wpływa na ważność rekordów. Znacznik UTC służy wyłącznie do odtworzenia pozostałego czasu życia po restarcie tego samego węzła. Ryzyko: jeśli zegar systemowy A zostanie przestawiony między zatrzymaniem a startem, pozostały czas jest błędny. W produkcji wymagany jest NTP.
+- Rekord znika, gdy provider nie ogłosi go ponownie przez 48 h.
+- Test `remote_provider_records_survive_server_restart`: B ogłasza CID serwerowi A, oba procesy są zatrzymywane, startuje **tylko A**. Klient C pyta A i dostaje `DHT_PROVIDER <PEER_B>`, mimo że B jest wyłączony.
+- Skutek uboczny trybu filtrowania: przychodzące zwykłe rekordy `PUT_VALUE` nie są zapisywane. Projekt ich nie używa.
+
+### Kilka adresów bootstrap
+
+```bash
+./ehr-cli node start --bootstrap-list /ip4/192.168.1.125/tcp/4101/p2p/<PEER_A>,/ip4/192.168.1.51/tcp/4101/p2p/<PEER_B>
+```
+
+Adresy rozdziela przecinek. `BootstrapPeer::parse_list` odrzuca całą listę przy pierwszym błędnym adresie i pomija powtórzony PeerId. Każdy peer z listy ma własny stan retry (backoff 2–30 s).
+
+### Test
+
+`known_peers_and_providing_survive_restart` (`test-runner`, `integration-network`): serwery A i B poznają się, B ogłasza CID, oba procesy są zatrzymywane. Po restarcie B startuje **bez bootstrapu**, łączy się z A z zapisanych peerów i sam wznawia providing. Klient C z `--bootstrap-list A,B` łączy się z oboma i dostaje `DHT_PROVIDER <PEER_B>`.
+
+### Ograniczenia
+
+- Adresy nieosiągalne (np. wewnętrzny adres WSL2) też są zapisywane; próba połączenia kończy się wtedy `DIAL_FAILED` i nie jest ponawiana.
+- Baza stanu jest otwierana na czas operacji. Kolizja z równoległym `ehr-cli put` daje `STATE_STORE_FAILED` i pominięcie jednego zapisu.
+- Nie ma limitu liczby peerów ani usuwania starych wpisów.
 
 ## 12. Zalecane zrzuty ekranu do pracy inżynierskiej
 

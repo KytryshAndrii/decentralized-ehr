@@ -25,6 +25,7 @@ pub fn build_kademlia(local_peer_id: PeerId, mode: DhtMode) -> KademliaBehaviour
     let protocol = StreamProtocol::new(LAN_DHT_PROTOCOL);
     let mut config = kad::Config::new(protocol);
     config.set_query_timeout(Duration::from_secs(DHT_QUERY_TIMEOUT_SECS));
+    config.set_record_filtering(kad::StoreInserts::FilterBoth);
     let store = kad::store::MemoryStore::new(local_peer_id);
     let mut kademlia = kad::Behaviour::with_config(local_peer_id, store, config);
     kademlia.set_mode(Some(mode.libp2p_mode()));

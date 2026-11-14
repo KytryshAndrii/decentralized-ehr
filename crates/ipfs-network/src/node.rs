@@ -70,6 +70,11 @@ impl NetworkNode {
             retries,
             dht_bootstrap_started: false,
             pending_provider_queries: HashMap::new(),
+            known_peers: HashMap::new(),
+            provided: HashMap::new(),
+            remote_providers: HashMap::new(),
+            next_reprovide: Instant::now(),
+            reprovided_after_bootstrap: false,
         })
     }
     pub fn local_peer_id(&self) -> PeerId {
@@ -241,6 +246,7 @@ impl NetworkNode {
                         }
                         self.start_dht_bootstrap();
                     }
+                    self.remember_peer(peer_id, &info.listen_addrs, supports_dht);
                 }
             }
             SwarmEvent::Behaviour(NetworkEvent::Ping(ping::Event { peer, result, .. })) => {
@@ -274,6 +280,12 @@ impl NetworkNode {
             } => {
                 println!("DHT_ROUTING_UPDATED {peer} new={is_new_peer}");
             }
+            kad::Event::InboundRequest {
+                request:
+                    kad::InboundRequest::AddProvider {
+                        record: Some(record),
+                    },
+            } => self.accept_remote_provider(record),
             kad::Event::OutboundQueryProgressed {
                 id, result, step, ..
             } => {
@@ -283,6 +295,11 @@ impl NetworkNode {
                             "DHT_BOOTSTRAP_PROGRESS {} remaining={}",
                             progress.peer, progress.num_remaining
                         );
+                        // Tablica routingu jest już wypełniona: rekordy trafią do sieci.
+                        if progress.num_remaining == 0 && !self.reprovided_after_bootstrap {
+                            self.reprovided_after_bootstrap = true;
+                            self.reprovide();
+                        }
                     }
                     kad::QueryResult::Bootstrap(Err(error)) => {
                         eprintln!("DHT_BOOTSTRAP_FAILED {error:?}");
@@ -323,7 +340,10 @@ impl NetworkNode {
     fn on_command(&mut self, command: NetworkCommand) {
         match command {
             NetworkCommand::StartProviding(cid) => match self.start_providing(&cid) {
-                Ok(_) => println!("DHT_PROVIDE_REQUESTED {}", cid.to_string_base32()),
+                Ok(_) => {
+                    println!("DHT_PROVIDE_REQUESTED {}", cid.to_string_base32());
+                    self.remember_provide(&cid);
+                }
                 Err(error) => eprintln!("DHT_PROVIDE_FAILED {error}"),
             },
             NetworkCommand::GetProviders(cid) => match self.get_providers(&cid) {
@@ -331,7 +351,10 @@ impl NetworkNode {
                 Err(error) => eprintln!("DHT_FIND_FAILED {error}"),
             },
             NetworkCommand::StopProviding(cid) => match self.stop_providing(&cid) {
-                Ok(()) => println!("DHT_STOPPED {}", cid.to_string_base32()),
+                Ok(()) => {
+                    println!("DHT_STOPPED {}", cid.to_string_base32());
+                    self.forget_provide(&cid);
+                }
                 Err(error) => eprintln!("DHT_STOP_FAILED {error}"),
             },
             NetworkCommand::Bootstrap => {
@@ -364,11 +387,15 @@ impl NetworkNode {
     ) -> Result<(), NetworkError> {
         self.listen()?;
         println!("LOCAL_PEER_ID {}", self.local_peer_id());
+        self.restore_state();
         let mut ticker = tokio::time::interval(self.config.maintenance_tick);
         ticker.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Skip);
         loop {
             tokio::select! {
-                _ = ticker.tick() => self.attempt_connections(),
+                _ = ticker.tick() => {
+                    self.attempt_connections();
+                    self.reprovide_if_due();
+                }
                 event = self.swarm.select_next_some() => self.on_swarm_event(event),
                 command = async {
                     match commands.as_mut() {

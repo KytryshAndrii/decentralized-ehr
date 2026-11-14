@@ -1426,6 +1426,7 @@ version = "0.1.0"
 dependencies = [
  "futures",
  "ipfs-cid",
+ "ipfs-store",
  "libp2p",
  "thiserror 2.0.21",
  "tokio",

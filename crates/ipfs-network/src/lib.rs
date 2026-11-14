@@ -6,6 +6,7 @@ pub mod error;
 pub mod identity;
 pub mod models;
 pub mod node;
+pub mod state;
 pub mod utils;
 
 pub use consts::*;

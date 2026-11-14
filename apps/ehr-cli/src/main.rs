@@ -22,13 +22,15 @@ Usage:\n\
   ehr-cli node start [--dht-server]\n\
   ehr-cli node start \"\" [--dht-server]\n\
   ehr-cli node start --bootstrap <multiaddr/p2p/PeerId> [--dht-server]\n\
+  ehr-cli node start --bootstrap-list <addr1>,<addr2>,... [--dht-server]\n\
   ehr-cli cid <absolute-file-path>\n\
   ehr-cli put <absolute-file-path>\n\
   ehr-cli has <CID>\n\
   ehr-cli get <CID> <absolute-output-path>\n\n\
 Identity: ./tmp/node-key.pb (auto-created or reused).\n\
 Listen: /ip4/0.0.0.0/tcp/4101 (port override: EHR_LISTEN_PORT).\n\
-Bootstrap: default peer when omitted, none with \"\".\n\
+Bootstrap: default peer when omitted, none with \"\", several with --bootstrap-list.\n\
+State: known peers and provided CIDs are saved in ./data and restored on start.\n\
 DHT: LAN only; Client by default, Server with --dht-server.\n\
 During node start: peers, bootstrap, provide <CID>, find <CID>, stop <CID>, quit.\n\n\
 Custom bootstrap address format: /ip4/<IPv4>/tcp/<port>/p2p/<PeerId>\n\
@@ -55,7 +57,8 @@ fn exact_args(args: &[String], expected: usize) -> CliResult<()> {
     Ok(())
 }
 /// Listen address is hardcoded; arguments only choose the bootstrap peer:
-/// none -> default bootstrap, "" -> no bootstrap, --bootstrap <addr> -> one custom peer.
+/// none -> default bootstrap, "" -> no bootstrap, --bootstrap <addr> -> one custom peer,
+/// --bootstrap-list <a>,<b> -> several custom peers.
 fn configure_node_start(config: &mut NetworkConfig, extra: &[String]) -> CliResult<()> {
     match extra {
         [] => config.bootstrap.push(BootstrapPeer::default_bootstrap()?),
@@ -63,9 +66,12 @@ fn configure_node_start(config: &mut NetworkConfig, extra: &[String]) -> CliResu
         [flag, address] if flag == "--bootstrap" => {
             config.bootstrap.push(BootstrapPeer::parse(address)?);
         }
+        [flag, list] if flag == "--bootstrap-list" => {
+            config.bootstrap.extend(BootstrapPeer::parse_list(list)?);
+        }
         _ => {
             return Err(
-                "Use: node start [\"\" | --bootstrap <multiaddr/p2p/PeerId>] [--dht-server]".into(),
+                "Use: node start [\"\" | --bootstrap <multiaddr/p2p/PeerId> | --bootstrap-list <addr1>,<addr2>,...] [--dht-server]".into(),
             );
         }
     }
@@ -141,6 +147,7 @@ async fn node_command(args: &[String]) -> CliResult<()> {
                 .collect();
             let mut config = NetworkConfig {
                 listen: NetworkConfig::listen_from_env()?,
+                state_directory: Some(ipfs_store::consts::DEFAULT_DATA_DIR.into()),
                 ..NetworkConfig::default()
             };
             if server_flag_count == 1 {
@@ -149,9 +156,10 @@ async fn node_command(args: &[String]) -> CliResult<()> {
             configure_node_start(&mut config, &remaining)?;
             println!("[NETWORK] IDENTITY_PATH {}", config.identity_path.display());
             println!("[NETWORK] LISTEN {}", config.listen);
-            if let Some(peer) = config.bootstrap.first() {
+            for peer in &config.bootstrap {
                 println!("[NETWORK] BOOTSTRAP {}/p2p/{}", peer.address, peer.peer_id);
-            } else {
+            }
+            if config.bootstrap.is_empty() {
                 println!("[NETWORK] LISTEN ONLY (no bootstrap)");
             }
             println!("[DHT] LAN {:?}", config.dht_mode);

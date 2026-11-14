@@ -152,3 +152,59 @@ fn same_leveldb_directory_cannot_be_opened_twice() {
 fn default_path_constant_is_in_sync_with_database_name() {
     assert!(ipfs_store::consts::DEFAULT_DB_PATH.ends_with(LEVELDB_DIR_NAME));
 }
+
+#[test]
+fn peers_and_provides_persist_across_reopen_without_touching_blocks() {
+    use ipfs_store::KnownPeer;
+    let root = tempdir().unwrap();
+    let peer = KnownPeer {
+        peer_id: "12D3KooWNX5AdkfjZ6nSWD8x7Cci1nuNtpXnj1AL42BXi7M9GENS".into(),
+        addresses: vec!["/ip4/192.168.1.125/tcp/4101".into()],
+        dht_server: true,
+    };
+    let cid = {
+        let store = isolated_store(root.path());
+        let cid = store.put(b"Hi!").unwrap();
+        store.put(b"not provided").unwrap();
+        store.save_peer(&peer).unwrap();
+        store.add_provide(&cid).unwrap();
+        cid
+    };
+    let store = isolated_store(root.path());
+    assert_eq!(store.load_peers().unwrap(), vec![peer.clone()]);
+    let provides = store.list_provides().unwrap();
+    assert_eq!(provides.len(), 1);
+    assert_eq!(provides[0].to_bytes(), cid.to_bytes());
+    store.remove_peer(&peer.peer_id).unwrap();
+    store.remove_provide(&cid).unwrap();
+    assert!(store.load_peers().unwrap().is_empty());
+    assert!(store.list_provides().unwrap().is_empty());
+    assert_eq!(store.get_block(&cid).unwrap().unwrap(), b"Hi!");
+}
+
+#[test]
+fn remote_providers_persist_across_reopen() {
+    use ipfs_store::RemoteProvider;
+    let root = tempdir().unwrap();
+    let now = ipfs_store::utils::utc_now_secs();
+    let provider = {
+        let store = isolated_store(root.path());
+        let cid = store.put(b"Hi!").unwrap();
+        let provider = RemoteProvider {
+            multihash: ipfs_store::utils::multihash_bytes(&cid.multihash),
+            peer_id: "12D3KooWNX5AdkfjZ6nSWD8x7Cci1nuNtpXnj1AL42BXi7M9GENS".into(),
+            addresses: vec!["/ip4/192.168.1.125/tcp/4101".into()],
+            expires_at_utc: now + 3600,
+        };
+        store.save_remote_provider(&provider).unwrap();
+        provider
+    };
+    let store = isolated_store(root.path());
+    assert_eq!(store.load_remote_providers(now).unwrap(), vec![provider]);
+    assert!(store.load_remote_providers(now + 3600).unwrap().is_empty());
+    assert_eq!(
+        store.remove_expired_remote_providers(now + 3600).unwrap(),
+        1
+    );
+    assert!(store.load_remote_providers(0).unwrap().is_empty());
+}

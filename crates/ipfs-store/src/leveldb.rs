@@ -1,6 +1,6 @@
 use crate::models::LevelDbDatastore;
 use crate::{datastore::Datastore, error::StoreError};
-use rusty_leveldb::{DB, Options};
+use rusty_leveldb::{DB, LdbIterator, Options};
 use std::path::Path;
 use std::sync::Mutex;
 
@@ -51,5 +51,33 @@ impl Datastore for LevelDbDatastore {
         db.flush()?;
 
         Ok(true)
+    }
+
+    fn delete(&self, key: &[u8]) -> Result<(), StoreError> {
+        let mut db = self.db.lock().map_err(|_| StoreError::LockPoisoned)?;
+        db.delete(key)?;
+        db.flush()?;
+        Ok(())
+    }
+
+    fn keys_with_prefix(&self, prefix: &[u8]) -> Result<Vec<Vec<u8>>, StoreError> {
+        let mut db = self.db.lock().map_err(|_| StoreError::LockPoisoned)?;
+        let mut iterator = db.new_iter()?;
+        // Klucze są posortowane, więc wpisy z jednym prefiksem leżą obok siebie.
+        iterator.seek(prefix);
+        let mut keys = Vec::new();
+        while iterator.valid() {
+            let Some((key, _)) = iterator.current() else {
+                break;
+            };
+            if !key.starts_with(prefix) {
+                break;
+            }
+            keys.push(key.to_vec());
+            if !iterator.advance() {
+                break;
+            }
+        }
+        Ok(keys)
     }
 }

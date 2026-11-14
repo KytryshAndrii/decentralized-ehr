@@ -38,4 +38,13 @@ pub enum StoreError {
 
     #[error("Blok zmienił się podczas operacji zapisu")]
     ConcurrentModification,
+
+    #[error("Uszkodzony wpis w magazynie: {0}")]
+    CorruptRecord(String),
+
+    #[error("Nieprawidłowy rekord providera: {0}")]
+    InvalidProvider(String),
+
+    #[error("Nieprawidłowy wpis peera: {0}")]
+    InvalidPeer(String),
 }

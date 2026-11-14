@@ -123,7 +123,8 @@ Pełny CIDv1 ma pola wersji, kodeka i multihash. Klucz lokalnego magazynu opiera
 
 - `ipfs-cid`: generowanie/dekodowanie CID, algorytm haszujący i weryfikacja.
 - `Blockstore`: operacje `put`, `put_block`, `get_block`, `has`, sprawdzanie rozmiaru i integralności.
-- `Datastore`: ogólny interfejs key-value, w tym zapis typu `put_if_absent`.
+- `Datastore`: ogólny interfejs key-value: `get`, `put`, `has`, `put_if_absent`, `delete`, `keys_with_prefix`.
+- `Namespace`: wybór prefiksu klucza („folderu”) dla danego rodzaju danych.
 - `LevelDbDatastore`: otwarcie bazy, synchronizacja dostępu przez mutex i odczyt/zapis bajtów.
 - `UnixFS`: późniejsze dzielenie plików na bloki, tworzenie i odczyt DAG, rekonstrukcja całego pliku.
 - `Bitswap`: późniejszy transfer bloków pomiędzy peerami.
@@ -133,7 +134,7 @@ Pełny CIDv1 ma pola wersji, kodeka i multihash. Klucz lokalnego magazynu opiera
 
 - `put_if_absent()` jest atomowe na poziomie współdzielonego uchwytu bazy z mutexem; nie stanowi transakcji między niezależnymi procesami.
 - `flush()` nie powinno być przedstawiane bez dodatkowych dowodów jako gwarancja przetrwania nagłej utraty zasilania.
-- Brak jeszcze zarządzania pinningiem, garbage collection, pamięcią podręczną ani MFS.
+- Brak jeszcze zarządzania pinningiem, garbage collection, pamięcią podręczną ani MFS. Przestrzenie nazw `/pins/` i `/cache/` są zarezerwowane, ale nie mają jeszcze metod w `Blockstore`.
 - Przykładowe testy obejmują trwałość po zamknięciu i ponownym otwarciu oraz porównanie danych z Kubo, lecz ich status należy dokumentować na podstawie rzeczywistego uruchomienia.
 
 ## Plan walidacji M2
@@ -199,6 +200,94 @@ Wszystkie `put/has/get` trzeba uruchamiać z tego samego katalogu. Pojedynczy pr
 ## Dlaczego nie usuwamy konstruktorów generycznych?
 
 Usunięcie `new_blockstore(D)` wymagałoby przepisywania testów jednostkowych oraz zamknęłoby możliwość testowania logiki Blockstore w pamięci. Fasada aplikacyjna `PersistentBlockstore::open_default()` spełnia wymóg enkapsulacji backendu bez pogorszenia testowalności.
+
+
+# Rozszerzenie M2: przestrzenie nazw i trwały stan węzła
+
+Stan: kod i testy uruchomione lokalnie 14.11.2026 (`store-unit-test` 24/24, `integration-store` 10/10). Zmiany nie są jeszcze w commicie.
+
+## Przestrzenie nazw („foldery”) w jednej bazie LevelDB
+
+LevelDB nie ma folderów. Rolę folderu pełni **prefiks klucza**, tak jak w datastore Kubo. Wszystkie dane węzła leżą w jednej bazie `data/ehr-blockstore.leveldb`, co daje jedną blokadę `LOCK` i wspólny mechanizm zapisu.
+
+| Przestrzeń (`Namespace`) | Prefiks (`consts.rs`) | Identyfikator | Wartość | Stan |
+|---|---|---|---|---|
+| `Blocks` | `/blocks/` | multihash | bajty bloku | używane od M2 |
+| `Peers` | `/peers/` | PeerId (tekst base58) | tryb DHT + adresy | używane |
+| `Provides` | `/provides/` | multihash | bajty CID | używane |
+| `RemoteProviders` | `/remote-providers/` | multihash + PeerId | termin ważności (UTC) + adresy | używane |
+| `Pins` | `/pins/` | multihash | (do ustalenia) | zarezerwowane |
+| `Cache` | `/cache/` | multihash | (do ustalenia) | zarezerwowane |
+
+Zasady implementacji:
+
+- Nazwy prefiksów są stałymi w `crates/ipfs-store/src/consts.rs`.
+- `enum Namespace` jest zdefiniowany w `models.rs`, a jego metody w `namespace.rs`.
+- `Namespace::prefix()` to **fabryka prefiksów**: jedyny `match` mapujący rodzaj danych na prefiks. `Namespace::key(id)` skleja prefiks z identyfikatorem, `Namespace::owns(key)` sprawdza przynależność klucza.
+- Nowy rodzaj danych wymaga trzech kroków: stała prefiksu, wariant `Namespace`, ramię w `match` (kompilator wymusza jego dodanie) oraz wpis w `Namespace::ALL`.
+- Układ klucza bloku nie zmienił się (`/blocks/` + `varint(code)` + `varint(len)` + `digest`), więc istniejące bazy działają bez migracji. Pilnuje tego test `block_key_layout_is_unchanged`.
+- Pin i cache nie są osobnymi kopiami bloków. Blok zawsze leży w `/blocks/`, a `/pins/` i `/cache/` będą indeksami, na podstawie których zadziała garbage collection.
+
+Aplikacja (`ehr-cli`) i `ipfs-network` nie znają prefiksów. Wywołują metody `Blockstore`, które same wybierają przestrzeń nazw.
+
+## Nowe operacje `Datastore`
+
+| Metoda | Opis |
+|---|---|
+| `delete(key)` | Usuwa wpis; brak klucza nie jest błędem |
+| `keys_with_prefix(prefix)` | Zwraca posortowane klucze zaczynające się od prefiksu |
+
+W `LevelDbDatastore` listowanie używa iteratora LevelDB: `seek(prefix)`, a potem odczyt kolejnych kluczy do pierwszego klucza spoza prefiksu. Klucze w LevelDB są posortowane, więc wpisy jednej przestrzeni nazw leżą obok siebie.
+
+## Nowe metody publiczne `Blockstore`
+
+| Metoda | Przestrzeń | Opis |
+|---|---|---|
+| `save_peer(&KnownPeer)` | `Peers` | Zapis lub nadpisanie znanego peera, z walidacją pól |
+| `load_peers()` | `Peers` | Lista zapamiętanych peerów posortowana po PeerId |
+| `remove_peer(peer_id)` | `Peers` | Usunięcie wpisu |
+| `add_provide(&Cid)` | `Provides` | Zapamiętanie, że węzeł ogłasza CID w DHT |
+| `remove_provide(&Cid)` | `Provides` | Wycofanie wpisu (po `stop <CID>`) |
+| `list_provides()` | `Provides` | CID do ponownego ogłoszenia po restarcie |
+| `save_remote_provider(&RemoteProvider)` | `RemoteProviders` | Zapis rekordu „peer ma blok”; ponowny zapis odświeża termin |
+| `load_remote_providers(now_utc)` | `RemoteProviders` | Tylko rekordy, których termin jeszcze nie minął |
+| `remove_expired_remote_providers(now_utc)` | `RemoteProviders` | Usuwa przeterminowane rekordy, zwraca ich liczbę |
+
+`KnownPeer { peer_id: String, addresses: Vec<String>, dht_server: bool }` używa typów tekstowych, bo `ipfs-store` nie zależy od libp2p. Wartość wpisu ma format liniowy: pierwsza linia `dht=server` albo `dht=client`, kolejne linie to adresy Multiaddr. Uszkodzony wpis daje błąd `CorruptRecord`, a nieprawidłowe dane wejściowe `InvalidPeer`.
+
+`RemoteProvider { multihash: Vec<u8>, peer_id: String, addresses: Vec<String>, expires_at_utc: u64 }` opisuje rekord otrzymany z DHT. Klucz to prefiks + multihash + PeerId; multihash sam określa swoją długość, więc klucz da się jednoznacznie rozdzielić. Pierwsza linia wartości to `expires_utc=<sekundy>`, kolejne to adresy.
+
+### Czas zawsze w UTC
+
+Wszystkie znaczniki czasu zapisywane przez aplikację to **sekundy od epoki Unix w UTC**. Źródłem jest `utils::utc_now_secs()`. Wynik nie zależy od strefy czasowej urządzenia, więc rekord zapisany na jednym komputerze znaczy to samo na każdym innym. Metody magazynu przyjmują `now_utc` jako argument, dzięki czemu testy nie zależą od zegara systemowego.
+
+## Kto korzysta z magazynu stanu
+
+`ipfs-network` zależy teraz od `ipfs-store` i otwiera bazę przez `PersistentBlockstore::open_in(katalog)` **tylko na czas pojedynczej operacji** (zapis peera, zapis CID, odczyt przy starcie). Dzięki temu działający węzeł nie blokuje poleceń `ehr-cli put|has|get` uruchamianych w drugim terminalu. Jeśli dwie operacje trafią na siebie, węzeł wypisuje `STATE_STORE_FAILED` i ponawia zapis peera przy następnym Identify. Szczegóły zachowania sieci opisuje `phase-5-dht.md`, sekcja „Trwały stan węzła”.
+
+Stała `DEFAULT_DATA_DIR = "data"` wskazuje katalog danych; `open_in(DEFAULT_DATA_DIR)` otwiera tę samą bazę co `open_default()`.
+
+## Testy
+
+| Test | Warstwa | Co sprawdza |
+|---|---|---|
+| `namespace_prefixes_match_consts_and_are_disjoint` | jednostkowa | Prefiksy zgodne ze stałymi, przestrzenie rozłączne |
+| `block_key_layout_is_unchanged` | jednostkowa | Zgodność wsteczna klucza bloku |
+| `same_id_in_other_namespace_does_not_collide_with_block` | jednostkowa | Ten sam multihash w `Pins` nie nadpisuje bloku |
+| `peers_are_saved_listed_overwritten_and_removed` | jednostkowa | Cykl życia wpisu peera |
+| `invalid_or_corrupt_peer_is_rejected` | jednostkowa | Walidacja i wykrywanie uszkodzonego wpisu |
+| `provides_are_tracked_separately_from_blocks` | jednostkowa | Lista ogłaszanych CID niezależna od bloków |
+| `remote_providers_are_saved_refreshed_and_expire_by_utc_time` | jednostkowa | Zapis, odświeżenie terminu, wygasanie i porządkowanie |
+| `invalid_or_corrupt_remote_provider_is_rejected` | jednostkowa | Walidacja multihash i PeerId, uszkodzony wpis |
+| `utc_clock_returns_unix_seconds` | jednostkowa | Zegar zwraca sekundy Unix |
+| `peers_and_provides_persist_across_reopen_without_touching_blocks` | integracyjna (LevelDB) | Trwałość po zamknięciu i ponownym otwarciu bazy |
+| `remote_providers_persist_across_reopen` | integracyjna (LevelDB) | Trwałość rekordów providerów i ich wygasanie |
+
+## Ograniczenia
+
+- Brak limitu liczby zapamiętanych peerów i brak usuwania nieaktualnych wpisów.
+- Zapis peera i zapis bloku to osobne operacje; nie ma jeszcze zapisu wsadowego (batch).
+- Pinning, cache i garbage collection pozostają do zaimplementowania.
 
 
 ## Literatura

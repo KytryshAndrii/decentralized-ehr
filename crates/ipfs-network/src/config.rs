@@ -1,7 +1,7 @@
 use crate::consts::{
-    DEFAULT_BOOTSTRAP_MULTIADDR, DEFAULT_IDENTITY_PATH, DEFAULT_LISTEN_MULTIADDR,
-    IDLE_TIMEOUT_SECS, LISTEN_PORT_ENV, MAINTENANCE_TICK_SECS, PING_INTERVAL_SECS,
-    RETRY_INITIAL_SECS, RETRY_MAX_SECS,
+    BOOTSTRAP_LIST_SEPARATOR, DEFAULT_BOOTSTRAP_MULTIADDR, DEFAULT_IDENTITY_PATH,
+    DEFAULT_LISTEN_MULTIADDR, IDLE_TIMEOUT_SECS, LISTEN_PORT_ENV, MAINTENANCE_TICK_SECS,
+    PING_INTERVAL_SECS, REPROVIDE_INTERVAL_SECS, RETRY_INITIAL_SECS, RETRY_MAX_SECS,
 };
 use crate::dht::DhtMode;
 use crate::error::NetworkError;
@@ -30,6 +30,17 @@ impl BootstrapPeer {
             });
         }
         Ok(Self { peer_id, address })
+    }
+    /// Parses a comma-separated list of bootstrap addresses; duplicates of one PeerId are dropped.
+    pub fn parse_list(value: &str) -> Result<Vec<Self>, NetworkError> {
+        let mut peers: Vec<Self> = Vec::new();
+        for item in value.split(BOOTSTRAP_LIST_SEPARATOR) {
+            let peer = Self::parse(item.trim())?;
+            if !peers.iter().any(|known| known.peer_id == peer.peer_id) {
+                peers.push(peer);
+            }
+        }
+        Ok(peers)
     }
     /// Opt-in bootstrap contact; NetworkConfig::default() remains bootstrap-free.
     pub fn default_bootstrap() -> Result<Self, NetworkError> {
@@ -64,6 +75,8 @@ impl Default for NetworkConfig {
             ping_interval: Duration::from_secs(PING_INTERVAL_SECS),
             idle_timeout: Duration::from_secs(IDLE_TIMEOUT_SECS),
             dht_mode: DhtMode::Client,
+            state_directory: None,
+            reprovide_interval: Duration::from_secs(REPROVIDE_INTERVAL_SECS),
         }
     }
 }

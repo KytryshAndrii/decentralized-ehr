@@ -14,4 +14,10 @@ pub trait Datastore {
     /// Atomowo sprawdza istnienie klucza i zapisuje nowe dane.
     /// Zwraca false, gdy klucz już istnieje
     fn put_if_absent(&self, key: &[u8], value: &[u8]) -> Result<bool, StoreError>;
+
+    /// Usuwa wpis; brak klucza nie jest błędem.
+    fn delete(&self, key: &[u8]) -> Result<(), StoreError>;
+
+    /// Zwraca wszystkie klucze zaczynające się od prefiksu, posortowane rosnąco.
+    fn keys_with_prefix(&self, prefix: &[u8]) -> Result<Vec<Vec<u8>>, StoreError>;
 }
