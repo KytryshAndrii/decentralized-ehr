@@ -5,6 +5,7 @@ use crate::{
     dht::{build_kademlia, provider_key},
     error::NetworkError,
     identity,
+    utils::error_chain,
 };
 use futures::StreamExt;
 use ipfs_cid::models::Cid;
@@ -98,9 +99,10 @@ impl NetworkNode {
     }
 
     pub fn listen(&mut self) -> Result<(), NetworkError> {
-        self.swarm
-            .listen_on(self.config.listen.clone())
-            .map_err(|e| NetworkError::Libp2p(e.to_string()))?;
+        let address = self.config.listen.clone();
+        self.swarm.listen_on(address.clone()).map_err(|e| {
+            NetworkError::Libp2p(format!("cannot listen on {address}: {}", error_chain(&e)))
+        })?;
         Ok(())
     }
     /// Add a known peer to the reconnect set; this is not automatic DHT discovery.
