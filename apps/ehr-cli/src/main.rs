@@ -11,27 +11,29 @@ use std::{
 };
 
 type CliResult<T> = Result<T, Box<dyn Error>>;
+const HELP_HINT: &str = "EHR CLI: use --help flag to see available commands";
+
 fn usage() {
-    eprintln!(
+    println!(
         "EHR CLI\n\n\
 Usage:\n\
-  ehr-cli help\n\
+  ehr-cli --help\n\
   ehr-cli node identity\n\
   ehr-cli node start [--dht-server]\n\
   ehr-cli node start \"\" [--dht-server]\n\
-  ehr-cli node start <bootstrap-multiaddr/p2p/PeerId> [--dht-server]\n\
-  ehr-cli node start <listen-multiaddr> [--dht-server]\n\
-  ehr-cli node start <listen-multiaddr> --default-bootstrap [--dht-server]\n\
-  ehr-cli node start <listen-multiaddr> --bootstrap <multiaddr/p2p/PeerId> [--dht-server]\n\
-  ehr-cli node start <listen-multiaddr> \"\" [--dht-server]\n\
+  ehr-cli node start --bootstrap <multiaddr/p2p/PeerId> [--dht-server]\n\
   ehr-cli cid <absolute-file-path>\n\
   ehr-cli put <absolute-file-path>\n\
   ehr-cli has <CID>\n\
   ehr-cli get <CID> <absolute-output-path>\n\n\
 Identity: ./tmp/node-key.pb (auto-created or reused).\n\
+Listen: /ip4/0.0.0.0/tcp/4101 (port override: EHR_LISTEN_PORT).\n\
+Bootstrap: default peer when omitted, none with \"\".\n\
 DHT: LAN only; Client by default, Server with --dht-server.\n\
-During node start: peers, bootstrap, provide <CID>, find <CID>, stop <CID>, quit.\n\
-Note: a listen address alone preserves the original listen-only behaviour.\n"
+During node start: peers, bootstrap, provide <CID>, find <CID>, stop <CID>, quit.\n\n\
+Custom bootstrap address format: /ip4/<IPv4>/tcp/<port>/p2p/<PeerId>\n\
+  e.g. /ip4/192.168.1.125/tcp/4101/p2p/12D3KooW...\n\
+  (the PeerId of a node is printed by: ehr-cli node identity)"
     );
 }
 fn arg<'a>(args: &'a [String], index: usize, description: &str) -> CliResult<&'a str> {
@@ -52,46 +54,19 @@ fn exact_args(args: &[String], expected: usize) -> CliResult<()> {
     }
     Ok(())
 }
-/// Exactly one of: listen only, default bootstrap, or custom bootstrap.
-/// The legacy positional multiaddr remains an alias for custom bootstrap,
-/// preserving existing integration tests without adding a fourth mode.
-fn configure_bootstrap(config: &mut NetworkConfig, extra: &[String]) -> CliResult<()> {
-    match extra {
-        [] => Ok(()),
-        [flag] if flag == "--default-bootstrap" => {
-            config.bootstrap.push(BootstrapPeer::default_bootstrap()?);
-            Ok(())
-        }
-        [flag, address] if flag == "--bootstrap" => {
-            config.bootstrap.push(BootstrapPeer::parse(address)?);
-            Ok(())
-        }
-        [address] if address.starts_with('/') => {
-            config.bootstrap.push(BootstrapPeer::parse(address)?);
-            Ok(())
-        }
-        _ => Err(
-            "Choose only one mode: listen only, --default-bootstrap, or --bootstrap <address>"
-                .into(),
-        ),
-    }
-}
-
+/// Listen address is hardcoded; arguments only choose the bootstrap peer:
+/// none -> default bootstrap, "" -> no bootstrap, --bootstrap <addr> -> one custom peer.
 fn configure_node_start(config: &mut NetworkConfig, extra: &[String]) -> CliResult<()> {
     match extra {
         [] => config.bootstrap.push(BootstrapPeer::default_bootstrap()?),
         [address] if address.is_empty() => {}
-        [flag] if flag == "--default-bootstrap" => configure_bootstrap(config, extra)?,
-        [flag, _] if flag == "--bootstrap" => configure_bootstrap(config, extra)?,
-        [address] if address.starts_with('/') && address.contains("/p2p/") => {
-            configure_bootstrap(config, extra)?;
+        [flag, address] if flag == "--bootstrap" => {
+            config.bootstrap.push(BootstrapPeer::parse(address)?);
         }
-        [listen, remaining @ ..] => {
-            config.listen = listen.parse()?;
-            if remaining.len() == 1 && remaining[0].is_empty() {
-                return Ok(());
-            }
-            configure_bootstrap(config, remaining)?;
+        _ => {
+            return Err(
+                "Use: node start [\"\" | --bootstrap <multiaddr/p2p/PeerId>] [--dht-server]".into(),
+            );
         }
     }
     Ok(())
@@ -164,7 +139,10 @@ async fn node_command(args: &[String]) -> CliResult<()> {
                 .filter(|argument| argument.as_str() != "--dht-server")
                 .cloned()
                 .collect();
-            let mut config = NetworkConfig::default();
+            let mut config = NetworkConfig {
+                listen: NetworkConfig::listen_from_env()?,
+                ..NetworkConfig::default()
+            };
             if server_flag_count == 1 {
                 config.dht_mode = DhtMode::Server;
             }
@@ -238,11 +216,11 @@ async fn main() -> CliResult<()> {
             Ok(())
         }
         None => {
-            usage();
+            println!("{HELP_HINT}");
             Ok(())
         }
         _ => {
-            usage();
+            eprintln!("{HELP_HINT}");
             Err("invalid arguments".into())
         }
     }

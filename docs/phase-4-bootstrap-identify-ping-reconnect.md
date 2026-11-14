@@ -102,6 +102,8 @@ W demonstracji z dwoma hostami skonfigurowano także połączenia wzajemne: Host
 
 ### 4.2. Trzy tryby uruchamiania
 
+> **Aktualizacja (M5):** składnia z tego rozdziału jest historyczna. Adres nasłuchu nie jest już parametrem — węzeł zawsze nasłuchuje na `/ip4/0.0.0.0/tcp/4101` (port można nadpisać `EHR_LISTEN_PORT`), a `--default-bootstrap` i pozycyjny bootstrap usunięto. Listen-only to teraz `node start ""`, domyślny bootstrap to `node start`, własny to `node start --bootstrap <multiaddr/p2p/PeerId>`. Szczegóły: `phase-5-dht.md` §7.
+
 Świadomie **odrzucono** proponowany wcześniej czwarty tryb łączący równocześnie `--default-bootstrap` i `--bootstrap`. Dopuszczalne są dokładnie trzy warianty:
 
 | Tryb | Składnia | Znaczenie |
@@ -253,6 +255,8 @@ Wymaga to aktualizacji reguły `portproxy`, jeśli adres WSL2 zmieni się po res
 ## 6. Aktualne CLI i scenariusze demonstracyjne
 
 **Istotna zmiana względem oryginalnego opisu:** obecne `ehr-cli` automatycznie tworzy/odczytuje `./tmp/node-key.pb`. Nie podaje się już pliku tożsamości w argumentach.
+
+> **Aktualizacja (M5):** polecenia `node start` w tym rozdziale (tabela i testy 6.x) używają składni M4 z adresem nasłuchu. Obecnie adres nasłuchu jest zahardkodowany (`/ip4/0.0.0.0/tcp/4101`, port nadpisywany przez `EHR_LISTEN_PORT`), np. `node start /ip4/0.0.0.0/tcp/4102` odpowiada teraz `EHR_LISTEN_PORT=4102 ./ehr-cli node start ""`. Pełną listę poleceń wypisuje `./ehr-cli --help`; aktualną składnię opisuje `phase-5-dht.md` §7.2.
 
 | Polecenie | Znaczenie |
 |---|---|

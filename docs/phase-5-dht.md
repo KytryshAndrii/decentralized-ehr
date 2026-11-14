@@ -202,9 +202,14 @@ Przełączanie odbywa się **przy uruchomieniu**. Aktualna wersja M5 nie ma Auto
 
 ```text
 DEFAULT_IDENTITY_PATH = ./tmp/node-key.pb
-DEFAULT_LISTEN_MULTIADDR = /ip4/127.0.0.1/tcp/0
+DEFAULT_LISTEN_MULTIADDR = /ip4/0.0.0.0/tcp/4101
 DEFAULT_BOOTSTRAP_MULTIADDR = /ip4/192.168.1.125/tcp/4101/p2p/<ZAPISANY_PEER_ID>
+LISTEN_PORT_ENV = EHR_LISTEN_PORT
 ```
+
+Adres nasłuchu **nie jest parametrem CLI**. Każde `node start` nasłuchuje na `/ip4/0.0.0.0/tcp/4101`, czyli na wszystkich interfejsach IPv4 (loopback, LAN, mostki Dockera), więc węzeł jest osiągalny z sieci LAN bez podawania własnego IP. Port `4101` jest taki sam jak w `DEFAULT_BOOTSTRAP_MULTIADDR`, dzięki czemu węzeł uruchomiony z `--dht-server` może pełnić rolę bootstrapu dla innych.
+
+Zmienna środowiskowa `EHR_LISTEN_PORT` nadpisuje **wyłącznie port TCP** (adres pozostaje `0.0.0.0`). Służy do uruchamiania kilku węzłów na **jednym komputerze** (testy integracyjne, skrypty Kubo); przy jednym węźle na komputer nie należy jej ustawiać. Przykład: `EHR_LISTEN_PORT=4102 ehr-cli node start ""`.
 
 Wartości pochodzą z `crates/ipfs-network/src/consts.rs`. Domyślny bootstrap zawiera **konkretny PeerId**: węzeł pod wskazanym IP musi używać odpowiadającego mu klucza. Jeżeli testowy serwer używa innego PeerId, na pozostałych urządzeniach należy wskazać jego rzeczywisty adres `--bootstrap`.
 
@@ -214,16 +219,24 @@ Nie dodajemy flagi `--identity-path`. Plik klucza jest odczytywany lub tworzony 
 
 | Polecenie | Zachowanie |
 |---|---|
-| `node start` | Domyślny nasłuch, domyślny bootstrap, DHT Client. |
-| `node start --dht-server` | Domyślny nasłuch, domyślny bootstrap, DHT Server. |
-| `node start "" --dht-server` | Domyślny nasłuch, brak bootstrapu, DHT Server. |
-| `node start <listen> "" --dht-server` | Wskazany nasłuch, brak bootstrapu; pierwszy Server w sieci. |
-| `node start <listen>` | **Zgodność z M4:** tylko nasłuch, bez bootstrapu. |
-| `node start <bootstrap/p2p/PeerId>` | Domyślny nasłuch, wskazany bootstrap. |
-| `node start <listen> --bootstrap <bootstrap/p2p/PeerId>` | Wskazany nasłuch i wskazany bootstrap. |
-| `node start <listen> --default-bootstrap` | Wskazany nasłuch i zahardkodowany bootstrap. |
+We wszystkich wariantach węzeł nasłuchuje na `/ip4/0.0.0.0/tcp/4101` (§7.1); argumenty wybierają wyłącznie bootstrap.
 
-Flaga `--dht-server` może być dodana do odpowiedniego polecenia. Nie ma flag WAN, LAN, AutoNAT ani osobnej flagi tożsamości. Na trzech urządzeniach testowych jawnie ustawiamy adres LAN do nasłuchu.
+| Polecenie | Zachowanie |
+|---|---|
+| `node start` | Domyślny bootstrap (`DEFAULT_BOOTSTRAP_MULTIADDR`), DHT Client. |
+| `node start --dht-server` | Domyślny bootstrap, DHT Server. |
+| `node start ""` | Brak bootstrapu (tylko nasłuch), DHT Client. |
+| `node start "" --dht-server` | Brak bootstrapu, DHT Server; pierwszy Server w sieci. |
+| `node start --bootstrap <multiaddr/p2p/PeerId>` | Wskazany bootstrap, DHT Client. |
+| `node start --bootstrap <multiaddr/p2p/PeerId> --dht-server` | Wskazany bootstrap, DHT Server. |
+
+Format własnego adresu bootstrap: `/ip4/<IPv4>/tcp/<port>/p2p/<PeerId>`, np. `/ip4/192.168.1.125/tcp/4101/p2p/12D3KooW...`. PeerId węzła wypisuje `ehr-cli node identity`. Adres bez końcowego `/p2p/<PeerId>` jest odrzucany.
+
+Usunięto wcześniejsze warianty: pozycyjny adres nasłuchu (`node start <listen> ...`), pozycyjny adres bootstrap bez flagi (`node start <bootstrap/p2p/PeerId>`) oraz `--default-bootstrap` (równoważny `node start` bez argumentów). Tryb „tylko nasłuch" z M4 odpowiada teraz `node start ""`. Jeśli domyślny bootstrap wskazuje na własny PeerId węzła, dial do samego siebie jest pomijany.
+
+Flaga `--dht-server` może być dodana do każdego wariantu. Nie ma flag WAN, LAN, AutoNAT ani osobnej flagi tożsamości.
+
+Wywołanie `ehr-cli` bez argumentów wypisuje jedynie podpowiedź `use --help flag to see available commands`; pełną listę poleceń pokazuje `ehr-cli --help` (także `-h`, `help`).
 
 ### 7.3. Polecenia w działającym procesie `node start`
 
@@ -243,7 +256,7 @@ Komendy są przekazywane z terminala przez kanał `tokio::sync::mpsc` do istniej
 1. Zainstaluj Rust/Cargo na komputerach A, B i C, skopiuj tę samą wersję kodu i wykonaj `cargo build -p ehr-cli`.
 2. Połącz urządzenia z **tą samą siecią LAN**. Wyłącz izolację klientów Wi-Fi (AP/client isolation), jeżeli router ją stosuje.
 3. Ustal adresy IPv4. Poniżej używamy **przykładów**: A=`192.168.1.125`, B=`192.168.1.126`, C=`192.168.1.127`. Podstaw rzeczywiste adresy swoich urządzeń.
-4. Dopuść połączenia TCP na porcie `4101` pomiędzy urządzeniami (firewall). Ten sam port może być używany na trzech różnych komputerach.
+4. Dopuść połączenia TCP na porcie `4101` pomiędzy urządzeniami (firewall). Każdy węzeł nasłuchuje na `0.0.0.0:4101`, więc ten sam port jest używany na trzech różnych komputerach, a własnego IP nie podaje się w poleceniu.
 5. Każdy komputer uruchamia proces z katalogu głównego **własnej** kopii repozytorium. W ten sposób `./tmp/node-key.pb` pozostaje niezależne.
 6. Nie używaj rzeczywistych danych pacjentów. Utwórz fikcyjny plik testowy.
 
@@ -261,18 +274,21 @@ Zapisz `CID` z wyniku `[BLOCKSTORE] PUT CID=...`.
 Uruchom serwer **A**:
 
 ```bash
-cargo run -p ehr-cli -- node start /ip4/192.168.1.125/tcp/4101 "" --dht-server
+cargo run -p ehr-cli -- node start "" --dht-server
 ```
 
 Zapisz `LOCAL_PEER_ID` jako `PEER_A`. Oczekiwane elementy logu:
 
 ```text
-[NETWORK] LISTEN /ip4/192.168.1.125/tcp/4101
+[NETWORK] LISTEN /ip4/0.0.0.0/tcp/4101
 [NETWORK] LISTEN ONLY (no bootstrap)
 [DHT] LAN Server
 LOCAL_PEER_ID <PEER_A>
+LISTEN /ip4/127.0.0.1/tcp/4101/p2p/<PEER_A>
 LISTEN /ip4/192.168.1.125/tcp/4101/p2p/<PEER_A>
 ```
+
+Linii `LISTEN` jest tyle, ile interfejsów IPv4 ma komputer; do bootstrapu pozostałych węzłów używa się adresu LAN (`192.168.1.125`).
 
 **Zrzut S1:** A działa jako Server, ma stabilny PeerId i nie korzysta z bootstrapu.
 
@@ -281,7 +297,7 @@ LISTEN /ip4/192.168.1.125/tcp/4101/p2p/<PEER_A>
 Na komputerze **B**:
 
 ```bash
-cargo run -p ehr-cli -- node start /ip4/192.168.1.126/tcp/4101 \
+cargo run -p ehr-cli -- node start \
   --bootstrap /ip4/192.168.1.125/tcp/4101/p2p/PEER_A \
   --dht-server
 ```
@@ -306,7 +322,7 @@ Na **A** może pojawić się `CONNECTED <PEER_B>` i `DHT_ROUTING_UPDATED <PEER_B
 Na komputerze **C**:
 
 ```bash
-cargo run -p ehr-cli -- node start /ip4/192.168.1.127/tcp/4101 \
+cargo run -p ehr-cli -- node start \
   --bootstrap /ip4/192.168.1.126/tcp/4101/p2p/PEER_B
 ```
 
@@ -375,7 +391,7 @@ Oczekiwane `HAS false` pokazuje, że `find` nie pobrało bloku z A. To **prawid�
 Na A zakończ proces poleceniem `quit`, pozostawiając B uruchomiony. Obserwuj `DISCONNECTED <PEER_A>` i zaplanowany retry na B. Uruchom A ponownie **z tego samego katalogu** i z tą samą domyślną tożsamością:
 
 ```bash
-cargo run -p ehr-cli -- node start /ip4/192.168.1.125/tcp/4101 "" --dht-server
+cargo run -p ehr-cli -- node start "" --dht-server
 ```
 
 `LOCAL_PEER_ID` A powinien być taki sam jak przed restartem. Na B oczekuj ponownego `CONNECTED <PEER_A>`. Po restarcie A **ponów `provide <CID>`**: używany `MemoryStore` nie zachowuje lokalnie ogłaszanych CID po restarcie.
@@ -407,7 +423,7 @@ Parsowanie opcji `node start` jest weryfikowane procesowo w `integration-network
 
 ### 9.2. Kilka procesów Rust
 
-Scenariusz wielu węzłów Rust na jednym komputerze realizuje skrypt z §9.3 (scenariusz **C**: dwa niezależne procesy Rust z osobnymi katalogami roboczymi, kluczami i Blockstore oraz węzeł Kubo jako DHT Server). Scenariusz trzech fizycznych komputerów opisano w §8.
+Kilka węzłów na jednym komputerze wymaga różnych portów: testy i skrypty ustawiają `EHR_LISTEN_PORT` osobno dla każdego procesu (§7.1). Scenariusz wielu węzłów Rust na jednym komputerze realizuje skrypt z §9.3 (scenariusz **C**: dwa niezależne procesy Rust z osobnymi katalogami roboczymi, kluczami i Blockstore oraz węzeł Kubo jako DHT Server). Scenariusz trzech fizycznych komputerów opisano w §8.
 
 ### 9.3. Interoperacyjność Rust ↔ Kubo
 

@@ -49,7 +49,7 @@ KUBO_ID="$(ipfs id -f='<id>')"
 start_rust() {
   local name="$1" port="$2"
   mkfifo "$TMP/$name.in"
-  (cd "$TMP/$name" && exec "$BIN" node start "/ip4/$IP/tcp/$port" --bootstrap "/ip4/$IP/tcp/$KUBO_PORT/p2p/$KUBO_ID" --dht-server <> "$TMP/$name.in" > "$TMP/$name.log" 2>&1) &
+  (cd "$TMP/$name" && EHR_LISTEN_PORT="$port" exec "$BIN" node start --bootstrap "/ip4/$IP/tcp/$KUBO_PORT/p2p/$KUBO_ID" --dht-server <> "$TMP/$name.in" > "$TMP/$name.log" 2>&1) &
   PIDS+=("$!")
   wait_for "$TMP/$name.log" "CONNECTED $KUBO_ID" 45
   wait_for "$TMP/$name.log" 'DHT_BOOTSTRAP_STARTED' 45

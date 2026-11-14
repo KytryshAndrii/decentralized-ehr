@@ -1,7 +1,7 @@
 use crate::consts::{
     DEFAULT_BOOTSTRAP_MULTIADDR, DEFAULT_IDENTITY_PATH, DEFAULT_LISTEN_MULTIADDR,
-    IDLE_TIMEOUT_SECS, MAINTENANCE_TICK_SECS, PING_INTERVAL_SECS, RETRY_INITIAL_SECS,
-    RETRY_MAX_SECS,
+    IDLE_TIMEOUT_SECS, LISTEN_PORT_ENV, MAINTENANCE_TICK_SECS, PING_INTERVAL_SECS,
+    RETRY_INITIAL_SECS, RETRY_MAX_SECS,
 };
 use crate::dht::DhtMode;
 use crate::error::NetworkError;
@@ -34,6 +34,22 @@ impl BootstrapPeer {
     /// Opt-in bootstrap contact; NetworkConfig::default() remains bootstrap-free.
     pub fn default_bootstrap() -> Result<Self, NetworkError> {
         Self::parse(DEFAULT_BOOTSTRAP_MULTIADDR)
+    }
+}
+impl NetworkConfig {
+    /// Hardcoded listen address, with the TCP port optionally taken from EHR_LISTEN_PORT.
+    pub fn listen_from_env() -> Result<Multiaddr, NetworkError> {
+        let mut address: Multiaddr = DEFAULT_LISTEN_MULTIADDR.parse().expect("static address");
+        let Ok(value) = std::env::var(LISTEN_PORT_ENV) else {
+            return Ok(address);
+        };
+        let port: u16 = value.parse().map_err(|e| NetworkError::InvalidAddress {
+            value: format!("{LISTEN_PORT_ENV}={value}"),
+            reason: format!("{e}"),
+        })?;
+        address.pop();
+        address.push(Protocol::Tcp(port));
+        Ok(address)
     }
 }
 impl Default for NetworkConfig {
