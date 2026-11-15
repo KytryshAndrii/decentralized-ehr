@@ -3,17 +3,11 @@
 //! cargo test -p test-runner --test integration-network -- --test-threads=1 --nocapture
 use std::{
     fs,
-    io::{BufRead, BufReader},
-    net::TcpListener,
     path::{Path, PathBuf},
-    process::{Child, Command, Stdio},
-    sync::{
-        atomic::{AtomicU64, Ordering},
-        mpsc::{self, Receiver},
-    },
-    thread,
-    time::{Duration, Instant},
+    process::{Command, Stdio},
+    sync::atomic::{AtomicU64, Ordering},
 };
+use test_runner::node_process::{NodeProcess, cli, free_port, put_file};
 static SEQ: AtomicU64 = AtomicU64::new(0);
 struct Workspace(PathBuf);
 impl Workspace {
@@ -33,114 +27,6 @@ impl Workspace {
 impl Drop for Workspace {
     fn drop(&mut self) {
         let _ = fs::remove_dir_all(&self.0);
-    }
-}
-fn cli() -> PathBuf {
-    if let Some(path) = std::env::var_os("EHR_CLI_BIN") {
-        return fs::canonicalize(path).expect("EHR_CLI_BIN must point to a built executable");
-    }
-    let mut path = std::env::current_exe().expect("test binary path");
-    path.pop();
-    path.pop();
-    path.push(format!("ehr-cli{}", std::env::consts::EXE_SUFFIX));
-    assert!(
-        path.is_file(),
-        "Build the CLI first: cargo build -p ehr-cli"
-    );
-    path
-}
-fn free_port() -> u16 {
-    TcpListener::bind("127.0.0.1:0")
-        .unwrap()
-        .local_addr()
-        .unwrap()
-        .port()
-}
-struct NodeProcess {
-    child: Child,
-    lines: Receiver<String>,
-    stdin: Option<std::process::ChildStdin>,
-}
-impl NodeProcess {
-    fn start(cwd: &Path, port: u16, args: &[String]) -> Self {
-        let mut child = Command::new(cli())
-            .current_dir(cwd)
-            .env("EHR_LISTEN_PORT", port.to_string())
-            .args(args)
-            .stdin(Stdio::piped())
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
-            .spawn()
-            .expect("launch ehr-cli");
-        let stdin = child.stdin.take();
-        let (tx, rx) = mpsc::channel();
-        let stdout = child.stdout.take().unwrap();
-        thread::spawn(move || {
-            for line in BufReader::new(stdout).lines().map_while(Result::ok) {
-                println!("[node] {line}");
-                let _ = tx.send(line);
-            }
-        });
-        let stderr = child.stderr.take().unwrap();
-        thread::spawn(move || {
-            for line in BufReader::new(stderr).lines().map_while(Result::ok) {
-                eprintln!("[node-err] {line}");
-            }
-        });
-        Self {
-            child,
-            lines: rx,
-            stdin,
-        }
-    }
-    fn send(&mut self, command: &str) {
-        use std::io::Write;
-        let stdin = self.stdin.as_mut().expect("stdin is piped");
-        writeln!(stdin, "{command}").expect("write node command");
-        stdin.flush().expect("flush node command");
-    }
-    fn until_all(&self, patterns: &[&str], secs: u64) {
-        let deadline = Instant::now() + Duration::from_secs(secs);
-        let mut seen = vec![false; patterns.len()];
-        while Instant::now() < deadline {
-            match self
-                .lines
-                .recv_timeout(deadline.saturating_duration_since(Instant::now()))
-            {
-                Ok(line) => {
-                    for (index, pattern) in patterns.iter().enumerate() {
-                        if line.contains(pattern) {
-                            seen[index] = true;
-                        }
-                    }
-                    if seen.iter().all(|v| *v) {
-                        return;
-                    }
-                }
-                Err(_) => break,
-            }
-        }
-        panic!("timeout waiting for {patterns:?}; observed {seen:?}");
-    }
-    fn until(&self, text: &str, secs: u64) -> String {
-        let deadline = Instant::now() + Duration::from_secs(secs);
-        while Instant::now() < deadline {
-            match self
-                .lines
-                .recv_timeout(deadline.saturating_duration_since(Instant::now()))
-            {
-                Ok(line) if line.contains(text) => return line,
-                Ok(_) => {}
-                Err(_) => break,
-            }
-        }
-        panic!("timeout waiting for {text:?}");
-    }
-}
-impl Drop for NodeProcess {
-    fn drop(&mut self) {
-        let _ = self.child.kill();
-        let _ = self.child.wait();
     }
 }
 fn start_args(bootstrap: Option<String>) -> Vec<String> {
@@ -185,33 +71,51 @@ fn identity_persists_between_processes() {
 #[test]
 fn invalid_cli_arguments_fail() {
     let w = Workspace::new();
+    // Każdy wariant musi zakończyć się błędem, zanim węzeł wystartuje.
+    let peer = "/ip4/127.0.0.1/tcp/4101/p2p/12D3KooWNSJcGB7bK5Kg1gWvyckQ2LbgXB5bMdTUv3Gnji6n8FUz";
     for args in [
-        vec!["node", "start", "invalid-address"],
-        vec!["node", "start", "/ip4/127.0.0.1/tcp/0"],
+        // Adres bez flagi nie jest już obsługiwany: tylko "", --bootstrap, --bootstrap-list.
+        vec!["node", "start", peer],
+        vec!["node", "start", "--bootstrap"],
+        vec!["node", "start", "--bootstrap", "invalid-address"],
+        vec!["node", "start", "--bootstrap", "/ip4/127.0.0.1/tcp/4101"],
         vec![
             "node",
             "start",
-            "/ip4/127.0.0.1/tcp/4101/p2p/12D3KooWNSJcGB7bK5Kg1gWvyckQ2LbgXB5bMdTUv3Gnji6n8FUz",
-        ],
-        vec!["node", "identity", "old-key.pb"],
-        vec![
-            "node",
-            "start",
-            "",
             "--bootstrap",
             "/ip4/127.0.0.1/tcp/4101/p2p/INVALID",
         ],
-        vec!["node", "start", "--bootstrap-list", "not-a-multiaddr"],
+        vec!["node", "start", "", "--bootstrap", peer],
         vec!["node", "start", "--bootstrap-list"],
+        vec!["node", "start", "--bootstrap-list", "not-a-multiaddr"],
+        vec![
+            "node",
+            "start",
+            "--bootstrap-list",
+            &format!("{peer},invalid-address"),
+        ],
+        vec!["node", "start", "", "--dht-server", "--dht-server"],
+        vec!["node", "start", "", "--unknown-flag"],
+        vec!["node"],
+        vec!["node", "unknown"],
+        vec!["node", "identity", "old-key.pb"],
+        vec!["cid"],
+        vec!["cid", "relative/path.txt"],
+        vec!["put", "relative/path.txt"],
+        vec!["has", "not-a-cid"],
+        vec!["get", "not-a-cid", "/tmp/out"],
+        vec!["help", "extra"],
         vec!["unknown"],
     ] {
         assert!(
             !Command::new(cli())
                 .current_dir(w.path())
-                .args(args)
+                .args(&args)
+                .stderr(Stdio::null())
                 .status()
                 .unwrap()
-                .success()
+                .success(),
+            "{args:?} should fail"
         );
     }
     for args in [vec!["help"], vec!["--help"], vec!["-h"]] {
@@ -219,10 +123,31 @@ fn invalid_cli_arguments_fail() {
             Command::new(cli())
                 .current_dir(w.path())
                 .args(args)
+                .stdout(Stdio::null())
                 .status()
                 .unwrap()
                 .success()
         );
+    }
+}
+/// Plik ponad limit bloku jest odrzucany po rozmiarze, bez wczytywania go do pamięci.
+#[test]
+fn put_and_cid_reject_oversized_file_before_reading_it() {
+    let w = Workspace::new();
+    let file = w.path().join("scan.dcm");
+    fs::File::create(&file)
+        .unwrap()
+        .set_len(8 * 1024 * 1024 * 1024)
+        .unwrap();
+    for command in ["put", "cid"] {
+        let output = Command::new(cli())
+            .current_dir(w.path())
+            .arg(command)
+            .arg(&file)
+            .output()
+            .unwrap();
+        assert!(!output.status.success(), "{command} should fail");
+        assert!(String::from_utf8_lossy(&output.stderr).contains("BlockTooLarge"));
     }
 }
 #[test]
@@ -283,19 +208,7 @@ fn known_peers_and_providing_survive_restart() {
 
     let file = b.path().join("record.txt");
     std::fs::write(&file, b"synthetic record for reprovide test").unwrap();
-    let output = Command::new(cli())
-        .current_dir(b.path())
-        .args(["put", file.to_str().unwrap()])
-        .output()
-        .unwrap();
-    assert!(output.status.success());
-    let stdout = String::from_utf8(output.stdout).unwrap();
-    let cid = stdout
-        .lines()
-        .find_map(|line| line.strip_prefix("[BLOCKSTORE] PUT CID="))
-        .expect("CID in put output")
-        .trim()
-        .to_owned();
+    let cid = put_file(b.path(), &file);
 
     {
         let host_a = NodeProcess::start(a.path(), port_a, &server(None));
@@ -361,19 +274,7 @@ fn remote_provider_records_survive_server_restart() {
 
     let file = b.path().join("record.txt");
     std::fs::write(&file, b"synthetic record for provider persistence test").unwrap();
-    let output = Command::new(cli())
-        .current_dir(b.path())
-        .args(["put", file.to_str().unwrap()])
-        .output()
-        .unwrap();
-    assert!(output.status.success());
-    let stdout = String::from_utf8(output.stdout).unwrap();
-    let cid = stdout
-        .lines()
-        .find_map(|line| line.strip_prefix("[BLOCKSTORE] PUT CID="))
-        .expect("CID in put output")
-        .trim()
-        .to_owned();
+    let cid = put_file(b.path(), &file);
 
     {
         let host_a = NodeProcess::start(a.path(), port_a, &server(None));

@@ -1,5 +1,7 @@
 use crate::error::StoreError;
 
+pub type Entry = (Vec<u8>, Vec<u8>);
+
 pub trait Datastore {
     /// Zwraca None tylko gdy klucza nie ma; awarie odczytu są błędami.
     fn get(&self, key: &[u8]) -> Result<Option<Vec<u8>>, StoreError>;
@@ -18,6 +20,5 @@ pub trait Datastore {
     /// Usuwa wpis; brak klucza nie jest błędem.
     fn delete(&self, key: &[u8]) -> Result<(), StoreError>;
 
-    /// Zwraca wszystkie klucze zaczynające się od prefiksu, posortowane rosnąco.
-    fn keys_with_prefix(&self, prefix: &[u8]) -> Result<Vec<Vec<u8>>, StoreError>;
+    fn entries_with_prefix(&self, prefix: &[u8]) -> Result<Vec<Entry>, StoreError>;
 }

@@ -1,6 +1,7 @@
 use crate::consts::{LOCK_RETRY_ATTEMPTS, LOCK_RETRY_DELAY_MS};
+use crate::datastore::{Datastore, Entry};
+use crate::error::StoreError;
 use crate::models::LevelDbDatastore;
-use crate::{datastore::Datastore, error::StoreError};
 use rusty_leveldb::{DB, LdbIterator, Options, StatusCode};
 use std::path::Path;
 use std::sync::Mutex;
@@ -79,24 +80,24 @@ impl Datastore for LevelDbDatastore {
         Ok(())
     }
 
-    fn keys_with_prefix(&self, prefix: &[u8]) -> Result<Vec<Vec<u8>>, StoreError> {
+    fn entries_with_prefix(&self, prefix: &[u8]) -> Result<Vec<Entry>, StoreError> {
         let mut db = self.db.lock().map_err(|_| StoreError::LockPoisoned)?;
         let mut iterator = db.new_iter()?;
         // Klucze są posortowane, więc wpisy z jednym prefiksem leżą obok siebie.
         iterator.seek(prefix);
-        let mut keys = Vec::new();
+        let mut entries = Vec::new();
         while iterator.valid() {
-            let Some((key, _)) = iterator.current() else {
+            let Some((key, value)) = iterator.current() else {
                 break;
             };
             if !key.starts_with(prefix) {
                 break;
             }
-            keys.push(key.to_vec());
+            entries.push((key.to_vec(), value.to_vec()));
             if !iterator.advance() {
                 break;
             }
         }
-        Ok(keys)
+        Ok(entries)
     }
 }

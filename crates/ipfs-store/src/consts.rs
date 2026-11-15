@@ -18,6 +18,7 @@ pub const REMOTE_PROVIDERS_PREFIX: &str = "/remote-providers/";
 
 pub const PEER_DHT_SERVER_MARKER: &str = "dht=server";
 pub const PEER_DHT_CLIENT_MARKER: &str = "dht=client";
+pub const PEER_SEEN_FIELD: &str = "seen_utc=";
 
 pub const PROVIDER_EXPIRES_FIELD: &str = "expires_utc=";
 

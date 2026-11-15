@@ -1,8 +1,6 @@
 mod services;
 
-use ipfs_cid::models::Cid;
-use ipfs_network::{BootstrapPeer, DhtMode, NetworkCommand, NetworkConfig, NetworkNode};
-use services::IpfsService;
+use services::{IpfsService, NetworkCommand, NetworkService};
 use std::{
     env,
     error::Error,
@@ -57,27 +55,6 @@ fn exact_args(args: &[String], expected: usize) -> CliResult<()> {
     }
     Ok(())
 }
-/// Listen address is hardcoded; arguments only choose the bootstrap peer:
-/// none -> default bootstrap, "" -> no bootstrap, --bootstrap <addr> -> one custom peer,
-/// --bootstrap-list <a>,<b> -> several custom peers.
-fn configure_node_start(config: &mut NetworkConfig, extra: &[String]) -> CliResult<()> {
-    match extra {
-        [] => config.bootstrap.push(BootstrapPeer::default_bootstrap()?),
-        [address] if address.is_empty() => {}
-        [flag, address] if flag == "--bootstrap" => {
-            config.bootstrap.push(BootstrapPeer::parse(address)?);
-        }
-        [flag, list] if flag == "--bootstrap-list" => {
-            config.bootstrap.extend(BootstrapPeer::parse_list(list)?);
-        }
-        _ => {
-            return Err(
-                "Use: node start [\"\" | --bootstrap <multiaddr/p2p/PeerId> | --bootstrap-list <addr1>,<addr2>,...] [--dht-server]".into(),
-            );
-        }
-    }
-    Ok(())
-}
 
 fn stdin_commands(sender: tokio::sync::mpsc::UnboundedSender<NetworkCommand>) {
     for line in io::stdin().lock().lines() {
@@ -91,13 +68,13 @@ fn stdin_commands(sender: tokio::sync::mpsc::UnboundedSender<NetworkCommand>) {
             ("peers", None, None) => Ok(NetworkCommand::ListPeers),
             ("bootstrap", None, None) => Ok(NetworkCommand::Bootstrap),
             ("quit", None, None) => Ok(NetworkCommand::Quit),
-            ("provide", Some(cid), None) => Cid::decode_from_string(cid)
+            ("provide", Some(cid), None) => IpfsService::parse_cid(cid)
                 .map(NetworkCommand::StartProviding)
                 .map_err(|error| error.to_string()),
-            ("find", Some(cid), None) => Cid::decode_from_string(cid)
+            ("find", Some(cid), None) => IpfsService::parse_cid(cid)
                 .map(NetworkCommand::GetProviders)
                 .map_err(|error| error.to_string()),
-            ("stop", Some(cid), None) => Cid::decode_from_string(cid)
+            ("stop", Some(cid), None) => IpfsService::parse_cid(cid)
                 .map(NetworkCommand::StopProviding)
                 .map_err(|error| error.to_string()),
             _ => Err("Use peers, bootstrap, provide <CID>, find <CID>, stop <CID> or quit".into()),
@@ -129,9 +106,7 @@ async fn node_command(args: &[String]) -> CliResult<()> {
     match arg(args, 2, "node subcommand")? {
         "identity" => {
             exact_args(args, 3)?;
-            let key_path = NetworkConfig::default().identity_path;
-            let key = ipfs_network::identity::load_or_create(&key_path)?;
-            println!("LOCAL_PEER_ID {}", ipfs_network::peer_id_from_keypair(&key));
+            println!("LOCAL_PEER_ID {}", NetworkService::local_peer_id()?);
         }
         "start" => {
             let server_flag_count = args[3..]
@@ -146,15 +121,7 @@ async fn node_command(args: &[String]) -> CliResult<()> {
                 .filter(|argument| argument.as_str() != "--dht-server")
                 .cloned()
                 .collect();
-            let mut config = NetworkConfig {
-                listen: NetworkConfig::listen_from_env()?,
-                state_directory: Some(ipfs_store::consts::DEFAULT_DATA_DIR.into()),
-                ..NetworkConfig::default()
-            };
-            if server_flag_count == 1 {
-                config.dht_mode = DhtMode::Server;
-            }
-            configure_node_start(&mut config, &remaining)?;
+            let config = NetworkService::node_config(server_flag_count == 1, &remaining)?;
             println!("[NETWORK] IDENTITY_PATH {}", config.identity_path.display());
             println!("[NETWORK] LISTEN {}", config.listen);
             for peer in &config.bootstrap {
@@ -166,9 +133,7 @@ async fn node_command(args: &[String]) -> CliResult<()> {
             println!("[DHT] LAN {:?}", config.dht_mode);
             let (sender, receiver) = tokio::sync::mpsc::unbounded_channel();
             std::thread::spawn(move || stdin_commands(sender));
-            NetworkNode::new_network_node(config)?
-                .run_with_commands(receiver)
-                .await?;
+            NetworkService::run(config, receiver).await?;
         }
         _ => return Err("Unknown node command".into()),
     }
@@ -196,13 +161,13 @@ fn storage_command(args: &[String]) -> CliResult<()> {
         }
         "has" => {
             exact_args(args, 3)?;
-            let cid = Cid::decode_from_string(arg(args, 2, "CID")?)?;
+            let cid = IpfsService::parse_cid(arg(args, 2, "CID")?)?;
             let service = IpfsService::new()?;
             println!("[BLOCKSTORE] HAS {}", service.has_block(&cid)?);
         }
         "get" => {
             exact_args(args, 4)?;
-            let cid = Cid::decode_from_string(arg(args, 2, "CID")?)?;
+            let cid = IpfsService::parse_cid(arg(args, 2, "CID")?)?;
             let output = Path::new(arg(args, 3, "absolute output path")?);
             let service = IpfsService::new()?;
             if !service.export_file(&cid, output)? {

@@ -56,6 +56,8 @@ Dodatkowo:
 - Po przekroczeniu 512 MiB łącznie pozostałe bloki nie są wysyłane (log `BITSWAP_RESPONSE_TRUNCATED`).
 - Blok, który zniknął między sprawdzeniem a wysyłką, zamienia się w `DontHave`.
 - Blok jest przed wysłaniem weryfikowany względem CID przez `Blockstore::get_block`; uszkodzony blok nie jest wysyłany.
+- Baza jest otwierana raz na wiadomość odpowiedzi (`BlockSource::with_reader`), a nie raz na blok, bo każde otwarcie LevelDB bierze blokadę pliku.
+- Po `stop <CID>` blok od razu przestaje być wydawany, bo wpis `Provides` znika z dysku przed wycofaniem ogłoszenia z DHT.
 
 ## 5. Struktura kodu
 

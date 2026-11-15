@@ -8,6 +8,7 @@ use ipfs_bitswap::{
     WantType, Wantlist, WantlistEntry, read_message, write_message,
 };
 use ipfs_cid::models::Cid;
+use ipfs_store::{PersistentBlockstore, consts::DEFAULT_DATA_DIR};
 use libp2p::{Multiaddr, PeerId, StreamProtocol, SwarmBuilder};
 use std::{fs, time::Duration};
 use test_runner::node_process::{NodeProcess, free_port, put_file};
@@ -166,6 +167,15 @@ async fn node_serves_only_provided_blocks_over_bitswap() {
     let response = client.ask(vec![want(private, WantType::Block)]).await;
     assert!(response.payload.is_empty());
     assert_eq!(presence_of(&response, private), BlockPresenceType::DontHave);
+
+    {
+        let _held =
+            PersistentBlockstore::open_in(&workspace.path().join(DEFAULT_DATA_DIR)).unwrap();
+        node.send(&format!("stop {}", shared.to_string_base32()));
+        node.until("DHT_STOP_FAILED", WAIT_SECS);
+    }
+    let response = client.ask(vec![want(shared, WantType::Have)]).await;
+    assert_eq!(presence_of(&response, shared), BlockPresenceType::Have);
 
     // Po `stop` blok przestaje być udostępniany.
     node.send(&format!("stop {}", shared.to_string_base32()));

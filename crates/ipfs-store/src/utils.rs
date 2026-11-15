@@ -1,5 +1,6 @@
 use crate::consts::{
-    MAX_BLOCK_BYTES, PEER_DHT_CLIENT_MARKER, PEER_DHT_SERVER_MARKER, PROVIDER_EXPIRES_FIELD,
+    MAX_BLOCK_BYTES, PEER_DHT_CLIENT_MARKER, PEER_DHT_SERVER_MARKER, PEER_SEEN_FIELD,
+    PROVIDER_EXPIRES_FIELD,
 };
 use crate::error::StoreError;
 use crate::models::{KnownPeer, Namespace, RemoteProvider};
@@ -91,7 +92,8 @@ pub fn encode_known_peer(peer: &KnownPeer) -> Vec<u8> {
     } else {
         PEER_DHT_CLIENT_MARKER
     };
-    let mut lines = vec![marker];
+    let seen = format!("{PEER_SEEN_FIELD}{}", peer.last_seen_utc);
+    let mut lines = vec![marker, seen.as_str()];
     lines.extend(peer.addresses.iter().map(String::as_str));
     lines.join("\n").into_bytes()
 }
@@ -99,16 +101,23 @@ pub fn encode_known_peer(peer: &KnownPeer) -> Vec<u8> {
 pub fn decode_known_peer(peer_id: &str, value: &[u8]) -> Result<KnownPeer, StoreError> {
     let corrupt = || StoreError::CorruptRecord(format!("peer {peer_id}"));
     let text = std::str::from_utf8(value).map_err(|_| corrupt())?;
-    let mut lines = text.lines();
+    let mut lines = text.lines().peekable();
     let dht_server = match lines.next() {
         Some(PEER_DHT_SERVER_MARKER) => true,
         Some(PEER_DHT_CLIENT_MARKER) => false,
         _ => return Err(corrupt()),
     };
+    let last_seen_utc = match lines.next_if(|line| line.starts_with(PEER_SEEN_FIELD)) {
+        Some(line) => line[PEER_SEEN_FIELD.len()..]
+            .parse()
+            .map_err(|_| corrupt())?,
+        None => utc_now_secs(),
+    };
     Ok(KnownPeer {
         peer_id: peer_id.to_string(),
         addresses: lines.map(str::to_string).collect(),
         dht_server,
+        last_seen_utc,
     })
 }
 

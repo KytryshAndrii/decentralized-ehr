@@ -11,7 +11,20 @@ pub trait BlockSource: Send + Sync + 'static {
 
     /// Bajty bloku albo `None`, gdy bloku nie ma lub nie jest udostępniany.
     fn get_block(&self, cid: &Cid) -> Result<Option<Vec<u8>>, BitswapError>;
+
+    /// Kilka odczytów w jednej sesji źródła (np. jedno otwarcie bazy na wiadomość).
+    fn with_reader<R>(
+        &self,
+        task: impl FnOnce(&ReadBlock<'_>) -> Result<R, BitswapError>,
+    ) -> Result<R, BitswapError>
+    where
+        Self: Sized,
+    {
+        task(&|cid| self.get_block(cid))
+    }
 }
+
+pub type ReadBlock<'a> = dyn Fn(&Cid) -> Result<Option<Vec<u8>>, BitswapError> + 'a;
 
 impl ProvidedBlockSource {
     pub fn new(directory: impl Into<PathBuf>) -> Self {
@@ -49,10 +62,21 @@ impl BlockSource for ProvidedBlockSource {
     }
 
     fn get_block(&self, cid: &Cid) -> Result<Option<Vec<u8>>, BitswapError> {
-        let store = self.open()?;
-        if !unsupported_as_absent(store.has_provide(cid))? {
-            return Ok(None);
-        }
-        unsupported_as_absent(store.get_block(cid))
+        read_provided(&self.open()?, cid)
     }
+
+    fn with_reader<R>(
+        &self,
+        task: impl FnOnce(&ReadBlock<'_>) -> Result<R, BitswapError>,
+    ) -> Result<R, BitswapError> {
+        let store = self.open()?;
+        task(&|cid| read_provided(&store, cid))
+    }
+}
+
+fn read_provided(store: &PersistentBlockstore, cid: &Cid) -> Result<Option<Vec<u8>>, BitswapError> {
+    if !unsupported_as_absent(store.has_provide(cid))? {
+        return Ok(None);
+    }
+    unsupported_as_absent(store.get_block(cid))
 }

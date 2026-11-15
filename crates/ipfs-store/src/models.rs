@@ -48,4 +48,5 @@ pub struct KnownPeer {
     pub peer_id: String,
     pub addresses: Vec<String>,
     pub dht_server: bool,
+    pub last_seen_utc: u64,
 }

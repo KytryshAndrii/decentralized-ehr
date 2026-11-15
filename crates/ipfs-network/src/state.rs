@@ -1,11 +1,15 @@
-use crate::consts::{PROVIDER_PERSIST_REFRESH_SECS, PROVIDER_RECORD_TTL_SECS};
+use crate::consts::{
+    KNOWN_PEER_REFRESH_SECS, KNOWN_PEER_TTL_SECS, PROVIDER_PERSIST_REFRESH_SECS,
+    PROVIDER_RECORD_TTL_SECS,
+};
 use crate::models::NetworkNode;
+use crate::utils::is_dialable;
 use ipfs_cid::models::Cid;
 use ipfs_store::utils::utc_now_secs;
-use ipfs_store::{KnownPeer, PersistentBlockstore, RemoteProvider};
+use ipfs_store::{KnownPeer, PersistentBlockstore, RemoteProvider, StoreError};
 use libp2p::kad::{self, store::RecordStore};
 use libp2p::swarm::dial_opts::DialOpts;
-use libp2p::{Multiaddr, PeerId, multiaddr::Protocol};
+use libp2p::{Multiaddr, PeerId};
 use std::time::{Duration, Instant};
 
 /// Trwały stan węzła: znane peery i ogłaszane CID.
@@ -25,20 +29,17 @@ impl NetworkNode {
         let Some(store) = self.open_state_store() else {
             return;
         };
-        let peers = store.load_peers();
-        let provides = store.list_provides();
         let now_utc = utc_now_secs();
-        let expired = store.remove_expired_remote_providers(now_utc);
-        let remote_providers = store.load_remote_providers(now_utc);
+        let peers = store.prune_peers(now_utc.saturating_sub(KNOWN_PEER_TTL_SECS));
+        let provides = store.list_provides();
+        let remote_providers = store.prune_remote_providers(now_utc);
         drop(store);
 
-        match expired {
-            Ok(0) => {}
-            Ok(removed) => println!("DHT_PROVIDER_RECORDS_EXPIRED count={removed}"),
-            Err(error) => eprintln!("STATE_STORE_FAILED {error}"),
-        }
         match remote_providers {
-            Ok(providers) => {
+            Ok((providers, removed)) => {
+                if removed > 0 {
+                    println!("DHT_PROVIDER_RECORDS_EXPIRED count={removed}");
+                }
                 let mut restored = 0;
                 for provider in providers {
                     if self.restore_remote_provider(provider, now_utc) {
@@ -51,7 +52,10 @@ impl NetworkNode {
         }
 
         match peers {
-            Ok(peers) => {
+            Ok((peers, removed)) => {
+                if removed > 0 {
+                    println!("KNOWN_PEERS_EXPIRED count={removed}");
+                }
                 let mut restored = 0;
                 for peer in peers {
                     if self.restore_peer(peer) {
@@ -146,9 +150,17 @@ impl NetworkNode {
         let expires_at_utc = now_utc + ttl_secs;
         let addresses: Vec<String> = record.addresses.iter().map(ToString::to_string).collect();
 
+        let key = record.key.clone();
         let store = self.swarm.behaviour_mut().kad.store_mut();
         if let Err(error) = store.add_provider(record) {
             eprintln!("DHT_PROVIDER_RECORD_REJECTED {peer_id}: {error}");
+            return;
+        }
+        if !store
+            .providers(&key)
+            .iter()
+            .any(|kept| kept.provider == peer_id)
+        {
             return;
         }
         let cache_key = (multihash, peer_id);
@@ -192,12 +204,19 @@ impl NetworkNode {
         if addresses.is_empty() {
             return;
         }
+        let now_utc = utc_now_secs();
         let peer = KnownPeer {
             peer_id: peer_id.to_string(),
             addresses,
             dht_server,
+            last_seen_utc: now_utc,
         };
-        if self.known_peers.get(&peer_id) == Some(&peer) {
+        let unchanged = self.known_peers.get(&peer_id).is_some_and(|saved| {
+            saved.addresses == peer.addresses
+                && saved.dht_server == dht_server
+                && saved.last_seen_utc + KNOWN_PEER_REFRESH_SECS > now_utc
+        });
+        if unchanged {
             return;
         }
         let Some(store) = self.open_state_store() else {
@@ -212,22 +231,36 @@ impl NetworkNode {
         }
     }
 
-    pub(crate) fn remember_provide(&mut self, cid: &Cid) {
-        self.provided.insert(cid.to_bytes(), cid.clone());
-        if let Some(store) = self.open_state_store()
-            && let Err(error) = store.add_provide(cid)
-        {
-            eprintln!("STATE_STORE_FAILED {error}");
+    fn write_state(
+        &self,
+        write: impl FnOnce(&PersistentBlockstore) -> Result<(), StoreError>,
+    ) -> bool {
+        let Some(directory) = self.config.state_directory.as_ref() else {
+            return true;
+        };
+        match PersistentBlockstore::open_in(directory).and_then(|store| write(&store)) {
+            Ok(()) => true,
+            Err(error) => {
+                eprintln!("STATE_STORE_FAILED {error}");
+                false
+            }
         }
     }
 
-    pub(crate) fn forget_provide(&mut self, cid: &Cid) {
-        self.provided.remove(&cid.to_bytes());
-        if let Some(store) = self.open_state_store()
-            && let Err(error) = store.remove_provide(cid)
-        {
-            eprintln!("STATE_STORE_FAILED {error}");
+    pub(crate) fn remember_provide(&mut self, cid: &Cid) -> bool {
+        if !self.write_state(|store| store.add_provide(cid)) {
+            return false;
         }
+        self.provided.insert(cid.to_bytes(), cid.clone());
+        true
+    }
+
+    pub(crate) fn forget_provide(&mut self, cid: &Cid) -> bool {
+        if !self.write_state(|store| store.remove_provide(cid)) {
+            return false;
+        }
+        self.provided.remove(&cid.to_bytes());
+        true
     }
 
     /// Ponownie ogłasza w DHT wszystkie CID tego węzła.
@@ -252,12 +285,4 @@ impl NetworkNode {
             self.reprovide();
         }
     }
-}
-
-fn is_dialable(address: &Multiaddr) -> bool {
-    address.iter().all(|component| match component {
-        Protocol::Ip4(ip) => !ip.is_unspecified(),
-        Protocol::Ip6(ip) => !ip.is_unspecified(),
-        _ => true,
-    })
 }

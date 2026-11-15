@@ -1,5 +1,6 @@
 use crate::consts::{DHT_QUERY_TIMEOUT_SECS, LAN_DHT_PROTOCOL};
 use ipfs_cid::models::Cid;
+use ipfs_store::utils::multihash_bytes;
 use libp2p::{PeerId, StreamProtocol, kad};
 use std::time::Duration;
 
@@ -36,10 +37,5 @@ pub fn provider_key(cid: &Cid) -> Result<kad::RecordKey, &'static str> {
     if usize::from(cid.multihash.size) != cid.multihash.digest.len() {
         return Err("multihash length does not match digest");
     }
-    let encoded_cid = cid.to_bytes();
-    let (_, remaining) =
-        unsigned_varint::decode::u64(&encoded_cid).map_err(|_| "invalid CID version encoding")?;
-    let (_, multihash) =
-        unsigned_varint::decode::u64(remaining).map_err(|_| "invalid CID codec encoding")?;
-    Ok(kad::RecordKey::new(&multihash))
+    Ok(kad::RecordKey::new(&multihash_bytes(&cid.multihash)))
 }

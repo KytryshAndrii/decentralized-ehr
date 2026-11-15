@@ -94,18 +94,27 @@ impl<D: Datastore> Blockstore<D> {
     pub fn load_peers(&self) -> Result<Vec<KnownPeer>, StoreError> {
         let prefix = Namespace::Peers.prefix();
         let mut peers = Vec::new();
-        for key in self.datastore.keys_with_prefix(prefix)? {
+        for (key, value) in self.datastore.entries_with_prefix(prefix)? {
             let peer_id = std::str::from_utf8(&key[prefix.len()..])
                 .map_err(|_| StoreError::CorruptRecord("klucz peera nie jest UTF-8".into()))?;
-            if let Some(value) = self.datastore.get(&key)? {
-                peers.push(decode_known_peer(peer_id, &value)?);
-            }
+            peers.push(decode_known_peer(peer_id, &value)?);
         }
         Ok(peers)
     }
 
     pub fn remove_peer(&self, peer_id: &str) -> Result<(), StoreError> {
         self.datastore.delete(&get_peer_key(peer_id))
+    }
+
+    pub fn prune_peers(&self, seen_after_utc: u64) -> Result<(Vec<KnownPeer>, usize), StoreError> {
+        let (fresh, stale): (Vec<_>, Vec<_>) = self
+            .load_peers()?
+            .into_iter()
+            .partition(|peer| peer.last_seen_utc >= seen_after_utc);
+        for peer in &stale {
+            self.remove_peer(&peer.peer_id)?;
+        }
+        Ok((fresh, stale.len()))
     }
 
     /// Zapamiętuje, że węzeł ogłasza ten CID w DHT (przestrzeń nazw `Provides`).
@@ -132,16 +141,11 @@ impl<D: Datastore> Blockstore<D> {
 
     /// CID, które należy ponownie ogłosić w DHT po restarcie węzła.
     pub fn list_provides(&self) -> Result<Vec<Cid>, StoreError> {
-        let mut cids = Vec::new();
-        for key in self
-            .datastore
-            .keys_with_prefix(Namespace::Provides.prefix())?
-        {
-            if let Some(value) = self.datastore.get(&key)? {
-                cids.push(Cid::decode_from_bytes(&value)?);
-            }
-        }
-        Ok(cids)
+        self.datastore
+            .entries_with_prefix(Namespace::Provides.prefix())?
+            .iter()
+            .map(|(_, value)| Ok(Cid::decode_from_bytes(value)?))
+            .collect()
     }
 
     /// Zapisuje rekord „peer ma blok” otrzymany z DHT (przestrzeń `RemoteProviders`).
@@ -154,37 +158,37 @@ impl<D: Datastore> Blockstore<D> {
 
     /// Ważne rekordy providerów; `now_utc` to sekundy od epoki Unix (UTC).
     pub fn load_remote_providers(&self, now_utc: u64) -> Result<Vec<RemoteProvider>, StoreError> {
-        let mut providers = Vec::new();
-        for key in self
-            .datastore
-            .keys_with_prefix(Namespace::RemoteProviders.prefix())?
-        {
-            if let Some(value) = self.datastore.get(&key)? {
-                let provider = decode_remote_provider(&key, &value)?;
-                if provider.expires_at_utc > now_utc {
-                    providers.push(provider);
-                }
-            }
-        }
-        Ok(providers)
+        Ok(self.scan_remote_providers(now_utc, false)?.0)
     }
 
-    /// Usuwa przeterminowane rekordy providerów; zwraca liczbę usuniętych.
-    pub fn remove_expired_remote_providers(&self, now_utc: u64) -> Result<usize, StoreError> {
+    /// Jednym przejściem usuwa przeterminowane rekordy i zwraca (ważne, liczba usuniętych).
+    pub fn prune_remote_providers(
+        &self,
+        now_utc: u64,
+    ) -> Result<(Vec<RemoteProvider>, usize), StoreError> {
+        self.scan_remote_providers(now_utc, true)
+    }
+
+    fn scan_remote_providers(
+        &self,
+        now_utc: u64,
+        delete_expired: bool,
+    ) -> Result<(Vec<RemoteProvider>, usize), StoreError> {
+        let mut providers = Vec::new();
         let mut removed = 0;
-        for key in self
+        for (key, value) in self
             .datastore
-            .keys_with_prefix(Namespace::RemoteProviders.prefix())?
+            .entries_with_prefix(Namespace::RemoteProviders.prefix())?
         {
-            let Some(value) = self.datastore.get(&key)? else {
-                continue;
-            };
-            if decode_remote_provider(&key, &value)?.expires_at_utc <= now_utc {
+            let provider = decode_remote_provider(&key, &value)?;
+            if provider.expires_at_utc > now_utc {
+                providers.push(provider);
+            } else if delete_expired {
                 self.datastore.delete(&key)?;
                 removed += 1;
             }
         }
-        Ok(removed)
+        Ok((providers, removed))
     }
 
     pub fn datastore(&self) -> &D {
