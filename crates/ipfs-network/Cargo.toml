@@ -10,6 +10,7 @@ futures = "0.3"
 thiserror = "2"
 ipfs-cid = { path = "../ipfs-cid" }
 ipfs-store = { path = "../ipfs-store" }
+ipfs-bitswap = { path = "../ipfs-bitswap" }
 unsigned-varint = "0.8"
 
 [[test]]

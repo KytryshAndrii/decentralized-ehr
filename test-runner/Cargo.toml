@@ -11,6 +11,10 @@ multibase = "0.9"
 
 [dev-dependencies]
 serial_test = "4.0.1"
+ipfs-bitswap = { path = "../crates/ipfs-bitswap" }
+libp2p = { version = "0.57.1", features = ["tokio", "tcp", "noise", "yamux"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
+futures = "0.3"
 
 [[test]]
 name = "integration-cid"
@@ -27,6 +31,10 @@ path = "tests/integration/network_integration.rs"
 
 
 [[test]]
+name = "integration-bitswap"
+path = "tests/integration/bitswap_integration.rs"
+
+[[test]]
 name = "interop-cid"
 path = "tests/interoperability/cid_interop.rs"
 
@@ -38,3 +46,7 @@ path = "tests/interoperability/network_interop.rs"
 [[test]]
 name = "interop-dht"
 path = "tests/interoperability/dht_interop.rs"
+
+[[test]]
+name = "interop-bitswap"
+path = "tests/interoperability/bitswap_interop.rs"

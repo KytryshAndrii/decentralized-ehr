@@ -32,6 +32,7 @@ Listen: /ip4/0.0.0.0/tcp/4101 (port override: EHR_LISTEN_PORT).\n\
 Bootstrap: default peer when omitted, none with \"\", several with --bootstrap-list.\n\
 State: known peers and provided CIDs are saved in ./data and restored on start.\n\
 DHT: LAN only; Client by default, Server with --dht-server.\n\
+Bitswap: provided blocks are served to connected peers over /ipfs/bitswap/1.2.0.\n\
 During node start: peers, bootstrap, provide <CID>, find <CID>, stop <CID>, quit.\n\n\
 Custom bootstrap address format: /ip4/<IPv4>/tcp/<port>/p2p/<PeerId>\n\
   e.g. /ip4/192.168.1.125/tcp/4101/p2p/12D3KooW...\n\

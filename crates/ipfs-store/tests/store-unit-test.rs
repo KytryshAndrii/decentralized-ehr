@@ -349,8 +349,11 @@ fn provides_are_tracked_separately_from_blocks() {
     let first = store.put(b"first").unwrap();
     let second = store.put(b"second").unwrap();
     assert!(store.list_provides().unwrap().is_empty());
+    assert!(!store.has_provide(&first).unwrap());
     store.add_provide(&first).unwrap();
     store.add_provide(&first).unwrap();
+    assert!(store.has_provide(&first).unwrap());
+    assert!(!store.has_provide(&second).unwrap());
     store.add_provide(&second).unwrap();
     let mut listed = store.list_provides().unwrap();
     listed.sort_by_key(|cid| cid.to_string_base32());
@@ -361,6 +364,7 @@ fn provides_are_tracked_separately_from_blocks() {
         assert_eq!(a.to_bytes(), b.to_bytes());
     }
     store.remove_provide(&first).unwrap();
+    assert!(!store.has_provide(&first).unwrap());
     let listed = store.list_provides().unwrap();
     assert_eq!(listed.len(), 1);
     assert_eq!(listed[0].to_bytes(), second.to_bytes());

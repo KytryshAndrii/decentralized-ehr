@@ -1,4 +1,5 @@
 pub mod behaviour;
+pub mod bitswap;
 pub mod config;
 pub mod consts;
 pub mod dht;

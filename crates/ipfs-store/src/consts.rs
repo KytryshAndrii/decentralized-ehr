@@ -20,3 +20,7 @@ pub const PEER_DHT_SERVER_MARKER: &str = "dht=server";
 pub const PEER_DHT_CLIENT_MARKER: &str = "dht=client";
 
 pub const PROVIDER_EXPIRES_FIELD: &str = "expires_utc=";
+
+/// Ponawianie otwarcia bazy, gdy plik LOCK trzyma inna, krótka operacja.
+pub const LOCK_RETRY_ATTEMPTS: u32 = 40;
+pub const LOCK_RETRY_DELAY_MS: u64 = 25;

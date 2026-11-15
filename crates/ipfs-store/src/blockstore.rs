@@ -121,6 +121,15 @@ impl<D: Datastore> Blockstore<D> {
         self.datastore.delete(&key)
     }
 
+    /// Czy węzeł ogłasza ten CID; tylko takie bloki wolno wydawać innym peerom.
+    pub fn has_provide(&self, cid: &Cid) -> Result<bool, StoreError> {
+        validate_cid(cid)?;
+        self.datastore.has(&get_namespaced_multihash_key(
+            Namespace::Provides,
+            &cid.multihash,
+        ))
+    }
+
     /// CID, które należy ponownie ogłosić w DHT po restarcie węzła.
     pub fn list_provides(&self) -> Result<Vec<Cid>, StoreError> {
         let mut cids = Vec::new();

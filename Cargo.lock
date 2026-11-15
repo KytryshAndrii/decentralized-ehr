@@ -1409,6 +1409,18 @@ dependencies = [
 [[package]]
 name = "ipfs-bitswap"
 version = "0.1.0"
+dependencies = [
+ "futures",
+ "ipfs-cid",
+ "ipfs-store",
+ "libp2p",
+ "libp2p-stream",
+ "prost",
+ "tempfile",
+ "thiserror 2.0.21",
+ "tokio",
+ "unsigned-varint",
+]
 
 [[package]]
 name = "ipfs-cid"
@@ -1425,6 +1437,7 @@ name = "ipfs-network"
 version = "0.1.0"
 dependencies = [
  "futures",
+ "ipfs-bitswap",
  "ipfs-cid",
  "ipfs-store",
  "libp2p",
@@ -1815,6 +1828,20 @@ dependencies = [
  "socket2",
  "thiserror 2.0.21",
  "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "libp2p-stream"
+version = "0.5.0-alpha"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f601608210b097bfd4433de5fd262fdfddc89b70ebdb00fb7f2f10c2f5ffb677"
+dependencies = [
+ "futures",
+ "libp2p-core",
+ "libp2p-identity",
+ "libp2p-swarm",
+ "rand 0.10.3",
  "tracing",
 ]
 
@@ -3026,11 +3053,15 @@ dependencies = [
 name = "test-runner"
 version = "0.1.0"
 dependencies = [
+ "futures",
+ "ipfs-bitswap",
  "ipfs-cid",
  "ipfs-store",
+ "libp2p",
  "multibase",
  "serial_test",
  "tempfile",
+ "tokio",
 ]
 
 [[package]]
@@ -3243,6 +3274,10 @@ name = "unsigned-varint"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "eb066959b24b5196ae73cb057f45598450d2c5f71460e98c49b738086eff9c06"
+dependencies = [
+ "futures-io",
+ "futures-util",
+]
 
 [[package]]
 name = "untrusted"

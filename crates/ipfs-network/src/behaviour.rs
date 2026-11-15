@@ -7,12 +7,15 @@ pub struct NetworkBehaviour {
     pub identify: identify::Behaviour,
     pub ping: ping::Behaviour,
     pub kad: crate::dht::KademliaBehaviour,
+    pub bitswap: ipfs_bitswap::BitswapBehaviour,
 }
 #[derive(Debug)]
 pub enum NetworkEvent {
     Identify(Box<identify::Event>),
     Ping(ping::Event),
     Kad(Box<kad::Event>),
+    /// Strumienie Bitswap obsługuje crate ipfs-bitswap; to zachowanie nie emituje zdarzeń.
+    Bitswap,
 }
 
 impl From<identify::Event> for NetworkEvent {
@@ -30,5 +33,11 @@ impl From<ping::Event> for NetworkEvent {
 impl From<kad::Event> for NetworkEvent {
     fn from(event: kad::Event) -> Self {
         Self::Kad(Box::new(event))
+    }
+}
+
+impl From<()> for NetworkEvent {
+    fn from(_: ()) -> Self {
+        Self::Bitswap
     }
 }

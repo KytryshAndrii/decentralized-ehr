@@ -1,14 +1,19 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+pub mod codec;
+pub mod consts;
+pub mod error;
+pub mod models;
+pub mod server;
+pub mod service;
+pub mod source;
+pub mod utils;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use codec::{read_message, write_message};
+pub use consts::BITSWAP_PROTOCOL;
+pub use error::BitswapError;
+pub use models::{
+    BitswapBehaviour, BitswapControl, BitswapIncomingStreams, BitswapLimits, BitswapMessage,
+    BitswapServer, Block, BlockPresence, BlockPresenceType, ProvidedBlockSource, ResponsePlan,
+    WantType, Wantlist, WantlistEntry,
+};
+pub use service::new_behaviour;
+pub use source::BlockSource;

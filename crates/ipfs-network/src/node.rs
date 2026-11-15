@@ -40,6 +40,7 @@ impl NetworkNode {
                 )),
                 ping: ping::Behaviour::new(ping_config),
                 kad: build_kademlia(local_id, config.dht_mode),
+                bitswap: ipfs_bitswap::new_behaviour(),
             })
             .map_err(|e| NetworkError::Libp2p(e.to_string()))?
             .with_swarm_config(|cfg| cfg.with_idle_connection_timeout(config.idle_timeout))
@@ -388,6 +389,7 @@ impl NetworkNode {
         self.listen()?;
         println!("LOCAL_PEER_ID {}", self.local_peer_id());
         self.restore_state();
+        self.start_bitswap();
         let mut ticker = tokio::time::interval(self.config.maintenance_tick);
         ticker.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Skip);
         loop {

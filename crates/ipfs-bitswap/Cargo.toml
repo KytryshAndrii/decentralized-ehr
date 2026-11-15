@@ -4,3 +4,19 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+libp2p = { version = "0.57.1" }
+libp2p-stream = "=0.5.0-alpha"
+prost = "0.14"
+futures = "0.3"
+tokio = { version = "1", features = ["rt", "time"] }
+thiserror = "2"
+unsigned-varint = { version = "0.8", features = ["futures"] }
+ipfs-cid = { path = "../ipfs-cid" }
+ipfs-store = { path = "../ipfs-store" }
+
+[dev-dependencies]
+tempfile = "3.3"
+
+[[test]]
+name = "bitswap-unit-test"
+path = "tests/bitswap-unit-test.rs"

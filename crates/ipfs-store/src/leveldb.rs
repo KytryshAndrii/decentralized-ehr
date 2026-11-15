@@ -1,8 +1,10 @@
+use crate::consts::{LOCK_RETRY_ATTEMPTS, LOCK_RETRY_DELAY_MS};
 use crate::models::LevelDbDatastore;
 use crate::{datastore::Datastore, error::StoreError};
-use rusty_leveldb::{DB, LdbIterator, Options};
+use rusty_leveldb::{DB, LdbIterator, Options, StatusCode};
 use std::path::Path;
 use std::sync::Mutex;
+use std::time::Duration;
 
 impl LevelDbDatastore {
     pub fn open(path: impl AsRef<Path>) -> Result<Self, StoreError> {
@@ -12,8 +14,25 @@ impl LevelDbDatastore {
             paranoid_checks: true,
             ..Options::default()
         };
-        let db = DB::open(path, options)?;
+        let db = Self::open_with_lock_retry(path.as_ref(), options)?;
         Ok(Self { db: Mutex::new(db) })
+    }
+
+    /// Baza jest otwierana tylko na czas jednej operacji, więc blokada pliku LOCK
+    /// (inny wątek węzła albo `ehr-cli put` w drugim terminalu) zwalnia się szybko.
+    fn open_with_lock_retry(path: &Path, options: Options) -> Result<DB, StoreError> {
+        let mut attempt = 0;
+        loop {
+            match DB::open(path, options.clone()) {
+                Err(status)
+                    if status.code == StatusCode::LockError && attempt < LOCK_RETRY_ATTEMPTS =>
+                {
+                    attempt += 1;
+                    std::thread::sleep(Duration::from_millis(LOCK_RETRY_DELAY_MS));
+                }
+                result => return Ok(result?),
+            }
+        }
     }
 
     /// Wymusza synchronizację wszystkich oczekujących operacji.
