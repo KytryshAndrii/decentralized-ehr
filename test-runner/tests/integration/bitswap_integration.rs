@@ -1,4 +1,5 @@
-//! Integration: a real `ehr-cli` node serves blocks over Bitswap 1.2.0 to a minimal test client.
+//! Integration: a real `ehr-cli` node serves blocks over Bitswap 1.2.0 to a minimal test client,
+//! and `ehr-cli` nodes fetch blocks from each other (DHT -> Bitswap -> Blockstore).
 //! cargo build -p ehr-cli
 //! cargo test -p test-runner --test integration-bitswap -- --nocapture
 use futures::{AsyncWriteExt, StreamExt};
@@ -10,8 +11,8 @@ use ipfs_bitswap::{
 use ipfs_cid::models::Cid;
 use ipfs_store::{PersistentBlockstore, consts::DEFAULT_DATA_DIR};
 use libp2p::{Multiaddr, PeerId, StreamProtocol, SwarmBuilder};
-use std::{fs, time::Duration};
-use test_runner::node_process::{NodeProcess, free_port, put_file};
+use std::{fs, path::Path, process::Command, time::Duration};
+use test_runner::node_process::{NodeProcess, cli, free_port, put_file};
 
 const WAIT_SECS: u64 = 20;
 
@@ -183,4 +184,73 @@ async fn node_serves_only_provided_blocks_over_bitswap() {
     let response = client.ask(vec![want(shared, WantType::Block)]).await;
     assert!(response.payload.is_empty());
     assert_eq!(presence_of(&response, shared), BlockPresenceType::DontHave);
+}
+
+fn local_peer_id(node: &NodeProcess) -> String {
+    node.until("LOCAL_PEER_ID", WAIT_SECS)
+        .trim_start_matches("LOCAL_PEER_ID")
+        .trim()
+        .to_owned()
+}
+
+fn node_dir(workspace: &Path, name: &str) -> std::path::PathBuf {
+    let directory = workspace.join(name);
+    fs::create_dir(&directory).unwrap();
+    directory
+}
+
+/// Hub DHT, dostawca i pobierający to trzy osobne węzły: pobierający zna tylko hub,
+/// dostawcę znajduje w DHT i sam się z nim łączy.
+#[test]
+fn node_fetches_verified_block_from_provider_found_in_dht() {
+    let workspace = tempfile::tempdir().unwrap();
+    let (hub_dir, provider_dir, fetcher_dir) = (
+        node_dir(workspace.path(), "hub"),
+        node_dir(workspace.path(), "provider"),
+        node_dir(workspace.path(), "fetcher"),
+    );
+    let bytes: Vec<u8> = (0..1_500_000u32).map(|index| (index % 241) as u8).collect();
+    let file = workspace.path().join("record.bin");
+    fs::write(&file, &bytes).unwrap();
+    let cid = put_file(&provider_dir, &file);
+    let private_file = workspace.path().join("private.txt");
+    fs::write(&private_file, b"stored by the provider, never provided\n").unwrap();
+    let private_cid = put_file(&provider_dir, &private_file);
+
+    let hub_port = free_port();
+    let hub = NodeProcess::start(&hub_dir, hub_port, &["node", "start", "", "--dht-server"]);
+    let hub_address = format!("/ip4/127.0.0.1/tcp/{hub_port}/p2p/{}", local_peer_id(&hub));
+    let start = ["node", "start", "--bootstrap", &hub_address];
+
+    let mut provider = NodeProcess::start(&provider_dir, free_port(), &start);
+    let provider_id = local_peer_id(&provider);
+    provider.until("DHT_BOOTSTRAP_PROGRESS", WAIT_SECS);
+    provider.send(&format!("provide {cid}"));
+    provider.until("DHT_PROVIDING_STARTED", WAIT_SECS);
+
+    let mut fetcher = NodeProcess::start(&fetcher_dir, free_port(), &start);
+    fetcher.until("DHT_BOOTSTRAP_PROGRESS", WAIT_SECS);
+    fetcher.send(&format!("fetch {cid}"));
+    let received = fetcher.until("BITSWAP_BLOCK_RECEIVED", WAIT_SECS);
+    assert!(received.contains(&provider_id), "{received}");
+    assert!(received.contains(&cid), "{received}");
+
+    // Blok jest w Blockstore pobierającego i ma te same bajty.
+    let output = workspace.path().join("fetched.bin");
+    let status = Command::new(cli())
+        .current_dir(&fetcher_dir)
+        .args(["get", &cid])
+        .arg(&output)
+        .status()
+        .unwrap();
+    assert!(status.success());
+    assert_eq!(fs::read(&output).unwrap(), bytes);
+
+    fetcher.send(&format!("fetch {cid}"));
+    fetcher.until("BITSWAP_ALREADY_LOCAL", WAIT_SECS);
+
+    // Blok bez dostawcy w DHT nie jest pobierany.
+    fetcher.send(&format!("fetch {private_cid}"));
+    let failed = fetcher.until("BITSWAP_FETCH_FAILED", 60);
+    assert!(failed.contains("no providers found"), "{failed}");
 }

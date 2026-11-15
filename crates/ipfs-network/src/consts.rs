@@ -21,6 +21,8 @@ pub const PING_INTERVAL_SECS: u64 = 15;
 pub const IDLE_TIMEOUT_SECS: u64 = 90;
 pub const LAN_DHT_PROTOCOL: &str = "/ipfs/lan/kad/1.0.0";
 pub const DHT_QUERY_TIMEOUT_SECS: u64 = 30;
+// libp2p MemoryStore defaults to 1024 provided keys; one UnixFS file is many blocks.
+pub const DHT_MAX_PROVIDED_KEYS: usize = 65_536;
 
 pub const REPROVIDE_INTERVAL_SECS: u64 = 12 * 60 * 60;
 pub const BOOTSTRAP_LIST_SEPARATOR: char = ',';

@@ -76,6 +76,8 @@ impl NetworkNode {
             remote_providers: HashMap::new(),
             next_reprovide: Instant::now(),
             reprovided_after_bootstrap: false,
+            bitswap_client: None,
+            pending_fetches: HashMap::new(),
         })
     }
     pub fn local_peer_id(&self) -> PeerId {
@@ -328,6 +330,9 @@ impl NetworkNode {
                     && let Some(providers) = self.pending_provider_queries.remove(&id)
                 {
                     println!("DHT_FIND_FINISHED count={}", providers.len());
+                    if let Some(cid) = self.pending_fetches.remove(&id) {
+                        self.fetch_block(cid, providers.into_iter().collect());
+                    }
                 }
             }
             _ => {}
@@ -351,6 +356,13 @@ impl NetworkNode {
             NetworkCommand::GetProviders(cid) => match self.get_providers(&cid) {
                 Ok(_) => println!("DHT_FIND_REQUESTED {}", cid.to_string_base32()),
                 Err(error) => eprintln!("DHT_FIND_FAILED {error}"),
+            },
+            NetworkCommand::Fetch(cid) => match self.get_providers(&cid) {
+                Ok(id) => {
+                    println!("BITSWAP_FETCH_REQUESTED {}", cid.to_string_base32());
+                    self.pending_fetches.insert(id, cid);
+                }
+                Err(error) => eprintln!("BITSWAP_FETCH_FAILED {error}"),
             },
             // Bez trwałego usunięcia Bitswap nadal wydawałby blok, więc DHT zostaje bez zmian.
             NetworkCommand::StopProviding(cid) => {

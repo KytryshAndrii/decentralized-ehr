@@ -1,4 +1,4 @@
-use crate::consts::{DHT_QUERY_TIMEOUT_SECS, LAN_DHT_PROTOCOL};
+use crate::consts::{DHT_MAX_PROVIDED_KEYS, DHT_QUERY_TIMEOUT_SECS, LAN_DHT_PROTOCOL};
 use ipfs_cid::models::Cid;
 use ipfs_store::utils::multihash_bytes;
 use libp2p::{PeerId, StreamProtocol, kad};
@@ -27,7 +27,11 @@ pub fn build_kademlia(local_peer_id: PeerId, mode: DhtMode) -> KademliaBehaviour
     let mut config = kad::Config::new(protocol);
     config.set_query_timeout(Duration::from_secs(DHT_QUERY_TIMEOUT_SECS));
     config.set_record_filtering(kad::StoreInserts::FilterBoth);
-    let store = kad::store::MemoryStore::new(local_peer_id);
+    let store_config = kad::store::MemoryStoreConfig {
+        max_provided_keys: DHT_MAX_PROVIDED_KEYS,
+        ..Default::default()
+    };
+    let store = kad::store::MemoryStore::with_config(local_peer_id, store_config);
     let mut kademlia = kad::Behaviour::with_config(local_peer_id, store, config);
     kademlia.set_mode(Some(mode.libp2p_mode()));
     kademlia

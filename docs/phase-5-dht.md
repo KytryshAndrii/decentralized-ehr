@@ -496,7 +496,7 @@ Stan: kod i testy uruchomione lokalnie 14.11.2026 (`network-unit-test` 15/15, `i
 
 - `provide <CID>` zapisuje CID w przestrzeni `Provides`, a `stop <CID>` go usuwa.
 - Kolejność jest istotna, bo Bitswap wydaje blok według wpisu na dysku. `provide` najpierw zapisuje wpis, potem ogłasza w DHT; nieudany zapis daje `DHT_PROVIDE_FAILED state not saved`. `stop` najpierw usuwa wpis z dysku, a dopiero potem wycofuje ogłoszenie. Jeśli usunięcie się nie uda (np. baza zajęta), węzeł wypisuje `DHT_STOP_FAILED block is still shared` i niczego nie zmienia; `DHT_STOPPED` pojawia się tylko wtedy, gdy blok naprawdę przestał być udostępniany. Test: `node_serves_only_provided_blocks_over_bitswap`.
-- Ograniczenie: `MemoryStore` Kademlii przyjmuje domyślnie najwyżej 1024 klucze ogłaszane przez własny węzeł (`max_provided_keys`). Kolejne `provide` kończy się `DHT_PROVIDE_FAILED`. Limit trzeba podnieść przez `MemoryStoreConfig` przed UnixFS, gdzie jeden plik to wiele bloków.
+- `MemoryStore` Kademlii przyjmuje domyślnie najwyżej 1024 klucze ogłaszane przez własny węzeł (`max_provided_keys`); kolejne `provide` kończyło się `DHT_PROVIDE_FAILED`. Od M7 limit to `DHT_MAX_PROVIDED_KEYS = 65 536` (`MemoryStoreConfig` w `build_kademlia`), bo w UnixFS jeden plik to wiele bloków.
 - Węzeł ogłasza zapisane CID ponownie w trzech momentach: zaraz po starcie (rekord lokalny), po pierwszym zakończonym bootstrapie DHT (rekordy trafiają do sieci) oraz okresowo co `REPROVIDE_INTERVAL_SECS = 12 * 60 * 60` s. Log: `DHT_REPROVIDE count=N`.
 - Krótki okres jest konieczny, bo serwery DHT trzymają rekordy w `MemoryStore` i tracą je po restarcie. Kubo ogłasza ponownie co 22 h, ale przechowuje rekordy trwale.
 

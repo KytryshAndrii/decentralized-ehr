@@ -17,6 +17,12 @@ pub enum BitswapError {
     #[error("stream: {0}")]
     Stream(String),
 
-    #[error("stream write timed out")]
+    #[error("Bitswap peer timed out")]
     Timeout,
+
+    #[error("provider does not have the block")]
+    DontHave,
+
+    #[error("no providers found")]
+    NoProviders,
 }

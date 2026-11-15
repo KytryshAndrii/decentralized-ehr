@@ -1,7 +1,7 @@
 use futures::executor::block_on;
 use futures::io::Cursor;
 use ipfs_bitswap::consts::{MAX_MESSAGE_BYTES, MAX_RESPONSE_BYTES, MAX_WANTLIST_ENTRIES};
-use ipfs_bitswap::utils::cid_prefix;
+use ipfs_bitswap::utils::{block_cid, cid_prefix};
 use ipfs_bitswap::{
     BitswapError, BitswapLimits, BitswapMessage, BitswapServer, Block, BlockPresence,
     BlockPresenceType, BlockSource, ProvidedBlockSource, WantType, Wantlist, WantlistEntry,
@@ -464,4 +464,20 @@ fn provided_block_source_treats_unsupported_cid_as_absent() {
         vec![false]
     );
     assert_eq!(source.get_block(&unsupported).unwrap(), None);
+}
+
+#[test]
+fn received_block_is_matched_to_cid_by_its_own_hash() {
+    let data = b"block received over Bitswap";
+    let wanted = cid(data);
+    let prefix = cid_prefix(&wanted);
+    assert_eq!(block_cid(&prefix, data), Some(wanted.clone()));
+    // Zmienione bajty dają inny CID, więc nie pasują do żądania.
+    assert_ne!(block_cid(&prefix, b"tampered bytes"), Some(wanted));
+    // CIDv0, nieznany hash, zła długość skrótu i ucięty prefiks są odrzucane.
+    assert_eq!(block_cid(&[0x00, 0x55, 0x12, 0x20], data), None);
+    assert_eq!(block_cid(&[0x01, 0x55, 0x1e, 0x20], data), None);
+    assert_eq!(block_cid(&[0x01, 0x55, 0x12, 0x10], data), None);
+    assert_eq!(block_cid(&[0x01, 0x55], data), None);
+    assert_eq!(block_cid(&[], data), None);
 }

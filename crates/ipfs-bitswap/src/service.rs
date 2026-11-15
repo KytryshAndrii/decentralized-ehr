@@ -1,8 +1,10 @@
+use crate::client::deliver;
 use crate::codec::{read_message, write_message};
 use crate::consts::{BITSWAP_PROTOCOL, STREAM_WRITE_TIMEOUT_SECS};
 use crate::error::BitswapError;
 use crate::models::{
-    BitswapBehaviour, BitswapMessage, BitswapServer, BlockPresenceType, ResponsePlan,
+    BitswapBehaviour, BitswapClient, BitswapMessage, BitswapServer, BlockPresenceType,
+    PendingWants, ResponsePlan,
 };
 use crate::source::BlockSource;
 use futures::{AsyncWriteExt, StreamExt};
@@ -17,7 +19,13 @@ pub fn new_behaviour() -> BitswapBehaviour {
 
 impl<S: BlockSource> BitswapServer<S> {
     /// Rejestruje protokół i uruchamia obsługę strumieni w tle (wymaga runtime tokio).
-    pub fn start(self, behaviour: &BitswapBehaviour) -> Result<(), BitswapError> {
+    /// Protokół ma jeden odbiornik strumieni, więc odpowiedzi dla `client` też przechodzą tędy.
+    pub fn start(
+        self,
+        behaviour: &BitswapBehaviour,
+        client: &BitswapClient,
+    ) -> Result<(), BitswapError> {
+        let pending = client.pending.clone();
         let mut control = behaviour.new_control();
         let mut incoming = control
             .accept(StreamProtocol::new(BITSWAP_PROTOCOL))
@@ -25,17 +33,25 @@ impl<S: BlockSource> BitswapServer<S> {
         let server = Arc::new(self);
         tokio::spawn(async move {
             while let Some((peer, stream)) = incoming.next().await {
-                tokio::spawn(server.clone().serve_stream(control.clone(), peer, stream));
+                let server = server.clone();
+                tokio::spawn(server.serve_stream(control.clone(), pending.clone(), peer, stream));
             }
         });
         Ok(())
     }
 
     /// Jeden strumień przychodzący może nieść wiele wiadomości z wantlistą.
-    async fn serve_stream(self: Arc<Self>, mut control: Control, peer: PeerId, mut stream: Stream) {
+    async fn serve_stream(
+        self: Arc<Self>,
+        mut control: Control,
+        pending: PendingWants,
+        peer: PeerId,
+        mut stream: Stream,
+    ) {
         loop {
             match read_message(&mut stream, self.limits.max_message_bytes).await {
-                Ok(Some(request)) => {
+                Ok(Some(mut request)) => {
+                    deliver(&pending, peer, &mut request);
                     if let Err(error) = self.clone().answer(&mut control, peer, request).await {
                         eprintln!("BITSWAP_FAILED {peer}: {error}");
                     }
@@ -104,7 +120,7 @@ impl<S: BlockSource> BitswapServer<S> {
 }
 
 /// Dostęp do LevelDB jest blokujący, więc nie może działać w wątku pętli sieciowej.
-async fn blocking<T: Send + 'static>(
+pub(crate) async fn blocking<T: Send + 'static>(
     task: impl FnOnce() -> Result<T, BitswapError> + Send + 'static,
 ) -> Result<T, BitswapError> {
     tokio::task::spawn_blocking(task)

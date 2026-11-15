@@ -1,7 +1,9 @@
+use futures::channel::oneshot;
 use ipfs_cid::models::Cid;
-use std::collections::VecDeque;
+use libp2p::PeerId;
+use std::collections::{HashMap, VecDeque};
 use std::path::PathBuf;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 pub type BitswapBehaviour = libp2p_stream::Behaviour;
 pub type BitswapControl = libp2p_stream::Control;
@@ -115,4 +117,17 @@ pub struct BitswapServer<S> {
 #[derive(Clone, Debug)]
 pub struct ProvidedBlockSource {
     pub(crate) directory: PathBuf,
+}
+
+/// Oczekiwane odpowiedzi: (dostawca, binarny CID) -> blok albo `None` dla DontHave.
+pub(crate) type WantMap = HashMap<(PeerId, Vec<u8>), oneshot::Sender<Option<Vec<u8>>>>;
+pub(crate) type PendingWants = Arc<Mutex<WantMap>>;
+
+/// Klient Bitswap: wysyła Want-Block i zapisuje zweryfikowany blok w Blockstore.
+/// Odpowiedzi przychodzą strumieniami, które odbiera `BitswapServer`.
+#[derive(Clone)]
+pub struct BitswapClient {
+    pub(crate) control: BitswapControl,
+    pub(crate) directory: PathBuf,
+    pub(crate) pending: PendingWants,
 }

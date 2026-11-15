@@ -31,7 +31,8 @@ Bootstrap: default peer when omitted, none with \"\", several with --bootstrap-l
 State: known peers and provided CIDs are saved in ./data and restored on start.\n\
 DHT: LAN only; Client by default, Server with --dht-server.\n\
 Bitswap: provided blocks are served to connected peers over /ipfs/bitswap/1.2.0.\n\
-During node start: peers, bootstrap, provide <CID>, find <CID>, stop <CID>, quit.\n\n\
+Fetch: fetch <CID> finds providers in the DHT, downloads and verifies the block, stores it locally.\n\
+During node start: peers, bootstrap, provide <CID>, find <CID>, fetch <CID>, stop <CID>, quit.\n\n\
 Custom bootstrap address format: /ip4/<IPv4>/tcp/<port>/p2p/<PeerId>\n\
   e.g. /ip4/192.168.1.125/tcp/4101/p2p/12D3KooW...\n\
   (the PeerId of a node is printed by: ehr-cli node identity)"
@@ -74,10 +75,16 @@ fn stdin_commands(sender: tokio::sync::mpsc::UnboundedSender<NetworkCommand>) {
             ("find", Some(cid), None) => IpfsService::parse_cid(cid)
                 .map(NetworkCommand::GetProviders)
                 .map_err(|error| error.to_string()),
+            ("fetch", Some(cid), None) => IpfsService::parse_cid(cid)
+                .map(NetworkCommand::Fetch)
+                .map_err(|error| error.to_string()),
             ("stop", Some(cid), None) => IpfsService::parse_cid(cid)
                 .map(NetworkCommand::StopProviding)
                 .map_err(|error| error.to_string()),
-            _ => Err("Use peers, bootstrap, provide <CID>, find <CID>, stop <CID> or quit".into()),
+            _ => Err(
+                "Use peers, bootstrap, provide <CID>, find <CID>, fetch <CID>, stop <CID> or quit"
+                    .into(),
+            ),
         };
         match parsed {
             Ok(NetworkCommand::StartProviding(cid)) => {
@@ -90,6 +97,14 @@ fn stdin_commands(sender: tokio::sync::mpsc::UnboundedSender<NetworkCommand>) {
                     Ok(false) => eprintln!("DHT_PROVIDE_FAILED block is not in local Blockstore"),
                     Err(error) => eprintln!("DHT_PROVIDE_FAILED {error}"),
                 }
+            }
+            Ok(NetworkCommand::Fetch(cid))
+                if matches!(
+                    IpfsService::new().and_then(|service| service.has_block(&cid)),
+                    Ok(true)
+                ) =>
+            {
+                println!("BITSWAP_ALREADY_LOCAL {}", cid.to_string_base32());
             }
             Ok(command) => {
                 let quit = matches!(command, NetworkCommand::Quit);
