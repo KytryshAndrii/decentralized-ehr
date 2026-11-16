@@ -29,24 +29,31 @@ impl BitswapClient {
         }
     }
 
-    /// Pobiera blok od pierwszego dostawcy, który go wyda, weryfikuje go względem CID
-    /// i zapisuje w Blockstore. Zwraca dostawcę i rozmiar bloku.
+    /// Zwraca blok z lokalnego Blockstore albo pobiera go od pierwszego dostawcy, który go
+    /// wyda, weryfikuje względem CID i zapisuje. Dostawca `None` oznacza blok lokalny.
     pub async fn fetch(
         &self,
         cid: &Cid,
         providers: &[PeerId],
-    ) -> Result<(PeerId, usize), BitswapError> {
+    ) -> Result<(Option<PeerId>, Vec<u8>), BitswapError> {
+        let (directory, wanted) = (self.directory.clone(), cid.clone());
+        let local =
+            blocking(move || Ok(PersistentBlockstore::open_in(&directory)?.get_block(&wanted)?));
+        if let Some(block) = local.await? {
+            return Ok((None, block));
+        }
         let mut last_error = BitswapError::NoProviders;
         for peer in providers {
             match self.fetch_from(*peer, cid).await {
                 Ok(data) => {
-                    let (directory, cid, size) = (self.directory.clone(), cid.clone(), data.len());
+                    let (directory, cid) = (self.directory.clone(), cid.clone());
                     // put_block ponownie liczy skrót: do bazy trafia tylko blok zgodny z CID.
-                    blocking(move || {
-                        Ok(PersistentBlockstore::open_in(&directory)?.put_block(&cid, &data)?)
+                    let data = blocking(move || {
+                        PersistentBlockstore::open_in(&directory)?.put_block(&cid, &data)?;
+                        Ok(data)
                     })
                     .await?;
-                    return Ok((*peer, size));
+                    return Ok((Some(*peer), data));
                 }
                 Err(error) => {
                     eprintln!("BITSWAP_PROVIDER_FAILED {peer}: {error}");

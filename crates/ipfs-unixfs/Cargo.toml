@@ -4,3 +4,14 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+prost = "0.14"
+thiserror = "2"
+ipfs-cid = { path = "../ipfs-cid" }
+ipfs-store = { path = "../ipfs-store" }
+
+[dev-dependencies]
+tempfile = "3.3"
+
+[[test]]
+name = "unixfs-unit-test"
+path = "tests/unixfs-unit-test.rs"

@@ -331,7 +331,15 @@ impl NetworkNode {
                 {
                     println!("DHT_FIND_FINISHED count={}", providers.len());
                     if let Some(cid) = self.pending_fetches.remove(&id) {
-                        self.fetch_block(cid, providers.into_iter().collect());
+                        // Jak w Bitswap Kubo: po dostawcach z DHT pytani są połączeni peerzy.
+                        // Rekord dostawcy mógł jeszcze nie dotrzeć do DHT.
+                        let mut candidates: Vec<PeerId> = providers.into_iter().collect();
+                        for peer in self.swarm.connected_peers() {
+                            if !candidates.contains(peer) {
+                                candidates.push(*peer);
+                            }
+                        }
+                        self.fetch_block(cid, candidates);
                     }
                 }
             }

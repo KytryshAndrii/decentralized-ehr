@@ -653,6 +653,7 @@ dependencies = [
  "ipfs-cid",
  "ipfs-network",
  "ipfs-store",
+ "ipfs-unixfs",
  "tokio",
 ]
 
@@ -1440,6 +1441,7 @@ dependencies = [
  "ipfs-bitswap",
  "ipfs-cid",
  "ipfs-store",
+ "ipfs-unixfs",
  "libp2p",
  "thiserror 2.0.21",
  "tokio",
@@ -1458,6 +1460,13 @@ dependencies = [
 [[package]]
 name = "ipfs-unixfs"
 version = "0.1.0"
+dependencies = [
+ "ipfs-cid",
+ "ipfs-store",
+ "prost",
+ "tempfile",
+ "thiserror 2.0.21",
+]
 
 [[package]]
 name = "ipnet"

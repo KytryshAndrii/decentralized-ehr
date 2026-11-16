@@ -23,5 +23,6 @@ pub const PEER_SEEN_FIELD: &str = "seen_utc=";
 pub const PROVIDER_EXPIRES_FIELD: &str = "expires_utc=";
 
 /// Ponawianie otwarcia bazy, gdy plik LOCK trzyma inna, krótka operacja.
-pub const LOCK_RETRY_ATTEMPTS: u32 = 40;
+// 5 s: węzeł obsługujący plik wieloblokowy otwiera bazę z wielu zadań naraz.
+pub const LOCK_RETRY_ATTEMPTS: u32 = 200;
 pub const LOCK_RETRY_DELAY_MS: u64 = 25;

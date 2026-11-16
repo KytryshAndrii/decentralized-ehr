@@ -1,1 +1,128 @@
-Mutable File System (MFS) and Unix File System (UnixFS)
+# Phase 8 — Pliki raw i podstawowy UnixFS (M8, Issue #10)
+
+> **Stan dokumentacji:** 16.11.2026. Testy jednostkowe, integracyjne (procesy `ehr-cli`) oraz interoperacyjności Rust ↔ Kubo 0.43.1 zostały uruchomione i **zakończyły się powodzeniem** (§8).
+
+## 1. Cel i zakres
+
+- Import i eksport małych plików raw (jeden blok).
+- Obsługa dag-pb: budowa DAG pliku i rekonstrukcja pliku z DAG.
+- Wymiana plików z Kubo w obie strony.
+- **Definition of Done:** raw działa w obie strony; zakres zgodności UnixFS jest udokumentowany (§5).
+
+Źródła: <https://specs.ipfs.tech/unixfs/>, <https://ipld.io/specs/codecs/dag-pb/spec/>, <https://docs.ipfs.tech/concepts/file-systems/>, kod chunkera Kubo (`ipfs/boxo/chunker`, `whyrusleeping/chunker`).
+
+## 2. Decyzje
+
+| Zagadnienie | Decyzja | Uzasadnienie |
+|---|---|---|
+| Kodek węzłów | **dag-pb** (`0x70`) + liście **raw** (`0x55`) | UnixFS v1 jest zdefiniowany wyłącznie na dag-pb. `ipfs cat`, `ipfs get` i bramki HTTP nie potrafią odczytać pliku z dag-cbor ani z kodeka JSON. |
+| dag-cbor | **nie dla plików** | Zob. §3. |
+| Układ DAG | **balanced**, do 174 linków na węzeł | Wymóg autora i domyślny układ Kubo; wszystkie liście na tej samej głębokości, więc dostęp do dowolnego miejsca pliku ma stały koszt. Trickle nie jest tworzony. |
+| Liście | raw (`--raw-leaves`) | Liść to same bajty pliku, bez opakowania protobuf. Ten sam fragment danych daje ten sam blok niezależnie od pliku, w którym występuje, a plik jednoblokowy ma ten sam CID co `put`. |
+| Chunker dla audio i wideo | stały, 256 KiB (`size-262144`) | Wymóg autora. Strumienie skompresowane nie mają powtarzalnych fragmentów; cięcie zależne od treści kosztowałoby czas bez zysku. |
+| Chunker dla pozostałych plików | Rabin `16384-65536-262144` | Wymóg autora co do metody; parametry zmienione względem domyślnych Kubo, zob. §4. |
+| Wybór chunkera | po rozszerzeniu pliku (`consts::FIXED_CHUNK_EXTENSIONS`) | Najprostsza reguła spełniająca wymóg. |
+| Wersja CID, hash | CIDv1, SHA2-256 | Jak w M1. |
+| Odczyt | w głąb, w kolejności linków, z jawnym stosem | Odtwarza także DAG trickle i pliki Kubo z liśćmi dag-pb; głębokość DAG z sieci nie może przepełnić stosu wywołań. |
+
+## 3. Dlaczego nie dag-cbor (propozycja inna niż w wymaganiach)
+
+Wymaganie brzmiało: dag-pb, „albo dag-cbor, jeżeli to możliwe”. Technicznie plik da się zapisać jako drzewo dag-cbor, ale:
+
+1. **Kubo by go nie odczytało jako pliku.** UnixFS v1 to komunikat protobuf `Data` w polu `Data` węzła dag-pb. Dla dag-cbor nie istnieje specyfikacja pliku; `ipfs cat <CID>` zwraca błąd, a zawartość widać tylko przez `ipfs dag get`. Wymóg „to, co wychodzi z crate unixfs, musi być kompatybilne z Kubo” byłby niespełniony.
+2. **CID nie dałoby się porównać z Kubo.** Przy dag-pb `ehr-cli add` i `ipfs add` dają ten sam CID, co jest najmocniejszym możliwym testem zgodności (§8).
+3. **dag-cbor nic tu nie daje.** Liście raw i tak nie zależą od kodeka, a węzły pośrednie to tylko lista linków.
+
+dag-cbor pozostaje właściwym wyborem dla **metadanych**: manifestów i rejestru EHR (M9) oraz tokenów UCAN (UCAN 1.0 jest kodowany w dag-cbor).
+
+## 4. Reużycie bloków i brak dopełniania
+
+- **Brak dopełniania (paddingu).** Żaden chunker nie dopełnia danych: ostatni kawałek jest po prostu krótszy. Węzły pośrednie nie zawierają bajtów pliku, a liście raw nie mają narzutu.
+- **Deduplikacja.** Blockstore przechowuje blok pod jego multihashem. Importer najpierw sprawdza, czy blok już jest (`has`), i dopiero wtedy zapisuje; `add` wypisuje `new_blocks` i `reused_blocks`. `fetch` pobiera z sieci tylko bloki, których nie ma lokalnie (`fetched` / `local`).
+- **Dlaczego Rabin.** Przy stałych kawałkach wstawienie jednego bajtu na początku pliku przesuwa wszystkie granice i żaden blok nowej wersji nie pokrywa się ze starą. Rabin wyznacza granice z treści (okno 16 B), więc granice „odnajdują się” za miejscem zmiany.
+- **Dlaczego nie domyślne parametry Kubo.** `--chunker=rabin` to `87381-262144-393216`. Zakres min..max jest wąski względem średniej, więc ok. 31% kawałków kończy się na maksimum, czyli cięciem zależnym od pozycji, a po takim cięciu synchronizacja ze starą wersją przepada. Pomiar na pliku tekstowym 1,8 MB po dopisaniu jednej linii na początku:
+
+| Parametry Rabina | Bloki pliku | Bloki reużyte w nowej wersji |
+|---|---|---|
+| Kubo domyślne `87381-262144-393216` | 6 | **0** |
+| Przyjęte `16384-65536-262144` | 9 | **6** |
+
+Przyjęte parametry mają tę samą górną granicę co zwykły blok Kubo (256 KiB), szeroki zakres min..max (wymuszone cięcie w ok. 2% kawałków przy danych losowych) i nadal dają **ten sam CID co Kubo** uruchomione z `--chunker=rabin-16384-65536-262144`. Uwaga: syntetyczny, bardzo powtarzalny tekst z tego pomiaru jest przypadkiem niekorzystnym (mało różnych okien), stąd kawałki bliskie maksimum.
+
+Implementacja Rabina jest portem chunkera Kubo: wielomian `17437180132763653`, okno 16 B, stan zerowany na początku każdego kawałka, maska `2^floor(log2(avg)) - 1`.
+
+## 5. Zakres zgodności UnixFS
+
+| Element | Zapis (Rust tworzy) | Odczyt (Rust odtwarza) |
+|---|---|---|
+| Plik jednoblokowy raw | tak | tak |
+| Plik wieloblokowy, balanced, liście raw, CIDv1 | tak, **CID identyczny z Kubo** | tak |
+| Plik pusty | tak (pusty blok raw, jak Kubo) | tak |
+| Chunker `size-N` | tak (N = 262144 w CLI) | dowolny |
+| Chunker `rabin-min-avg-max` | tak (16384-65536-262144 w CLI) | dowolny |
+| Chunker buzhash | nie | tak (odczyt nie zależy od chunkera) |
+| Układ trickle | nie | tak |
+| Liście dag-pb z danymi w polu `Data` (Kubo bez `--raw-leaves`) | nie | tak |
+| Linki CIDv0 wewnątrz DAG | nie | tak |
+| Korzeń podany jako CIDv0 (`Qm...`) | nie | nie wprost: trzeba podać `ipfs cid base32 <Qm...>` |
+| Katalogi, HAMT, symlinki | nie | nie (`get` zwraca błąd; `fetch` pobiera bloki) |
+| Metadane `mode`, `mtime` (UnixFS 1.5) | nie | pomijane |
+| Hash inny niż SHA2-256 / SHA2-512 | nie | nie |
+| Inline CID (`identity`) | nie | nie |
+| Blok większy niż 2 MiB | nie | nie |
+
+Odpowiednik w Kubo dla `ehr-cli add <plik>`:
+
+```text
+ipfs add --cid-version=1 --raw-leaves --chunker=size-262144 <audio/wideo>
+ipfs add --cid-version=1 --raw-leaves --chunker=rabin-16384-65536-262144 <pozostałe>
+```
+
+## 6. CLI i sieć
+
+| Komenda | Działanie |
+|---|---|
+| `ehr-cli put <plik>` | bez zmian: jeden blok raw, do 2 MiB |
+| `ehr-cli add <plik>` | import UnixFS pliku dowolnej wielkości (strumieniowo); `[UNIXFS] ADDED CID=... bytes=... chunker=... new_blocks=... reused_blocks=...` |
+| `ehr-cli get <CID> <plik>` | blok raw albo cały plik UnixFS; nie nadpisuje |
+| `provide <CID>` (w węźle) | ogłasza **wszystkie bloki** pliku, korzeń na końcu |
+| `stop <CID>` | wycofuje wszystkie bloki pliku |
+| `fetch <CID>` | pobiera korzeń i wszystkie bloki, do których prowadzą linki; `BITSWAP_FETCH_DONE <CID> fetched=N local=M` |
+
+Zmiany w zachowaniu sieci, które wyszły w testach z Kubo:
+
+- **Korzeń ogłaszany jako ostatni.** Kubo pyta o bloki od razu po znalezieniu korzenia; blok jeszcze nieogłoszony dostawał `DontHave` i pobieranie się zatrzymywało.
+- **`fetch` pyta także połączonych peerów**, po dostawcach z DHT. Kubo ogłasza każdy blok dodanego pliku, a rekord korzenia mógł dotrzeć do węzła Rust po zakończeniu zapytania DHT. Tak samo działa Bitswap w Kubo (najpierw połączeni peerzy).
+- **Ponawianie otwarcia LevelDB wydłużone z 1 s do 5 s** (`LOCK_RETRY_ATTEMPTS`). Przy pliku wieloblokowym wiele zadań węzła otwiera bazę naraz; po 1 s część żądań Kubo kończyła się błędem blokady i nie dostawała odpowiedzi.
+
+## 7. Kod
+
+| Miejsce | Zawartość |
+|---|---|
+| `ipfs-unixfs/src/chunker.rs` | `Chunker::{fixed, rabin, for_path, split}`, iterator `Chunks`, tablice Rabina |
+| `ipfs-unixfs/src/dagpb.rs` | kanoniczne kodowanie dag-pb (linki przed danymi), linki CIDv0/CIDv1 |
+| `ipfs-unixfs/src/importer.rs` | `add_file`: liście → poziomy po 174 → korzeń |
+| `ipfs-unixfs/src/exporter.rs` | `cat`, `dag_cids`, `block_links` |
+| `ipfs-unixfs/src/models.rs` | `Chunker`, `ImportedFile`, struktury protobuf (`prost`) |
+| `ipfs-bitswap/src/client.rs` | `fetch` zwraca blok; blok lokalny nie jest pobierany |
+| `ipfs-network/src/bitswap.rs` | `fetch_dag`: przejście po linkach |
+| `ehr-cli` | `add`, `get` przez `ipfs_unixfs::cat`, `provide`/`stop`/`fetch` na całym DAG |
+
+## 8. Testy
+
+| Warstwa | Test | Wynik |
+|---|---|---|
+| Jednostkowe | `cargo test -p ipfs-unixfs` (13): CID wzorcowe z Kubo dla `size-1024` (2 poziomy, 391 liści), `size-262144`, trzech zestawów Rabina i pliku pustego; granice Rabina; reużycie po wstawce; liście dag-pb i linki CIDv0; kolejność pól dag-pb; błędy | PASS |
+| Integracyjne | `integration-unixfs` (2): `add`/`get` dla tekstu i `.mp4`, reużycie bloków między wersjami, brak nadpisywania; pobranie całego pliku między dwoma węzłami, `stop` wszystkich bloków | PASS |
+| Interop Kubo 0.43.1 | `scripts/testing/test-kubo-unixfs-interop.sh` (`interop-unixfs`): A ten sam CID w Rust i Kubo (tekst, wideo, mały, pusty) · B Kubo czyta pliki z Rusta (`ipfs cat`) · C Rust odtwarza plik Kubo (rabin) · D DAG dwupoziomowy (200 liści) · E plik CIDv0 z liśćmi dag-pb · F DAG trickle · G katalog odrzucony przez `get` | PASS (3 kolejne uruchomienia) |
+| Ręcznie | `M8_VIDEO_BYTES=60000000`: plik 60 MB (229 liści, 2 poziomy), ten sam CID co Kubo, `ipfs cat` z Rusta | PASS |
+
+## 9. Ograniczenia
+
+- Baza LevelDB jest otwierana na czas operacji. `ehr-cli add` dużego pliku oraz `provide`/`fetch` sprawdzające cały DAG trzymają ją przez cały import lub odczyt; operacje działającego węzła, które w tym czasie czekają dłużej niż 5 s, kończą się błędem blokady (`STATE_STORE_FAILED`, `BITSWAP_FAILED`).
+- `fetch` pobiera bloki po jednym, każdy osobnym strumieniem; duże pliki pobierają się wolno.
+- `provide` uruchamia jedno zapytanie DHT na blok; limit ogłaszanych kluczy to 65 536.
+- `stop` wycofuje wszystkie bloki pliku, także te współdzielone z innym ogłoszonym plikiem (deduplikacja); taki plik trzeba ogłosić ponownie.
+- `get` nie ogranicza rozmiaru odtwarzanego pliku; spreparowany DAG, który wielokrotnie linkuje ten sam blok, może zapełnić dysk.
+- Każdy zapisany blok wypisuje linie diagnostyczne `[ipfs-cid]` i `[ipfs-store]` na stderr.
+- Wybór chunkera po rozszerzeniu nie rozpoznaje audio/wideo w plikach o innej nazwie.

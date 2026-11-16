@@ -47,6 +47,8 @@
 
 ## 5. Ograniczenia
 
+> Od M8 (`docs/phase-8-unixfs.md`) `fetch` pobiera cały DAG pliku i po dostawcach z DHT pyta także połączonych peerów; poniższa lista opisuje stan M7.
+
 - Jeden blok na żądanie; pliki wieloblokowe (DAG) to M8.
 - Tylko CIDv1 z SHA2-256 / SHA2-512 (zakres `ipfs-cid`).
 - Brak ponawiania: po `BITSWAP_FETCH_FAILED` komendę trzeba powtórzyć.
