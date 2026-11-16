@@ -46,7 +46,7 @@ Niezgodny digest → IntegrityMismatch
 4. Wartość LevelDB to oryginalne bajty bloku.
 5. Przy zapisie i odczycie Blockstore weryfikuje integralność względem CID; `has()` sprawdza tylko obecność klucza.
 6. Atomowość operacji `put_if_absent()` wynika ze współdzielonego `Mutex<DB>`; dotyczy wątków korzystających z tego samego uchwytu, nie wielu niezależnych procesów.
-7. Maksymalny rozmiar bloku w prototypie wynosi 2 MiB. Nie ma minimalnego rozmiaru: 256 KiB to typowa wielkość fragmentu UnixFS, a nie dolna granica bloku.
+7. Maksymalny rozmiar bloku w prototypie wynosi 2 MiB. `ehr-cli put` i `ehr-cli cid` sprawdzają rozmiar pliku z metadanych **przed** wczytaniem go do pamięci; większy plik kończy się błędem `BlockTooLarge` bez czytania treści. Nie ma minimalnego rozmiaru: 256 KiB to typowa wielkość fragmentu UnixFS, a nie dolna granica bloku.
 8. Testy jednostkowe, integracyjne i interoperacyjności Kubo stanowią odrębny etap walidacji. Przygotowanie kodu testów nie oznacza ich pomyślnego wykonania.
 
 ## Notatki źródłowe — zachowane dosłownie
@@ -123,7 +123,7 @@ Pełny CIDv1 ma pola wersji, kodeka i multihash. Klucz lokalnego magazynu opiera
 
 - `ipfs-cid`: generowanie/dekodowanie CID, algorytm haszujący i weryfikacja.
 - `Blockstore`: operacje `put`, `put_block`, `get_block`, `has`, sprawdzanie rozmiaru i integralności.
-- `Datastore`: ogólny interfejs key-value: `get`, `put`, `has`, `put_if_absent`, `delete`, `keys_with_prefix`.
+- `Datastore`: ogólny interfejs key-value: `get`, `put`, `has`, `put_if_absent`, `delete`, `entries_with_prefix`.
 - `Namespace`: wybór prefiksu klucza („folderu”) dla danego rodzaju danych.
 - `LevelDbDatastore`: otwarcie bazy, synchronizacja dostępu przez mutex i odczyt/zapis bajtów.
 - `UnixFS`: późniejsze dzielenie plików na bloki, tworzenie i odczyt DAG, rekonstrukcja całego pliku.
@@ -148,7 +148,7 @@ Pełny CIDv1 ma pola wersji, kodeka i multihash. Klucz lokalnego magazynu opiera
 
 ## Założenia
 
-- `ehr-cli` importuje **tylko** `PersistentBlockstore`, bez `LevelDbDatastore` i bez ścieżki bazy.
+- `ehr-cli` importuje z `ipfs-store` **tylko** `PersistentBlockstore`, `StoreError` i stałe z `consts`, bez `LevelDbDatastore` i bez ścieżki bazy. Robi to wyłącznie warstwa `apps/ehr-cli/src/services/`; `main.rs` nie odwołuje się do crate'ów bezpośrednio (opis warstw: `phase-4-bootstrap-identify-ping-reconnect.md`).
 - `PersistentBlockstore` jest aliasem `Blockstore<LevelDbDatastore>`, aby zachować generyczny Blockstore na potrzeby unit tests i mocków.
 - `PersistentBlockstore::open_default()` sam otwiera LevelDB przez `ipfs-store`.
 - `DEFAULT_DB_PATH = "data/ehr-blockstore.leveldb"` oraz `LEVELDB_DIR_NAME = "ehr-blockstore.leveldb"` znajdują się wyłącznie w `crates/ipfs-store/src/consts.rs`.
@@ -235,9 +235,9 @@ Aplikacja (`ehr-cli`) i `ipfs-network` nie znają prefiksów. Wywołują metody 
 | Metoda | Opis |
 |---|---|
 | `delete(key)` | Usuwa wpis; brak klucza nie jest błędem |
-| `keys_with_prefix(prefix)` | Zwraca posortowane klucze zaczynające się od prefiksu |
+| `entries_with_prefix(prefix)` | Zwraca posortowane pary `(klucz, wartość)` (`Entry`) dla kluczy zaczynających się od prefiksu |
 
-W `LevelDbDatastore` listowanie używa iteratora LevelDB: `seek(prefix)`, a potem odczyt kolejnych kluczy do pierwszego klucza spoza prefiksu. Klucze w LevelDB są posortowane, więc wpisy jednej przestrzeni nazw leżą obok siebie.
+W `LevelDbDatastore` listowanie używa iteratora LevelDB: `seek(prefix)`, a potem odczyt kolejnych wpisów do pierwszego klucza spoza prefiksu. Wartość wraca razem z kluczem, więc wywołujący nie robi osobnego `get` dla każdego klucza. Klucze w LevelDB są posortowane, więc wpisy jednej przestrzeni nazw leżą obok siebie.
 
 ## Nowe metody publiczne `Blockstore`
 
@@ -246,14 +246,15 @@ W `LevelDbDatastore` listowanie używa iteratora LevelDB: `seek(prefix)`, a pote
 | `save_peer(&KnownPeer)` | `Peers` | Zapis lub nadpisanie znanego peera, z walidacją pól |
 | `load_peers()` | `Peers` | Lista zapamiętanych peerów posortowana po PeerId |
 | `remove_peer(peer_id)` | `Peers` | Usunięcie wpisu |
+| `prune_peers(seen_after_utc)` | `Peers` | Usuwa peery niewidziane od podanego czasu; zwraca (pozostałe, liczba usuniętych) |
 | `add_provide(&Cid)` | `Provides` | Zapamiętanie, że węzeł ogłasza CID w DHT |
 | `remove_provide(&Cid)` | `Provides` | Wycofanie wpisu (po `stop <CID>`) |
 | `list_provides()` | `Provides` | CID do ponownego ogłoszenia po restarcie |
 | `save_remote_provider(&RemoteProvider)` | `RemoteProviders` | Zapis rekordu „peer ma blok”; ponowny zapis odświeża termin |
 | `load_remote_providers(now_utc)` | `RemoteProviders` | Tylko rekordy, których termin jeszcze nie minął |
-| `remove_expired_remote_providers(now_utc)` | `RemoteProviders` | Usuwa przeterminowane rekordy, zwraca ich liczbę |
+| `prune_remote_providers(now_utc)` | `RemoteProviders` | Jednym przejściem usuwa przeterminowane rekordy; zwraca (ważne, liczba usuniętych) |
 
-`KnownPeer { peer_id: String, addresses: Vec<String>, dht_server: bool }` używa typów tekstowych, bo `ipfs-store` nie zależy od libp2p. Wartość wpisu ma format liniowy: pierwsza linia `dht=server` albo `dht=client`, kolejne linie to adresy Multiaddr. Uszkodzony wpis daje błąd `CorruptRecord`, a nieprawidłowe dane wejściowe `InvalidPeer`.
+`KnownPeer { peer_id: String, addresses: Vec<String>, dht_server: bool, last_seen_utc: u64 }` używa typów tekstowych, bo `ipfs-store` nie zależy od libp2p. Wartość wpisu ma format liniowy: pierwsza linia `dht=server` albo `dht=client`, druga `seen_utc=<sekundy Unix, UTC>`, kolejne linie to adresy Multiaddr. Wpis w starszym formacie, bez linii `seen_utc=`, jest nadal poprawny i przy odczycie liczy się jako widziany teraz. Znane ograniczenie: taki wpis nie jest przepisywany na dysk, więc peer, który nigdy już się nie zgłosi, nie wygasa. Uszkodzony wpis daje błąd `CorruptRecord`, a nieprawidłowe dane wejściowe `InvalidPeer`.
 
 `RemoteProvider { multihash: Vec<u8>, peer_id: String, addresses: Vec<String>, expires_at_utc: u64 }` opisuje rekord otrzymany z DHT. Klucz to prefiks + multihash + PeerId; multihash sam określa swoją długość, więc klucz da się jednoznacznie rozdzielić. Pierwsza linia wartości to `expires_utc=<sekundy>`, kolejne to adresy.
 

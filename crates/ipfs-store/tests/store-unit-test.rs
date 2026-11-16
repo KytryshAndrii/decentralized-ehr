@@ -1,5 +1,6 @@
 use ipfs_cid::consts::{CODEC_RAW, SHA2_256, SHA2_512};
 use ipfs_cid::models::Cid;
+use ipfs_store::datastore::Entry;
 use ipfs_store::{Blockstore, Datastore, KnownPeer, Namespace, RemoteProvider, StoreError};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -33,15 +34,15 @@ impl Datastore for MemoryDatastore {
         self.entries.lock().unwrap().remove(key);
         Ok(())
     }
-    fn keys_with_prefix(&self, prefix: &[u8]) -> Result<Vec<Vec<u8>>, StoreError> {
+    fn entries_with_prefix(&self, prefix: &[u8]) -> Result<Vec<Entry>, StoreError> {
         let map = self.entries.lock().unwrap();
-        let mut keys: Vec<Vec<u8>> = map
-            .keys()
-            .filter(|key| key.starts_with(prefix))
-            .cloned()
+        let mut entries: Vec<Entry> = map
+            .iter()
+            .filter(|(key, _)| key.starts_with(prefix))
+            .map(|(key, value)| (key.clone(), value.clone()))
             .collect();
-        keys.sort();
-        Ok(keys)
+        entries.sort();
+        Ok(entries)
     }
 }
 
@@ -59,8 +60,8 @@ impl Datastore for SharedDatastore {
     fn delete(&self, k: &[u8]) -> Result<(), StoreError> {
         self.0.delete(k)
     }
-    fn keys_with_prefix(&self, p: &[u8]) -> Result<Vec<Vec<u8>>, StoreError> {
-        self.0.keys_with_prefix(p)
+    fn entries_with_prefix(&self, p: &[u8]) -> Result<Vec<Entry>, StoreError> {
+        self.0.entries_with_prefix(p)
     }
 }
 
@@ -229,7 +230,7 @@ impl Datastore for FailingDatastore {
     fn delete(&self, _: &[u8]) -> Result<(), StoreError> {
         Err(StoreError::LockPoisoned)
     }
-    fn keys_with_prefix(&self, _: &[u8]) -> Result<Vec<Vec<u8>>, StoreError> {
+    fn entries_with_prefix(&self, _: &[u8]) -> Result<Vec<Entry>, StoreError> {
         Err(StoreError::LockPoisoned)
     }
 }
@@ -295,6 +296,7 @@ fn known_peer(id: &str, server: bool) -> KnownPeer {
         peer_id: id.into(),
         addresses: vec!["/ip4/192.168.1.125/tcp/4101".into()],
         dht_server: server,
+        last_seen_utc: 1_700_000_000,
     }
 }
 #[test]
@@ -320,6 +322,30 @@ fn peers_are_saved_listed_overwritten_and_removed() {
         store.load_peers().unwrap(),
         vec![known_peer("12D3KooWB", true)]
     );
+}
+#[test]
+fn stale_peers_are_pruned_and_old_records_count_as_seen_now() {
+    let store = Blockstore::new_blockstore(MemoryDatastore::default());
+    let mut old = known_peer("12D3KooWA", true);
+    old.last_seen_utc = 100;
+    let mut fresh = known_peer("12D3KooWB", false);
+    fresh.last_seen_utc = 200;
+    store.save_peer(&old).unwrap();
+    store.save_peer(&fresh).unwrap();
+    // Rekord w starym formacie, bez linii `seen_utc=`.
+    store
+        .datastore()
+        .put(
+            &ipfs_store::utils::get_peer_key("12D3KooWC"),
+            b"dht=server\n/ip4/192.168.1.7/tcp/4101",
+        )
+        .unwrap();
+    let (kept, removed) = store.prune_peers(150).unwrap();
+    assert_eq!(removed, 1);
+    let ids: Vec<_> = kept.iter().map(|peer| peer.peer_id.as_str()).collect();
+    assert_eq!(ids, ["12D3KooWB", "12D3KooWC"]);
+    assert_eq!(kept[1].addresses, ["/ip4/192.168.1.7/tcp/4101"]);
+    assert_eq!(store.load_peers().unwrap().len(), 2);
 }
 #[test]
 fn invalid_or_corrupt_peer_is_rejected() {
@@ -403,8 +429,9 @@ fn remote_providers_are_saved_refreshed_and_expire_by_utc_time() {
     assert!(loaded.contains(&remote_provider(b"x", "12D3KooWA", now + 500)));
     // Po terminie rekord nie jest zwracany, a porządkowanie usuwa go z bazy.
     assert_eq!(store.load_remote_providers(now + 100).unwrap().len(), 1);
-    assert_eq!(store.remove_expired_remote_providers(now + 100).unwrap(), 2);
-    assert_eq!(store.remove_expired_remote_providers(now + 100).unwrap(), 0);
+    let (valid, removed) = store.prune_remote_providers(now + 100).unwrap();
+    assert_eq!((valid.len(), removed), (1, 2));
+    assert_eq!(store.prune_remote_providers(now + 100).unwrap().1, 0);
     assert_eq!(
         store.load_remote_providers(0).unwrap(),
         vec![remote_provider(b"x", "12D3KooWA", now + 500)]

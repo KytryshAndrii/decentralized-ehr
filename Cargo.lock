@@ -1443,7 +1443,6 @@ dependencies = [
  "libp2p",
  "thiserror 2.0.21",
  "tokio",
- "unsigned-varint",
 ]
 
 [[package]]

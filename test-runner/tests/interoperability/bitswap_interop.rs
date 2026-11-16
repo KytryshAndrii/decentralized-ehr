@@ -1,7 +1,7 @@
 use std::{path::PathBuf, process::Command};
 
 #[test]
-fn kubo_fetches_provided_block_from_rust_over_bitswap() {
+fn kubo_and_rust_fetch_blocks_from_each_other_over_bitswap() {
     let workspace = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent()
         .expect("test-runner is inside repository")

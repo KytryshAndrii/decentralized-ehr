@@ -1,4 +1,4 @@
-use libp2p::{PeerId, identity::Keypair};
+use libp2p::{Multiaddr, PeerId, identity::Keypair, multiaddr::Protocol};
 use std::error::Error;
 
 pub fn peer_id_from_keypair(keypair: &Keypair) -> PeerId {
@@ -23,4 +23,12 @@ pub(crate) fn error_chain(error: &dyn Error) -> String {
     } else {
         parts.join(": ")
     }
+}
+
+pub(crate) fn is_dialable(address: &Multiaddr) -> bool {
+    address.iter().all(|component| match component {
+        Protocol::Ip4(ip) => !ip.is_unspecified(),
+        Protocol::Ip6(ip) => !ip.is_unspecified(),
+        _ => true,
+    })
 }

@@ -108,7 +108,7 @@ Istniejący NetworkNode / event loop
 | `src/lib.rs` | Eksport modułu DHT i typów potrzebnych CLI. |
 | `crates/ipfs-network/Cargo.toml` (testy) | Rejestracja targetu `[[test]] dht-unit-test`. |
 | `crates/ipfs-network/tests/dht-unit-test.rs` | Testy trybów, protokołu, konstrukcji Kademlia i klucza providera. |
-| `apps/ehr-cli/src/main.rs` | Ustalona składnia startu, `--dht-server`, interaktywne komendy DHT (wątek stdin → `mpsc` → `NetworkNode`). |
+| `apps/ehr-cli/src/main.rs` | Ustalona składnia startu, `--dht-server`, interaktywne komendy DHT (wątek stdin → `mpsc` → `NetworkNode`). Od 15.11.2026 konfigurację i start węzła wykonuje `services/network_service.rs`. |
 | `test-runner/Cargo.toml` | Nowy target `[[test]] interop-dht`. |
 | `test-runner/tests/interoperability/dht_interop.rs` | Test Rust uruchamiający skrypt interoperacyjności z Kubo. |
 | `scripts/testing/test-kubo-dht-interop.sh` | Scenariusze A/B/C: Rust → Kubo, Kubo → Rust, Rust → Rust przez sieć DHT z Kubo. |
@@ -245,7 +245,7 @@ peers             wyświetl wpisy znane lokalnej tablicy routingu Kademlia
 bootstrap         ponów zapytanie bootstrap DHT
 provide <CID>     ogłoś CID istniejący w lokalnym Blockstore
 find <CID>        znajdź deklarujących dostawców bloku
-stop <CID>        zatrzymaj lokalne ogłaszanie
+stop <CID>        przestań ogłaszać i udostępniać blok
 quit              zakończ aplikację
 ```
 
@@ -487,20 +487,23 @@ Stan: kod i testy uruchomione lokalnie 14.11.2026 (`network-unit-test` 15/15, `i
 
 ### Znane peery
 
-- Po każdym `IDENTIFY` węzeł zapisuje peera (PeerId, adresy nasłuchu bez `0.0.0.0`, informację o trybie DHT Server) w magazynie `ipfs-store`. Zapis następuje tylko przy zmianie danych. Log: `KNOWN_PEER_SAVED <PeerId> dht_server=<bool>`.
+- Po każdym `IDENTIFY` węzeł zapisuje peera (PeerId, adresy nasłuchu bez `0.0.0.0`, informację o trybie DHT Server) w magazynie `ipfs-store`. Razem z peerem zapisywany jest czas ostatniego Identify (`seen_utc`, sekundy Unix w UTC). Zapis następuje przy zmianie danych, a bez zmian najwyżej raz na `KNOWN_PEER_REFRESH_SECS = 24 h`. Log: `KNOWN_PEER_SAVED <PeerId> dht_server=<bool>`.
+- Przy starcie peery niewidziane dłużej niż `KNOWN_PEER_TTL_SECS = 7 dni` są usuwane (`KNOWN_PEERS_EXPIRED count=N`). Dzięki temu lista nie rośnie bez końca, a węzeł nie dzwoni pod stare adresy. Ograniczenie: czas odświeża tylko Identify (raz na połączenie), więc peer połączony bez przerwy ponad tydzień zniknie z listy przy następnym restarcie i wróci po ponownym połączeniu.
 - Po starcie węzeł wczytuje zapisane peery (`KNOWN_PEER_RESTORED`, `KNOWN_PEERS_RESTORED count=N`). Peery z trybem Server trafiają do tablicy routingu Kademlii. Do każdego peera spoza listy bootstrap wykonywana jest **jedna** próba połączenia, bez mechanizmu retry.
 - Skutek: węzeł uruchomiony bez bootstrapu (`node start ""`) wraca do sieci, jeśli działa choć jeden zapamiętany peer. Bootstrap przestaje być pojedynczym punktem wejścia.
 
 ### Wznowienie providingu
 
 - `provide <CID>` zapisuje CID w przestrzeni `Provides`, a `stop <CID>` go usuwa.
+- Kolejność jest istotna, bo Bitswap wydaje blok według wpisu na dysku. `provide` najpierw zapisuje wpis, potem ogłasza w DHT; nieudany zapis daje `DHT_PROVIDE_FAILED state not saved`. `stop` najpierw usuwa wpis z dysku, a dopiero potem wycofuje ogłoszenie. Jeśli usunięcie się nie uda (np. baza zajęta), węzeł wypisuje `DHT_STOP_FAILED block is still shared` i niczego nie zmienia; `DHT_STOPPED` pojawia się tylko wtedy, gdy blok naprawdę przestał być udostępniany. Test: `node_serves_only_provided_blocks_over_bitswap`.
+- `MemoryStore` Kademlii przyjmuje domyślnie najwyżej 1024 klucze ogłaszane przez własny węzeł (`max_provided_keys`); kolejne `provide` kończyło się `DHT_PROVIDE_FAILED`. Od M7 limit to `DHT_MAX_PROVIDED_KEYS = 65 536` (`MemoryStoreConfig` w `build_kademlia`), bo w UnixFS jeden plik to wiele bloków.
 - Węzeł ogłasza zapisane CID ponownie w trzech momentach: zaraz po starcie (rekord lokalny), po pierwszym zakończonym bootstrapie DHT (rekordy trafiają do sieci) oraz okresowo co `REPROVIDE_INTERVAL_SECS = 12 * 60 * 60` s. Log: `DHT_REPROVIDE count=N`.
 - Krótki okres jest konieczny, bo serwery DHT trzymają rekordy w `MemoryStore` i tracą je po restarcie. Kubo ogłasza ponownie co 22 h, ale przechowuje rekordy trwale.
 
 ### Rekordy obcych providerów („peer B ma blok X”)
 
 - Kademlia działa w trybie `StoreInserts::FilterBoth`: przychodzące `ADD_PROVIDER` nie trafia od razu do `MemoryStore`, tylko jako zdarzenie `InboundRequest::AddProvider` do `NetworkNode`.
-- Węzeł dodaje rekord do `MemoryStore` i zapisuje go w przestrzeni `RemoteProviders` razem z adresami providera i terminem ważności. Log: `DHT_PROVIDER_RECORD_SAVED <PeerId> expires_utc=<sekundy>`.
+- Węzeł dodaje rekord do `MemoryStore` i zapisuje go w przestrzeni `RemoteProviders` razem z adresami providera i terminem ważności. Na dysk trafia tylko rekord, który `MemoryStore` faktycznie zatrzymał: przy 20 providerach jednego klucza (`K_VALUE`) `add_provider` zwraca `Ok`, ale rekord pomija (test `memory_store_silently_drops_providers_over_the_per_key_limit`). Log: `DHT_PROVIDER_RECORD_SAVED <PeerId> expires_utc=<sekundy>`.
 - Termin ważności to czas otrzymania + TTL Kademlii (48 h), zapisany jako sekundy Unix w **UTC**. libp2p liczy termin na zegarze monotonicznym, który nie przetrwa restartu, dlatego na dysku jest czas UTC, a przy starcie jest on przeliczany z powrotem.
 - Każde ponowne ogłoszenie przesuwa termin. Zapis na dysk następuje dopiero, gdy termin przesunie się o co najmniej `PROVIDER_PERSIST_REFRESH_SECS = 3600` s, żeby reprovide nie powodował ciągłych zapisów.
 - Po starcie węzeł usuwa rekordy przeterminowane (`DHT_PROVIDER_RECORDS_EXPIRED count=N`) i wkłada ważne do `MemoryStore` (`DHT_PROVIDER_RECORDS_RESTORED count=N`). Serwer po restarcie od razu odpowiada na `find`, bez czekania na ponowne ogłoszenie.

@@ -1,5 +1,6 @@
 //! Uruchamianie `ehr-cli` jako osobnego procesu w testach integracyjnych.
 use std::{
+    ffi::OsStr,
     fs,
     io::{BufRead, BufReader, Write},
     net::TcpListener,
@@ -62,7 +63,7 @@ pub struct NodeProcess {
 }
 
 impl NodeProcess {
-    pub fn start(cwd: &Path, port: u16, args: &[&str]) -> Self {
+    pub fn start<S: AsRef<OsStr>>(cwd: &Path, port: u16, args: &[S]) -> Self {
         let mut child = Command::new(cli())
             .current_dir(cwd)
             .env("EHR_LISTEN_PORT", port.to_string())
@@ -75,16 +76,18 @@ impl NodeProcess {
         let stdin = child.stdin.take();
         let (tx, rx) = mpsc::channel();
         let stdout = child.stdout.take().unwrap();
+        let out_tx = tx.clone();
         thread::spawn(move || {
             for line in BufReader::new(stdout).lines().map_while(Result::ok) {
                 println!("[node] {line}");
-                let _ = tx.send(line);
+                let _ = out_tx.send(line);
             }
         });
         let stderr = child.stderr.take().unwrap();
         thread::spawn(move || {
             for line in BufReader::new(stderr).lines().map_while(Result::ok) {
                 eprintln!("[node-err] {line}");
+                let _ = tx.send(line);
             }
         });
         Self {
@@ -114,6 +117,23 @@ impl NodeProcess {
             }
         }
         panic!("timeout waiting for {text:?}");
+    }
+
+    pub fn until_all(&self, patterns: &[&str], secs: u64) {
+        let deadline = Instant::now() + Duration::from_secs(secs);
+        let mut seen = vec![false; patterns.len()];
+        while let Ok(line) = self
+            .lines
+            .recv_timeout(deadline.saturating_duration_since(Instant::now()))
+        {
+            for (index, pattern) in patterns.iter().enumerate() {
+                seen[index] |= line.contains(pattern);
+            }
+            if seen.iter().all(|v| *v) {
+                return;
+            }
+        }
+        panic!("timeout waiting for {patterns:?}; observed {seen:?}");
     }
 }
 

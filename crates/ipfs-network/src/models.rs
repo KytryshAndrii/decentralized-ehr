@@ -25,6 +25,9 @@ pub struct NetworkNode {
     pub(crate) remote_providers: HashMap<(Vec<u8>, PeerId), u64>,
     pub(crate) next_reprovide: Instant,
     pub(crate) reprovided_after_bootstrap: bool,
+    pub(crate) bitswap_client: Option<ipfs_bitswap::BitswapClient>,
+    /// Zapytania DHT o dostawców, po których blok ma zostać pobrany przez Bitswap.
+    pub(crate) pending_fetches: HashMap<kad::QueryId, Cid>,
 }
 
 /// Peers from this list are direct addresses, not DHT-discovered peers.
@@ -53,6 +56,8 @@ pub enum NetworkCommand {
     StartProviding(Cid),
     GetProviders(Cid),
     StopProviding(Cid),
+    /// Znajdź dostawców w DHT, pobierz blok przez Bitswap i zapisz go w Blockstore.
+    Fetch(Cid),
     Bootstrap,
     ListPeers,
     Quit,

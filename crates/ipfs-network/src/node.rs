@@ -5,12 +5,12 @@ use crate::{
     dht::{build_kademlia, provider_key},
     error::NetworkError,
     identity,
-    utils::error_chain,
+    utils::{error_chain, is_dialable},
 };
 use futures::StreamExt;
 use ipfs_cid::models::Cid;
 use libp2p::swarm::dial_opts::DialOpts;
-use libp2p::{PeerId, SwarmBuilder, identify, kad, multiaddr::Protocol, ping, swarm::SwarmEvent};
+use libp2p::{PeerId, SwarmBuilder, identify, kad, ping, swarm::SwarmEvent};
 use std::{collections::HashMap, time::Instant};
 use tokio::sync::mpsc;
 
@@ -76,6 +76,8 @@ impl NetworkNode {
             remote_providers: HashMap::new(),
             next_reprovide: Instant::now(),
             reprovided_after_bootstrap: false,
+            bitswap_client: None,
+            pending_fetches: HashMap::new(),
         })
     }
     pub fn local_peer_id(&self) -> PeerId {
@@ -177,12 +179,7 @@ impl NetworkNode {
         match event {
             SwarmEvent::NewListenAddr { address, .. } => {
                 println!("LISTEN {address}/p2p/{}", self.local_peer_id());
-                let externally_usable = address.iter().all(|component| match component {
-                    Protocol::Ip4(ip) => !ip.is_unspecified(),
-                    Protocol::Ip6(ip) => !ip.is_unspecified(),
-                    _ => true,
-                });
-                if externally_usable {
+                if is_dialable(&address) {
                     self.swarm.add_external_address(address);
                 }
             }
@@ -333,6 +330,9 @@ impl NetworkNode {
                     && let Some(providers) = self.pending_provider_queries.remove(&id)
                 {
                     println!("DHT_FIND_FINISHED count={}", providers.len());
+                    if let Some(cid) = self.pending_fetches.remove(&id) {
+                        self.fetch_block(cid, providers.into_iter().collect());
+                    }
                 }
             }
             _ => {}
@@ -340,24 +340,41 @@ impl NetworkNode {
     }
     fn on_command(&mut self, command: NetworkCommand) {
         match command {
-            NetworkCommand::StartProviding(cid) => match self.start_providing(&cid) {
-                Ok(_) => {
-                    println!("DHT_PROVIDE_REQUESTED {}", cid.to_string_base32());
-                    self.remember_provide(&cid);
+            NetworkCommand::StartProviding(cid) => {
+                if !self.remember_provide(&cid) {
+                    eprintln!("DHT_PROVIDE_FAILED state not saved");
+                    return;
                 }
-                Err(error) => eprintln!("DHT_PROVIDE_FAILED {error}"),
-            },
+                match self.start_providing(&cid) {
+                    Ok(_) => println!("DHT_PROVIDE_REQUESTED {}", cid.to_string_base32()),
+                    Err(error) => {
+                        eprintln!("DHT_PROVIDE_FAILED {error}");
+                        self.forget_provide(&cid);
+                    }
+                }
+            }
             NetworkCommand::GetProviders(cid) => match self.get_providers(&cid) {
                 Ok(_) => println!("DHT_FIND_REQUESTED {}", cid.to_string_base32()),
                 Err(error) => eprintln!("DHT_FIND_FAILED {error}"),
             },
-            NetworkCommand::StopProviding(cid) => match self.stop_providing(&cid) {
-                Ok(()) => {
-                    println!("DHT_STOPPED {}", cid.to_string_base32());
-                    self.forget_provide(&cid);
+            NetworkCommand::Fetch(cid) => match self.get_providers(&cid) {
+                Ok(id) => {
+                    println!("BITSWAP_FETCH_REQUESTED {}", cid.to_string_base32());
+                    self.pending_fetches.insert(id, cid);
                 }
-                Err(error) => eprintln!("DHT_STOP_FAILED {error}"),
+                Err(error) => eprintln!("BITSWAP_FETCH_FAILED {error}"),
             },
+            // Bez trwałego usunięcia Bitswap nadal wydawałby blok, więc DHT zostaje bez zmian.
+            NetworkCommand::StopProviding(cid) => {
+                if !self.forget_provide(&cid) {
+                    eprintln!("DHT_STOP_FAILED block is still shared");
+                    return;
+                }
+                match self.stop_providing(&cid) {
+                    Ok(()) => println!("DHT_STOPPED {}", cid.to_string_base32()),
+                    Err(error) => eprintln!("DHT_STOP_FAILED {error}"),
+                }
+            }
             NetworkCommand::Bootstrap => {
                 self.dht_bootstrap_started = false;
                 self.start_dht_bootstrap();

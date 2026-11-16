@@ -161,6 +161,7 @@ fn peers_and_provides_persist_across_reopen_without_touching_blocks() {
         peer_id: "12D3KooWNX5AdkfjZ6nSWD8x7Cci1nuNtpXnj1AL42BXi7M9GENS".into(),
         addresses: vec!["/ip4/192.168.1.125/tcp/4101".into()],
         dht_server: true,
+        last_seen_utc: 1_700_000_000,
     };
     let cid = {
         let store = isolated_store(root.path());
@@ -203,8 +204,8 @@ fn remote_providers_persist_across_reopen() {
     assert_eq!(store.load_remote_providers(now).unwrap(), vec![provider]);
     assert!(store.load_remote_providers(now + 3600).unwrap().is_empty());
     assert_eq!(
-        store.remove_expired_remote_providers(now + 3600).unwrap(),
-        1
+        store.prune_remote_providers(now + 3600).unwrap(),
+        (vec![], 1)
     );
     assert!(store.load_remote_providers(0).unwrap().is_empty());
 }

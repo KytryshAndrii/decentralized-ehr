@@ -79,7 +79,9 @@ W demonstracji z dwoma hostami skonfigurowano także połączenia wzajemne: Host
 | `crates/ipfs-network/src/node.rs` | Budowa Swarm, Listen, Dial, obsługa zdarzeń, reconnect |
 | `crates/ipfs-network/src/error.rs` | Typy błędów sieciowych |
 | `crates/ipfs-network/src/lib.rs` | Publiczne API biblioteki |
-| `apps/ehr-cli/src/main.rs` | Interpretacja poleceń i prezentacja zdarzeń |
+| `apps/ehr-cli/src/main.rs` | Interpretacja poleceń i prezentacja zdarzeń; woła tylko `services` |
+| `apps/ehr-cli/src/services/network_service.rs` | `NetworkService`: PeerId, konfiguracja startu, uruchomienie węzła przez publiczne API `ipfs-network` |
+| `apps/ehr-cli/src/services/ipfs_service.rs` | `IpfsService`: `cid`, `put`, `has`, `get`, parsowanie CID przez publiczne API `ipfs-cid` i `ipfs-store` |
 | `test-runner/tests/integration/network_integration.rs` | Testy procesowe Rust ↔ Rust |
 | `test-runner/tests/interoperability/network_interop.rs` | Uruchomienie testu Rust ↔ Kubo |
 | `scripts/testing/test-network.sh` | Lokalny scenariusz Kubo i Rust |
@@ -271,6 +273,17 @@ Wymaga to aktualizacji reguły `portproxy`, jeśli adres WSL2 zmieni się po res
 | `./ehr-cli get <CID> <absolute-output-path>` | Odtworzenie danych lokalnego bloku do pliku |
 
 Ostatnie cztery polecenia to równoległa demonstracja integracji `ipfs-cid` i `ipfs-store` z serwisem `IpfsService`; **nie są protokołem transmisji przez sieć**.
+
+#### Warstwy `ehr-cli` (stan 15.11.2026)
+
+```text
+main.rs  ->  services (IpfsService, NetworkService)  ->  publiczne API crate'ów
+```
+
+- `main.rs` tylko czyta argumenty, wypisuje wyniki i woła metody serwisów. Nie importuje `ipfs-cid`, `ipfs-store` ani `ipfs-network`.
+- Serwisy używają crate'ów tak, jak każdej zewnętrznej biblioteki: wyłącznie przez elementy `pub`.
+- `NetworkService::local_peer_id()` obsługuje `node identity`, `NetworkService::node_config(dht_server, argumenty)` buduje `NetworkConfig` (tu jest wybór bootstrapu), a `NetworkService::run(config, komendy)` uruchamia węzeł.
+- `IpfsService::create_cid` i `IpfsService::put_file` czytają plik wspólną funkcją, która sprawdza ścieżkę absolutną, istnienie pliku i limit 2 MiB z metadanych, zanim wczyta bajty. Test: `put_and_cid_reject_oversized_file_before_reading_it`.
 
 ### 6.1. Test A — WSL inicjuje połączenie do Fedory
 

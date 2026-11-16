@@ -4,7 +4,7 @@ use crate::models::{
     BitswapLimits, BitswapMessage, BitswapServer, Block, BlockPresenceType, PlannedBlock,
     ResponsePlan, WantType,
 };
-use crate::source::BlockSource;
+use crate::source::{BlockSource, ReadBlock};
 use crate::utils::{block_presence, cid_prefix};
 use ipfs_cid::models::Cid;
 use prost::Message;
@@ -87,16 +87,25 @@ impl<S: BlockSource> BitswapServer<S> {
     }
 
     /// Kolejna wiadomość odpowiedzi, nie większa niż limit wiadomości;
-    /// `None`, gdy plan został wysłany w całości.
+    /// `None`, gdy plan został wysłany w całości. Źródło jest otwierane raz na wiadomość.
     pub fn next_message(
         &self,
         plan: &mut ResponsePlan,
+    ) -> Result<Option<BitswapMessage>, BitswapError> {
+        self.source
+            .with_reader(|read| self.build_message(plan, read))
+    }
+
+    fn build_message(
+        &self,
+        plan: &mut ResponsePlan,
+        read: &ReadBlock<'_>,
     ) -> Result<Option<BitswapMessage>, BitswapError> {
         let mut message = BitswapMessage {
             block_presences: std::mem::take(&mut plan.presences),
             ..BitswapMessage::default()
         };
-        while let Some((cid, block, send_dont_have)) = self.next_block(plan)? {
+        while let Some((cid, block, send_dont_have)) = next_block(plan, read)? {
             if plan.sent_block_bytes + block.data.len() > self.limits.max_response_bytes {
                 plan.dropped_blocks += 1 + plan.blocks.len();
                 plan.blocks.clear();
@@ -126,31 +135,31 @@ impl<S: BlockSource> BitswapServer<S> {
         message.block_presences.append(&mut plan.presences);
         Ok((!message.is_empty()).then_some(message))
     }
+}
 
-    /// Następny blok z planu; brakujący blok zamienia się w DontHave.
-    fn next_block(
-        &self,
-        plan: &mut ResponsePlan,
-    ) -> Result<Option<(Cid, Block, bool)>, BitswapError> {
-        if let Some((cid, block)) = plan.carried.take() {
-            return Ok(Some((cid, block, false)));
-        }
-        while let Some(planned) = plan.blocks.pop_front() {
-            match self.source.get_block(&planned.cid)? {
-                Some(data) => {
-                    let block = Block {
-                        prefix: cid_prefix(&planned.cid),
-                        data,
-                    };
-                    return Ok(Some((planned.cid, block, planned.send_dont_have)));
-                }
-                None if planned.send_dont_have => plan.presences.push(block_presence(
-                    &planned.cid.to_bytes(),
-                    BlockPresenceType::DontHave,
-                )),
-                None => {}
-            }
-        }
-        Ok(None)
+/// Następny blok z planu; brakujący blok zamienia się w DontHave.
+fn next_block(
+    plan: &mut ResponsePlan,
+    read: &ReadBlock<'_>,
+) -> Result<Option<(Cid, Block, bool)>, BitswapError> {
+    if let Some((cid, block)) = plan.carried.take() {
+        return Ok(Some((cid, block, false)));
     }
+    while let Some(planned) = plan.blocks.pop_front() {
+        match read(&planned.cid)? {
+            Some(data) => {
+                let block = Block {
+                    prefix: cid_prefix(&planned.cid),
+                    data,
+                };
+                return Ok(Some((planned.cid, block, planned.send_dont_have)));
+            }
+            None if planned.send_dont_have => plan.presences.push(block_presence(
+                &planned.cid.to_bytes(),
+                BlockPresenceType::DontHave,
+            )),
+            None => {}
+        }
+    }
+    Ok(None)
 }
