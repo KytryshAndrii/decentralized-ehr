@@ -61,7 +61,9 @@ else
   KUBO_USED=true
   ready=false
   for _ in $(seq 1 60); do
-    if IPFS_PATH="$IPFS_PATH" timeout 3s ipfs swarm addrs listen >/dev/null 2>&1; then
+    # Bez pliku `api` demon jeszcze nie działa, a komenda otworzyłaby repo sama
+    # i zabrała demonowi blokadę repozytorium.
+    if [[ -f "$IPFS_PATH/api" ]] && IPFS_PATH="$IPFS_PATH" timeout 3s ipfs swarm addrs listen >/dev/null 2>&1; then
       ready=true
       break
     fi
