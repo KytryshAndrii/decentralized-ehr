@@ -1,4 +1,4 @@
-use crate::models::NetworkNode;
+use crate::models::{FetchReply, NetworkNode};
 use ipfs_bitswap::{
     BITSWAP_PROTOCOL, BitswapClient, BitswapServer, FETCH_WINDOW, ProvidedBlockSource,
 };
@@ -28,18 +28,28 @@ impl NetworkNode {
 
     /// Pobiera blok i wszystkie bloki, do których prowadzą jego linki (cały plik UnixFS).
     /// Działa w tle, żeby nie blokować pętli zdarzeń węzła.
-    pub(crate) fn fetch_block(&self, cid: Cid, providers: Vec<PeerId>) {
+    pub(crate) fn fetch_block(&self, cid: Cid, providers: Vec<PeerId>, reply: Option<FetchReply>) {
         let name = cid.to_string_base32();
         let Some(client) = self.bitswap_client.clone() else {
             eprintln!("BITSWAP_FETCH_FAILED {name}: Bitswap is disabled");
+            if let Some(reply) = reply {
+                let _ = reply.send(Err("Bitswap is disabled".into()));
+            }
             return;
         };
         tokio::spawn(async move {
-            match fetch_dag(&client, cid, &providers).await {
+            let result = match fetch_dag(&client, cid, &providers).await {
                 Ok((fetched, local)) => {
-                    println!("BITSWAP_FETCH_DONE {name} fetched={fetched} local={local}")
+                    println!("BITSWAP_FETCH_DONE {name} fetched={fetched} local={local}");
+                    Ok(())
                 }
-                Err(error) => eprintln!("BITSWAP_FETCH_FAILED {name}: {error}"),
+                Err(error) => {
+                    eprintln!("BITSWAP_FETCH_FAILED {name}: {error}");
+                    Err(error.to_string())
+                }
+            };
+            if let Some(reply) = reply {
+                let _ = reply.send(result);
             }
         });
     }

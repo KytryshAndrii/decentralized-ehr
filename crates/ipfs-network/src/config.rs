@@ -77,6 +77,7 @@ impl Default for NetworkConfig {
             dht_mode: DhtMode::Client,
             state_directory: None,
             reprovide_interval: Duration::from_secs(REPROVIDE_INTERVAL_SECS),
+            keypair: None,
         }
     }
 }

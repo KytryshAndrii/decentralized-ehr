@@ -1,4 +1,7 @@
-use crate::models::{BootstrapPeer, NetworkCommand, NetworkConfig, NetworkNode, RetryState};
+use crate::models::{
+    BootstrapPeer, FetchReply, NetworkCommand, NetworkConfig, NetworkNode, RetryState,
+    StreamControl,
+};
 use crate::{
     behaviour::{NetworkBehaviour, NetworkEvent},
     consts::LAN_DHT_PROTOCOL,
@@ -22,7 +25,10 @@ impl NetworkNode {
         {
             return Err(NetworkError::Libp2p("invalid retry durations".into()));
         }
-        let keypair = identity::load_or_create(&config.identity_path)?;
+        let keypair = match &config.keypair {
+            Some(keypair) => keypair.clone(),
+            None => identity::load_or_create(&config.identity_path)?,
+        };
         let local_id = PeerId::from(keypair.public());
         let ping_config = ping::Config::new().with_interval(config.ping_interval);
         let mut swarm = SwarmBuilder::with_existing_identity(keypair)
@@ -82,6 +88,11 @@ impl NetworkNode {
     }
     pub fn local_peer_id(&self) -> PeerId {
         *self.swarm.local_peer_id()
+    }
+
+    /// Uchwyt strumieni dla protokołów warstwy aplikacji; pobierz go przed `run_with_commands`.
+    pub fn stream_control(&self) -> StreamControl {
+        self.swarm.behaviour().bitswap.new_control()
     }
 
     pub fn start_providing(&mut self, cid: &Cid) -> Result<kad::QueryId, NetworkError> {
@@ -330,7 +341,7 @@ impl NetworkNode {
                     && let Some(providers) = self.pending_provider_queries.remove(&id)
                 {
                     println!("DHT_FIND_FINISHED count={}", providers.len());
-                    if let Some(cid) = self.pending_fetches.remove(&id) {
+                    if let Some((cid, reply)) = self.pending_fetches.remove(&id) {
                         // Jak w Bitswap Kubo: po dostawcach z DHT pytani są połączeni peerzy.
                         // Rekord dostawcy mógł jeszcze nie dotrzeć do DHT.
                         let mut candidates: Vec<PeerId> = providers.into_iter().collect();
@@ -339,7 +350,7 @@ impl NetworkNode {
                                 candidates.push(*peer);
                             }
                         }
-                        self.fetch_block(cid, candidates);
+                        self.fetch_block(cid, candidates, reply);
                     }
                 }
             }
@@ -365,13 +376,12 @@ impl NetworkNode {
                 Ok(_) => println!("DHT_FIND_REQUESTED {}", cid.to_string_base32()),
                 Err(error) => eprintln!("DHT_FIND_FAILED {error}"),
             },
-            NetworkCommand::Fetch(cid) => match self.get_providers(&cid) {
-                Ok(id) => {
-                    println!("BITSWAP_FETCH_REQUESTED {}", cid.to_string_base32());
-                    self.pending_fetches.insert(id, cid);
-                }
-                Err(error) => eprintln!("BITSWAP_FETCH_FAILED {error}"),
-            },
+            NetworkCommand::Fetch(cid) => self.request_fetch(cid, None),
+            NetworkCommand::FetchWithReply(cid, reply) => self.request_fetch(cid, Some(reply)),
+            NetworkCommand::AddPeer(peer) => {
+                println!("PEER_ADDED {}/p2p/{}", peer.address, peer.peer_id);
+                self.add_bootstrap(peer);
+            }
             // Bez trwałego usunięcia Bitswap nadal wydawałby blok, więc DHT zostaje bez zmian.
             NetworkCommand::StopProviding(cid) => {
                 if !self.forget_provide(&cid) {
@@ -396,6 +406,20 @@ impl NetworkNode {
                 println!("DHT_PEERS_DONE");
             }
             NetworkCommand::Quit => {}
+        }
+    }
+    fn request_fetch(&mut self, cid: Cid, reply: Option<FetchReply>) {
+        match self.get_providers(&cid) {
+            Ok(id) => {
+                println!("BITSWAP_FETCH_REQUESTED {}", cid.to_string_base32());
+                self.pending_fetches.insert(id, (cid, reply));
+            }
+            Err(error) => {
+                eprintln!("BITSWAP_FETCH_FAILED {error}");
+                if let Some(reply) = reply {
+                    let _ = reply.send(Err(error.to_string()));
+                }
+            }
         }
     }
     pub async fn run(self) -> Result<(), NetworkError> {
