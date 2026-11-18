@@ -1,6 +1,8 @@
 # Phase 8 — Pliki raw i podstawowy UnixFS (M8, Issue #10)
 
 > **Stan dokumentacji:** 16.11.2026. Testy jednostkowe, integracyjne (procesy `ehr-cli`) oraz interoperacyjności Rust ↔ Kubo 0.43.1 zostały uruchomione i **zakończyły się powodzeniem** (§8).
+>
+> **Zmiana w M9 (18.11.2026): chunker Rabina usunięty z kodu.** Wszystkie pliki są dzielone stałym chunkerem `size-262144`, bo dokumenty EHR są szyfrogramami (uzasadnienie: `docs/security-ucan-gpg-integration.md` §8, `docs/phase-9-ehr-delivery-plan.md` krok R). Usunięto `Chunker::Rabin`, `Chunker::for_path`, tablice i stałe Rabina oraz testy CID Rabina. Opis Rabina w §2, §4, §5 i §10 zostaje jako historia decyzji. Rust nadal **czyta** pliki Kubo zrobione Rabinem (scenariusz C skryptu interop, PASS 18.11.2026).
 
 ## 1. Cel i zakres
 

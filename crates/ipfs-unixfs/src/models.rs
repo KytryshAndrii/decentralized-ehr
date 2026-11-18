@@ -6,22 +6,12 @@ use std::io::BufReader;
 pub enum Chunker {
     /// Kawałki stałej długości (`size-N` w Kubo); ostatni jest krótszy, bez dopełniania.
     Fixed { size: usize },
-    /// Granice zależne od treści (`rabin-min-avg-max` w Kubo).
-    Rabin { min: usize, avg: usize, max: usize },
 }
 
 /// Iterator po kawałkach pliku; czyta strumieniowo, bez ładowania całego pliku do pamięci.
 pub struct Chunks<R> {
     pub(crate) reader: BufReader<R>,
     pub(crate) chunker: Chunker,
-    pub(crate) rabin: Option<Box<RabinTables>>,
-}
-
-pub(crate) struct RabinTables {
-    pub(crate) out: [u64; 256],
-    pub(crate) modulo: [u64; 256],
-    pub(crate) shift: u32,
-    pub(crate) mask: u64,
 }
 
 /// Wynik importu pliku.

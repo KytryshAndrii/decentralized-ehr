@@ -56,7 +56,7 @@ rust_get() {
   (cd "$TMP/rust" && "$BIN" get "$1" "$2" >/dev/null 2>&1)
 }
 
-# Tekst (Rabin), "wideo" (stałe kawałki), mały plik (jeden blok raw) i plik pusty.
+# Tekst i "wideo" (stałe kawałki 256 KiB), mały plik (jeden blok raw) i plik pusty.
 for i in $(seq 1 40000); do
   printf 'Patient %d: observation %d, value %d mmHg\n' $((i % 97)) "$i" $((i * 37 % 200))
 done > "$TMP/record.txt"
@@ -67,10 +67,7 @@ printf 'small EHR note\n' > "$TMP/note.txt"
 echo 'A: Rust and Kubo compute the same CID for the same file and chunker'
 declare -A RUST_CID
 for name in record.txt ekg.mp4 note.txt empty.txt; do
-  case "$name" in
-    *.mp4) chunker='size-262144' ;;
-    *) chunker='rabin-16384-65536-262144' ;;
-  esac
+  chunker='size-262144'
   RUST_CID[$name]="$(rust_add "$TMP/$name")"
   kubo_cid="$("${KUBO_ADD[@]}" -n --chunker="$chunker" "$TMP/$name")"
   test -n "${RUST_CID[$name]}"
@@ -105,7 +102,8 @@ rust_fetches() {
   cmp "$file" "$TMP/$label.out"
 }
 
-echo 'C: Rust fetches and rebuilds a Kubo file (balanced, raw leaves, rabin)'
+# Rust nie tworzy już DAG-ów Rabinem, ale odczyt nie zależy od chunkera.
+echo 'C: Rust fetches and rebuilds a Kubo file made with the rabin chunker'
 head -c 1300000 /dev/urandom > "$TMP/kubo-rabin.bin"
 rust_fetches kubo-rabin "$("${KUBO_ADD[@]}" --chunker=rabin "$TMP/kubo-rabin.bin")" "$TMP/kubo-rabin.bin"
 

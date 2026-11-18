@@ -30,12 +30,12 @@ impl IpfsService {
         Ok(self.blockstore.put(&read_block_file(file_path)?)?)
     }
 
-    /// Import pliku dowolnej wielkości jako UnixFS. Chunker wynika z rozszerzenia pliku.
+    /// Import pliku dowolnej wielkości jako UnixFS (stałe kawałki 256 KiB jak domyślnie w Kubo).
     pub fn add_file(&self, file_path: &Path) -> ServiceResult<(ImportedFile, Chunker)> {
         if !file_path.is_absolute() {
             return Err("Input file path must be absolute".into());
         }
-        let chunker = Chunker::for_path(file_path);
+        let chunker = Chunker::fixed();
         let file = fs::File::open(file_path)?;
         Ok((
             ipfs_unixfs::add_file(&self.blockstore, file, chunker)?,

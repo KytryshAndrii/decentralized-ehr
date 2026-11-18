@@ -57,36 +57,26 @@ fn get(cwd: &Path, cid: &str, output: &Path) -> Vec<u8> {
 }
 
 #[test]
-fn add_and_get_round_trip_with_chunker_chosen_by_file_type() {
+fn add_and_get_round_trip_with_fixed_chunks() {
     let workspace = tempfile::tempdir().unwrap();
     let dir = workspace.path();
 
-    // Tekst: Rabin, kilka bloków.
+    // Tekst: stałe kawałki 256 KiB, kilka bloków.
     let text = patient_text(40_000);
     let text_path = dir.join("record.txt");
     fs::write(&text_path, &text).unwrap();
     let added = add(dir, &text_path);
-    assert_eq!(field(&added, "chunker"), "rabin-16384-65536-262144");
+    assert_eq!(field(&added, "chunker"), "size-262144");
     assert_eq!(field(&added, "bytes"), text.len().to_string());
     assert!(field(&added, "CID").starts_with("bafybei"), "{added}");
     let first_blocks: usize = field(&added, "new_blocks").parse().unwrap();
     assert!(first_blocks > 3, "{added}");
+    // Ten sam plik dodany drugi raz: wszystkie bloki już są w Blockstore.
+    let again = add(dir, &text_path);
+    assert_eq!(field(&again, "new_blocks"), "0", "{again}");
     assert_eq!(
         get(dir, &field(&added, "CID"), &dir.join("record.out")),
         text
-    );
-
-    // Nowa wersja z dopisanym nagłówkiem: większość bloków jest już w Blockstore.
-    let mut edited = b"Amended on 2026-11-16\n".to_vec();
-    edited.extend_from_slice(&text);
-    let edited_path = dir.join("record-v2.txt");
-    fs::write(&edited_path, &edited).unwrap();
-    let added = add(dir, &edited_path);
-    let reused: usize = field(&added, "reused_blocks").parse().unwrap();
-    assert!(reused >= first_blocks - 3, "{added}");
-    assert_eq!(
-        get(dir, &field(&added, "CID"), &dir.join("record-v2.out")),
-        edited
     );
 
     // Wideo: stałe kawałki 256 KiB, ostatni krótszy.

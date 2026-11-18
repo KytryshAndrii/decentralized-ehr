@@ -7,7 +7,6 @@ use ipfs_unixfs::consts::MAX_EXPORT_BYTES;
 use ipfs_unixfs::models::{DataType, PbLink, PbNode, UnixfsData};
 use ipfs_unixfs::{Chunker, UnixfsError, add_file, block_links, cat, dag_cids};
 use prost::Message;
-use std::path::Path;
 
 /// Te same dane co w skrypcie, którym policzono CID w Kubo.
 fn pseudo_random(length: usize, seed: u64) -> Vec<u8> {
@@ -16,20 +15,6 @@ fn pseudo_random(length: usize, seed: u64) -> Vec<u8> {
         .map(|_| {
             state = (state * 1_103_515_245 + 12_345) & 0x7fff_ffff;
             (state >> 16) as u8
-        })
-        .collect()
-}
-
-fn patient_text() -> Vec<u8> {
-    (0..30_000u32)
-        .flat_map(|i| {
-            format!(
-                "Patient {}: observation {}, value {} mmHg\n",
-                i % 97,
-                i,
-                (i * 37) % 200
-            )
-            .into_bytes()
         })
         .collect()
 }
@@ -50,14 +35,6 @@ fn read_back(store: &PersistentBlockstore, root: &Cid) -> Vec<u8> {
     output
 }
 
-fn small_rabin() -> Chunker {
-    Chunker::Rabin {
-        min: 2048,
-        avg: 4096,
-        max: 8192,
-    }
-}
-
 #[test]
 fn fixed_chunks_have_no_padding() {
     let data = pseudo_random(2500, 1);
@@ -71,44 +48,11 @@ fn fixed_chunks_have_no_padding() {
 }
 
 #[test]
-fn rabin_chunks_respect_bounds_and_cover_the_file() {
-    let data = pseudo_random(300_000, 3);
-    let parts = chunks(small_rabin(), &data);
-    assert!(parts.len() > 20);
-    let (last, full) = parts.split_last().unwrap();
-    assert!(full.iter().all(|part| (2048..=8192).contains(&part.len())));
-    assert!(last.len() <= 8192);
-    // Granice zależą od treści: nie wszystkie kawałki mają tę samą długość.
-    assert!(full.iter().any(|part| part.len() != full[0].len()));
-    assert_eq!(parts.concat(), data);
-}
-
-#[test]
 fn invalid_chunker_parameters_are_rejected() {
     for chunker in [
         Chunker::Fixed { size: 0 },
         Chunker::Fixed {
             size: 3 * 1024 * 1024,
-        },
-        Chunker::Rabin {
-            min: 8,
-            avg: 64,
-            max: 128,
-        },
-        Chunker::Rabin {
-            min: 64,
-            avg: 64,
-            max: 128,
-        },
-        Chunker::Rabin {
-            min: 64,
-            avg: 128,
-            max: 128,
-        },
-        Chunker::Rabin {
-            min: 64,
-            avg: 128,
-            max: 3 * 1024 * 1024,
         },
     ] {
         assert!(matches!(
@@ -119,36 +63,27 @@ fn invalid_chunker_parameters_are_rejected() {
 }
 
 #[test]
-fn audio_and_video_use_fixed_chunks_everything_else_rabin() {
-    for name in ["ekg.MP4", "/data/heart.wav", "scan.mkv"] {
-        assert_eq!(Chunker::for_path(Path::new(name)), Chunker::fixed());
-    }
-    for name in ["record.json", "notes.txt", "xray.bmp", "no-extension"] {
-        assert_eq!(Chunker::for_path(Path::new(name)), Chunker::rabin());
-    }
+fn fixed_chunker_uses_kubo_default_size() {
     assert_eq!(Chunker::fixed().kubo_name(), "size-262144");
-    assert_eq!(Chunker::rabin().kubo_name(), "rabin-16384-65536-262144");
 }
 
 #[test]
 fn small_file_is_a_single_raw_block() {
     let (_directory, store) = store();
     let data = b"small EHR note";
-    for chunker in [Chunker::fixed(), Chunker::rabin()] {
-        let imported = add_file(&store, &data[..], chunker).unwrap();
-        assert_eq!(
-            imported.root,
-            Cid::generate_from_data(data, CODEC_RAW, SHA2_256).unwrap()
-        );
-        assert_eq!(imported.size, data.len() as u64);
-        assert_eq!(read_back(&store, &imported.root), data);
-    }
+    let imported = add_file(&store, &data[..], Chunker::fixed()).unwrap();
+    assert_eq!(
+        imported.root,
+        Cid::generate_from_data(data, CODEC_RAW, SHA2_256).unwrap()
+    );
+    assert_eq!(imported.size, data.len() as u64);
+    assert_eq!(read_back(&store, &imported.root), data);
 }
 
 #[test]
 fn empty_file_matches_kubo() {
     let (_directory, store) = store();
-    let imported = add_file(&store, &b""[..], Chunker::rabin()).unwrap();
+    let imported = add_file(&store, &b""[..], Chunker::fixed()).unwrap();
     assert_eq!(
         imported.root.to_string_base32(),
         "bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku"
@@ -185,90 +120,23 @@ fn fixed_default_chunker_matches_kubo() {
     assert_eq!(read_back(&store, &imported.root), data);
 }
 
+/// Ten sam plik dodany drugi raz nie zapisuje niczego; wstawka na początku przesuwa
+/// wszystkie stałe kawałki, więc nowa wersja nie współdzieli bloków (oczekiwane).
 #[test]
-fn rabin_chunker_matches_kubo() {
-    let (_directory, store) = store();
-    let binary = pseudo_random(1_000_000, 7);
-    let text = patient_text();
-    let text_rabin = Chunker::Rabin {
-        min: 1024,
-        avg: 3000,
-        max: 6000,
-    };
-    for (data, chunker, kubo_cid) in [
-        (
-            &binary,
-            Chunker::rabin(),
-            "bafybeiboymxpj7o3mceb2xukvtjl5ilssmse2wznc5cf5ro6cwizl5j5iy",
-        ),
-        (
-            &text,
-            Chunker::rabin(),
-            "bafybeicbi7idsqjkq3skv7utx5gu2xq7fgbmufynnqbxrmah7ir35375ea",
-        ),
-        // Domyślne parametry `--chunker=rabin` w Kubo.
-        (
-            &binary,
-            Chunker::Rabin {
-                min: 87_381,
-                avg: 262_144,
-                max: 393_216,
-            },
-            "bafybeic2bjuaxvokxtgygoqpoq7zij6c6hkfivtvdpyjqsljq46tt5476m",
-        ),
-        (
-            &binary,
-            small_rabin(),
-            "bafybeigilmw4hfehsszdgnm7ej3efjpk2umjvcmbaredsgk4fwbo62wh7e",
-        ),
-        (
-            &text,
-            text_rabin,
-            "bafybeifiadcns2uzsc447fsedy34gpc6goqnrunhyyjzbgkmosj26acryy",
-        ),
-    ] {
-        let imported = add_file(&store, data.as_slice(), chunker).unwrap();
-        assert_eq!(imported.root.to_string_base32(), kubo_cid);
-        assert_eq!(&read_back(&store, &imported.root), data);
-    }
-}
-
-/// Wstawka na początku pliku przesuwa wszystkie stałe kawałki, a Rabin odnajduje
-/// stare granice: większość bloków nowej wersji już jest w Blockstore.
-#[test]
-fn rabin_reuses_blocks_after_an_insertion_and_fixed_does_not() {
+fn identical_file_reuses_every_block() {
     let original = pseudo_random(300_000, 5);
+    let fixed = Chunker::Fixed { size: 4096 };
+    let (_directory, store) = store();
+    let first = add_file(&store, original.as_slice(), fixed).unwrap();
+    assert_eq!(first.reused_blocks, 0);
+    let again = add_file(&store, original.as_slice(), fixed).unwrap();
+    assert_eq!((again.root, again.new_blocks), (first.root, 0));
+
     let mut edited = b"new header line\n".to_vec();
     edited.extend_from_slice(&original);
-
-    let (_directory, store) = store();
-    let first = add_file(&store, original.as_slice(), small_rabin()).unwrap();
-    assert_eq!(first.reused_blocks, 0);
-    let second = add_file(&store, edited.as_slice(), small_rabin()).unwrap();
-    assert!(
-        second.reused_blocks * 10 >= first.new_blocks * 9,
-        "reused {} of {}",
-        second.reused_blocks,
-        first.new_blocks
-    );
+    let second = add_file(&store, edited.as_slice(), fixed).unwrap();
+    assert_eq!(second.reused_blocks, 0);
     assert_eq!(read_back(&store, &second.root), edited);
-    // Ten sam plik dodany drugi raz nie zapisuje niczego.
-    assert_eq!(
-        add_file(&store, original.as_slice(), small_rabin())
-            .unwrap()
-            .new_blocks,
-        0
-    );
-
-    let (_directory, store) = self::store();
-    let fixed = Chunker::Fixed { size: 4096 };
-    add_file(&store, original.as_slice(), fixed).unwrap();
-    assert_eq!(
-        add_file(&store, edited.as_slice(), fixed)
-            .unwrap()
-            .reused_blocks,
-        0
-    );
 }
 
 fn unixfs_node(data_type: DataType, data: Option<&[u8]>, links: &[&Cid]) -> Vec<u8> {

@@ -27,7 +27,7 @@ Usage:\n\
   ehr-cli has <CID>\n\
   ehr-cli get <CID> <absolute-output-path>\n\n\
 put stores a file as one raw block (up to 2 MiB). add imports a file of any size as UnixFS\n\
-(balanced DAG, raw leaves; fixed chunks for audio/video, Rabin for everything else).\n\
+(balanced DAG, raw leaves, fixed 256 KiB chunks).\n\
 get writes a raw block or a whole UnixFS file.\n\
 Identity: ./tmp/node-key.pb (auto-created or reused).\n\
 Listen: /ip4/0.0.0.0/tcp/4101 (port override: EHR_LISTEN_PORT).\n\
