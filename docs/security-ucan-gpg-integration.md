@@ -27,7 +27,7 @@ ipfs-unixfs → ipfs-store → ipfs-bitswap / ipfs-network              BEZ ZMIA
 | Kto może **odczytać treść**? | OpenPGP: szyfr hybrydowy, klucz sesji opakowany dla każdego odbiorcy | przy odszyfrowaniu, lokalnie u odbiorcy |
 | Kto **wystawił** dokument? | OpenPGP: podpis wystawcy wewnątrz szyfrogramu | po odszyfrowaniu |
 | Czy wystawca **miał prawo** wystawić dokument medyczny? | UCAN: delegacja `/ehr/doc/issue` od zaufanej placówki | przy przyjęciu dokumentu |
-| Czy lekarz **ma zgodę pacjenta** na odczyt? | UCAN: delegacja `/ehr/doc/read` od pacjenta, z terminem ważności | przed udostępnieniem (opakowaniem klucza) |
+| Czy pacjent **ma prawo** odczytać dokument? | UCAN: delegacja `/ehr/doc/read` **od lekarza** (nigdy odwrotnie), z terminem ważności | przy wystawieniu dokumentu (opakowanie klucza dla pacjenta) |
 | Czy bajty są **nienaruszone**? | CID (już jest) | Blockstore, Bitswap |
 
 Sam UCAN nie chroni poufności (kto zna CID, pobierze blok), a sam podpis GPG nie mówi, że podpisujący jest lekarzem. Dlatego potrzebne są oba.
@@ -43,22 +43,25 @@ Potrzebne są dwie małe funkcje (`did_from_keypair`, `public_key_from_did`) w n
 
 ## 4. Role bez serwera centralnego
 
+> **Uproszczenie przyjęte w pracy:** placówka i lekarz to **jeden węzeł** (jeden klucz, jeden adres). Korzeń łańcucha `/ehr/doc/issue` to klucz tego węzła (token wystawiony samemu sobie: `iss = sub = DID węzła lekarza`). Pacjent dodaje DID lekarza do lokalnej listy zaufanych przy imporcie wizytówki lekarza (`contact add`). Wiersze „Placówka” i „Lekarz” w tabeli poniżej opisują więc ten sam węzeł; rozdzielenie na dwa węzły jest rozszerzeniem poza zakres. Szczegóły i kolejność prac: `docs/phase-9-ehr-delivery-plan.md` (nadrzędny).
+
 Ten sam program, różne uprawnienia (zgodnie z regułą projektu). Rola wynika z **łańcucha delegacji**, a nie z flagi w konfiguracji:
 
 | Podmiot | Skąd bierze uprawnienie | Co może |
 |---|---|---|
 | **Placówka** | jej DID jest w lokalnej liście zaufanych wystawców (`./data/trusted-issuers`), dodanej ręcznie przez użytkownika | korzeń zaufania dla `/ehr/doc/issue` |
-| **Lekarz** | delegacja UCAN od placówki: `cmd = /ehr/doc/issue` | wystawia dokumenty uznawane za medyczne |
-| **Pacjent** | jest podmiotem (`sub`) własnej dokumentacji | czyta swoje dokumenty; deleguje `/ehr/doc/read` |
-| **Lekarz z dostępem** | delegacja od pacjenta: `cmd = /ehr/doc/read`, `exp` | dostaje opakowany klucz dokumentu |
+| **Lekarz** | delegacja UCAN od placówki: `cmd = /ehr/doc/issue` | wystawia dokumenty (upload), tworzy nowe wersje (zmiana), czyta i pobiera; **jako jedyny** nadaje pacjentowi `/ehr/doc/read` |
+| **Pacjent** | delegacja UCAN od lekarza: `cmd = /ehr/doc/read`, `exp`; jest podmiotem (`sub`) dokumentacji | **tylko odczyt i pobranie**; nie wystawia, nie zmienia, nie udostępnia |
 
 Dzięki temu pacjent nie podszyje się pod lekarza: może podpisać plik własnym kluczem, ale nie ma łańcucha `/ehr/doc/issue` zaczynającego się u zaufanej placówki, więc aplikacja oznaczy plik jako „prywatny plik pacjenta”, a nie „dokument medyczny” (scenariusz T08).
+
+**Reguła „pacjent nie deleguje”:** weryfikator przyjmuje token `/ehr/doc/read` tylko wtedy, gdy jego `iss` ma własny łańcuch `/ehr/doc/issue` do zaufanej placówki. Token podpisany przez pacjenta (np. dla innego lekarza) nie ma takiego łańcucha, więc jest odrzucany. Lekarz nadaje dostęp innemu lekarzowi tym samym mechanizmem. Zniesiono polecenie `/ehr/doc/share`.
 
 ### 4.1. Token (podzbiór UCAN 1.0)
 
 Pola jak w UCAN 1.0 Delegation: `iss`, `aud`, `sub`, `cmd`, `pol`, `nonce`, `exp`, `nbf`. Czas w **sekundach Unix UTC**. Proponowany zakres dla pracy:
 
-- polecenia: `/ehr/doc/issue`, `/ehr/doc/read`, `/ehr/doc/share`;
+- polecenia: `/ehr/doc/issue` (lekarz: upload, nowa wersja), `/ehr/doc/read` (odczyt i pobranie; pacjent i lekarz);
 - `pol` ograniczone do jednego warunku: lista CID dokumentów albo „wszystkie dokumenty podmiotu”;
 - token jest blokiem w IPFS, a dowód (`prf`) to lista CID tokenów.
 
@@ -90,6 +93,14 @@ Model szyfrowania jest hybrydowy i OpenPGP robi go natywnie: jeden losowy klucz 
 
 ## 6. Przepływy
 
+### 6.0. Rejestracja pacjenta (jednorazowo): skąd lekarz zna DID pacjenta
+
+`provide` w IPFS **nie jest adresowane**: ogłasza w DHT „mam CID X”, a pobiera ten, kto zna CID. Lekarz nie wskazuje więc PeerId pacjenta, żeby coś „dostarczyć”. Dane pacjenta są mu potrzebne do trzech innych rzeczy: zaszyfrowania dokumentu (klucz publiczny OpenPGP), wpisania `aud` w tokenie UCAN (DID) i weryfikacji podpisu żądania skrzynki (klucz publiczny jest w DID).
+
+1. Pacjent uruchamia `ehr-cli identity contact`: wizytówka `{ did, klucz publiczny OpenPGP, podpisane kluczem węzła powiązanie „ten odcisk należy do tego DID”, opcjonalnie multiaddr }` jako tekst albo kod QR.
+2. Przy wizycie w placówce lekarz importuje wizytówkę: `ehr-cli contact add <wizytówka>` (lokalna książka kontaktów `./data/contacts`). Weryfikacja twarzą w twarz zastępuje urząd certyfikacji.
+3. **PeerId wynika z DID** (klucz Ed25519 jest w obu), więc adresu pacjenta można szukać w DHT po PeerId, a wizytówka może go podać jako wskazówkę.
+
 ### 6.1. Lekarz wystawia dokument pacjentowi
 
 ```text
@@ -104,13 +115,57 @@ manifest { doc: CID_doc, sub: DID pacjenta, iss: DID lekarza,
 
 `fetch CID_manifest` → `fetch CID_doc` → odszyfrowanie własnym kluczem → weryfikacja podpisu → weryfikacja łańcucha `prf` do zaufanej placówki → status „dokument medyczny” albo „niezweryfikowany”.
 
-### 6.3. Pacjent udostępnia dokument innemu lekarzowi
+### 6.3. Zmiana dokumentu i dostęp innego lekarza (tylko lekarz)
 
-1. Pacjent wystawia delegację `/ehr/doc/read` (`aud` = DID lekarza, `exp`, `pol` = CID dokumentu).
-2. Pacjent odszyfrowuje dokument i **szyfruje go ponownie** dla nowego zbioru odbiorców → nowy CID; nowa wersja manifestu wskazuje poprzednią.
-3. Lekarz pobiera manifest, sprawdza delegację, odszyfrowuje.
+Pacjent **nie udostępnia** dokumentów. Zmiany i nowe uprawnienia wprowadza wyłącznie lekarz:
+
+1. **Zmiana:** bloki w IPFS są niezmienne, więc „zmiana” to nowa wersja. Lekarz podpisuje i szyfruje plik od nowa → nowy CID; nowy manifest wskazuje poprzedni (`prev`). Pacjent zobaczy nową wersję przy kolejnym `inbox sync` (6.4).
+2. **Dostęp innego lekarza:** poza zakresem pracy (jeden węzeł lekarza, decyzja D05). Poniższy opis zostaje jako rozszerzenie: lekarz A wystawia lekarzowi B delegację `/ehr/doc/read` i szyfruje dokument ponownie dla {pacjent, A, B} → nowy CID.
 
 Ponowne szyfrowanie zamiast dopisania opakowanego klucza: jest proste, a dopisanie pakietu do istniejącego szyfrogramu i tak zmieniłoby CID. Wariant z kluczem w osobnym małym bloku („koperta klucza”), przy którym CID danych się nie zmienia, zostaje jako możliwe rozszerzenie (decyzja D05).
+
+**Kopia pliku u innej osoby.** Blok lub plik pacjenta może leżeć na urządzeniu innego pacjenta (węzeł przechowuje i ogłasza bloki, Bitswap wydaje je każdemu). To akceptowane: ma tam wyłącznie szyfrogram. Bez klucza prywatnego odbiorcy nie odszyfruje go (OpenPGP), a podpis lekarza uniemożliwia podmianę treści bez wykrycia (podpis + CID).
+
+### 6.4. Jak pacjent dowiaduje się o dokumencie (pobieranie od znanego węzła)
+
+Lekarz **nie łączy się z pacjentem**: nie zna jego adresu, a pacjent może być wyłączony. Pacjent zna adres węzła lekarza z wizytówki (6.0) i sam do niego dzwoni.
+
+1. Przy wystawieniu dokumentu lekarz dopisuje wpis do swojego indeksu (nazwa pliku, `CID_manifest`, numer kolejny) pod DID pacjenta.
+2. Pacjent uruchamia `inbox sync` (przy starcie aplikacji albo co N sekund). Węzeł łączy się z lekarzem (adres z wizytówki) i przez `/ehr/inbox/1.0.0` pyta: „co masz dla DID X?”. Zapytanie jest **podpisane kluczem pacjenta**, więc lekarz odpowiada tylko właścicielowi DID.
+3. Lekarz odpowiada podpisaną listą `[(numer, CID_manifest, data)]`. Pacjent weryfikuje podpis i łańcuch UCAN, pobiera manifest (`fetch`), odszyfrowuje go i zapisuje w swoim indeksie nazwę pliku. Dopiero wtedy pobiera dokument.
+4. **Hook** po zweryfikowanym wpisie: komunikat `[INBOX] NEW "<nazwa pliku>" verified`.
+
+Pacjent nie zna CID i nie musi: dostaje go w kroku 3 i widzi tylko nazwę pliku. Lekarz nie zna adresu pacjenta i nie musi.
+
+**Imię i nazwisko** nigdy nie trafiają do IPFS ani do manifestu. Lekarz widzi je z lokalnej książki kontaktów (`DID -> imię, nazwisko`, wypełnionej przy rejestracji na podstawie dokumentu tożsamości okazanego osobiście). Nazwa pliku jest wewnątrz zaszyfrowanego manifestu.
+
+Ograniczenia: pobranie działa tylko, gdy węzeł lekarza jest włączony i osiągalny; przy wielu węzłach można dodać marker w DHT (`hash("ehr-inbox" + DID)` ogłaszany przez `provide`) jako wariant poza zakresem pracy.
+
+### 6.5. Cały przepływ: od wystawienia do odczytu
+
+```text
+LEKARZ (węzeł D, także placówka)                         PACJENT (węzeł P)
+────────────────────────────────                         ─────────────────
+[jednorazowo] contact add <wizytówka pacjenta>  <──────  identity contact (DID, klucz PGP)
+              wizytówka lekarza (adres D)       ──────>  contact add (adres D = bootstrap, DID D zaufany)
+
+doc issue badanie.pdf --patient <DID P> --name "..."
+ 1. podpis OpenPGP lekarza + szyfrowanie dla {P, lekarz} -> szyfrogram
+ 2. add_file (stały chunker)               -> CID_doc
+ 3. token UCAN /ehr/doc/read, aud = DID P  -> CID_ucan
+ 4. manifest (zaszyfrowany) {nazwa, doc, ...} -> CID_manifest
+ 5. provide: bloki dokumentu, tokenu, manifestu
+ 6. wpis w indeksie lekarza
+                                                                7. inbox sync: połączenie P -> D (adres z wizytówki)
+                                                                   żądanie podpisane przez P, odpowiedź podpisana przez D
+                                                                8. weryfikacja podpisu, tokenu (aud = P, exp), łańcucha issue
+                                                                9. fetch CID_manifest, odszyfrowanie, wpis w indeksie P
+                                                               10. doc open "<nazwa>": fetch CID_doc (Bitswap, fale po 64 bloki)
+                                                               11. odszyfrowanie kluczem prywatnym P, weryfikacja podpisu D
+                                                               12. odczyt / pobranie (tylko tyle)
+```
+
+Zależność praktyczna: pobranie działa, dopóki węzeł lekarza jest włączony (jeden węzeł, brak kopii zapasowej). Pacjent po pobraniu może ogłaszać własną kopię (szyfrogram, który i tak odczyta tylko odbiorca).
 
 ## 7. Co dokładnie dochodzi w kodzie
 
@@ -127,12 +182,14 @@ Proponowane komendy:
 
 ```text
 ehr-cli identity did                              # DID węzła
+ehr-cli identity contact                          # wizytówka: DID + klucz publiczny OpenPGP (tekst / QR)
+ehr-cli contact add <wizytówka>                   # książka kontaktów lekarza
 ehr-cli key generate | key export | key import <plik>
 ehr-cli trust add-issuer <DID>                    # placówka jako korzeń zaufania
 ehr-cli ucan delegate <DID-odbiorcy> <polecenie> [--doc <CID>] [--exp <sekundy-UTC>]
 ehr-cli doc issue <plik> --patient <DID>          # podpis + szyfrowanie + add + manifest
 ehr-cli doc open <CID-manifestu> <plik-wyjściowy> # weryfikacja + odszyfrowanie
-ehr-cli doc share <CID-manifestu> --to <DID>
+ehr-cli doc update <CID-manifestu> <plik>         # tylko lekarz: nowa wersja (prev = stary manifest)
 ```
 
 ### 7.1. Jedyne miejsce, gdzie warstwa mogłaby wejść głębiej (opcjonalne)
@@ -142,7 +199,16 @@ Serwer Bitswap wydaje dziś ogłoszone bloki każdemu połączonemu peerowi. Kon
 ## 8. Skutki dla UnixFS i deduplikacji
 
 - Losowy klucz sesji oznacza, że ten sam dokument zaszyfrowany dwa razy daje **różne szyfrogramy i różne CID**. Deduplikacja bloków między wersjami zaszyfrowanego dokumentu nie działa.
-- Dla szyfrogramów właściwy jest **stały chunker** (Rabin nic nie daje na danych losowych). `Chunker::for_path` wybiera chunker po rozszerzeniu, więc szyfrogram powinien być importowany jawnie przez `Chunker::fixed()`; API crate już to umożliwia.
+- **Decyzja: rezygnujemy z chunkera Rabina, zostaje wyłącznie stały chunker (`size-262144`).**
+  <!-- Dlaczego: (1) w tym systemie każdy dokument jest szyfrogramem, a Rabin dzieli po treści i
+  daje korzyść (reużycie bloków po wstawce) tylko dla jawnych danych z powtarzalnymi fragmentami;
+  szyfrogram z losowym kluczem sesji jest pseudolosowy, więc granice Rabina nie "odnajdują się"
+  i każdy blok jest inny. (2) Rabin kosztuje czas procesora (100 MB: 9,0 s zamiast 5,3 s przy
+  stałym) i ok. 3x więcej bloków (1231 zamiast 386 dla 100 MB), a liczba bloków to koszt `provide`,
+  `fetch` i miejsca w bazie. (3) Jeden chunker oznacza mniej kodu i brak wyboru po rozszerzeniu
+  (`Chunker::for_path` błędnie traktuje przemianowane pliki). (4) Deduplikacja po szyfrowaniu
+  jest niemożliwa z założenia (sekcja poniżej: szyfrowanie zbieżne jest niedopuszczalne w EHR). -->
+  Zakres zmiany (jeszcze niewykonanej w kodzie): usunięcie `Chunker::Rabin`, `Chunker::for_path`, tablic Rabina i stałych `RABIN_*` z `ipfs-unixfs`, a z testów i skryptów: wzorce CID Rabina w `unixfs-unit-test.rs` oraz scenariusz C (`--chunker=rabin`) w `test-kubo-unixfs-interop.sh`. Zgodność z Kubo zostaje dla `size-262144`. Pliki z Kubo wykonane Rabinem nadal da się **czytać** (`cat` nie zależy od chunkera), tylko Rust już ich tak nie tworzy.
 - Szyfrowanie zbieżne (klucz wyliczany z treści) przywróciłoby deduplikację, ale ujawnia, że dwie osoby mają ten sam dokument. W EHR jest to niedopuszczalne.
 
 ## 9. Testy
@@ -159,6 +225,9 @@ Scenariusze T01–T10 z `phase-1.1` przechodzą bez zmian. Dochodzą testy UCAN:
 | U06 | podpis tokenu zmieniony o jeden bajt | odrzucony |
 | U07 | delegacja na liście unieważnień | odrzucona |
 | U08 | dokument podpisany przez pacjenta, bez łańcucha `issue` | „prywatny plik pacjenta” (T08) |
+| U09 | pacjent wystawia `/ehr/doc/read` dla innego lekarza | odrzucone (`iss` bez łańcucha `issue`) |
+| U10 | pacjent próbuje wystawić nową wersję dokumentu | odrzucone |
+| U11 | odpowiedź skrzynki bez ważnego łańcucha `issue` | odrzucona, wpis nie trafia do indeksu |
 
 Warstwy testów jak w projekcie: jednostkowe w `crates/ehr-security/tests/`, integracyjne na procesach `ehr-cli` (placówka + 2 pacjentów), a interoperacyjność: szyfrogram z aplikacji odszyfrowany przez `gpg --decrypt` i odwrotnie.
 
@@ -179,13 +248,13 @@ Warstwy testów jak w projekcie: jednostkowe w `crates/ehr-security/tests/`, int
 4. Manifest w `ehr-core` (M9) i komendy `doc issue / open / share`.
 5. Demonstracja na trzech maszynach (M10).
 
-## 12. Decyzje do podjęcia przez autora
+## 12. Decyzje (rozstrzygnięte dla pracy dyplomowej)
 
-- **D01** klucze OpenPGP: generowane przez aplikację czy importowane z istniejącego keyringu GnuPG.
-- **D02** zgoda pacjenta: per dokument czy na całą dokumentację (`pol`).
-- **D04** kto podpisuje: lekarz czy placówka; czy pacjent podpisuje własne pliki.
-- **D05** udostępnianie: ponowne szyfrowanie (proponowane) czy koperta klucza w osobnym bloku.
-- Format tokenu: DAG-CBOR jak w UCAN 1.0 (wymaga kodera dag-cbor) czy prostszy zapis na czas pracy.
+- **D01** klucze OpenPGP generuje aplikacja (`data/keys/`, tryb `0600`); import z GnuPG poza zakresem.
+- **D02** zakres delegacji `/ehr/doc/read`: jeden dokument (`pol` = CID dokumentu), wystawiany przez lekarza.
+- **D04** dokumenty podpisuje lekarz; pacjent niczego nie podpisuje poza żądaniem skrzynki.
+- **D05** udostępnianie innemu lekarzowi: **poza zakresem** (jeden węzeł lekarza). Komendy `doc grant` nie ma.
+- Format tokenu i wiadomości: JSON (`serde_json`), podpis liczony nad dokładnymi bajtami przesyłanego ładunku (bez kanonikalizacji). DAG-CBOR odrzucony: wymaga kodera, którego nie ma w projekcie.
 
 ## 13. Źródła
 

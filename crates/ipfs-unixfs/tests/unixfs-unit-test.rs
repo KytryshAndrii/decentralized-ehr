@@ -3,6 +3,7 @@
 use ipfs_cid::consts::{CODEC_DAG_PB, CODEC_RAW, SHA2_256};
 use ipfs_cid::models::Cid;
 use ipfs_store::PersistentBlockstore;
+use ipfs_unixfs::consts::MAX_EXPORT_BYTES;
 use ipfs_unixfs::models::{DataType, PbLink, PbNode, UnixfsData};
 use ipfs_unixfs::{Chunker, UnixfsError, add_file, block_links, cat, dag_cids};
 use prost::Message;
@@ -291,6 +292,28 @@ fn unixfs_node(data_type: DataType, data: Option<&[u8]>, links: &[&Cid]) -> Vec<
     .to_canonical_bytes()
 }
 
+/// Węzeł pliku z rozmiarami deklarowanymi jak w Kubo: `filesize` i `blocksizes` dzieci.
+fn sized_node(links: &[(Vec<u8>, u64)], filesize: u64) -> Vec<u8> {
+    let unixfs = UnixfsData {
+        r#type: DataType::File as i32,
+        data: None,
+        filesize: Some(filesize),
+        blocksizes: links.iter().map(|(_, size)| *size).collect(),
+    };
+    PbNode {
+        data: Some(unixfs.encode_to_vec()),
+        links: links
+            .iter()
+            .map(|(hash, _)| PbLink {
+                hash: Some(hash.clone()),
+                name: Some(String::new()),
+                tsize: None,
+            })
+            .collect(),
+    }
+    .to_canonical_bytes()
+}
+
 /// Kubo bez `--raw-leaves` trzyma dane liścia w polu Data węzła dag-pb i linkuje CIDv0.
 #[test]
 fn reads_dag_pb_leaves_and_cid_v0_links() {
@@ -312,17 +335,7 @@ fn reads_dag_pb_leaves_and_cid_v0_links() {
     // CIDv0 to sam multihash: 0x12 0x20 + skrót.
     let mut v0_link = vec![0x12, 0x20];
     v0_link.extend_from_slice(&leaf_a.multihash.digest);
-    let mut root =
-        PbNode::decode(unixfs_node(DataType::File, None, &[&leaf_b]).as_slice()).unwrap();
-    root.links.insert(
-        0,
-        PbLink {
-            hash: Some(v0_link),
-            name: None,
-            tsize: None,
-        },
-    );
-    let root_bytes = root.to_canonical_bytes();
+    let root_bytes = sized_node(&[(v0_link, 6), (leaf_b.to_bytes(), 6)], 12);
     let root_cid = store
         .put_with_codec(&root_bytes, CODEC_DAG_PB, SHA2_256)
         .unwrap();
@@ -361,7 +374,7 @@ fn unsupported_and_incomplete_dags_are_errors() {
     let missing = Cid::generate_from_data(b"never stored", CODEC_RAW, SHA2_256).unwrap();
     let root = store
         .put_with_codec(
-            &unixfs_node(DataType::File, None, &[&missing]),
+            &sized_node(&[(missing.to_bytes(), 12)], 12),
             CODEC_DAG_PB,
             SHA2_256,
         )
@@ -382,4 +395,56 @@ fn unsupported_and_incomplete_dags_are_errors() {
         cat(&store, &garbage, &mut Vec::new()),
         Err(UnixfsError::Decode(_))
     ));
+}
+
+/// Spreparowane DAG-i: deklaracje rozmiarów muszą się zgadzać, a `cat` nie może zapisać
+/// więcej, niż deklaruje korzeń (ani więcej niż `MAX_EXPORT_BYTES`).
+#[test]
+fn crafted_dags_are_rejected_before_they_grow_the_output() {
+    let (_directory, store) = store();
+    let leaf = store.put_with_codec(b"x", CODEC_RAW, SHA2_256).unwrap();
+    let link = || leaf.to_bytes();
+    let put = |bytes: Vec<u8>| {
+        store
+            .put_with_codec(&bytes, CODEC_DAG_PB, SHA2_256)
+            .unwrap()
+    };
+    let cat_error = |root: &Cid| {
+        let mut output = Vec::new();
+        let error = cat(&store, root, &mut output).unwrap_err();
+        (error, output)
+    };
+
+    // 1000 linków do tego samego bloku przy deklaracji 1 B: suma nie zgadza się z filesize.
+    let amplified = put(sized_node(&vec![(link(), 1); 1000], 1));
+    let (error, output) = cat_error(&amplified);
+    assert!(matches!(error, UnixfsError::InvalidDag { .. }), "{error}");
+    assert!(output.is_empty());
+
+    // Rodzic deklaruje dziecku 5 B, a blok ma 1 B.
+    let lying_parent = put(sized_node(&[(link(), 5)], 5));
+    assert!(matches!(
+        cat_error(&lying_parent).0,
+        UnixfsError::InvalidDag { .. }
+    ));
+
+    // Dziecko o rozmiarze zero (amplifikacja bez bajtów).
+    let zero_child = put(sized_node(&[(link(), 0)], 0));
+    assert!(matches!(
+        cat_error(&zero_child).0,
+        UnixfsError::InvalidDag { .. }
+    ));
+
+    // Korzeń deklaruje więcej, niż dozwolone: odrzucony przed zapisem czegokolwiek.
+    let too_large = MAX_EXPORT_BYTES + 1;
+    let huge = put(sized_node(&[(link(), too_large)], too_large));
+    let (error, output) = cat_error(&huge);
+    assert!(matches!(error, UnixfsError::FileTooLarge { .. }), "{error}");
+    assert!(output.is_empty());
+
+    // Uczciwy DAG z powtórzonym blokiem nadal działa (deduplikacja liści).
+    let honest = put(sized_node(&[(link(), 1), (link(), 1)], 2));
+    let mut output = Vec::new();
+    assert_eq!(cat(&store, &honest, &mut output).unwrap(), 2);
+    assert_eq!(output, b"xx");
 }

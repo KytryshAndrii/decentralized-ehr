@@ -20,6 +20,12 @@ pub enum UnixfsError {
     #[error("block {0} is missing from the Blockstore")]
     MissingBlock(String),
 
+    #[error("file declares {declared} B, limit is {limit} B")]
+    FileTooLarge { declared: u64, limit: u64 },
+
+    #[error("inconsistent DAG at {cid}: {reason}")]
+    InvalidDag { cid: String, reason: &'static str },
+
     #[error("unsupported block {cid}: {reason}")]
     Unsupported { cid: String, reason: &'static str },
 }

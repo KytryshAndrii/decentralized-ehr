@@ -104,26 +104,68 @@ Zmiany w zachowaniu sieci, które wyszły w testach z Kubo:
 | `ipfs-unixfs/src/importer.rs` | `add_file`: liście → poziomy po 174 → korzeń |
 | `ipfs-unixfs/src/exporter.rs` | `cat`, `dag_cids`, `block_links` |
 | `ipfs-unixfs/src/models.rs` | `Chunker`, `ImportedFile`, struktury protobuf (`prost`) |
-| `ipfs-bitswap/src/client.rs` | `fetch` zwraca blok; blok lokalny nie jest pobierany |
-| `ipfs-network/src/bitswap.rs` | `fetch_dag`: przejście po linkach |
+| `ipfs-bitswap/src/client.rs` | `fetch_many`: fala bloków jedną wantlistą, jedno otwarcie bazy do odczytu i do zapisu; `fetch` to skrót dla jednego bloku |
+| `ipfs-network/src/bitswap.rs` | `fetch_dag`: przejście po linkach falami po `FETCH_WINDOW` |
+| `vendor/libp2p-stream` | kopia z poprawką kolejki przychodzących strumieni (sekcja 9) |
 | `ehr-cli` | `add`, `get` przez `ipfs_unixfs::cat`, `provide`/`stop`/`fetch` na całym DAG |
 
 ## 8. Testy
 
 | Warstwa | Test | Wynik |
 |---|---|---|
-| Jednostkowe | `cargo test -p ipfs-unixfs` (13): CID wzorcowe z Kubo dla `size-1024` (2 poziomy, 391 liści), `size-262144`, trzech zestawów Rabina i pliku pustego; granice Rabina; reużycie po wstawce; liście dag-pb i linki CIDv0; kolejność pól dag-pb; błędy | PASS |
+| Jednostkowe | `cargo test -p ipfs-unixfs` (14): CID wzorcowe z Kubo dla `size-1024` (2 poziomy, 391 liści), `size-262144`, trzech zestawów Rabina i pliku pustego; granice Rabina; reużycie po wstawce; liście dag-pb i linki CIDv0; kolejność pól dag-pb; błędy | PASS |
 | Integracyjne | `integration-unixfs` (2): `add`/`get` dla tekstu i `.mp4`, reużycie bloków między wersjami, brak nadpisywania; pobranie całego pliku między dwoma węzłami, `stop` wszystkich bloków | PASS |
 | Interop Kubo 0.43.1 | `scripts/testing/test-kubo-unixfs-interop.sh` (`interop-unixfs`): A ten sam CID w Rust i Kubo (tekst, wideo, mały, pusty) · B Kubo czyta pliki z Rusta (`ipfs cat`) · C Rust odtwarza plik Kubo (rabin) · D DAG dwupoziomowy (200 liści) · E plik CIDv0 z liśćmi dag-pb · F DAG trickle · G katalog odrzucony przez `get` | PASS (3 kolejne uruchomienia) |
 | Ręcznie | `M8_VIDEO_BYTES=60000000`: plik 60 MB (229 liści, 2 poziomy), ten sam CID co Kubo, `ipfs cat` z Rusta | PASS |
 
-## 9. Ograniczenia
+## 9. Pobieranie falami (wydajność)
 
+`fetch` pobierał bloki po jednym: osobny strumień, osobny `GET` z LevelDB i osobne otwarcie bazy na każdy blok (100 MB = 386 bloków = 46 s, ok. 0,12 s na blok). Zmiany:
+
+| | Zmiana | Efekt |
+|---|---|---|
+| a | **Wantlista z wieloma wpisami.** Klient wysyła jedną wiadomość z do `FETCH_WINDOW` (64) wpisami Want-Block zamiast jednej wiadomości na blok; serwer przyjmuje do 100 wpisów | jeden strumień zapytań na falę |
+| b | **Pobieranie równoległe.** `fetch_dag` idzie falami (BFS): bloki jednej fali są zamawiane naraz, linki z odebranych bloków tworzą następną falę. Korzeń jest zawsze pierwszą, jednoelementową falą | bloki fali płyną jednocześnie |
+| c | **Jedno otwarcie bazy na falę.** `BitswapClient::fetch_many` otwiera LevelDB raz do sprawdzenia, które bloki są lokalne, i raz do zapisu wszystkich odebranych (`put_block` nadal liczy skrót każdego bloku) | 2 otwarcia zamiast 2 na blok, mniej konfliktów blokady |
+
+Zachowania, które się nie zmieniły (sprawdzone testami): blok niezgodny z CID jest odrzucany (odpowiedź jest dopasowana po CID wyliczonym z bajtów); `DontHave` i `Timeout` wycofują want (Kubo pamięta want po `DontHave`); po błędzie bloki, które już dotarły, zostają zapisane, więc ponowne `fetch` nie zaczyna od zera; dostawcy są próbowani po kolei, a niepobrane bloki przechodzą do następnego; ten sam blok w DAG jest pobierany raz.
+
+### Poprawka w `libp2p-stream` (potrzebna dla równoległości)
+
+Pierwsza wersja fali z Kubo kończyła się `Bitswap peer timed out`: Kubo wysyła każdy blok osobnym strumieniem, a `libp2p-stream 0.5.0-alpha` ma kolejkę nadchodzących strumieni o **jednym miejscu** (`mpsc::channel(0)`) i **po cichu porzuca** strumienie, gdy kolejka jest pełna (`Channel is full, dropping inbound stream`). Z 5 bloków dochodziły 3. Poprawka jest jednowierszowa (`INBOUND_STREAM_BACKLOG = 256` w `src/shared.rs`) i leży w `vendor/libp2p-stream` (`[patch.crates-io]` w głównym `Cargo.toml`, katalog wyłączony z workspace). Przy aktualizacji tej zależności trzeba poprawkę przenieść albo sprawdzić, czy upstream poszerzył kolejkę. To dotyczy też serwera: seria strumieni od Kubo mogła być gubiona także po tej stronie.
+
+### Pomiary (dwa węzły na jednym komputerze, build release)
+
+Plik losowy `.mp4` (stałe kawałki 256 KiB), węzeł A ogłasza, węzeł B pobiera przez DHT i Bitswap; 18.11.2026.
+
+| Plik | Bloki | `fetch` przed | `fetch` po | Przyspieszenie |
+|---|---|---|---|---|
+| 10 MB | 40 | 7,6 s | **0,5 s** | 15× |
+| 100 MB | 386 | 46 s | **3,6 s** (ok. 28 MB/s) | 13× |
+
+`provide` 100 MB (386 bloków) zajęło 2,0 s. `get` pobranego pliku 100 MB daje plik identyczny bajt po bajcie (`cmp`). Pomiar dotyczy localhost; w sieci rzeczywistej czas zależy od opóźnienia i łącza, ale liczba rund zależy już od liczby fal (głębokość DAG × bloki / 64), a nie od liczby bloków.
+
+## 10. Zabezpieczenia odczytu (`get` / `cat`)
+
+DAG pochodzi z sieci, więc korzeń nie może być zaufany. Spreparowany DAG, w którym każdy poziom linkuje 174 razy ten sam blok, jest kilkaset bajtów w sieci, a po odtworzeniu daje terabajty (albo miliardy odwiedzin bez zapisanych bajtów). `cat` sprawdza:
+
+1. **Limit rozmiaru**: rozmiar deklarowany przez korzeń (`filesize`) nie może przekraczać `MAX_EXPORT_BYTES` (8 GiB); większy plik jest odrzucany **przed zapisem pierwszego bajtu** (`FileTooLarge`).
+2. **Rozmiary dzieci**: każdy link ma w rodzicu rozmiar (`blocksizes`) i blok dziecka musi deklarować dokładnie tyle; liczba `blocksizes` musi równać się liczbie linków.
+3. **Suma**: własne dane węzła plus suma rozmiarów dzieci musi równać się jego `filesize`.
+4. **Brak dzieci o rozmiarze zero**: wyklucza amplifikację bez bajtów (miliardy odwiedzin pustych węzłów).
+5. **Budżet bajtów**: zapis nigdy nie przekracza rozmiaru z korzenia (`InvalidDag`); plik jest usuwany przy błędzie (`export_file`).
+
+Skutek: liczba odwiedzonych bloków jest ograniczona rozmiarem pliku, a plik na dysku nie urośnie ponad deklarację korzenia, która sama jest ograniczona limitem. `dag_cids` i `fetch_dag` pomijają powtórzone bloki, więc nie są podatne na ten atak.
+
+Konsekwencja: węzeł dag-pb bez `blocksizes` (np. ręcznie zbudowany albo ze starej implementacji) jest odrzucany. Kubo i importer w tym repozytorium zawsze je zapisują; sprawdzone w interop (pliki balanced, trickle, CIDv0 z liśćmi dag-pb). Testy: `crafted_dags_are_rejected_before_they_grow_the_output` (amplifikacja, kłamiący rodzic, dziecko zerowe, rozmiar ponad limit, uczciwy DAG z powtórzonym blokiem).
+
+## 11. Ograniczenia
+
+- **Blokada LevelDB nadal jest głównym ryzykiem.** Przy pomiarach `provide` zlecone jeden po drugim (`provide A` i od razu `provide B` dużego pliku) dały `STATE_STORE_FAILED` / `DHT_PROVIDE_FAILED`: wątek czytający cały DAG drugiego pliku trzymał bazę, a zapisy stanu pierwszego przekroczyły 5 s oczekiwania. Zlecenia `provide` dużych plików trzeba dawać po kolei i czekać na koniec poprzedniego. Docelowa naprawa: węzeł jest jedynym właścicielem bazy, a komendy CLI przechodzą przez niego.
 - Baza LevelDB jest otwierana na czas operacji. `ehr-cli add` dużego pliku oraz `provide`/`fetch` sprawdzające cały DAG trzymają ją przez cały import lub odczyt; operacje działającego węzła, które w tym czasie czekają dłużej niż 5 s, kończą się błędem blokady (`STATE_STORE_FAILED`, `BITSWAP_FAILED`).
-- `fetch` pobiera bloki po jednym, każdy osobnym strumieniem; duże pliki pobierają się wolno.
 - `provide` uruchamia jedno zapytanie DHT na blok; limit ogłaszanych kluczy to 65 536.
 - `stop` wycofuje wszystkie bloki pliku, także te współdzielone z innym ogłoszonym plikiem (deduplikacja); taki plik trzeba ogłosić ponownie.
-- `get` nie ogranicza rozmiaru odtwarzanego pliku; spreparowany DAG, który wielokrotnie linkuje ten sam blok, może zapełnić dysk.
+- `get` odrzuca pliki większe niż `MAX_EXPORT_BYTES` (8 GiB); przy większych plikach stałą trzeba podnieść (sekcja 10).
 - Każdy zapisany blok wypisuje linie diagnostyczne `[ipfs-cid]` i `[ipfs-store]` na stderr.
 - Wybór chunkera po rozszerzeniu nie rozpoznaje audio/wideo w plikach o innej nazwie.
 
