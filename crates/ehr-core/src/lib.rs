@@ -1,14 +1,19 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+//! Warstwa EHR (M9): pacjent, dokument, manifest i lokalny rejestr CID z nazwami plików.
+//! Wymiana plików w standardzie HL7 FHIR R5 (`DocumentReference`), dokumenty szyfrowane
+//! i podpisane OpenPGP, uprawnienia UCAN (`ehr-security`). Wspólna logika CLI i UI.
+pub mod app;
+pub mod consts;
+pub mod error;
+pub mod fhir;
+pub mod models;
+pub mod node;
+pub mod store;
+pub mod utils;
+pub(crate) mod wire;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use error::EhrError;
+pub use models::{
+    Category, Contact, DocumentReference, EhrApp, EhrNode, IndexEntry, NewDocument, Person,
+    Profile, Role,
+};
+pub use store::ContactKind;
