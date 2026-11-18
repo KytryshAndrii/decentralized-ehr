@@ -10,6 +10,7 @@ members = [
     "crates/ipfs-bitswap",
     "crates/ipfs-unixfs",
     "crates/ehr-core",
+    "crates/ehr-security",
     "test-runner",
 ]
 
@@ -17,3 +18,9 @@ members = [
 # Kopia w vendor/ różni się jednym miejscem: INBOUND_STREAM_BACKLOG w src/shared.rs.
 [patch.crates-io]
 libp2p-stream = { path = "vendor/libp2p-stream" }
+
+# Argon2 (hasło do kluczy) bez optymalizacji trwa kilka sekund na każde odblokowanie.
+[profile.dev.package.argon2]
+opt-level = 3
+[profile.dev.package.blake2]
+opt-level = 3
