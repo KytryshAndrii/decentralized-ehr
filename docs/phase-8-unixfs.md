@@ -17,7 +17,7 @@
 |---|---|---|
 | Kodek węzłów | **dag-pb** (`0x70`) + liście **raw** (`0x55`) | UnixFS v1 jest zdefiniowany wyłącznie na dag-pb. `ipfs cat`, `ipfs get` i bramki HTTP nie potrafią odczytać pliku z dag-cbor ani z kodeka JSON. |
 | dag-cbor | **nie dla plików** | Zob. §3. |
-| Układ DAG | **balanced**, do 174 linków na węzeł | Wymóg autora i domyślny układ Kubo; wszystkie liście na tej samej głębokości, więc dostęp do dowolnego miejsca pliku ma stały koszt. Trickle nie jest tworzony. |
+| Układ DAG | **balanced**, do 174 linków na węzeł | Wymóg autora i domyślny układ Kubo; wszystkie liście na tej samej głębokości, więc dostęp do dowolnego miejsca pliku ma stały koszt. Trickle nie jest tworzony. Budowa i matematyka podziału: §10. |
 | Liście | raw (`--raw-leaves`) | Liść to same bajty pliku, bez opakowania protobuf. Ten sam fragment danych daje ten sam blok niezależnie od pliku, w którym występuje, a plik jednoblokowy ma ten sam CID co `put`. |
 | Chunker dla audio i wideo | stały, 256 KiB (`size-262144`) | Wymóg autora. Strumienie skompresowane nie mają powtarzalnych fragmentów; cięcie zależne od treści kosztowałoby czas bez zysku. |
 | Chunker dla pozostałych plików | Rabin `16384-65536-262144` | Wymóg autora co do metody; parametry zmienione względem domyślnych Kubo, zob. §4. |
@@ -126,3 +126,124 @@ Zmiany w zachowaniu sieci, które wyszły w testach z Kubo:
 - `get` nie ogranicza rozmiaru odtwarzanego pliku; spreparowany DAG, który wielokrotnie linkuje ten sam blok, może zapełnić dysk.
 - Każdy zapisany blok wypisuje linie diagnostyczne `[ipfs-cid]` i `[ipfs-store]` na stderr.
 - Wybór chunkera po rozszerzeniu nie rozpoznaje audio/wideo w plikach o innej nazwie.
+
+## 10. Budowa DAG: kiedy `root → leaf`, a kiedy `root → node → leaf`
+
+Nie ma osobnej decyzji „węzeł czy liść”. **Liśćmi są zawsze kawałki z chunkera**, a węzły powstają tylko wtedy, gdy liści jest więcej niż jeden: każdy węzeł grupuje do 174 linków. O tym, czy jest `root → leaf`, czy `root → node → leaf`, decyduje wyłącznie **liczba kawałków `n`** porównana z potęgami 174.
+
+### 10.1. Przykład: plik 400 000 B, chunker `size-1024`
+
+Przypadek z testu jednostkowego `balanced_two_level_dag_matches_kubo`; CID zgodny z Kubo.
+
+```text
+                              KORZEŃ  bafybeialngtx5…
+                              dag-pb, UnixFS File, 3 linki
+                              filesize = 400 000
+                              blocksizes = [178 176, 178 176, 43 648]
+                 ┌──────────────────────┼───────────────────────┐
+                 ▼                      ▼                       ▼
+            WĘZEŁ A                WĘZEŁ B                 WĘZEŁ C            poziom 1
+            dag-pb, 174 linki      dag-pb, 174 linki       dag-pb, 43 linki   (dag-pb)
+            178 176 B pliku        178 176 B pliku         43 648 B pliku
+        ┌─────┬───┴───┐        ┌─────┬───┴───┐        ┌─────┬───┴───┐
+        ▼     ▼       ▼        ▼     ▼       ▼        ▼     ▼       ▼
+       L1    L2 …   L174     L175   …     L348      L349   …     L391         liście
+       raw   raw    raw      raw          raw       raw          raw          (raw)
+      1024  1024   1024     1024         1024      1024         640 B
+
+   bajty pliku:  [L1][L2]…[L174][L175]…[L348][L349]…[L391]   = 400 000 B
+```
+
+Kroki budowy (`importer.rs`):
+
+1. **Chunker** tnie plik: 391 kawałków (390 × 1024 B i ostatni 640 B, bez dopełniania).
+2. **Liście**: każdy kawałek to blok raw (`bafkrei…`). Przed zapisem importer sprawdza `has()`, więc blok, który już jest w Blockstore, nie jest zapisywany drugi raz.
+3. **Poziom 1**: liście grupowane po 174, co daje węzły A (174), B (174) i C (43).
+4. **Poziom 2**: trzy węzły mieszczą się w jednym, więc powstaje korzeń i budowa się kończy.
+
+Zawartość jednego węzła dag-pb (np. A):
+
+```text
+PbNode                                  ← kolejność bajtów jak w Kubo: Links, potem Data
+├─ Links[0]   Hash = CID L1   Name = ""   Tsize = 1024
+├─ Links[1]   Hash = CID L2   Name = ""   Tsize = 1024
+│  …
+├─ Links[173] Hash = CID L174 Name = ""   Tsize = 1024
+└─ Data = UnixFS { Type = File, filesize = 178 176, blocksizes = [1024 × 174] }
+```
+
+- `blocksizes` mówi, ile bajtów pliku leży pod każdym linkiem. Dzięki temu można przeskoczyć do dowolnego miejsca pliku bez czytania wcześniejszych bloków.
+- `Tsize` to łączny rozmiar bloków poddrzewa. Kubo używa go do pokazywania postępu pobierania.
+- Węzły nie zawierają bajtów pliku, tylko linki; dane są wyłącznie w liściach.
+
+### 10.2. Ile jest liści
+
+Rozmiar pliku `S` bajtów:
+
+- **stałe kawałki 256 KiB:** `n = ⌈S / 262 144⌉`, a pusty plik daje jeden pusty liść (`n = 1`);
+- **Rabin (16–256 KiB):** `n` zależy od treści, ale jest ograniczone: `⌈S / 262 144⌉ ≤ n ≤ ⌊S / 16 384⌋ + 1`.
+
+### 10.3. Poziomy
+
+Algorytm (`importer.rs`, pętla `level.chunks(MAX_FILE_LINKS)`) liczy poziom po poziomie:
+
+```text
+n₀ = n                 (liście)
+n₁ = ⌈n₀ / 174⌉        (węzły nad liśćmi)
+n₂ = ⌈n₁ / 174⌉
+…                      aż nₖ = 1  →  to jest korzeń
+```
+
+Głębokość drzewa to najmniejsze `d`, dla którego `174^d ≥ n`, czyli `d = ⌈log₁₇₄ n⌉`.
+
+| Liczba liści `n` | Głębokość `d` | Kształt |
+|---|---|---|
+| 1 | 0 | sam liść raw, bez dag-pb (CID `bafkrei…`) |
+| 2 – 174 | 1 | `root → leaf` |
+| 175 – 30 276 (=174²) | 2 | `root → node → leaf` |
+| 30 277 – 5 268 024 (=174³) | 3 | `root → node → node → leaf` |
+
+Granica leży więc dokładnie przy **174 → 175 liściach**. Przy 174 liściach wszystkie mieszczą się w korzeniu. Przy 175 korzeń nie pomieści już wszystkich linków, więc pod nim powstają węzły pośrednie.
+
+### 10.4. Przykłady
+
+```text
+n = 2     → n₁ = ⌈2/174⌉ = 1                         → root → 2 liście            (3 bloki)
+n = 174   → n₁ = 1                                   → root → 174 liście          (175 bloków)
+n = 175   → n₁ = ⌈175/174⌉ = 2 → n₂ = 1              → root → [174] [1] → liście  (178 bloków)
+n = 391   → n₁ = ⌈391/174⌉ = 3 → n₂ = 1              → root → [174] [174] [43]    (395 bloków)
+```
+
+Węzły są wypełniane od lewej do pełna, a tylko ostatni na danym poziomie jest niepełny (43 w przykładzie z §10.1). W układzie balanced węzeł danego poziomu linkuje wyłącznie do poziomu niżej, nigdy na raz do liścia i węzła, więc wszystkie liście są na tej samej głębokości. To odróżnia go od trickle.
+
+Liczba wszystkich bloków to `n + n₁ + n₂ + …`. Dla 391 liści wychodzi 391 + 3 + 1 = **395**; dokładnie tyle sprawdza test `balanced_two_level_dag_matches_kubo`.
+
+### 10.5. Maksymalny rozmiar pliku dla głębokości
+
+`S_max(d) = 174^d × rozmiar_kawałka`
+
+| `d` | stałe 256 KiB | Rabin, średnio ~64 KiB |
+|---|---|---|
+| 1 | 43,5 MiB | ~11 MiB |
+| 2 | ~7,4 GiB | ~1,8 GiB |
+| 3 | ~1,26 TiB | ~0,3 TiB |
+
+Dla Rabina to wartości orientacyjne, bo długość kawałka zależy od treści.
+
+### 10.6. Skąd 174
+
+To stała Kubo `DefaultLinksPerBlock` z `ipfs/boxo`, plik `ipld/unixfs/importer/helpers/helpers.go`, wyliczona tak, żeby węzeł z linkami miał około 8 KiB:
+
+```text
+link ≈ 34 B (multihash SHA2-256) + 8 B (rozmiar) + 5 B (ramka protobuf) = 47 B
+8192 B / 47 B ≈ 174,3  →  174
+```
+
+Musimy użyć tej samej liczby: przy innej (np. 200) DAG miałby inny kształt i inny CID niż w Kubo, nawet przy identycznych liściach.
+
+### 10.7. Odczyt i reużycie bloków
+
+- **`get` / `cat`** czyta w głąb w kolejności linków: korzeń → A → L1…L174 → B → … → L391. Bajty z kolejnych liści wychodzą od razu w dobrej kolejności.
+- **Nowa wersja pliku**: zmieniony kawałek dostaje nowy CID. Nowe CID dostają też węzły na drodze od tego kawałka do korzenia, a wszystkie pozostałe liście i węzły zostają wspólne. Stąd w pomiarze z §4 (plik 1,8 MB, 9 bloków) nowa wersja zapisała tylko 3 nowe bloki, a 6 reużyła.
+
+**Zakres weryfikacji:** z CID Kubo porównano przypadek 391 liści (dwa poziomy) oraz duże pliki z testu interop (§8). Przypadki 2, 174 i 175 liści wynikają z tego samego algorytmu, ale nie mają osobnego testu porównawczego z Kubo.
