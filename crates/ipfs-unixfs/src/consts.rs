@@ -23,3 +23,7 @@ pub const FIXED_CHUNK_EXTENSIONS: &[&str] = &[
     "aac", "avi", "flac", "m4a", "m4v", "mkv", "mov", "mp3", "mp4", "mpeg", "mpg", "oga", "ogg",
     "ogv", "opus", "wav", "webm", "wma", "wmv",
 ];
+
+/// Największy plik, który `cat` odtworzy. Rozmiar bierze się z korzenia DAG (nie ufamy mu
+/// bez limitu: spreparowany korzeń mógłby deklarować terabajty).
+pub const MAX_EXPORT_BYTES: u64 = 8 * 1024 * 1024 * 1024;

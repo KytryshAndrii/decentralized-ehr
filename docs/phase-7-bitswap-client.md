@@ -47,7 +47,7 @@
 
 ## 5. Ograniczenia
 
-> Od M8 (`docs/phase-8-unixfs.md`) `fetch` pobiera cały DAG pliku i po dostawcach z DHT pyta także połączonych peerów; poniższa lista opisuje stan M7.
+> Od M8 (`docs/phase-8-unixfs.md`) `fetch` pobiera całe pliki falami po 64 bloki jedną wantlistą (`BitswapClient::fetch_many`, sekcja 9 tamtego dokumentu: 13-15× szybciej) oraz `libp2p-stream` jest użyty w wersji z poprawką kolejki strumieni (`vendor/libp2p-stream`). `fetch` pobiera cały DAG pliku i po dostawcach z DHT pyta także połączonych peerów; poniższa lista opisuje stan M7.
 
 - Jeden blok na żądanie; pliki wieloblokowe (DAG) to M8.
 - Tylko CIDv1 z SHA2-256 / SHA2-512 (zakres `ipfs-cid`).

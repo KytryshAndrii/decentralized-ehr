@@ -8,3 +8,5 @@ pub const STREAM_WRITE_TIMEOUT_SECS: u64 = 30;
 /// Jak długo klient czeka na blok albo DontHave od jednego dostawcy.
 pub const FETCH_RESPONSE_TIMEOUT_SECS: u64 = 30;
 pub const WANT_PRIORITY: i32 = 1;
+/// Ile bloków klient zamawia jedną wantlistą (serwer przyjmuje do `MAX_WANTLIST_ENTRIES`).
+pub const FETCH_WINDOW: usize = 64;

@@ -9,7 +9,7 @@ pub mod source;
 pub mod utils;
 
 pub use codec::{read_message, write_message};
-pub use consts::BITSWAP_PROTOCOL;
+pub use consts::{BITSWAP_PROTOCOL, FETCH_WINDOW};
 pub use error::BitswapError;
 pub use models::{
     BitswapBehaviour, BitswapClient, BitswapControl, BitswapIncomingStreams, BitswapLimits,

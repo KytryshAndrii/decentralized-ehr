@@ -1,8 +1,10 @@
 use crate::models::NetworkNode;
-use ipfs_bitswap::{BITSWAP_PROTOCOL, BitswapClient, BitswapServer, ProvidedBlockSource};
+use ipfs_bitswap::{
+    BITSWAP_PROTOCOL, BitswapClient, BitswapServer, FETCH_WINDOW, ProvidedBlockSource,
+};
 use ipfs_cid::models::Cid;
 use libp2p::PeerId;
-use std::collections::HashSet;
+use std::collections::{HashSet, VecDeque};
 
 impl NetworkNode {
     /// Uruchamia serwer i klienta Bitswap na wspólnym Swarmie. Bloki leżą w katalogu stanu,
@@ -44,8 +46,8 @@ impl NetworkNode {
 }
 
 /// Zwraca liczbę bloków pobranych z sieci i liczbę bloków, które już były lokalnie.
-// shortcut: bloki są pobierane po jednym, każdy osobnym strumieniem; przy dużych plikach
-// przejść na wantlistę z wieloma wpisami i pobieranie równoległe.
+/// Bloki idą falami po `FETCH_WINDOW`: jedna wantlista i jedno otwarcie bazy na falę,
+/// a bloki fali są pobierane równolegle.
 async fn fetch_dag(
     client: &BitswapClient,
     root: Cid,
@@ -53,25 +55,31 @@ async fn fetch_dag(
 ) -> Result<(usize, usize), Box<dyn std::error::Error + Send + Sync>> {
     let (mut fetched, mut local) = (0, 0);
     let mut seen = HashSet::new();
-    let mut pending = vec![root];
-    while let Some(cid) = pending.pop() {
-        // Ten sam blok może wystąpić w pliku wiele razy; wystarczy go mieć raz.
-        if !seen.insert(cid.to_bytes()) {
-            continue;
-        }
-        let (peer, block) = client.fetch(&cid, providers).await?;
-        match peer {
-            Some(peer) => {
-                fetched += 1;
-                println!(
-                    "BITSWAP_BLOCK_RECEIVED {peer} {} bytes={}",
-                    cid.to_string_base32(),
-                    block.len()
-                );
+    let mut pending = VecDeque::from([root]);
+    while !pending.is_empty() {
+        let mut wave = Vec::new();
+        while wave.len() < FETCH_WINDOW
+            && let Some(cid) = pending.pop_front()
+        {
+            // Ten sam blok może wystąpić w pliku wiele razy; wystarczy go mieć raz.
+            if seen.insert(cid.to_bytes()) {
+                wave.push(cid);
             }
-            None => local += 1,
         }
-        pending.extend(ipfs_unixfs::block_links(&cid, &block)?);
+        for (cid, (peer, block)) in wave.iter().zip(client.fetch_many(&wave, providers).await?) {
+            match peer {
+                Some(peer) => {
+                    fetched += 1;
+                    println!(
+                        "BITSWAP_BLOCK_RECEIVED {peer} {} bytes={}",
+                        cid.to_string_base32(),
+                        block.len()
+                    );
+                }
+                None => local += 1,
+            }
+            pending.extend(ipfs_unixfs::block_links(cid, &block)?);
+        }
     }
     Ok((fetched, local))
 }
