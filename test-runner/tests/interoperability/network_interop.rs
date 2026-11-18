@@ -28,7 +28,7 @@ fn rust_kubo_identify_ping_interoperability() {
     }
     let cli = std::env::var_os("EHR_CLI_BIN")
         .map(PathBuf::from)
-        .unwrap_or_else(|| workspace.join("target/debug/ehr-cli"));
+        .unwrap_or_else(|| workspace.join("target/debug/ehr-cli-patient"));
     assert!(
         cli.is_file(),
         "build executable first: cargo build -p ehr-cli"

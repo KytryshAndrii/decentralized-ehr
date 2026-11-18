@@ -29,7 +29,7 @@ wait_for() {
 
 command -v ipfs >/dev/null || { echo 'Kubo ipfs binary is missing' >&2; exit 1; }
 (cd "$ROOT" && cargo build -p ehr-cli)
-BIN="$ROOT/target/debug/ehr-cli"
+BIN="$ROOT/target/debug/ehr-cli-patient"
 mkdir -p "$TMP/kubo" "$TMP/rust"
 export IPFS_PATH="$TMP/kubo"
 

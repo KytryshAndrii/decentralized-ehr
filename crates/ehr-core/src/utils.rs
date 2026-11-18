@@ -1,5 +1,6 @@
 //! Czas zawsze w UTC (D-26). Kalendarz gregoriański bez zależności: algorytm
 //! `days_from_civil` / `civil_from_days` (H. Hinnant).
+pub use ehr_security::peer_id_from_did;
 pub use ipfs_store::utils::utc_now_secs;
 
 const DAY_SECS: i64 = 86_400;

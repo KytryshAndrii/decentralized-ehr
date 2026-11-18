@@ -1,4 +1,4 @@
-//! Uruchamianie `ehr-cli` jako osobnego procesu w testach integracyjnych.
+//! Uruchamianie węzła CLI (`ehr-cli-patient`, `ehr-cli-doctor`) jako procesu w testach.
 use std::{
     ffi::OsStr,
     fs,
@@ -11,18 +11,26 @@ use std::{
     time::{Duration, Instant},
 };
 
-/// Ścieżka do zbudowanego `ehr-cli` (`EHR_CLI_BIN` albo katalog target testu).
+/// Binarka CLI do testów IPFS (`EHR_CLI_BIN` albo `ehr-cli-patient` z katalogu target).
+/// Komendy IPFS są takie same w obu binarkach ról.
 pub fn cli() -> PathBuf {
-    if let Some(path) = std::env::var_os("EHR_CLI_BIN") {
+    role_cli("ehr-cli-patient")
+}
+
+/// `ehr-cli-doctor` albo `ehr-cli-patient` z katalogu target testu.
+pub fn role_cli(name: &str) -> PathBuf {
+    if name == "ehr-cli-patient"
+        && let Some(path) = std::env::var_os("EHR_CLI_BIN")
+    {
         return fs::canonicalize(path).expect("EHR_CLI_BIN must point to a built executable");
     }
     let mut path = std::env::current_exe().expect("test binary path");
     path.pop();
     path.pop();
-    path.push(format!("ehr-cli{}", std::env::consts::EXE_SUFFIX));
+    path.push(format!("{name}{}", std::env::consts::EXE_SUFFIX));
     assert!(
         path.is_file(),
-        "Build the CLI first: cargo build -p ehr-cli"
+        "Build the CLI first: cargo build -p ehr-cli ({name})"
     );
     path
 }
@@ -35,14 +43,14 @@ pub fn free_port() -> u16 {
         .port()
 }
 
-/// `ehr-cli put <plik>` w katalogu węzła; zwraca CID jako tekst.
+/// `put <plik>` w katalogu węzła; zwraca CID jako tekst.
 pub fn put_file(cwd: &Path, file: &Path) -> String {
     let output = Command::new(cli())
         .current_dir(cwd)
         .arg("put")
         .arg(file)
         .output()
-        .expect("failed to run ehr-cli put");
+        .expect("failed to run the CLI put");
     assert!(
         output.status.success(),
         "{}",
@@ -64,15 +72,27 @@ pub struct NodeProcess {
 
 impl NodeProcess {
     pub fn start<S: AsRef<OsStr>>(cwd: &Path, port: u16, args: &[S]) -> Self {
-        let mut child = Command::new(cli())
+        Self::start_with(&cli(), cwd, port, args, &[])
+    }
+
+    /// Wybrana binarka (np. `role_cli("ehr-cli-doctor")`) i dodatkowe zmienne środowiska.
+    pub fn start_with<S: AsRef<OsStr>>(
+        binary: &Path,
+        cwd: &Path,
+        port: u16,
+        args: &[S],
+        envs: &[(&str, &str)],
+    ) -> Self {
+        let mut child = Command::new(binary)
             .current_dir(cwd)
             .env("EHR_LISTEN_PORT", port.to_string())
+            .envs(envs.iter().copied())
             .args(args)
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()
-            .expect("launch ehr-cli");
+            .expect("launch the CLI");
         let stdin = child.stdin.take();
         let (tx, rx) = mpsc::channel();
         let stdout = child.stdout.take().unwrap();

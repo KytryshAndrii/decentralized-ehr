@@ -15,6 +15,7 @@ ipfs-bitswap = { path = "../crates/ipfs-bitswap" }
 libp2p = { version = "0.57.1", features = ["tokio", "tcp", "noise", "yamux"] }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
 futures = "0.3"
+serde_json = "1"
 
 [[test]]
 name = "integration-cid"
@@ -58,3 +59,7 @@ path = "tests/interoperability/bitswap_interop.rs"
 [[test]]
 name = "interop-unixfs"
 path = "tests/interoperability/unixfs_interop.rs"
+
+[[test]]
+name = "integration-ehr"
+path = "tests/integration/ehr_integration.rs"

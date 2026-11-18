@@ -4,7 +4,7 @@ set -euo pipefail
 # Rust <-> Kubo interoperability. This test ALWAYS shuts down the Kubo daemon
 # associated with IPFS_PATH on exit, including an already running daemon.
 # Use a dedicated test repo, never your everyday ~/.ipfs.
-CLI="${EHR_CLI_BIN:-target/debug/ehr-cli}"
+CLI="${EHR_CLI_BIN:-target/debug/ehr-cli-patient}"
 CLI="$(realpath "$CLI")"
 : "${IPFS_PATH:?Set IPFS_PATH to a dedicated Kubo test repository}"
 command -v ipfs >/dev/null || { echo 'ERROR: ipfs missing' >&2; exit 1; }
