@@ -1,0 +1,882 @@
+// Interfejs EHR wg makiety docs/mockups/ehr-mockups.html. Pokazane są tylko pola obsłużone
+// kodem (ehr-core); CID nie pojawia się nigdzie, użytkownik widzi nazwy plików.
+import { LineEdit, ComboBox, ScrollView, TextEdit } from "std-widgets.slint";
+
+export struct DocRow {
+    title: string,
+    subtitle: string,
+    date: string,
+    category: string,
+    issuer: string,
+    size: string,
+    valid-until: string,
+    version: string,
+}
+
+export struct PersonRow {
+    name: string,
+    did: string,
+}
+
+global Palette {
+    out property <color> rail: #2c3438;
+    out property <color> side: #5483b3;
+    out property <color> side-active: #416690;
+    out property <color> side-field: #7a9fc6;
+    out property <color> ink: #111111;
+    out property <color> muted: #666666;
+    out property <color> line: #d9d9d9;
+    out property <color> block: #ebebeb;
+    out property <color> blue: #2062f5;
+    out property <color> navy: #14264a;
+    out property <length> radius: 4px;
+}
+
+component Btn inherits Rectangle {
+    in property <string> text;
+    in property <bool> primary: false;
+    in property <bool> enabled: true;
+    callback clicked;
+    height: 34px;
+    min-width: label.preferred-width + 28px;
+    border-radius: Palette.radius;
+    border-width: 1px;
+    border-color: primary ? Palette.blue : #b9b9b9;
+    background: !enabled ? #e6e6e6 : primary ? (area.has-hover ? #1a52cc : Palette.blue) : (area.has-hover ? #f2f2f2 : white);
+    label := Text {
+        text: root.text;
+        color: root.primary ? white : Palette.ink;
+        font-size: 14px;
+        vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+    area := TouchArea {
+        enabled: root.enabled;
+        clicked => { root.clicked(); }
+        mouse-cursor: pointer;
+    }
+}
+
+component Link inherits Text {
+    callback clicked;
+    color: Palette.blue;
+    font-weight: 700;
+    font-size: 14px;
+    TouchArea {
+        clicked => { root.clicked(); }
+        mouse-cursor: pointer;
+    }
+}
+
+component SideItem inherits Rectangle {
+    in property <string> text;
+    in property <bool> active;
+    in property <string> hint;
+    callback clicked;
+    height: 34px;
+    border-radius: Palette.radius;
+    background: active ? Palette.side-active : (area.has-hover ? #4d78a6 : transparent);
+    HorizontalLayout {
+        padding-left: 10px;
+        padding-right: 10px;
+        Text {
+            text: root.text;
+            color: white;
+            font-weight: root.active ? 700 : 400;
+            vertical-alignment: center;
+            overflow: elide;
+        }
+        Text {
+            text: root.hint;
+            color: #ffe08a;
+            font-size: 12px;
+            vertical-alignment: center;
+            horizontal-alignment: right;
+        }
+    }
+    area := TouchArea {
+        clicked => { root.clicked(); }
+        mouse-cursor: pointer;
+    }
+}
+
+component Field inherits VerticalLayout {
+    in property <string> label;
+    in-out property <string> text;
+    in property <bool> password: false;
+    in property <string> placeholder;
+    spacing: 5px;
+    Text {
+        text: root.label;
+        font-size: 13px;
+    }
+    LineEdit {
+        text <=> root.text;
+        placeholder-text: root.placeholder;
+        input-type: root.password ? InputType.password : InputType.text;
+    }
+}
+
+component Backdrop inherits Rectangle {
+    background: Palette.navy;
+    clip: true;
+    for i in 17: Rectangle {
+        y: i * 40px;
+        width: parent.width;
+        height: 1px;
+        background: #1f3a6e;
+    }
+    for i in 10: Rectangle {
+        x: i * 40px;
+        width: 1px;
+        height: parent.height;
+        background: #1f3a6e;
+    }
+    Path {
+        x: parent.width / 2 - 120px;
+        y: 170px;
+        width: 240px;
+        height: 240px;
+        commands: "M 60 0 h 60 v 60 h 60 v 60 h -60 v 60 h -60 v -60 h -60 v -60 h 60 z";
+        stroke: #3d62d8;
+        stroke-width: 2px;
+    }
+    Path {
+        y: parent.height - 260px;
+        width: parent.width;
+        height: 160px;
+        viewbox-width: 400;
+        viewbox-height: 160;
+        commands: "M 0 80 L 110 80 L 128 80 L 144 30 L 164 130 L 186 0 L 208 100 L 224 80 L 400 80";
+        stroke: #8fb0ff;
+        stroke-width: 2.5px;
+    }
+}
+
+component Modal inherits Rectangle {
+    in property <string> title;
+    in property <string> subtitle;
+    background: #00000066;
+    TouchArea { }
+    Rectangle {
+        width: min(460px, parent.width - 40px);
+        height: content.preferred-height;
+        background: white;
+        border-radius: Palette.radius;
+        content := VerticalLayout {
+            padding: 24px;
+            spacing: 10px;
+            Text {
+                text: root.title;
+                font-size: 18px;
+                font-weight: 700;
+            }
+            if root.subtitle != "": Text {
+                text: root.subtitle;
+                color: Palette.muted;
+                font-size: 13.5px;
+                wrap: word-wrap;
+            }
+            @children
+        }
+    }
+}
+
+export component AppWindow inherits Window {
+    title: is-doctor ? "EHR – lekarz" : "EHR – pacjent";
+    preferred-width: 1240px;
+    preferred-height: 720px;
+    min-width: 900px;
+    min-height: 600px;
+    background: white;
+    default-font-family: "Helvetica";
+    default-font-size: 15px;
+
+    in property <bool> is-doctor;
+    // "first" | "login" | "main"
+    in-out property <string> screen: "login";
+    in property <string> me-name;
+    in property <string> status;
+
+    // Lekarz: pacjenci i prośby o kontakt; pacjent: lekarze.
+    in property <[PersonRow]> people;
+    in property <[PersonRow]> pending;
+    in-out property <int> selected-person: -1;
+    in property <string> header;
+    in property <string> header-note;
+
+    in property <[DocRow]> docs;
+    in-out property <int> selected-doc: -1;
+    in-out property <string> search;
+    in-out property <int> category-filter: -1;
+    in property <[string]> categories;
+
+    in property <bool> preview-ready;
+    in property <bool> has-preview-image;
+    in property <image> preview-image;
+    in property <string> preview-text;
+    // true dopiero po odszyfrowaniu i weryfikacji podpisu treści (open_document).
+    in property <bool> doc-verified;
+
+    // "none" | "add" | "edit" | "invite" | "connect" | "accept"
+    in-out property <string> modal: "none";
+    in property <string> invite-text;
+    in-out property <string> connect-text;
+    in-out property <string> file-path;
+    in-out property <string> file-name;
+    in-out property <int> file-category: 0;
+    in-out property <string> recipient;
+    in property <string> valid-until;
+    in property <string> accept-did;
+    in-out property <string> accept-name;
+
+    callback create-profile(string, string, string);
+    callback login(string);
+    callback logout();
+    callback select-person(int);
+    callback select-doc(int);
+    callback refresh();
+    callback download(int);
+    callback open-add();
+    callback open-edit(int);
+    callback pick-file();
+    callback confirm-add();
+    callback confirm-edit();
+    callback new-invite();
+    callback connect-doctor();
+    callback open-accept(int);
+    callback accept-contact();
+    callback reject-contact();
+    callback filter-changed();
+
+    property <string> pw1;
+    property <string> pw2;
+    property <string> new-name;
+
+    // ---------- 1a / 1b: pierwsze uruchomienie i logowanie ----------
+    if root.screen != "main": HorizontalLayout {
+        Rectangle {
+            background: Palette.side;
+            HorizontalLayout {
+                padding-left: 38px;
+                padding-right: 38px;
+                alignment: center;
+                VerticalLayout {
+                    alignment: center;
+                    Rectangle {
+                        background: white;
+                        border-radius: Palette.radius;
+                        max-width: 520px;
+                        min-width: 360px;
+                        VerticalLayout {
+                            padding: 36px;
+                            spacing: 14px;
+                            Text {
+                                text: root.screen == "first" ? "Utwórz profil" : "Zaloguj się";
+                                font-size: 25px;
+                                color: #0d2150;
+                            }
+                            Text {
+                                text: root.screen == "first"
+                                    ? "Przy pierwszym uruchomieniu aplikacja tworzy Twój klucz tożsamości (" + (root.is-doctor ? "lekarz" : "pacjent") + "). Hasło go chroni; po jego utracie klucza nie da się odzyskać."
+                                    : root.me-name;
+                                color: Palette.muted;
+                                font-size: 13.5px;
+                                wrap: word-wrap;
+                            }
+                            if root.screen == "first": Field {
+                                label: "Imię i nazwisko";
+                                placeholder: "Imię i nazwisko";
+                                text <=> root.new-name;
+                            }
+                            Field {
+                                label: "Hasło";
+                                placeholder: "Hasło";
+                                password: true;
+                                text <=> root.pw1;
+                            }
+                            if root.screen == "first": Field {
+                                label: "Powtórz hasło";
+                                placeholder: "Powtórz hasło";
+                                password: true;
+                                text <=> root.pw2;
+                            }
+                            if root.status != "": Text {
+                                text: root.status;
+                                color: #b00020;
+                                wrap: word-wrap;
+                            }
+                            HorizontalLayout {
+                                alignment: start;
+                                Btn {
+                                    primary: true;
+                                    text: root.screen == "first" ? "Utwórz profil" : "Zaloguj";
+                                    clicked => {
+                                        if (root.screen == "first") {
+                                            root.create-profile(root.new-name, root.pw1, root.pw2);
+                                        } else {
+                                            root.login(root.pw1);
+                                        }
+                                        root.pw1 = "";
+                                        root.pw2 = "";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Backdrop { }
+    }
+
+    // ---------- 2 / 4: widok lekarza i pacjenta ----------
+    if root.screen == "main": HorizontalLayout {
+        // Pasek z wylogowaniem.
+        Rectangle {
+            width: 64px;
+            background: Palette.rail;
+            VerticalLayout {
+                padding-top: 14px;
+                padding-bottom: 14px;
+                spacing: 8px;
+                Text {
+                    text: "EHR";
+                    color: white;
+                    font-size: 15px;
+                    font-weight: 700;
+                    horizontal-alignment: center;
+                }
+                Rectangle { }
+                Text {
+                    text: "Wyloguj";
+                    color: #cfd6dc;
+                    font-size: 12px;
+                    horizontal-alignment: center;
+                    TouchArea {
+                        clicked => { root.logout(); }
+                        mouse-cursor: pointer;
+                    }
+                }
+            }
+        }
+        // Panel boczny.
+        Rectangle {
+            width: 250px;
+            background: Palette.side;
+            VerticalLayout {
+                padding: 16px;
+                padding-left: 14px;
+                padding-right: 14px;
+                spacing: 4px;
+                Text {
+                    text: "Dokumentacja";
+                    color: white;
+                    font-size: 17px;
+                    font-weight: 700;
+                }
+                Rectangle { height: 8px; }
+                Rectangle {
+                    height: 36px;
+                    border-radius: Palette.radius;
+                    background: Palette.side-field;
+                    search-edit := TextInput {
+                        x: 12px;
+                        width: parent.width - 24px;
+                        vertical-alignment: center;
+                        color: white;
+                        text <=> root.search;
+                        edited => { root.filter-changed(); }
+                    }
+                    if root.search == "": Text {
+                        text: root.is-doctor ? "Szukaj pacjenta" : "Szukaj dokumentu";
+                        color: #eaf1f8;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                    }
+                }
+                Rectangle { height: 10px; }
+                if root.is-doctor: VerticalLayout {
+                    alignment: start;
+                    spacing: 2px;
+                    HorizontalLayout {
+                        Text {
+                            text: "Pacjenci";
+                            color: #d3e0ee;
+                            font-size: 16px;
+                        }
+                        Link {
+                            text: "+";
+                            color: white;
+                            font-size: 18px;
+                            horizontal-alignment: right;
+                            clicked => { root.new-invite(); }
+                        }
+                    }
+                    for person[i] in root.people: SideItem {
+                        text: person.name;
+                        active: i == root.selected-person;
+                        clicked => { root.select-person(i); }
+                    }
+                    if root.pending.length > 0: Text {
+                        text: "Prośby o kontakt";
+                        color: #d3e0ee;
+                        font-size: 16px;
+                    }
+                    for person[i] in root.pending: SideItem {
+                        text: person.name;
+                        hint: "nowy";
+                        clicked => { root.open-accept(i); }
+                    }
+                }
+                if !root.is-doctor: VerticalLayout {
+                    alignment: start;
+                    spacing: 2px;
+                    Text {
+                        text: "Moje dokumenty";
+                        color: #d3e0ee;
+                        font-size: 16px;
+                    }
+                    SideItem {
+                        text: "Wszystkie";
+                        active: root.category-filter == -1;
+                        clicked => {
+                            root.category-filter = -1;
+                            root.filter-changed();
+                        }
+                    }
+                    for category[i] in root.categories: SideItem {
+                        text: category;
+                        active: i == root.category-filter;
+                        clicked => {
+                            root.category-filter = i;
+                            root.filter-changed();
+                        }
+                    }
+                    Rectangle { height: 12px; }
+                    HorizontalLayout {
+                        Text {
+                            text: "Lekarze";
+                            color: #d3e0ee;
+                            font-size: 16px;
+                        }
+                        Link {
+                            text: "+";
+                            color: white;
+                            font-size: 18px;
+                            horizontal-alignment: right;
+                            clicked => {
+                                root.connect-text = "";
+                                root.modal = "connect";
+                            }
+                        }
+                    }
+                    for person in root.people: SideItem {
+                        text: person.name;
+                    }
+                }
+                Rectangle {
+                    vertical-stretch: 1;
+                }
+                Rectangle {
+                    height: 1px;
+                    background: #ffffff40;
+                }
+                VerticalLayout {
+                    padding-top: 10px;
+                    Text {
+                        text: root.me-name;
+                        color: white;
+                        font-size: 14px;
+                        font-weight: 700;
+                    }
+                    Text {
+                        text: root.is-doctor ? "Lekarz" : "Pacjent";
+                        color: #dbe6f1;
+                        font-size: 13px;
+                    }
+                }
+            }
+        }
+        // Lista dokumentów.
+        VerticalLayout {
+            Rectangle {
+                height: 58px;
+                border-width: 0;
+                HorizontalLayout {
+                    padding-left: 24px;
+                    padding-right: 24px;
+                    Text {
+                        text: root.header;
+                        font-size: 19px;
+                        font-weight: 700;
+                        vertical-alignment: center;
+                    }
+                    Text {
+                        text: root.header-note;
+                        color: Palette.muted;
+                        font-size: 13px;
+                        horizontal-alignment: right;
+                        vertical-alignment: center;
+                    }
+                }
+                Rectangle {
+                    y: parent.height - 1px;
+                    height: 1px;
+                    background: Palette.line;
+                }
+            }
+            HorizontalLayout {
+                padding-left: 24px;
+                padding-right: 24px;
+                padding-top: 14px;
+                spacing: 8px;
+                alignment: start;
+                if root.is-doctor: Btn {
+                    primary: true;
+                    text: "Dodaj dokument";
+                    enabled: root.selected-person >= 0;
+                    clicked => { root.open-add(); }
+                }
+                Btn {
+                    text: root.is-doctor ? "Odśwież" : "Sprawdź nowe";
+                    clicked => { root.refresh(); }
+                }
+            }
+            ScrollView {
+                VerticalLayout {
+                    padding: 24px;
+                    padding-top: 10px;
+                    Rectangle {
+                        background: Palette.block;
+                        border-radius: Palette.radius;
+                        VerticalLayout {
+                            padding-left: 18px;
+                            padding-right: 18px;
+                            padding-top: 6px;
+                            padding-bottom: 6px;
+                            if root.docs.length == 0: Text {
+                                height: 48px;
+                                text: root.is-doctor && root.selected-person < 0 ? "Wybierz pacjenta albo zaproś nowego (+)." : "Brak dokumentów.";
+                                color: Palette.muted;
+                                vertical-alignment: center;
+                            }
+                            for doc[i] in root.docs: Rectangle {
+                                height: 60px;
+                                TouchArea {
+                                    clicked => { root.select-doc(i); }
+                                }
+                                HorizontalLayout {
+                                    spacing: 16px;
+                                    VerticalLayout {
+                                        alignment: center;
+                                        horizontal-stretch: 1;
+                                        Text {
+                                            text: doc.title;
+                                            font-size: 14.5px;
+                                            font-weight: 700;
+                                            overflow: elide;
+                                        }
+                                        Text {
+                                            text: doc.subtitle;
+                                            font-size: 12.5px;
+                                            color: Palette.muted;
+                                            overflow: elide;
+                                        }
+                                    }
+                                    Text {
+                                        text: doc.date;
+                                        width: 84px;
+                                        font-size: 13px;
+                                        color: Palette.muted;
+                                        vertical-alignment: center;
+                                    }
+                                    HorizontalLayout {
+                                        spacing: 14px;
+                                        width: root.is-doctor ? 210px : 140px;
+                                        alignment: end;
+                                        Link {
+                                            text: "Podgląd";
+                                            vertical-alignment: center;
+                                            clicked => { root.select-doc(i); }
+                                        }
+                                        Link {
+                                            text: "Pobierz";
+                                            vertical-alignment: center;
+                                            clicked => { root.download(i); }
+                                        }
+                                        if root.is-doctor: Link {
+                                            text: "Edytuj";
+                                            vertical-alignment: center;
+                                            clicked => { root.open-edit(i); }
+                                        }
+                                    }
+                                }
+                                if i < root.docs.length - 1: Rectangle {
+                                    y: parent.height - 1px;
+                                    height: 1px;
+                                    background: #dcdcdc;
+                                }
+                                if i == root.selected-doc: Rectangle {
+                                    x: -12px;
+                                    width: 4px;
+                                    height: parent.height - 16px;
+                                    y: 8px;
+                                    background: Palette.blue;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if root.status != "": Rectangle {
+                height: 30px;
+                background: #f4f6f8;
+                Text {
+                    x: 24px;
+                    text: root.status;
+                    color: Palette.muted;
+                    font-size: 13px;
+                    vertical-alignment: center;
+                    overflow: elide;
+                    width: parent.width - 48px;
+                }
+            }
+        }
+        // Szczegóły wybranego dokumentu.
+        Rectangle {
+            width: 290px;
+            Rectangle {
+                width: 1px;
+                x: 0;
+                background: Palette.line;
+            }
+            if root.selected-doc >= 0 && root.selected-doc < root.docs.length: VerticalLayout {
+                padding: 20px;
+                spacing: 12px;
+                alignment: start;
+                Text {
+                    text: root.docs[root.selected-doc].title;
+                    font-size: 15px;
+                    font-weight: 700;
+                    wrap: word-wrap;
+                }
+                Rectangle {
+                    height: 170px;
+                    background: Palette.block;
+                    border-radius: Palette.radius;
+                    clip: true;
+                    if root.has-preview-image: Image {
+                        source: root.preview-image;
+                        width: parent.width;
+                        height: parent.height;
+                        image-fit: contain;
+                    }
+                    if !root.has-preview-image: Text {
+                        x: 12px;
+                        y: 10px;
+                        width: parent.width - 24px;
+                        height: parent.height - 20px;
+                        text: root.preview-ready ? root.preview-text : "Odszyfrowywanie…";
+                        color: #555;
+                        font-size: 12px;
+                        wrap: word-wrap;
+                        overflow: elide;
+                    }
+                }
+                GridLayout {
+                    spacing: 6px;
+                    Row {
+                        Text { text: "Dodał"; color: Palette.muted; font-size: 13.5px; }
+                        Text { text: root.docs[root.selected-doc].issuer; font-size: 13.5px; wrap: word-wrap; }
+                    }
+                    Row {
+                        Text { text: "Data"; color: Palette.muted; font-size: 13.5px; }
+                        Text { text: root.docs[root.selected-doc].date; font-size: 13.5px; }
+                    }
+                    Row {
+                        Text { text: "Rozmiar"; color: Palette.muted; font-size: 13.5px; }
+                        Text { text: root.docs[root.selected-doc].size; font-size: 13.5px; }
+                    }
+                    Row {
+                        Text { text: "Kategoria"; color: Palette.muted; font-size: 13.5px; }
+                        Text { text: root.docs[root.selected-doc].category; font-size: 13.5px; }
+                    }
+                    Row {
+                        Text { text: "Wersja"; color: Palette.muted; font-size: 13.5px; }
+                        Text { text: root.docs[root.selected-doc].version; font-size: 13.5px; }
+                    }
+                    Row {
+                        Text { text: "Ważny do"; color: Palette.muted; font-size: 13.5px; }
+                        Text { text: root.docs[root.selected-doc].valid-until + " (UTC)"; font-size: 13.5px; }
+                    }
+                    Row {
+                        Text { text: "Stan"; color: Palette.muted; font-size: 13.5px; }
+                        Text { text: !root.preview-ready ? "zaszyfrowany, weryfikacja…" : root.doc-verified ? "zaszyfrowany, podpis zweryfikowany" : "zaszyfrowany, weryfikacja nieudana"; font-size: 13.5px; wrap: word-wrap; }
+                    }
+                }
+                Rectangle {
+                    height: 1px;
+                    background: Palette.line;
+                }
+                Text {
+                    text: root.is-doctor ? "Twoje uprawnienia: podgląd, pobranie, udostępnianie, edycja." : "Twoje uprawnienia: podgląd i pobranie.";
+                    color: Palette.muted;
+                    font-size: 13px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
+
+    // ---------- 3: okna dialogowe ----------
+    if root.modal == "add" || root.modal == "edit": Modal {
+        title: root.modal == "add" ? "Udostępnij dokument" : "Nowa wersja dokumentu";
+        subtitle: root.modal == "add" ? "Plik zostanie podpisany i zaszyfrowany dla pacjenta i dla Ciebie." : root.file-name;
+        Text { text: "Plik"; font-size: 13px; }
+        HorizontalLayout {
+            spacing: 8px;
+            LineEdit {
+                text <=> root.file-path;
+                placeholder-text: "/ścieżka/do/pliku";
+            }
+            Btn {
+                text: "Wybierz…";
+                clicked => { root.pick-file(); }
+            }
+        }
+        if root.modal == "add": Field {
+            label: "Nazwa widoczna dla pacjenta";
+            text <=> root.file-name;
+        }
+        if root.modal == "add": Text { text: "Kategoria"; font-size: 13px; }
+        if root.modal == "add": ComboBox {
+            model: root.categories;
+            current-index <=> root.file-category;
+        }
+        if root.modal == "add": Field {
+            label: "Odbiorca (pacjent z Twoich kontaktów)";
+            text <=> root.recipient;
+        }
+        Text {
+            text: "Pacjent może odczytać i pobrać ten dokument.";
+            color: Palette.muted;
+            font-size: 13.5px;
+        }
+        Text { text: "Dostęp ważny do (automatycznie: 20 lat)"; font-size: 13px; }
+        Rectangle {
+            height: 36px;
+            background: #f4f4f4;
+            border-radius: Palette.radius;
+            border-width: 1px;
+            border-color: #b5bcc4;
+            Text {
+                x: 12px;
+                text: root.valid-until + " (UTC)";
+                vertical-alignment: center;
+            }
+        }
+        if root.status != "": Text {
+            text: root.status;
+            color: Palette.muted;
+            wrap: word-wrap;
+        }
+        HorizontalLayout {
+            alignment: end;
+            spacing: 8px;
+            Btn {
+                text: "Anuluj";
+                clicked => { root.modal = "none"; }
+            }
+            Btn {
+                primary: true;
+                text: root.modal == "add" ? "Udostępnij" : "Zapisz wersję";
+                clicked => {
+                    if (root.modal == "add") {
+                        root.confirm-add();
+                    } else {
+                        root.confirm-edit();
+                    }
+                }
+            }
+        }
+    }
+
+    if root.modal == "invite": Modal {
+        title: "Zaproś pacjenta";
+        subtitle: "Przekaż pacjentowi to jednorazowe zaproszenie (ważne 7 dni): zaznacz tekst i skopiuj (Ctrl+A, Ctrl+C). Jego aplikacja połączy się z Twoim węzłem i wyśle wizytówkę; prośba pojawi się w „Prośby o kontakt”.";
+        TextEdit {
+            height: 120px;
+            text: root.invite-text;
+            read-only: true;
+            wrap: char-wrap;
+            font-size: 11px;
+        }
+        HorizontalLayout {
+            alignment: end;
+            spacing: 8px;
+            Btn {
+                primary: true;
+                text: "Zamknij";
+                clicked => { root.modal = "none"; }
+            }
+        }
+    }
+
+    if root.modal == "connect": Modal {
+        title: "Dodaj lekarza";
+        subtitle: "Wklej zaproszenie otrzymane od lekarza (tekst zaczynający się od ehr1:).";
+        TextEdit {
+            height: 120px;
+            text <=> root.connect-text;
+            wrap: char-wrap;
+            font-size: 11px;
+        }
+        if root.status != "": Text {
+            text: root.status;
+            color: Palette.muted;
+            wrap: word-wrap;
+        }
+        HorizontalLayout {
+            alignment: end;
+            spacing: 8px;
+            Btn {
+                text: "Anuluj";
+                clicked => { root.modal = "none"; }
+            }
+            Btn {
+                primary: true;
+                text: "Połącz";
+                clicked => { root.connect-doctor(); }
+            }
+        }
+    }
+
+    if root.modal == "accept": Modal {
+        title: "Prośba o kontakt";
+        subtitle: "Sprawdź dokument tożsamości pacjenta i popraw imię i nazwisko, jeśli trzeba.";
+        Field {
+            label: "Imię i nazwisko";
+            text <=> root.accept-name;
+        }
+        Text {
+            text: root.accept-did;
+            color: Palette.muted;
+            font-size: 11px;
+            wrap: char-wrap;
+        }
+        HorizontalLayout {
+            alignment: end;
+            spacing: 8px;
+            Btn {
+                text: "Odrzuć";
+                clicked => { root.reject-contact(); }
+            }
+            Btn {
+                primary: true;
+                text: "Akceptuj";
+                clicked => { root.accept-contact(); }
+            }
+        }
+    }
+}

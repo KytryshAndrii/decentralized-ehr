@@ -4,6 +4,7 @@ exclude = ["vendor"]
 
 members = [
     "apps/ehr-cli",
+    "apps/ehr-desktop",
     "crates/ipfs-cid",
     "crates/ipfs-store",
     "crates/ipfs-network",
