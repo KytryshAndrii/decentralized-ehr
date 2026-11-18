@@ -249,8 +249,8 @@ fn node_fetches_verified_block_from_provider_found_in_dht() {
     fetcher.send(&format!("fetch {cid}"));
     fetcher.until("BITSWAP_ALREADY_LOCAL", WAIT_SECS);
 
-    // Blok bez dostawcy w DHT nie jest pobierany.
+    // Blok nieogłoszony nie jest wydawany, także połączonemu peerowi zapytanemu wprost.
     fetcher.send(&format!("fetch {private_cid}"));
     let failed = fetcher.until("BITSWAP_FETCH_FAILED", 60);
-    assert!(failed.contains("no providers found"), "{failed}");
+    assert!(failed.contains("does not have the block"), "{failed}");
 }

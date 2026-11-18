@@ -23,15 +23,21 @@ Usage:\n\
   ehr-cli node start --bootstrap-list <addr1>,<addr2>,... [--dht-server]\n\
   ehr-cli cid <absolute-file-path>\n\
   ehr-cli put <absolute-file-path>\n\
+  ehr-cli add <absolute-file-path>\n\
   ehr-cli has <CID>\n\
   ehr-cli get <CID> <absolute-output-path>\n\n\
+put stores a file as one raw block (up to 2 MiB). add imports a file of any size as UnixFS\n\
+(balanced DAG, raw leaves; fixed chunks for audio/video, Rabin for everything else).\n\
+get writes a raw block or a whole UnixFS file.\n\
 Identity: ./tmp/node-key.pb (auto-created or reused).\n\
 Listen: /ip4/0.0.0.0/tcp/4101 (port override: EHR_LISTEN_PORT).\n\
 Bootstrap: default peer when omitted, none with \"\", several with --bootstrap-list.\n\
 State: known peers and provided CIDs are saved in ./data and restored on start.\n\
 DHT: LAN only; Client by default, Server with --dht-server.\n\
 Bitswap: provided blocks are served to connected peers over /ipfs/bitswap/1.2.0.\n\
-Fetch: fetch <CID> finds providers in the DHT, downloads and verifies the block, stores it locally.\n\
+provide and stop cover every block of a UnixFS file.\n\
+Fetch: fetch <CID> finds providers in the DHT, downloads and verifies the block or the whole\n\
+UnixFS file, stores it locally.\n\
 During node start: peers, bootstrap, provide <CID>, find <CID>, fetch <CID>, stop <CID>, quit.\n\n\
 Custom bootstrap address format: /ip4/<IPv4>/tcp/<port>/p2p/<PeerId>\n\
   e.g. /ip4/192.168.1.125/tcp/4101/p2p/12D3KooW...\n\
@@ -55,6 +61,12 @@ fn exact_args(args: &[String], expected: usize) -> CliResult<()> {
         .into());
     }
     Ok(())
+}
+
+fn local_dag(
+    cid: &ipfs_cid::models::Cid,
+) -> services::ipfs_service::ServiceResult<Vec<ipfs_cid::models::Cid>> {
+    IpfsService::new()?.dag_cids(cid)
 }
 
 fn stdin_commands(sender: tokio::sync::mpsc::UnboundedSender<NetworkCommand>) {
@@ -87,23 +99,27 @@ fn stdin_commands(sender: tokio::sync::mpsc::UnboundedSender<NetworkCommand>) {
             ),
         };
         match parsed {
-            Ok(NetworkCommand::StartProviding(cid)) => {
-                match IpfsService::new().and_then(|service| service.has_block(&cid)) {
-                    Ok(true) => {
+            // Inne węzły pobierają plik blok po bloku, więc ogłaszany jest cały DAG.
+            // Korzeń idzie ostatni: gdy da się go znaleźć, wszystkie bloki są już wydawane.
+            Ok(NetworkCommand::StartProviding(cid)) => match local_dag(&cid) {
+                Ok(cids) => {
+                    for cid in cids.into_iter().rev() {
                         if sender.send(NetworkCommand::StartProviding(cid)).is_err() {
-                            break;
+                            return;
                         }
                     }
-                    Ok(false) => eprintln!("DHT_PROVIDE_FAILED block is not in local Blockstore"),
-                    Err(error) => eprintln!("DHT_PROVIDE_FAILED {error}"),
+                }
+                Err(error) => eprintln!("DHT_PROVIDE_FAILED {error}"),
+            },
+            // Gdy DAG nie jest kompletny lokalnie, wycofywany jest sam wskazany blok.
+            Ok(NetworkCommand::StopProviding(cid)) => {
+                for cid in local_dag(&cid).unwrap_or_else(|_| vec![cid]) {
+                    if sender.send(NetworkCommand::StopProviding(cid)).is_err() {
+                        return;
+                    }
                 }
             }
-            Ok(NetworkCommand::Fetch(cid))
-                if matches!(
-                    IpfsService::new().and_then(|service| service.has_block(&cid)),
-                    Ok(true)
-                ) =>
-            {
+            Ok(NetworkCommand::Fetch(cid)) if local_dag(&cid).is_ok() => {
                 println!("BITSWAP_ALREADY_LOCAL {}", cid.to_string_base32());
             }
             Ok(command) => {
@@ -174,6 +190,19 @@ fn storage_command(args: &[String]) -> CliResult<()> {
             println!("[BLOCKSTORE] PUT CID={}", cid.to_string_base32());
             println!("[BLOCKSTORE] HAS {}", service.has_block(&cid)?);
         }
+        "add" => {
+            exact_args(args, 3)?;
+            let path = Path::new(arg(args, 2, "absolute file path")?);
+            let (file, chunker) = IpfsService::new()?.add_file(path)?;
+            println!(
+                "[UNIXFS] ADDED CID={} bytes={} chunker={} new_blocks={} reused_blocks={}",
+                file.root.to_string_base32(),
+                file.size,
+                chunker.kubo_name(),
+                file.new_blocks,
+                file.reused_blocks
+            );
+        }
         "has" => {
             exact_args(args, 3)?;
             let cid = IpfsService::parse_cid(arg(args, 2, "CID")?)?;
@@ -199,7 +228,7 @@ async fn main() -> CliResult<()> {
     let args: Vec<String> = env::args().collect();
     match args.get(1).map(String::as_str) {
         Some("node") => node_command(&args).await,
-        Some("cid" | "put" | "has" | "get") => storage_command(&args),
+        Some("cid" | "put" | "add" | "has" | "get") => storage_command(&args),
         Some("--help" | "-h" | "help") if args.len() == 2 => {
             usage();
             Ok(())

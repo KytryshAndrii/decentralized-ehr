@@ -11,6 +11,7 @@ thiserror = "2"
 ipfs-cid = { path = "../ipfs-cid" }
 ipfs-store = { path = "../ipfs-store" }
 ipfs-bitswap = { path = "../ipfs-bitswap" }
+ipfs-unixfs = { path = "../ipfs-unixfs" }
 
 [[test]]
 name = "network-unit-test"

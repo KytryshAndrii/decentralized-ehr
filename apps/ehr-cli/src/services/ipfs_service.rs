@@ -3,7 +3,8 @@ use ipfs_cid::{
     models::Cid,
 };
 use ipfs_store::{PersistentBlockstore, StoreError, consts::MAX_BLOCK_BYTES};
-use std::{error::Error, fs, io::Write, path::Path};
+use ipfs_unixfs::{Chunker, ImportedFile};
+use std::{error::Error, fs, path::Path};
 
 pub type ServiceResult<T> = Result<T, Box<dyn Error>>;
 
@@ -29,6 +30,24 @@ impl IpfsService {
         Ok(self.blockstore.put(&read_block_file(file_path)?)?)
     }
 
+    /// Import pliku dowolnej wielkości jako UnixFS. Chunker wynika z rozszerzenia pliku.
+    pub fn add_file(&self, file_path: &Path) -> ServiceResult<(ImportedFile, Chunker)> {
+        if !file_path.is_absolute() {
+            return Err("Input file path must be absolute".into());
+        }
+        let chunker = Chunker::for_path(file_path);
+        let file = fs::File::open(file_path)?;
+        Ok((
+            ipfs_unixfs::add_file(&self.blockstore, file, chunker)?,
+            chunker,
+        ))
+    }
+
+    /// Wszystkie bloki pliku (albo sam blok raw); błąd, gdy któregoś brakuje lokalnie.
+    pub fn dag_cids(&self, cid: &Cid) -> ServiceResult<Vec<Cid>> {
+        Ok(ipfs_unixfs::dag_cids(&self.blockstore, cid)?)
+    }
+
     pub fn parse_cid(text: &str) -> ServiceResult<Cid> {
         Ok(Cid::decode_from_string(text)?)
     }
@@ -37,18 +56,14 @@ impl IpfsService {
         Ok(self.blockstore.has(cid)?)
     }
 
-    pub fn get_block(&self, cid: &Cid) -> ServiceResult<Option<Vec<u8>>> {
-        Ok(self.blockstore.get_block(cid)?)
-    }
-
-    /// Eksport bajtów do wskazanej absolutnej ścieżki; brak nadpisywania.
+    /// Eksport pliku (blok raw albo DAG UnixFS) do absolutnej ścieżki; brak nadpisywania.
     pub fn export_file(&self, cid: &Cid, output_path: &Path) -> ServiceResult<bool> {
         if !output_path.is_absolute() {
             return Err("Output path must be absolute".into());
         }
-        let Some(bytes) = self.get_block(cid)? else {
+        if !self.has_block(cid)? {
             return Ok(false);
-        };
+        }
         if let Some(parent) = output_path.parent() {
             fs::create_dir_all(parent)?;
         }
@@ -56,7 +71,7 @@ impl IpfsService {
             .write(true)
             .create_new(true)
             .open(output_path)?;
-        if let Err(error) = output.write_all(&bytes) {
+        if let Err(error) = ipfs_unixfs::cat(&self.blockstore, cid, &mut output) {
             drop(output);
             let _ = fs::remove_file(output_path);
             return Err(error.into());

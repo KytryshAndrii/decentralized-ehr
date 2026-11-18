@@ -35,6 +35,10 @@ name = "integration-bitswap"
 path = "tests/integration/bitswap_integration.rs"
 
 [[test]]
+name = "integration-unixfs"
+path = "tests/integration/unixfs_integration.rs"
+
+[[test]]
 name = "interop-cid"
 path = "tests/interoperability/cid_interop.rs"
 
@@ -50,3 +54,7 @@ path = "tests/interoperability/dht_interop.rs"
 [[test]]
 name = "interop-bitswap"
 path = "tests/interoperability/bitswap_interop.rs"
+
+[[test]]
+name = "interop-unixfs"
+path = "tests/interoperability/unixfs_interop.rs"
