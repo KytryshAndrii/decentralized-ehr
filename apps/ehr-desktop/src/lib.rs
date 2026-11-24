@@ -284,7 +284,7 @@ fn doc_at(state: &State, index: i32) -> Option<IndexEntry> {
 
 pub fn run(role: Role) -> Result<(), Box<dyn Error>> {
     let window = AppWindow::new()?;
-    let data_dir = EhrApp::default_data_dir();
+    let data_dir = EhrApp::default_data_dir(role);
     let state = Arc::new(State {
         role,
         runtime: tokio::runtime::Runtime::new()?,
@@ -459,7 +459,12 @@ pub fn run(role: Role) -> Result<(), Box<dyn Error>> {
                     .pick_file()
                     .await
                 else {
-                    return;
+                    // rfd: bez xdg-desktop-portal (np. WSL) potrzebny jest zenity; inaczej zwraca None po cichu.
+                    return status(
+                        &ui,
+                        "Nie wybrano pliku. Jeśli okno wyboru się nie otworzyło, zainstaluj zenity \
+                         (sudo apt install zenity) albo wpisz pełną ścieżkę w polu „Plik”.",
+                    );
                 };
                 let path = file.path().to_path_buf();
                 let _ = ui.upgrade_in_event_loop(move |window| {

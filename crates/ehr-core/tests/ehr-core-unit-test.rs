@@ -326,3 +326,29 @@ async fn doctor_issues_and_only_the_patient_reads_the_document() {
         b"corrected synthetic result"
     );
 }
+
+#[test]
+fn doctor_and_patient_started_from_one_folder_keep_separate_profiles() {
+    let doctor = EhrApp::default_data_dir(Role::Doctor);
+    let patient = EhrApp::default_data_dir(Role::Patient);
+    assert_ne!(doctor, patient);
+    let root = tempfile::tempdir().unwrap();
+    let (doctor, patient) = (root.path().join(doctor), root.path().join(patient));
+    for (dir, role) in [(&doctor, Role::Doctor), (&patient, Role::Patient)] {
+        std::fs::create_dir_all(dir).unwrap();
+        EhrApp::create_profile(dir, role, "Jan Kowalski", PASSWORD).unwrap();
+    }
+    // Restart: każda rola loguje się hasłem do własnego profilu.
+    assert_eq!(
+        EhrApp::open(&doctor, Role::Doctor, PASSWORD)
+            .unwrap()
+            .role(),
+        Role::Doctor
+    );
+    assert_eq!(
+        EhrApp::open(&patient, Role::Patient, PASSWORD)
+            .unwrap()
+            .role(),
+        Role::Patient
+    );
+}

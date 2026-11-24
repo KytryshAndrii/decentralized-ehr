@@ -94,7 +94,7 @@ ipfs add --cid-version=1 --raw-leaves --chunker=rabin-16384-65536-262144 <pozost
 Zmiany w zachowaniu sieci, które wyszły w testach z Kubo:
 
 - **Korzeń ogłaszany jako ostatni.** Kubo pyta o bloki od razu po znalezieniu korzenia; blok jeszcze nieogłoszony dostawał `DontHave` i pobieranie się zatrzymywało.
-- **`fetch` pyta także połączonych peerów**, po dostawcach z DHT. Kubo ogłasza każdy blok dodanego pliku, a rekord korzenia mógł dotrzeć do węzła Rust po zakończeniu zapytania DHT. Tak samo działa Bitswap w Kubo (najpierw połączeni peerzy).
+- **`fetch` pyta także połączonych peerów**, po dostawcach z DHT. Kubo ogłasza każdy blok dodanego pliku, a rekord korzenia mógł dotrzeć do węzła Rust po zakończeniu zapytania DHT. Kubo działa w odwrotnej kolejności: od razu rozsyła want-have do wszystkich połączonych peerów, a dostawców w DHT szuka równolegle, po krótkim opóźnieniu. U nas najpierw jest DHT, a połączeni peerzy są pytani po kolei jako uzupełnienie, tylko o bloki, których jeszcze brakuje.
 - **Ponawianie otwarcia LevelDB wydłużone z 1 s do 5 s** (`LOCK_RETRY_ATTEMPTS`). Przy pliku wieloblokowym wiele zadań węzła otwiera bazę naraz; po 1 s część żądań Kubo kończyła się błędem blokady i nie dostawała odpowiedzi.
 
 ## 7. Kod

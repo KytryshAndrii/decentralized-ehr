@@ -250,7 +250,7 @@ Warstwy testów jak w projekcie: jednostkowe w `crates/ehr-security/tests/`, int
 
 ## 12. Decyzje (rozstrzygnięte dla pracy dyplomowej)
 
-- **D01** klucze OpenPGP generuje aplikacja (`data/keys/`, tryb `0600`); import z GnuPG poza zakresem.
+- **D01** klucze OpenPGP generuje aplikacja (`data/<doctor|patient>/keys/`, tryb `0600`); import z GnuPG poza zakresem.
 - **D02** zakres delegacji `/ehr/doc/read`: jeden dokument (`pol` = CID dokumentu), wystawiany przez lekarza.
 - **D04** dokumenty podpisuje lekarz; pacjent niczego nie podpisuje poza żądaniem skrzynki.
 - **D05** udostępnianie innemu lekarzowi: **poza zakresem** (jeden węzeł lekarza). Komendy `doc grant` nie ma.

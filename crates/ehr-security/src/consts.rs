@@ -2,7 +2,6 @@
 pub const ED25519_MULTICODEC: [u8; 2] = [0xed, 0x01];
 pub const DID_KEY_PREFIX: &str = "did:key:z";
 
-/// Polecenia UCAN tej pracy (podzbiór UCAN 1.0, `docs/security-ucan-gpg-integration.md` §4).
 pub const CMD_DOC_ISSUE: &str = "/ehr/doc/issue";
 pub const CMD_DOC_READ: &str = "/ehr/doc/read";
 

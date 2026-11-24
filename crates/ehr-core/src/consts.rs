@@ -20,8 +20,8 @@ pub const INDEX_PREFIX: &str = "/index/";
 
 /// Dokumentacja medyczna w Polsce: 20 lat; tyle ważny jest token odczytu od daty wystawienia.
 pub const DOCUMENT_VALIDITY_YEARS: i64 = 20;
-/// Zaproszenie lekarza (jednorazowe) wygasa po 7 dniach.
-pub const INVITE_VALIDITY_SECS: u64 = 7 * 24 * 3600;
+/// Zaproszenie lekarza (jednorazowe) wygasa po 1 godzinie.
+pub const INVITE_VALIDITY_SECS: u64 = 3600;
 /// Żądanie skrzynki starsze niż to okno jest odrzucane (ochrona przed powtórzeniem).
 pub const REQUEST_MAX_AGE_SECS: u64 = 300;
 /// Co tyle sekund węzeł pacjenta pyta lekarzy o nowe dokumenty.

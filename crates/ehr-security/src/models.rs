@@ -3,7 +3,6 @@ use pgp::composed::{SignedPublicKey, SignedSecretKey};
 use serde::{Deserialize, Serialize};
 
 /// Podpisany ładunek: dokładne bajty JSON (base64) + podpis Ed25519 klucza węzła nad nimi.
-/// Bez kanonikalizacji JSON: weryfikowane są bajty, które przyszły (decyzja DEC4).
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Signed {
     pub v: u8,

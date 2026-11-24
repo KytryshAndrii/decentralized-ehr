@@ -342,8 +342,9 @@ impl NetworkNode {
                 {
                     println!("DHT_FIND_FINISHED count={}", providers.len());
                     if let Some((cid, reply)) = self.pending_fetches.remove(&id) {
-                        // Jak w Bitswap Kubo: po dostawcach z DHT pytani są połączeni peerzy.
-                        // Rekord dostawcy mógł jeszcze nie dotrzeć do DHT.
+                        // Najpierw dostawcy z DHT, potem połączeni peerzy, bo rekord dostawcy mógł
+                        // jeszcze nie dotrzeć do DHT. Kubo robi odwrotnie: od razu rozsyła want-have
+                        // do połączonych peerów, a DHT pyta równolegle po krótkim opóźnieniu.
                         let mut candidates: Vec<PeerId> = providers.into_iter().collect();
                         for peer in self.swarm.connected_peers() {
                             if !candidates.contains(peer) {

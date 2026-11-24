@@ -42,7 +42,6 @@ pub struct HumanName {
 }
 
 /// `Patient` (u lekarza) albo `Practitioner` (u pacjenta): DID jako identyfikator i nazwa.
-/// Bez PESEL i daty urodzenia (decyzja autora, D-29). Zasób zostaje lokalnie, nie trafia do IPFS.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Person {

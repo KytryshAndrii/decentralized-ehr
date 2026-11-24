@@ -51,8 +51,8 @@ The patient only reads and downloads documents issued by doctors from the contac
 }
 
 /// PeerId bez hasła: z DID profilu albo z `./tmp/node-key.pb`, gdy profilu nie ma.
-pub(crate) fn local_peer_id() -> CliResult<String> {
-    let data_dir = EhrApp::default_data_dir();
+pub(crate) fn local_peer_id(role: Role) -> CliResult<String> {
+    let data_dir = EhrApp::default_data_dir(role);
     if let Ok(bytes) = std::fs::read(data_dir.join(ehr_core::consts::PROFILE_FILE))
         && EhrApp::profile_exists(&data_dir)
     {
@@ -86,7 +86,7 @@ fn password(confirm: bool) -> CliResult<String> {
 
 fn open_app(role: Role) -> CliResult<Arc<EhrApp>> {
     Ok(Arc::new(EhrApp::open(
-        &EhrApp::default_data_dir(),
+        &EhrApp::default_data_dir(role),
         role,
         &password(false)?,
     )?))
@@ -140,7 +140,7 @@ pub(crate) async fn offline(role: Role, args: &[String]) -> CliResult<()> {
         let mut words = words;
         let name =
             take_option(&mut words, "--name")?.ok_or("use: identity init --name \"<name>\"")?;
-        let data_dir = EhrApp::default_data_dir();
+        let data_dir = EhrApp::default_data_dir(role);
         std::fs::create_dir_all(&data_dir)?;
         let app = EhrApp::create_profile(&data_dir, role, &name, &password(true)?)?;
         print_profile(&app);
@@ -192,7 +192,7 @@ pub(crate) async fn run_node(role: Role, config: NetworkConfig) -> CliResult<()>
                     }
                 }
                 _ => {
-                    if !ipfs_line(&line, node.commands()) {
+                    if !ipfs_line(app.data_dir(), &line, node.commands()) {
                         break;
                     }
                 }

@@ -13,9 +13,9 @@ pub struct IpfsService {
 }
 
 impl IpfsService {
-    pub fn new() -> ServiceResult<Self> {
+    pub fn new(directory: &Path) -> ServiceResult<Self> {
         Ok(Self {
-            blockstore: PersistentBlockstore::open_default()?,
+            blockstore: PersistentBlockstore::open_in(directory)?,
         })
     }
 

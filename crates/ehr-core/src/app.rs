@@ -28,9 +28,10 @@ impl Role {
 }
 
 impl EhrApp {
-    /// Katalog danych węzła (jak blockstore: `./data` względem katalogu roboczego).
-    pub fn default_data_dir() -> PathBuf {
-        PathBuf::from(ipfs_store::consts::DEFAULT_DATA_DIR)
+    /// Katalog profilu roli: `./data/doctor` albo `./data/patient` względem katalogu roboczego,
+    /// żeby lekarz i pacjent uruchomieni z jednego katalogu nie dzielili kluczy ani baz.
+    pub fn default_data_dir(role: Role) -> PathBuf {
+        Path::new(ipfs_store::consts::DEFAULT_DATA_DIR).join(role.code())
     }
 
     pub fn profile_exists(data_dir: &Path) -> bool {
