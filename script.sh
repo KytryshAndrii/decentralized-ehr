@@ -4,7 +4,7 @@ set -euo pipefail
 
 # ============================================================
 # EHR-IPFS: Test Environment Setup
-# Uruchom z katalogu głównego repozytorium.
+# Run from the repository root.
 # ============================================================
 
 if [[ ! -f "Cargo.toml" ]]; then
@@ -27,7 +27,7 @@ mkdir -p \
     tests/fixtures \
     scripts/testing
 
-# Nie zapisujemy danych do fixtures.
+# Do not write data to fixtures.
 for file in hello.txt binary.dat sample.pdf; do
     if [[ ! -e "tests/fixtures/$file" ]]; then
         touch "tests/fixtures/$file"
@@ -37,7 +37,7 @@ done
 touch tests/interoperability/results/.gitkeep
 
 # ============================================================
-# Osobny crate test-runner
+# Separate test-runner crate
 # ============================================================
 
 echo "==> Konfiguracja test-runner..."
@@ -64,7 +64,7 @@ EOF
 fi
 
 # ============================================================
-# Dokumentacja
+# Documentation
 # ============================================================
 
 if [[ ! -f "tests/unit/README.md" ]]; then
@@ -125,7 +125,7 @@ EOF
 fi
 
 # ============================================================
-# Skrypt: CID test reference
+# Script: CID test reference
 # ============================================================
 
 if [[ ! -f "scripts/testing/test-cid.sh" ]]; then
@@ -167,7 +167,7 @@ EOF
 fi
 
 # ============================================================
-# Skrypt: sprawdzenie obu wezlow Kubo
+# Script: check both Kubo nodes
 # ============================================================
 
 if [[ ! -f "scripts/testing/test-kubo-nodes.sh" ]]; then
@@ -202,7 +202,7 @@ EOF
 fi
 
 # ============================================================
-# Skrypt: testy Rust
+# Script: Rust tests
 # ============================================================
 
 if [[ ! -f "scripts/testing/run-rust-tests.sh" ]]; then

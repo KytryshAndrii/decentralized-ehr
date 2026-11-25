@@ -4,15 +4,15 @@ use ipfs_cid::models::Cid;
 use ipfs_store::{PersistentBlockstore, StoreError};
 use std::path::PathBuf;
 
-/// Skąd serwer bierze bloki; w testach podmieniane na źródło w pamięci.
+/// Where the server takes blocks from; tests use an in-memory source.
 pub trait BlockSource: Send + Sync + 'static {
-    /// Dla każdego CID: czy blok wolno i da się wydać.
+    /// For each CID: whether the block may and can be served.
     fn has_blocks(&self, cids: &[Cid]) -> Result<Vec<bool>, BitswapError>;
 
-    /// Bajty bloku albo `None`, gdy bloku nie ma lub nie jest udostępniany.
+    /// Block bytes, or `None` when the block is missing or not shared.
     fn get_block(&self, cid: &Cid) -> Result<Option<Vec<u8>>, BitswapError>;
 
-    /// Kilka odczytów w jednej sesji źródła (np. jedno otwarcie bazy na wiadomość).
+    /// Several reads in one source session (e.g. one database open per message).
     fn with_reader<R>(
         &self,
         task: impl FnOnce(&ReadBlock<'_>) -> Result<R, BitswapError>,
@@ -38,7 +38,7 @@ impl ProvidedBlockSource {
     }
 }
 
-/// CID, którego Blockstore nie obsługuje, to po prostu brak bloku, a nie awaria.
+/// A CID the Blockstore does not support is simply a missing block, not a failure.
 fn unsupported_as_absent<T: Default>(result: Result<T, StoreError>) -> Result<T, BitswapError> {
     match result {
         Err(

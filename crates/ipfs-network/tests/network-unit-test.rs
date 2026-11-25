@@ -7,13 +7,13 @@ use std::{
     time::Duration,
 };
 
-static N: AtomicU64 = AtomicU64::new(0);
+static COUNTER: AtomicU64 = AtomicU64::new(0);
 struct TempDir(PathBuf);
 impl TempDir {
     fn new() -> Self {
-        let n = N.fetch_add(1, Ordering::Relaxed);
+        let number = COUNTER.fetch_add(1, Ordering::Relaxed);
         let path =
-            std::env::temp_dir().join(format!("ehr-network-test-{}-{n}", std::process::id()));
+            std::env::temp_dir().join(format!("ehr-network-test-{}-{number}", std::process::id()));
         fs::create_dir_all(&path).expect("create temp directory");
         Self(path)
     }
@@ -26,47 +26,47 @@ impl Drop for TempDir {
         let _ = fs::remove_dir_all(&self.0);
     }
 }
-fn id() -> PeerId {
+fn random_peer_id() -> PeerId {
     PeerId::from(Keypair::generate_ed25519().public())
 }
 
 #[test]
 fn identity_is_created_and_reused() {
-    let tmp = TempDir::new();
-    let first = identity::load_or_create(&tmp.key()).unwrap();
-    let data1 = fs::read(tmp.key()).unwrap();
-    let second = identity::load_or_create(&tmp.key()).unwrap();
+    let temp_dir = TempDir::new();
+    let first = identity::load_or_create(&temp_dir.key()).unwrap();
+    let data1 = fs::read(temp_dir.key()).unwrap();
+    let second = identity::load_or_create(&temp_dir.key()).unwrap();
     assert_eq!(PeerId::from(first.public()), PeerId::from(second.public()));
-    assert_eq!(data1, fs::read(tmp.key()).unwrap());
+    assert_eq!(data1, fs::read(temp_dir.key()).unwrap());
 }
 #[test]
 fn different_key_files_produce_different_peer_ids() {
-    let tmp = TempDir::new();
-    let a = identity::load_or_create(&tmp.0.join("a.pb")).unwrap();
-    let b = identity::load_or_create(&tmp.0.join("b.pb")).unwrap();
-    assert_ne!(PeerId::from(a.public()), PeerId::from(b.public()));
+    let temp_dir = TempDir::new();
+    let first = identity::load_or_create(&temp_dir.0.join("a.pb")).unwrap();
+    let second = identity::load_or_create(&temp_dir.0.join("b.pb")).unwrap();
+    assert_ne!(PeerId::from(first.public()), PeerId::from(second.public()));
 }
 #[test]
 fn corrupt_identity_must_not_be_regenerated() {
-    let tmp = TempDir::new();
-    fs::create_dir_all(tmp.key().parent().unwrap()).unwrap();
+    let temp_dir = TempDir::new();
+    fs::create_dir_all(temp_dir.key().parent().unwrap()).unwrap();
     fs::write(
-        tmp.key().parent().unwrap().join("corrupt.pb"),
+        temp_dir.key().parent().unwrap().join("corrupt.pb"),
         b"invalid protobuf",
     )
     .unwrap();
-    let path = tmp.0.join("nested/corrupt.pb");
+    let path = temp_dir.0.join("nested/corrupt.pb");
     assert!(identity::load_or_create(&path).is_err());
     assert_eq!(fs::read(&path).unwrap(), b"invalid protobuf");
 }
 #[test]
 fn identity_path_as_directory_returns_error() {
-    let tmp = TempDir::new();
-    assert!(identity::load_or_create(&tmp.0).is_err());
+    let temp_dir = TempDir::new();
+    assert!(identity::load_or_create(&temp_dir.0).is_err());
 }
 #[test]
 fn bootstrap_parse_strips_peer_id_and_preserves_transport() {
-    let peer = id();
+    let peer = random_peer_id();
     let input = format!("/ip4/127.0.0.1/tcp/4101/p2p/{peer}");
     let parsed = BootstrapPeer::parse(&input).unwrap();
     assert_eq!(parsed.peer_id, peer);
@@ -78,7 +78,7 @@ fn bootstrap_missing_peer_id_is_rejected() {
 }
 #[test]
 fn bootstrap_missing_transport_is_rejected() {
-    assert!(BootstrapPeer::parse(&format!("/p2p/{}", id())).is_err());
+    assert!(BootstrapPeer::parse(&format!("/p2p/{}", random_peer_id())).is_err());
 }
 #[test]
 fn bootstrap_malformed_address_is_rejected() {
@@ -86,7 +86,7 @@ fn bootstrap_malformed_address_is_rejected() {
 }
 #[test]
 fn bootstrap_list_parses_several_peers_and_drops_duplicates() {
-    let (first, second) = (id(), id());
+    let (first, second) = (random_peer_id(), random_peer_id());
     let input = format!(
         "/ip4/127.0.0.1/tcp/4101/p2p/{first}, /ip4/127.0.0.1/tcp/4102/p2p/{second},/ip4/10.0.0.1/tcp/4101/p2p/{first}"
     );
@@ -98,7 +98,10 @@ fn bootstrap_list_parses_several_peers_and_drops_duplicates() {
 }
 #[test]
 fn bootstrap_list_with_invalid_item_is_rejected() {
-    let input = format!("/ip4/127.0.0.1/tcp/4101/p2p/{},not-a-multiaddr", id());
+    let input = format!(
+        "/ip4/127.0.0.1/tcp/4101/p2p/{},not-a-multiaddr",
+        random_peer_id()
+    );
     assert!(BootstrapPeer::parse_list(&input).is_err());
     assert!(BootstrapPeer::parse_list("").is_err());
 }
@@ -108,56 +111,56 @@ fn default_config_has_no_state_directory() {
 }
 #[test]
 fn default_config_listens_on_all_interfaces_and_backoff() {
-    let cfg = NetworkConfig::default();
-    assert_eq!(cfg.listen.to_string(), "/ip4/0.0.0.0/tcp/4101");
-    assert!(cfg.bootstrap.is_empty());
-    assert!(cfg.retry_initial < cfg.retry_max);
+    let config = NetworkConfig::default();
+    assert_eq!(config.listen.to_string(), "/ip4/0.0.0.0/tcp/4101");
+    assert!(config.bootstrap.is_empty());
+    assert!(config.retry_initial < config.retry_max);
 }
 #[test]
 fn node_rejects_invalid_retry_settings() {
-    let tmp = TempDir::new();
-    let cfg = NetworkConfig {
-        identity_path: tmp.key(),
+    let temp_dir = TempDir::new();
+    let config = NetworkConfig {
+        identity_path: temp_dir.key(),
         retry_initial: Duration::ZERO,
         ..NetworkConfig::default()
     };
-    assert!(NetworkNode::new_network_node(cfg.clone()).is_err());
-    let cfg = NetworkConfig {
-        identity_path: tmp.key(),
+    assert!(NetworkNode::new_network_node(config.clone()).is_err());
+    let config = NetworkConfig {
+        identity_path: temp_dir.key(),
         retry_initial: Duration::from_secs(2),
         retry_max: Duration::from_secs(1),
         ..NetworkConfig::default()
     };
-    assert!(NetworkNode::new_network_node(cfg.clone()).is_err());
-    let cfg = NetworkConfig {
-        identity_path: tmp.key(),
+    assert!(NetworkNode::new_network_node(config.clone()).is_err());
+    let config = NetworkConfig {
+        identity_path: temp_dir.key(),
         retry_max: Duration::from_secs(30),
         maintenance_tick: Duration::ZERO,
         ..NetworkConfig::default()
     };
-    assert!(NetworkNode::new_network_node(cfg).is_err());
+    assert!(NetworkNode::new_network_node(config).is_err());
 }
 #[test]
 fn node_ignores_self_as_bootstrap() {
-    let tmp = TempDir::new();
-    let key = identity::load_or_create(&tmp.key()).unwrap();
+    let temp_dir = TempDir::new();
+    let key = identity::load_or_create(&temp_dir.key()).unwrap();
     let peer = PeerId::from(key.public());
-    let cfg = NetworkConfig {
-        identity_path: tmp.key(),
+    let config = NetworkConfig {
+        identity_path: temp_dir.key(),
         bootstrap: vec![
             BootstrapPeer::parse(&format!("/ip4/127.0.0.1/tcp/4111/p2p/{peer}")).unwrap(),
         ],
         ..NetworkConfig::default()
     };
-    let node = NetworkNode::new_network_node(cfg).unwrap();
+    let node = NetworkNode::new_network_node(config).unwrap();
     assert_eq!(node.local_peer_id(), peer);
 }
 #[cfg(unix)]
 #[test]
 fn private_key_file_has_owner_only_permissions() {
     use std::os::unix::fs::PermissionsExt;
-    let tmp = TempDir::new();
-    identity::load_or_create(&tmp.key()).unwrap();
-    let mode = fs::metadata(tmp.key()).unwrap().permissions().mode() & 0o777;
+    let temp_dir = TempDir::new();
+    identity::load_or_create(&temp_dir.key()).unwrap();
+    let mode = fs::metadata(temp_dir.key()).unwrap().permissions().mode() & 0o777;
     assert_eq!(mode, 0o600);
 }

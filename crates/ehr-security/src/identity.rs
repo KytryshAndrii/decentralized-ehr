@@ -1,5 +1,5 @@
-//! did:key z klucza węzła Ed25519: `did:key:z` + base58btc(`0xed 0x01` + 32 bajty).
-//! Ten sam klucz daje PeerId, więc tożsamość sieciowa i autoryzacyjna to jeden podmiot.
+//! did:key from the Ed25519 node key: `did:key:z` + base58btc(`0xed 0x01` + 32 bytes).
+//! The same key gives the PeerId, so the network and the authorization identity are one subject.
 use crate::consts::{DID_KEY_PREFIX, ED25519_MULTICODEC};
 use crate::error::SecurityError;
 use libp2p::PeerId;

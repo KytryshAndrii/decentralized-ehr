@@ -1,6 +1,8 @@
-//! Operacje lokalne (bez sieci), wspólne dla CLI i UI. Rola pochodzi z binarki;
-//! metody spoza roli kończą się błędem `EhrError::Role`.
-use crate::consts::{INVITE_VALIDITY_SECS, KEYS_DIR, PROFILE_FILE};
+//! Local operations (no network), shared by the CLI and the UI. The role comes from the binary;
+//! methods of the other role end with `EhrError::Role`.
+use crate::consts::{
+    DOCTOR_DATA_DIR, INVITE_VALIDITY_SECS, KEYS_DIR, PATIENT_DATA_DIR, PROFILE_FILE,
+};
 use crate::error::EhrError;
 use crate::models::{Contact, EhrApp, IndexEntry, Invite, Person, Profile, Role};
 use crate::store::ContactKind;
@@ -28,17 +30,20 @@ impl Role {
 }
 
 impl EhrApp {
-    /// Katalog profilu roli: `./data/doctor` albo `./data/patient` względem katalogu roboczego,
-    /// żeby lekarz i pacjent uruchomieni z jednego katalogu nie dzielili kluczy ani baz.
+    /// Role folder in the working directory (`ehr-doctor-data` or `ehr-patient-data`): the CLI
+    /// and the desktop app of one role share it, a doctor and a patient never do.
     pub fn default_data_dir(role: Role) -> PathBuf {
-        Path::new(ipfs_store::consts::DEFAULT_DATA_DIR).join(role.code())
+        PathBuf::from(match role {
+            Role::Doctor => DOCTOR_DATA_DIR,
+            Role::Patient => PATIENT_DATA_DIR,
+        })
     }
 
     pub fn profile_exists(data_dir: &Path) -> bool {
         data_dir.join(PROFILE_FILE).is_file() && Identity::exists(&data_dir.join(KEYS_DIR))
     }
 
-    /// Pierwsze uruchomienie: klucze chronione hasłem i profil z imieniem i nazwiskiem.
+    /// First run: password-protected keys and a profile with the first and last name.
     pub fn create_profile(
         data_dir: &Path,
         role: Role,
@@ -63,7 +68,7 @@ impl EhrApp {
         Ok(Self::assemble(role, data_dir, identity, profile))
     }
 
-    /// Logowanie: hasło odszyfrowuje klucze; profil musi należeć do roli tej binarki.
+    /// Login: the password decrypts the keys; the profile must belong to the role of this binary.
     pub fn open(data_dir: &Path, role: Role, password: &str) -> Result<Self, EhrError> {
         let profile: Profile = serde_json::from_slice(
             &fs::read(data_dir.join(PROFILE_FILE))
@@ -79,7 +84,7 @@ impl EhrApp {
         Ok(Self::assemble(role, data_dir, identity, profile))
     }
 
-    /// Nazwa z profilu bez odblokowania kluczy (ekran logowania).
+    /// Profile name without unlocking the keys (login screen).
     pub fn profile_name(data_dir: &Path) -> Option<String> {
         let bytes = fs::read(data_dir.join(PROFILE_FILE)).ok()?;
         serde_json::from_slice::<Profile>(&bytes)
@@ -140,8 +145,8 @@ impl EhrApp {
         )?)
     }
 
-    /// Lekarz: jednorazowe zaproszenie (wizytówka z adresem węzła i kodem), jak link SimpleX.
-    /// `address` to adres bez `/p2p/`, np. `/ip4/192.168.1.125/tcp/4101`.
+    /// Doctor: a one-time invitation (contact card with the node address and a code), like a SimpleX link.
+    /// `address` has no `/p2p/`, e.g. `/ip4/192.168.1.125/tcp/4101`.
     pub fn create_invite(&self, address: &str) -> Result<String, EhrError> {
         self.require(Role::Doctor)?;
         let code = random_id();
@@ -154,7 +159,7 @@ impl EhrApp {
         Ok(text)
     }
 
-    /// Lekarz akceptuje prośbę o kontakt; `name` poprawia imię po sprawdzeniu dokumentu.
+    /// The doctor accepts a contact request; `name` corrects the name after checking an ID document.
     pub fn accept_contact(&self, did: &str, name: Option<&str>) -> Result<Contact, EhrError> {
         self.require(Role::Doctor)?;
         let mut contact = self
@@ -174,7 +179,7 @@ impl EhrApp {
         self.remove_contact(ContactKind::Pending, did)
     }
 
-    /// Lekarz wybiera pacjenta po imieniu i nazwisku (fragment, bez wielkości liter) albo DID.
+    /// The doctor picks a patient by name (a case-insensitive fragment) or by DID.
     pub fn find_patient(&self, query: &str) -> Result<Contact, EhrError> {
         self.require(Role::Doctor)?;
         let query = query.trim().to_lowercase();
@@ -202,7 +207,7 @@ impl EhrApp {
         }
     }
 
-    /// Wybór dokumentu z listy po numerze (od 1) albo nazwie pliku.
+    /// Picks a document from the list by number (from 1) or by file name.
     pub fn resolve_document(
         documents: &[IndexEntry],
         selector: &str,
@@ -223,7 +228,11 @@ impl EhrApp {
             many => Err(EhrError::Ambiguous(
                 many.iter()
                     .map(|entry| {
-                        let number = documents.iter().position(|d| d == *entry).unwrap_or(0) + 1;
+                        let number = documents
+                            .iter()
+                            .position(|listed| listed == *entry)
+                            .unwrap_or(0)
+                            + 1;
                         format!("#{number} {}", entry.file_name)
                     })
                     .collect(),
@@ -231,7 +240,7 @@ impl EhrApp {
         }
     }
 
-    /// Nazwa wystawcy albo pacjenta do wyświetlenia (z kontaktów; DID, gdy nieznany).
+    /// Issuer or patient name to show (from the contacts; the DID when unknown).
     pub fn display_name(&self, did: &str) -> String {
         if did == self.profile.did {
             return self.profile.name.clone();

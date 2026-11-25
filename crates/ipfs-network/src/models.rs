@@ -26,7 +26,7 @@ pub struct NetworkNode {
     pub(crate) next_reprovide: Instant,
     pub(crate) reprovided_after_bootstrap: bool,
     pub(crate) bitswap_client: Option<ipfs_bitswap::BitswapClient>,
-    /// Zapytania DHT o dostawców, po których blok ma zostać pobrany przez Bitswap.
+    /// DHT provider queries after which the block is fetched over Bitswap.
     pub(crate) pending_fetches: HashMap<kad::QueryId, (Cid, Option<FetchReply>)>,
 }
 
@@ -49,16 +49,16 @@ pub struct NetworkConfig {
     pub dht_mode: DhtMode,
     pub state_directory: Option<PathBuf>,
     pub reprovide_interval: Duration,
-    /// Gotowy klucz węzła (np. odszyfrowany hasłem przez warstwę EHR).
-    /// `None`: klucz z `identity_path`, jak dotąd.
+    /// Ready node key (e.g. unlocked with the password by the EHR layer).
+    /// `None`: the key from `identity_path`.
     pub keypair: Option<Keypair>,
 }
 
-/// Wynik pobrania całego pliku zleconego przez `NetworkCommand::FetchWithReply`.
+/// Result of fetching a whole file requested with `NetworkCommand::FetchWithReply`.
 pub type FetchReply = tokio::sync::oneshot::Sender<Result<(), String>>;
 
-/// Uchwyt do otwierania i przyjmowania strumieni libp2p na Swarmie węzła
-/// (ten sam `libp2p-stream`, którego używa Bitswap; inne protokoły dostają własne nazwy).
+/// Handle for opening and accepting libp2p streams on the node Swarm
+/// (the same `libp2p-stream` Bitswap uses; other protocols get their own names).
 pub type StreamControl = ipfs_bitswap::BitswapControl;
 
 #[derive(Debug)]
@@ -66,13 +66,17 @@ pub enum NetworkCommand {
     StartProviding(Cid),
     GetProviders(Cid),
     StopProviding(Cid),
-    /// Znajdź dostawców w DHT, pobierz blok przez Bitswap i zapisz go w Blockstore.
+    /// Find providers in the DHT, fetch the block over Bitswap and store it in the Blockstore.
     Fetch(Cid),
-    /// Jak `Fetch`, ale wynik (cały plik lokalnie albo błąd) wraca kanałem.
+    /// Like `Fetch`, but the result (whole file local, or an error) comes back on a channel.
     FetchWithReply(Cid, FetchReply),
-    /// Dodaje znany adres peera do zbioru połączeń utrzymywanych przez węzeł (jak bootstrap).
+    /// Adds a known peer address to the connections the node keeps (like bootstrap).
     AddPeer(BootstrapPeer),
     Bootstrap,
     ListPeers,
+    /// Peers in the DHT routing table, i.e. DHT servers.
+    DhtServers(tokio::sync::oneshot::Sender<Vec<PeerId>>),
+    /// Switches Kademlia between client and server mode without a restart.
+    SetDhtMode(DhtMode),
     Quit,
 }

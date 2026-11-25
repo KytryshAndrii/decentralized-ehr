@@ -15,12 +15,12 @@ members = [
     "test-runner",
 ]
 
-# libp2p-stream 0.5.0-alpha gubi przychodzące strumienie przy serii (kanał o jednym miejscu).
-# Kopia w vendor/ różni się jednym miejscem: INBOUND_STREAM_BACKLOG w src/shared.rs.
+# libp2p-stream 0.5.0-alpha drops incoming streams in a burst (a channel with one slot).
+# The copy in vendor/ differs in one place: INBOUND_STREAM_BACKLOG in src/shared.rs.
 [patch.crates-io]
 libp2p-stream = { path = "vendor/libp2p-stream" }
 
-# Argon2 (hasło do kluczy) bez optymalizacji trwa kilka sekund na każde odblokowanie.
+# Argon2 (key password) without optimisation takes several seconds per unlock.
 [profile.dev.package.argon2]
 opt-level = 3
 [profile.dev.package.blake2]

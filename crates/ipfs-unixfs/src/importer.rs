@@ -6,9 +6,9 @@ use ipfs_cid::models::Cid;
 use ipfs_store::{Blockstore, Datastore};
 use std::io::Read;
 
-/// Importuje plik jako UnixFS v1 w układzie zgodnym z
-/// `ipfs add --cid-version=1 --raw-leaves --chunker=<chunker>`: liście raw, węzły dag-pb,
-/// DAG zrównoważony (balanced). Plik mieszczący się w jednym kawałku to jeden blok raw.
+/// Imports a file as UnixFS v1 with the layout of
+/// `ipfs add --cid-version=1 --raw-leaves --chunker=<chunker>`: raw leaves, dag-pb nodes,
+/// balanced DAG. A file that fits in one chunk is a single raw block.
 pub fn add_file<D: Datastore>(
     store: &Blockstore<D>,
     reader: impl Read,
@@ -27,8 +27,8 @@ pub fn add_file<D: Datastore>(
     if level.is_empty() {
         level.push(import.put(CODEC_RAW, &[], 0, 0)?);
     }
-    // Układ balanced: każdy poziom grupuje poprzedni po 174, aż zostanie jeden korzeń.
-    // Wszystkie liście są na tej samej głębokości, jak w Kubo.
+    // Balanced layout: each level groups the previous one by 174 until one root is left.
+    // All leaves are at the same depth, as in Kubo.
     while level.len() > 1 {
         let mut parents = Vec::with_capacity(level.len().div_ceil(MAX_FILE_LINKS));
         for children in level.chunks(MAX_FILE_LINKS) {
@@ -55,8 +55,8 @@ struct Import<'a, D: Datastore> {
 }
 
 impl<D: Datastore> Import<'_, D> {
-    /// Zapisuje blok, chyba że Blockstore już go ma: ten sam kawałek w innym pliku
-    /// albo w nowej wersji pliku nie zajmuje miejsca drugi raz.
+    /// Stores the block unless the Blockstore already has it: the same chunk in another file
+    /// or in a new file version takes no space twice.
     fn put(
         &mut self,
         codec: u64,

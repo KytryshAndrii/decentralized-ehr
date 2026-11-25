@@ -1,9 +1,12 @@
-//! Modele EHR (FHIR R5), rejestr i kontakty, a na końcu pełny przebieg w jednym procesie:
-//! lekarz i dwóch pacjentów jako osobne węzły libp2p na localhost.
-use ehr_core::utils::{add_years, date_text, iso8601, safe_file_name, size_text};
+//! EHR models (FHIR R5), index and contacts, and finally a full run in one process:
+//! a doctor and two patients as separate libp2p nodes on localhost.
+use ehr_core::utils::{
+    add_years, date_text, file_name_with_extension, iso8601, patient_dht_server, safe_file_name,
+    size_text,
+};
 use ehr_core::{
-    Category, ContactKind, DocumentReference, EhrApp, EhrError, IndexEntry, NewDocument, Person,
-    Role,
+    Battery, Category, ContactKind, DocumentReference, EhrApp, EhrError, IndexEntry, NewDocument,
+    Person, Role,
 };
 use ehr_security::Signed;
 use std::path::Path;
@@ -18,7 +21,7 @@ fn utc_calendar_helpers() {
     assert_eq!(iso8601(NOW), "2026-11-18T09:12:00Z");
     assert_eq!(date_text(NOW), "18.11.2026");
     assert_eq!(iso8601(add_years(NOW, 20)), "2046-11-18T09:12:00Z");
-    // 29.02.2028 + 20 lat = 29.02.2048 (przestępny); + 1 rok = 28.02.2029.
+    // 29.02.2028 + 20 years = 29.02.2048 (leap year); + 1 year = 28.02.2029.
     let leap_day = 1_835_395_200; // 2028-02-29T00:00:00Z
     assert_eq!(iso8601(leap_day), "2028-02-29T00:00:00Z");
     assert_eq!(iso8601(add_years(leap_day, 20)), "2048-02-29T00:00:00Z");
@@ -77,9 +80,9 @@ fn manifest_is_a_fhir_r5_document_reference() {
     let attachment = &json["content"][0]["attachment"];
     assert_eq!(attachment["url"], "ipfs://bafydocument");
     assert_eq!(attachment["title"], "Morfologia krwi.pdf");
-    // R5: `size` to integer64, w JSON napis.
+    // R5: `size` is integer64, a string in JSON.
     assert_eq!(attachment["size"], "223232");
-    // Bez danych osobowych pacjenta w manifeście (tylko DID).
+    // No personal data of the patient in the manifest (only the DID).
     assert!(!json.to_string().contains("Kowalski"));
 
     let back = manifest
@@ -112,25 +115,30 @@ fn person_is_fhir_patient_or_practitioner() {
 
 #[test]
 fn profile_needs_the_password_and_the_matching_role() {
-    let dir = tempfile::tempdir().unwrap();
-    assert!(!EhrApp::profile_exists(dir.path()));
-    assert!(EhrApp::create_profile(dir.path(), Role::Doctor, " ", PASSWORD).is_err());
-    let app =
-        EhrApp::create_profile(dir.path(), Role::Doctor, "dr Anna Malinowska", PASSWORD).unwrap();
-    assert!(EhrApp::profile_exists(dir.path()));
+    let temp_dir = tempfile::tempdir().unwrap();
+    assert!(!EhrApp::profile_exists(temp_dir.path()));
+    assert!(EhrApp::create_profile(temp_dir.path(), Role::Doctor, " ", PASSWORD).is_err());
+    let app = EhrApp::create_profile(
+        temp_dir.path(),
+        Role::Doctor,
+        "dr Anna Malinowska",
+        PASSWORD,
+    )
+    .unwrap();
+    assert!(EhrApp::profile_exists(temp_dir.path()));
     assert_eq!(
-        EhrApp::profile_name(dir.path()).unwrap(),
+        EhrApp::profile_name(temp_dir.path()).unwrap(),
         "dr Anna Malinowska"
     );
-    assert!(EhrApp::create_profile(dir.path(), Role::Doctor, "again", PASSWORD).is_err());
+    assert!(EhrApp::create_profile(temp_dir.path(), Role::Doctor, "again", PASSWORD).is_err());
     assert!(matches!(
-        EhrApp::open(dir.path(), Role::Patient, PASSWORD),
+        EhrApp::open(temp_dir.path(), Role::Patient, PASSWORD),
         Err(EhrError::Role(_))
     ));
-    assert!(EhrApp::open(dir.path(), Role::Doctor, "bad password!").is_err());
-    let reopened = EhrApp::open(dir.path(), Role::Doctor, PASSWORD).unwrap();
+    assert!(EhrApp::open(temp_dir.path(), Role::Doctor, "bad password!").is_err());
+    let reopened = EhrApp::open(temp_dir.path(), Role::Doctor, PASSWORD).unwrap();
     assert_eq!(reopened.profile(), app.profile());
-    // Pacjent-tylko operacje są niedostępne dla lekarza i odwrotnie.
+    // Patient-only operations are unavailable to the doctor and the other way round.
     assert!(matches!(app.find_patient("x"), Err(EhrError::NotFound(_))));
     let patient_dir = tempfile::tempdir().unwrap();
     let patient =
@@ -185,11 +193,11 @@ fn free_port() -> u16 {
         .port()
 }
 
-fn app(dir: &Path, role: Role, name: &str) -> Arc<EhrApp> {
-    Arc::new(EhrApp::create_profile(dir, role, name, PASSWORD).unwrap())
+fn app(temp_dir: &Path, role: Role, name: &str) -> Arc<EhrApp> {
+    Arc::new(EhrApp::create_profile(temp_dir, role, name, PASSWORD).unwrap())
 }
 
-/// Wysłanie pliku, budowa UnixFS, odbiór przez pacjenta i otwarcie po odszyfrowaniu.
+/// Sending a file, building UnixFS, receiving by the patient and opening after decryption.
 #[tokio::test(flavor = "multi_thread")]
 async fn doctor_issues_and_only_the_patient_reads_the_document() {
     let dirs: Vec<_> = (0..3).map(|_| tempfile::tempdir().unwrap()).collect();
@@ -214,12 +222,12 @@ async fn doctor_issues_and_only_the_patient_reads_the_document() {
         .await
         .unwrap();
 
-    // Zaproszenie lekarza -> pacjent wysyła swoją wizytówkę p2p -> lekarz akceptuje.
+    // Doctor's invitation -> the patient sends its card over p2p -> the doctor accepts.
     let address = format!("/ip4/127.0.0.1/tcp/{doctor_port}");
     let invitation = doctor.create_invite(&address).unwrap();
     let added = anna_node.connect_doctor(&invitation).await.unwrap();
     assert_eq!(added.person.display_name(), "dr Anna Malinowska");
-    // Zaproszenie jest jednorazowe.
+    // The invitation is single use.
     assert!(matches!(
         piotr_node.connect_doctor(&invitation).await,
         Err(EhrError::Rejected(_))
@@ -236,8 +244,8 @@ async fn doctor_issues_and_only_the_patient_reads_the_document() {
         anna.profile().did
     );
 
-    // Lekarz wystawia wynik (wieloblokowy: > 256 KiB) Janowi Kowalskiemu.
-    let content: Vec<u8> = (0..700_000u32).map(|i| (i % 251) as u8).collect();
+    // The doctor issues a result (multi-block: > 256 KiB) to Jan Kowalski.
+    let content: Vec<u8> = (0..700_000u32).map(|index| (index % 251) as u8).collect();
     let file = dirs[0].path().join("wynik.pdf");
     std::fs::write(&file, &content).unwrap();
     let issued = doctor_node
@@ -245,19 +253,18 @@ async fn doctor_issues_and_only_the_patient_reads_the_document() {
             path: file.clone(),
             patient_did: anna.profile().did.clone(),
             file_name: "Morfologia krwi.pdf".into(),
-            media_type: "application/pdf".into(),
             category: Category::Lab,
         })
         .await
         .unwrap();
     assert_eq!((issued.seq, issued.version), (1, 1));
     assert_eq!(issued.valid_until_utc, add_years(issued.created_utc, 20));
-    // Lekarz widzi nazwę pliku u pacjenta i otwiera własny dokument.
+    // The doctor sees the file name at the patient and opens its own document.
     let doctor_list = doctor.documents(Some(&anna.profile().did)).unwrap();
     assert_eq!(doctor_list[0].file_name, "Morfologia krwi.pdf");
     assert_eq!(doctor_node.open_document(&issued).await.unwrap(), content);
 
-    // Pacjent: skrzynka -> manifest -> nazwa pliku w rejestrze -> odszyfrowany plik.
+    // Patient: inbox -> manifest -> file name in the index -> decrypted file.
     let received = wait_for(|| {
         let runtime = tokio::runtime::Handle::current();
         let synced =
@@ -278,29 +285,36 @@ async fn doctor_issues_and_only_the_patient_reads_the_document() {
         anna_node.save_document(&list[0], &output).await.is_err(),
         "no overwrite"
     );
+    // The downloaded document is pinned: a GC with no space left keeps it (option a+).
+    {
+        // Closed right away: an open store holds the LevelDB lock the patient node needs.
+        let patient_store = ipfs_store::PersistentBlockstore::open_in(dirs[1].path()).unwrap();
+        patient_store.collect_garbage(0).unwrap();
+        let doc_cid = ipfs_cid::models::Cid::decode_from_string(&list[0].doc_cid).unwrap();
+        assert!(ipfs_unixfs::dag_cids(&patient_store, &doc_cid).is_ok());
+    }
 
-    // T05/T06: drugi pacjent nie dostaje wpisu ani nie odszyfruje cudzego dokumentu.
+    // T05/T06: the second patient gets no entry and cannot decrypt someone else's document.
     assert!(piotr_node.sync_inbox().await.unwrap().is_empty());
     assert!(piotr.documents(None).unwrap().is_empty());
     let mut stolen = list[0].clone();
     stolen.patient_did = piotr.profile().did.clone();
     assert!(piotr_node.open_document(&stolen).await.is_err());
 
-    // Pacjent nie wystawia dokumentów (U10).
+    // The patient does not issue documents (U10).
     assert!(matches!(
         anna_node
             .issue_document(NewDocument {
                 path: file.clone(),
                 patient_did: piotr.profile().did.clone(),
                 file_name: "x".into(),
-                media_type: "text/plain".into(),
                 category: Category::Other,
             })
             .await,
         Err(EhrError::Role(_))
     ));
 
-    // Zmiana dokumentu: nowa wersja z tym samym doc_id; lista pokazuje ostatnią.
+    // Document change: a new version with the same doc_id; the list shows the latest.
     let corrected = dirs[0].path().join("wynik-v2.pdf");
     std::fs::write(&corrected, b"corrected synthetic result").unwrap();
     let second = doctor_node
@@ -334,11 +348,11 @@ fn doctor_and_patient_started_from_one_folder_keep_separate_profiles() {
     assert_ne!(doctor, patient);
     let root = tempfile::tempdir().unwrap();
     let (doctor, patient) = (root.path().join(doctor), root.path().join(patient));
-    for (dir, role) in [(&doctor, Role::Doctor), (&patient, Role::Patient)] {
-        std::fs::create_dir_all(dir).unwrap();
-        EhrApp::create_profile(dir, role, "Jan Kowalski", PASSWORD).unwrap();
+    for (temp_dir, role) in [(&doctor, Role::Doctor), (&patient, Role::Patient)] {
+        std::fs::create_dir_all(temp_dir).unwrap();
+        EhrApp::create_profile(temp_dir, role, "Jan Kowalski", PASSWORD).unwrap();
     }
-    // Restart: każda rola loguje się hasłem do własnego profilu.
+    // Restart: each role logs in with the password to its own profile.
     assert_eq!(
         EhrApp::open(&doctor, Role::Doctor, PASSWORD)
             .unwrap()
@@ -351,4 +365,41 @@ fn doctor_and_patient_started_from_one_folder_keep_separate_profiles() {
             .role(),
         Role::Patient
     );
+}
+
+#[test]
+fn display_name_keeps_the_extension_of_the_source_file() {
+    let source = Path::new("/tmp/scan.PDF");
+    assert_eq!(file_name_with_extension("", source), "scan.PDF");
+    assert_eq!(
+        file_name_with_extension("Wynik krwi 2026.11.18", source),
+        "Wynik krwi 2026.11.18.PDF"
+    );
+    assert_eq!(file_name_with_extension("Wynik.pdf", source), "Wynik.pdf");
+    assert_eq!(file_name_with_extension("Wynik.png", source), "Wynik.PDF");
+    assert_eq!(
+        file_name_with_extension("Notatka", Path::new("/tmp/README")),
+        "Notatka"
+    );
+    assert_eq!(
+        file_name_with_extension("", Path::new("/tmp/.bashrc")),
+        ".bashrc"
+    );
+}
+
+#[test]
+fn patient_dht_mode_follows_the_battery() {
+    let battery = |percent, charging| Some(Battery { percent, charging });
+    // No readable battery: always a DHT client.
+    assert!(!patient_dht_server(None, true));
+    // Below 33% client, even while charging.
+    assert!(!patient_dht_server(battery(32, false), true));
+    assert!(!patient_dht_server(battery(10, true), true));
+    // From 40% server.
+    assert!(patient_dht_server(battery(40, false), false));
+    assert!(patient_dht_server(battery(100, false), false));
+    // 33-39%: unchanged, unless charging.
+    assert!(patient_dht_server(battery(35, false), true));
+    assert!(!patient_dht_server(battery(35, false), false));
+    assert!(patient_dht_server(battery(33, true), false));
 }

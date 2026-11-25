@@ -2,7 +2,7 @@
 name = "ehr-desktop"
 version = "0.1.0"
 edition = "2024"
-# Slint na licencji GPLv3 (jak repozytorium, plik LICENSE).
+# Slint under the GPLv3 licence (like the repository, see LICENSE).
 license = "GPL-3.0-only"
 build = "build.rs"
 
@@ -20,9 +20,9 @@ path = "src/bin/ehr-desktop-patient.rs"
 [dependencies]
 ehr-core = { path = "../../crates/ehr-core" }
 ipfs-network = { path = "../../crates/ipfs-network" }
-# 1.18+ wymaga glow 0.18 -> js-sys >= 0.3.100, a libp2p 0.57.1 przypina js-sys 0.3.85.
+# 1.18+ needs glow 0.18 -> js-sys >= 0.3.100, while libp2p 0.57.1 pins js-sys 0.3.85.
 slint = { version = "=1.17.0", features = ["renderer-software"] }
-# fontconfig ładowany w czasie działania (dlopen): budowanie bez pakietów -dev i pkg-config.
+# fontconfig loaded at run time (dlopen): builds without -dev packages and pkg-config.
 i-slint-common = { version = "=1.17.0", features = ["fontconfig-dlopen"] }
 rfd = "0.15"
 image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }

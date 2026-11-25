@@ -1,5 +1,5 @@
-//! Aplikacja konsolowa EHR. Bez profilu EHR (`identity init`) działa jak dotąd jako węzeł IPFS;
-//! z profilem dochodzą komendy lekarza albo pacjenta (`ehr-core`), te same co w UI.
+//! EHR console app. Without an EHR profile (`identity init`) it runs as a plain IPFS node;
+//! with a profile it adds the doctor or patient commands (`ehr-core`), the same as in the UI.
 mod cli;
 mod ehr_commands;
 pub mod services;

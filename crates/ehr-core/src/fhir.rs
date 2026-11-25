@@ -1,4 +1,4 @@
-//! HL7 FHIR R5: `Patient` / `Practitioner` (kontakty) i `DocumentReference` (manifest pliku).
+//! HL7 FHIR R5: `Patient` / `Practitioner` (contacts) and `DocumentReference` (file manifest).
 use crate::consts::{
     FHIR_CATEGORY_SYSTEM, FHIR_DID_SYSTEM, FHIR_DOC_ID_SYSTEM, FHIR_READ_TOKEN_EXTENSION,
     FHIR_RELATIONSHIP_SYSTEM, FHIR_VALID_UNTIL_EXTENSION, IPFS_URL_PREFIX,
@@ -46,7 +46,7 @@ fn did_identifier(did: &str) -> Identifier {
 }
 
 impl Person {
-    /// `Patient` dla kontaktu-pacjenta, `Practitioner` dla kontaktu-lekarza.
+    /// `Patient` for a patient contact, `Practitioner` for a doctor contact.
     pub fn new(role: Role, did: &str, name: &str) -> Self {
         let name = name.trim();
         let (given, family) = match name.rsplit_once(' ') {
@@ -93,7 +93,7 @@ fn reference_did(reference: &Reference) -> Option<&str> {
 }
 
 impl DocumentReference {
-    /// Manifest wersji dokumentu (bez numeru `seq`, który nadaje rejestr).
+    /// Manifest of a document version (without `seq`, which the index assigns).
     pub fn from_entry(entry: &IndexEntry) -> Result<Self, EhrError> {
         Ok(Self {
             resource_type: "DocumentReference".into(),
@@ -166,8 +166,8 @@ impl DocumentReference {
         })
     }
 
-    /// Wymagane pola R5 (`status`, `content`) i pola, bez których dokumentu nie da się otworzyć.
-    /// Z manifestu odczytanego od lekarza powstaje wpis rejestru pacjenta.
+    /// Required R5 fields (`status`, `content`) and the fields needed to open the document.
+    /// The manifest read from the doctor becomes an entry of the patient's index.
     pub fn to_entry(
         &self,
         seq: u64,

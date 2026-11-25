@@ -1,9 +1,11 @@
 pub mod behaviour;
 pub mod bitswap;
+mod commands;
 pub mod config;
 pub mod consts;
 pub mod dht;
 pub mod error;
+mod events;
 pub mod identity;
 pub mod models;
 pub mod node;

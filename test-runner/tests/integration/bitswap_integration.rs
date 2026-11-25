@@ -26,7 +26,7 @@ fn want(cid: &Cid, want_type: WantType) -> WantlistEntry {
     }
 }
 
-/// Minimalny klient: wysyła wantlistę i czeka na odpowiedź w strumieniu otwartym przez serwer.
+/// Minimal client: sends a wantlist and waits for the answer on a stream the server opens.
 struct TestClient {
     control: BitswapControl,
     incoming: BitswapIncomingStreams,
@@ -45,7 +45,9 @@ impl TestClient {
             .unwrap()
             .with_behaviour(|_| ipfs_bitswap::new_behaviour())
             .unwrap()
-            .with_swarm_config(|cfg| cfg.with_idle_connection_timeout(Duration::from_secs(60)))
+            .with_swarm_config(|swarm_config| {
+                swarm_config.with_idle_connection_timeout(Duration::from_secs(60))
+            })
             .build();
         let mut control = swarm.behaviour().new_control();
         let incoming = control
@@ -141,7 +143,7 @@ async fn node_serves_only_provided_blocks_over_bitswap() {
         .unwrap();
     let mut client = TestClient::connect(address, server).await;
 
-    // Want-Have: obecność bez przesyłania bajtów.
+    // Want-Have: presence without sending the bytes.
     let response = client
         .ask(vec![
             want(shared, WantType::Have),
@@ -152,7 +154,7 @@ async fn node_serves_only_provided_blocks_over_bitswap() {
     assert_eq!(presence_of(&response, shared), BlockPresenceType::Have);
     assert_eq!(presence_of(&response, private), BlockPresenceType::DontHave);
 
-    // Want-Block: bajty zgodne z CID.
+    // Want-Block: bytes matching the CID.
     let response = client.ask(vec![want(shared, WantType::Block)]).await;
     assert_eq!(response.payload.len(), 1);
     assert_eq!(response.payload[0].prefix, [0x01, 0x55, 0x12, 0x20]);
@@ -164,7 +166,7 @@ async fn node_serves_only_provided_blocks_over_bitswap() {
     assert_eq!(response.payload[0].data, large_bytes);
     assert!(large.verify_block(&response.payload[0].data));
 
-    // Blok zapisany, ale nieogłoszony, nie jest wydawany.
+    // A stored but unannounced block is not served.
     let response = client.ask(vec![want(private, WantType::Block)]).await;
     assert!(response.payload.is_empty());
     assert_eq!(presence_of(&response, private), BlockPresenceType::DontHave);
@@ -178,7 +180,7 @@ async fn node_serves_only_provided_blocks_over_bitswap() {
     let response = client.ask(vec![want(shared, WantType::Have)]).await;
     assert_eq!(presence_of(&response, shared), BlockPresenceType::Have);
 
-    // Po `stop` blok przestaje być udostępniany.
+    // After `stop` the block is no longer shared.
     node.send(&format!("stop {}", shared.to_string_base32()));
     node.until("DHT_STOPPED", WAIT_SECS);
     let response = client.ask(vec![want(shared, WantType::Block)]).await;
@@ -199,8 +201,8 @@ fn node_dir(workspace: &Path, name: &str) -> std::path::PathBuf {
     directory
 }
 
-/// Hub DHT, dostawca i pobierający to trzy osobne węzły: pobierający zna tylko hub,
-/// dostawcę znajduje w DHT i sam się z nim łączy.
+/// DHT hub, provider and fetcher are three separate nodes: the fetcher knows only the hub,
+/// finds the provider in the DHT and connects to it by itself.
 #[test]
 fn node_fetches_verified_block_from_provider_found_in_dht() {
     let workspace = tempfile::tempdir().unwrap();
@@ -235,7 +237,7 @@ fn node_fetches_verified_block_from_provider_found_in_dht() {
     assert!(received.contains(&provider_id), "{received}");
     assert!(received.contains(&cid), "{received}");
 
-    // Blok jest w Blockstore pobierającego i ma te same bajty.
+    // The block is in the fetcher's Blockstore with the same bytes.
     let output = workspace.path().join("fetched.bin");
     let status = Command::new(cli())
         .current_dir(&fetcher_dir)
@@ -249,7 +251,7 @@ fn node_fetches_verified_block_from_provider_found_in_dht() {
     fetcher.send(&format!("fetch {cid}"));
     fetcher.until("BITSWAP_ALREADY_LOCAL", WAIT_SECS);
 
-    // Blok nieogłoszony nie jest wydawany, także połączonemu peerowi zapytanemu wprost.
+    // An unannounced block is not served, even to a connected peer asked directly.
     fetcher.send(&format!("fetch {private_cid}"));
     let failed = fetcher.until("BITSWAP_FETCH_FAILED", 60);
     assert!(failed.contains("does not have the block"), "{failed}");

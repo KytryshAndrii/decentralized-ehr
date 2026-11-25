@@ -19,18 +19,18 @@ impl IpfsService {
         })
     }
 
-    /// Wyznacza CID bez zapisywania pliku w bazie.
+    /// Computes the CID without storing the file.
     pub fn create_cid(file_path: &Path) -> ServiceResult<Cid> {
         let bytes = read_block_file(file_path)?;
         Ok(Cid::generate_from_data(&bytes, CODEC_RAW, SHA2_256)?)
     }
 
-    /// Sam Blockstore oblicza CID i zapisuje dane.
+    /// The Blockstore computes the CID and stores the data.
     pub fn put_file(&self, file_path: &Path) -> ServiceResult<Cid> {
         Ok(self.blockstore.put(&read_block_file(file_path)?)?)
     }
 
-    /// Import pliku dowolnej wielkości jako UnixFS (stałe kawałki 256 KiB jak domyślnie w Kubo).
+    /// Imports a file of any size as UnixFS (fixed 256 KiB chunks, the Kubo default).
     pub fn add_file(&self, file_path: &Path) -> ServiceResult<(ImportedFile, Chunker)> {
         if !file_path.is_absolute() {
             return Err("Input file path must be absolute".into());
@@ -43,7 +43,7 @@ impl IpfsService {
         ))
     }
 
-    /// Wszystkie bloki pliku (albo sam blok raw); błąd, gdy któregoś brakuje lokalnie.
+    /// All blocks of the file (or the single raw block); an error when one is missing locally.
     pub fn dag_cids(&self, cid: &Cid) -> ServiceResult<Vec<Cid>> {
         Ok(ipfs_unixfs::dag_cids(&self.blockstore, cid)?)
     }
@@ -56,7 +56,7 @@ impl IpfsService {
         Ok(self.blockstore.has(cid)?)
     }
 
-    /// Eksport pliku (blok raw albo DAG UnixFS) do absolutnej ścieżki; brak nadpisywania.
+    /// Exports the file (raw block or UnixFS DAG) to an absolute path; never overwrites.
     pub fn export_file(&self, cid: &Cid, output_path: &Path) -> ServiceResult<bool> {
         if !output_path.is_absolute() {
             return Err("Output path must be absolute".into());
@@ -80,8 +80,8 @@ impl IpfsService {
     }
 }
 
-/// Bajty pliku jako jeden blok. Rozmiar jest sprawdzany z metadanych,
-/// żeby nie wczytywać do RAM pliku, który i tak nie zmieści się w bloku.
+/// File bytes as one block. The size is checked from the metadata first,
+/// so a file that cannot fit in a block is never read into RAM.
 fn read_block_file(path: &Path) -> ServiceResult<Vec<u8>> {
     if !path.is_absolute() {
         return Err("Input file path must be absolute".into());

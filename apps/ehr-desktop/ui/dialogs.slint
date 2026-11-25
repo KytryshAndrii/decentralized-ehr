@@ -1,0 +1,174 @@
+import { LineEdit, ComboBox, TextEdit } from "std-widgets.slint";
+import { Palette, Btn, Field, Modal } from "widgets.slint";
+
+// Issue a document ("add") or save a new version ("edit").
+export component DocumentDialog inherits Modal {
+    in-out property <string> modal;
+    in-out property <string> file-path;
+    in-out property <string> file-name;
+    in-out property <int> file-category;
+    in-out property <string> recipient;
+    in property <[string]> categories;
+    in property <string> valid-until;
+    in property <string> status;
+    callback pick-file();
+    callback confirm-add();
+    callback confirm-edit();
+    title: root.modal == "add" ? "Udostępnij dokument" : "Nowa wersja dokumentu";
+    subtitle: root.modal == "add" ? "Plik zostanie podpisany i zaszyfrowany dla pacjenta i dla Ciebie." : root.file-name;
+    Text { text: "Plik"; font-size: 13px; }
+    HorizontalLayout {
+        spacing: 8px;
+        LineEdit {
+            text <=> root.file-path;
+            placeholder-text: "/ścieżka/do/pliku";
+        }
+        Btn {
+            text: "Wybierz…";
+            clicked => { root.pick-file(); }
+        }
+    }
+    if root.modal == "add": Field {
+        label: "Nazwa widoczna dla pacjenta";
+        text <=> root.file-name;
+    }
+    if root.modal == "add": Text { text: "Kategoria"; font-size: 13px; }
+    if root.modal == "add": ComboBox {
+        model: root.categories;
+        current-index <=> root.file-category;
+    }
+    if root.modal == "add": Field {
+        label: "Odbiorca (pacjent z Twoich kontaktów)";
+        text <=> root.recipient;
+    }
+    Text {
+        text: "Pacjent może odczytać i pobrać ten dokument.";
+        color: Palette.muted;
+        font-size: 13.5px;
+    }
+    Text { text: "Dostęp ważny do (automatycznie: 20 lat)"; font-size: 13px; }
+    Rectangle {
+        height: 36px;
+        background: #f4f4f4;
+        border-radius: Palette.radius;
+        border-width: 1px;
+        border-color: #b5bcc4;
+        Text {
+            x: 12px;
+            text: root.valid-until + " (UTC)";
+            vertical-alignment: center;
+        }
+    }
+    if root.status != "": Text {
+        text: root.status;
+        color: Palette.muted;
+        wrap: word-wrap;
+    }
+    HorizontalLayout {
+        alignment: end;
+        spacing: 8px;
+        Btn {
+            text: "Anuluj";
+            clicked => { root.modal = "none"; }
+        }
+        Btn {
+            primary: true;
+            text: root.modal == "add" ? "Udostępnij" : "Zapisz wersję";
+            clicked => {
+                if (root.modal == "add") {
+                    root.confirm-add();
+                } else {
+                    root.confirm-edit();
+                }
+            }
+        }
+    }
+}
+
+export component InviteDialog inherits Modal {
+    in-out property <string> modal;
+    in property <string> invite-text;
+    title: "Zaproś pacjenta";
+    subtitle: "Przekaż pacjentowi to jednorazowe zaproszenie (ważne 1 godzinę): zaznacz tekst i skopiuj (Ctrl+A, Ctrl+C). Jego aplikacja połączy się z Twoim węzłem i wyśle wizytówkę; prośba pojawi się w „Prośby o kontakt”.";
+    TextEdit {
+        height: 120px;
+        text: root.invite-text;
+        read-only: true;
+        wrap: char-wrap;
+        font-size: 11px;
+    }
+    HorizontalLayout {
+        alignment: end;
+        spacing: 8px;
+        Btn {
+            primary: true;
+            text: "Zamknij";
+            clicked => { root.modal = "none"; }
+        }
+    }
+}
+
+export component ConnectDialog inherits Modal {
+    in-out property <string> modal;
+    in-out property <string> connect-text;
+    in property <string> status;
+    callback connect-doctor();
+    title: "Dodaj lekarza";
+    subtitle: "Wklej zaproszenie otrzymane od lekarza (tekst zaczynający się od ehr1:).";
+    TextEdit {
+        height: 120px;
+        text <=> root.connect-text;
+        wrap: char-wrap;
+        font-size: 11px;
+    }
+    if root.status != "": Text {
+        text: root.status;
+        color: Palette.muted;
+        wrap: word-wrap;
+    }
+    HorizontalLayout {
+        alignment: end;
+        spacing: 8px;
+        Btn {
+            text: "Anuluj";
+            clicked => { root.modal = "none"; }
+        }
+        Btn {
+            primary: true;
+            text: "Połącz";
+            clicked => { root.connect-doctor(); }
+        }
+    }
+}
+
+export component AcceptDialog inherits Modal {
+    in-out property <string> accept-name;
+    in property <string> accept-did;
+    callback accept-contact();
+    callback reject-contact();
+    title: "Prośba o kontakt";
+    subtitle: "Sprawdź dokument tożsamości pacjenta i popraw imię i nazwisko, jeśli trzeba.";
+    Field {
+        label: "Imię i nazwisko";
+        text <=> root.accept-name;
+    }
+    Text {
+        text: root.accept-did;
+        color: Palette.muted;
+        font-size: 11px;
+        wrap: char-wrap;
+    }
+    HorizontalLayout {
+        alignment: end;
+        spacing: 8px;
+        Btn {
+            text: "Odrzuć";
+            clicked => { root.reject-contact(); }
+        }
+        Btn {
+            primary: true;
+            text: "Akceptuj";
+            clicked => { root.accept-contact(); }
+        }
+    }
+}

@@ -5,18 +5,18 @@ use tokio::sync::mpsc::UnboundedReceiver;
 
 const START_USAGE: &str = "Use: node start [\"\" | --bootstrap <multiaddr/p2p/PeerId> | --bootstrap-list <addr1>,<addr2>,...] [--dht-server]";
 
-/// Węzeł sieciowy widziany przez CLI: tylko publiczne API `ipfs-network`.
+/// The network node as the CLI sees it: only the public `ipfs-network` API.
 pub struct NetworkService;
 
 impl NetworkService {
-    /// PeerId z klucza w domyślnej ścieżce; klucz powstaje przy pierwszym użyciu.
+    /// PeerId from the key at the default path; the key is created on first use.
     pub fn local_peer_id() -> ServiceResult<String> {
         let key = ipfs_network::identity::load_or_create(&NetworkConfig::default().identity_path)?;
         Ok(ipfs_network::peer_id_from_keypair(&key).to_string())
     }
 
-    /// Adres nasłuchu jest stały; argumenty wybierają tylko bootstrap:
-    /// brak -> domyślny, "" -> żaden, --bootstrap <addr> -> jeden, --bootstrap-list <a>,<b> -> kilka.
+    /// The listen address is fixed; the arguments only pick the bootstrap:
+    /// none -> default, "" -> no bootstrap, --bootstrap <addr> -> one, --bootstrap-list <a>,<b> -> several.
     pub fn node_config(dht_server: bool, bootstrap: &[String]) -> ServiceResult<NetworkConfig> {
         let mut config = NetworkConfig {
             listen: NetworkConfig::listen_from_env()?,

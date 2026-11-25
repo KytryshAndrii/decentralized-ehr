@@ -5,7 +5,7 @@ use ipfs_cid::models::{Cid, Multihash};
 use prost::Message;
 
 impl PbNode {
-    /// Węzeł pliku UnixFS: same linki, dane są w liściach raw.
+    /// UnixFS file node: only links, the data is in the raw leaves.
     pub(crate) fn file(children: &[Child]) -> Self {
         let unixfs = UnixfsData {
             r#type: DataType::File as i32,
@@ -19,7 +19,7 @@ impl PbNode {
                 .iter()
                 .map(|child| PbLink {
                     hash: Some(child.cid.to_bytes()),
-                    // Kubo zapisuje pustą nazwę jawnie; bez niej CID byłby inny.
+                    // Kubo writes the empty name explicitly; without it the CID would differ.
                     name: Some(String::new()),
                     tsize: Some(child.dag_bytes),
                 })
@@ -27,8 +27,8 @@ impl PbNode {
         }
     }
 
-    /// Kanoniczny dag-pb: linki (pole 2) przed danymi (pole 1). `prost` kodowałby
-    /// w kolejności numerów pól, co dałoby inny CID niż Kubo.
+    /// Canonical dag-pb: links (field 2) before data (field 1). `prost` would encode in
+    /// field number order, which gives a different CID than Kubo.
     pub fn to_canonical_bytes(&self) -> Vec<u8> {
         let mut bytes = Vec::new();
         for link in &self.links {
@@ -48,7 +48,7 @@ impl PbNode {
     }
 }
 
-/// Link jako CIDv1 albo CIDv0 (goły multihash SHA2-256, zawsze dag-pb).
+/// Link as CIDv1 or CIDv0 (bare SHA2-256 multihash, always dag-pb).
 fn link_cid(bytes: &[u8]) -> Result<Cid, UnixfsError> {
     match bytes {
         [0x12, 0x20, digest @ ..] if digest.len() == 32 => Ok(Cid::new_cid(

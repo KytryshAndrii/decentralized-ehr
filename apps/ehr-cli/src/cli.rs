@@ -32,7 +32,7 @@ put stores a file as one raw block (up to 2 MiB). add imports a file of any size
 (balanced DAG, raw leaves, fixed 256 KiB chunks).\n\
 get writes a raw block or a whole UnixFS file.\n\
 Identity: ./tmp/node-key.pb (auto-created or reused); with an EHR profile the node key is\n\
-./data/<doctor|patient>/keys/node-key.enc, protected by the profile password.\n\
+./ehr-<doctor|patient>-data/keys/node-key.enc, protected by the profile password.\n\
 Listen: /ip4/0.0.0.0/tcp/4101 (port override: EHR_LISTEN_PORT).\n\
 Bootstrap: default peer when omitted, none with \"\", several with --bootstrap-list.\n\
 State: known peers and provided CIDs are saved in ./data and restored on start.\n\
@@ -58,7 +58,7 @@ pub(crate) fn binary_name(role: Role) -> &'static str {
     }
 }
 
-fn arg<'a>(args: &'a [String], index: usize, description: &str) -> CliResult<&'a str> {
+fn argument_at<'a>(args: &'a [String], index: usize, description: &str) -> CliResult<&'a str> {
     Ok(args
         .get(index)
         .map(String::as_str)
@@ -77,7 +77,7 @@ fn exact_args(args: &[String], expected: usize) -> CliResult<()> {
     Ok(())
 }
 
-/// Blockstore tej binarki: katalog profilu roli, a bez profilu `./data` jak zwykły węzeł IPFS.
+/// Blockstore of this binary: the role profile folder, or `./data` without a profile, like a plain IPFS node.
 pub(crate) fn store_dir(role: Role) -> PathBuf {
     let profile_dir = EhrApp::default_data_dir(role);
     if EhrApp::profile_exists(&profile_dir) {
@@ -94,7 +94,7 @@ fn local_dag(
     IpfsService::new(store)?.dag_cids(cid)
 }
 
-/// Komendy IPFS w działającym węźle. Zwraca `false` po `quit` albo zamknięciu węzła.
+/// IPFS commands in the running node; `false` after `quit` or when the node stopped.
 pub(crate) fn ipfs_line(
     store: &Path,
     line: &str,
@@ -127,8 +127,8 @@ pub(crate) fn ipfs_line(
         ),
     };
     match parsed {
-        // Inne węzły pobierają plik blok po bloku, więc ogłaszany jest cały DAG.
-        // Korzeń idzie ostatni: gdy da się go znaleźć, wszystkie bloki są już wydawane.
+        // Other nodes fetch the file block by block, so the whole DAG is announced.
+        // The root goes last: once it can be found, every block is already served.
         Ok(NetworkCommand::StartProviding(cid)) => match local_dag(store, &cid) {
             Ok(cids) => {
                 for cid in cids.into_iter().rev() {
@@ -139,7 +139,7 @@ pub(crate) fn ipfs_line(
             }
             Err(error) => eprintln!("DHT_PROVIDE_FAILED {error}"),
         },
-        // Gdy DAG nie jest kompletny lokalnie, wycofywany jest sam wskazany blok.
+        // When the DAG is not complete locally, only the given block is withdrawn.
         Ok(NetworkCommand::StopProviding(cid)) => {
             for cid in local_dag(store, &cid).unwrap_or_else(|_| vec![cid]) {
                 if sender.send(NetworkCommand::StopProviding(cid)).is_err() {
@@ -171,7 +171,7 @@ fn stdin_commands(store: PathBuf, sender: tokio::sync::mpsc::UnboundedSender<Net
 }
 
 async fn node_command(role: Role, args: &[String]) -> CliResult<()> {
-    match arg(args, 2, "node subcommand")? {
+    match argument_at(args, 2, "node subcommand")? {
         "identity" => {
             exact_args(args, 3)?;
             println!("LOCAL_PEER_ID {}", ehr_commands::local_peer_id(role)?);
@@ -197,7 +197,7 @@ async fn node_command(role: Role, args: &[String]) -> CliResult<()> {
             if config.bootstrap.is_empty() {
                 println!("[NETWORK] LISTEN ONLY (no bootstrap)");
             }
-            // Z profilem EHR: klucz odblokowany hasłem i komendy lekarza albo pacjenta.
+            // With an EHR profile: key unlocked by the password and doctor or patient commands.
             if EhrApp::profile_exists(&EhrApp::default_data_dir(role)) {
                 return ehr_commands::run_node(role, config).await;
             }
@@ -213,10 +213,10 @@ async fn node_command(role: Role, args: &[String]) -> CliResult<()> {
 }
 fn storage_command(role: Role, args: &[String]) -> CliResult<()> {
     let store = store_dir(role);
-    match arg(args, 1, "storage command")? {
+    match argument_at(args, 1, "storage command")? {
         "cid" => {
             exact_args(args, 3)?;
-            let path = Path::new(arg(args, 2, "absolute file path")?);
+            let path = Path::new(argument_at(args, 2, "absolute file path")?);
             let cid = IpfsService::create_cid(path)?;
             println!(
                 "[CID] CREATED file={} codec=raw hash=sha2-256 CID={}",
@@ -226,7 +226,7 @@ fn storage_command(role: Role, args: &[String]) -> CliResult<()> {
         }
         "put" => {
             exact_args(args, 3)?;
-            let path = Path::new(arg(args, 2, "absolute file path")?);
+            let path = Path::new(argument_at(args, 2, "absolute file path")?);
             let service = IpfsService::new(&store)?;
             let cid = service.put_file(path)?;
             println!("[BLOCKSTORE] PUT CID={}", cid.to_string_base32());
@@ -234,7 +234,7 @@ fn storage_command(role: Role, args: &[String]) -> CliResult<()> {
         }
         "add" => {
             exact_args(args, 3)?;
-            let path = Path::new(arg(args, 2, "absolute file path")?);
+            let path = Path::new(argument_at(args, 2, "absolute file path")?);
             let (file, chunker) = IpfsService::new(&store)?.add_file(path)?;
             println!(
                 "[UNIXFS] ADDED CID={} bytes={} chunker={} new_blocks={} reused_blocks={}",
@@ -247,14 +247,14 @@ fn storage_command(role: Role, args: &[String]) -> CliResult<()> {
         }
         "has" => {
             exact_args(args, 3)?;
-            let cid = IpfsService::parse_cid(arg(args, 2, "CID")?)?;
+            let cid = IpfsService::parse_cid(argument_at(args, 2, "CID")?)?;
             let service = IpfsService::new(&store)?;
             println!("[BLOCKSTORE] HAS {}", service.has_block(&cid)?);
         }
         "get" => {
             exact_args(args, 4)?;
-            let cid = IpfsService::parse_cid(arg(args, 2, "CID")?)?;
-            let output = Path::new(arg(args, 3, "absolute output path")?);
+            let cid = IpfsService::parse_cid(argument_at(args, 2, "CID")?)?;
+            let output = Path::new(argument_at(args, 3, "absolute output path")?);
             let service = IpfsService::new(&store)?;
             if !service.export_file(&cid, output)? {
                 return Err(format!("Block not found: {}", cid.to_string_base32()).into());
@@ -266,8 +266,9 @@ fn storage_command(role: Role, args: &[String]) -> CliResult<()> {
     Ok(())
 }
 
-/// Punkt wejścia obu binarek; `role` jest stałą binarki.
+/// Entry point of both binaries; `role` is fixed per binary.
 pub fn run(role: Role) -> CliResult<()> {
+    std::fs::create_dir_all(EhrApp::default_data_dir(role))?;
     let runtime = tokio::runtime::Runtime::new()?;
     runtime.block_on(async {
         let args: Vec<String> = env::args().collect();

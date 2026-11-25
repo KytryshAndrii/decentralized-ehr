@@ -5,10 +5,12 @@ use crate::models::{Blockstore, KnownPeer, LevelDbDatastore, Namespace, RemotePr
 use crate::utils::{
     decode_known_peer, decode_remote_provider, encode_known_peer, encode_remote_provider,
     get_multihash_key, get_namespaced_multihash_key, get_peer_key, get_remote_provider_key,
-    validate_block_size, validate_cid, validate_known_peer, validate_remote_provider,
+    multihash_bytes, validate_block_size, validate_cid, validate_known_peer,
+    validate_remote_provider,
 };
 use ipfs_cid::consts::{CODEC_RAW, SHA2_256};
 use ipfs_cid::models::Cid;
+use std::collections::{HashMap, HashSet};
 use std::path::Path;
 
 impl<D: Datastore> Blockstore<D> {
@@ -16,7 +18,7 @@ impl<D: Datastore> Blockstore<D> {
         Self { datastore }
     }
 
-    /// Tworzy CIDv1 raw/SHA2-256 i zapisuje blok.
+    /// Stores the block under a CIDv1 raw/SHA2-256.
     pub fn put(&self, bytes: &[u8]) -> Result<Cid, StoreError> {
         self.put_with_codec(bytes, CODEC_RAW, SHA2_256)
     }
@@ -33,7 +35,7 @@ impl<D: Datastore> Blockstore<D> {
         Ok(cid)
     }
 
-    /// Zapisuje blok po zweryfikowaniu CID. Deduplikuje po multihash.
+    /// Stores the block after checking the CID; deduplicated by multihash.
     pub fn put_block(&self, cid: &Cid, bytes: &[u8]) -> Result<(), StoreError> {
         validate_block_size(bytes)?;
         validate_cid(cid)?;
@@ -61,7 +63,7 @@ impl<D: Datastore> Blockstore<D> {
         }
     }
 
-    /// Odczyt z kontrolą integralności; None oznacza brak bloku.
+    /// Read with an integrity check; None means the block is missing.
     pub fn get_block(&self, cid: &Cid) -> Result<Option<Vec<u8>>, StoreError> {
         validate_cid(cid)?;
         let key = get_multihash_key(&cid.multihash);
@@ -77,20 +79,20 @@ impl<D: Datastore> Blockstore<D> {
         }
     }
 
-    /// Sprawdza tylko obecność klucza, bez ponownego haszowania bloku.
+    /// Checks only that the key exists, without hashing the block again.
     pub fn has(&self, cid: &Cid) -> Result<bool, StoreError> {
         validate_cid(cid)?;
         self.datastore.has(&get_multihash_key(&cid.multihash))
     }
 
-    /// Zapisuje lub nadpisuje znanego peera (przestrzeń nazw `Peers`).
+    /// Saves or overwrites a known peer (`Peers` namespace).
     pub fn save_peer(&self, peer: &KnownPeer) -> Result<(), StoreError> {
         validate_known_peer(peer)?;
         self.datastore
             .put(&get_peer_key(&peer.peer_id), &encode_known_peer(peer))
     }
 
-    /// Wszystkie zapamiętane peery, posortowane po PeerId.
+    /// All saved peers, sorted by PeerId.
     pub fn load_peers(&self) -> Result<Vec<KnownPeer>, StoreError> {
         let prefix = Namespace::Peers.prefix();
         let mut peers = Vec::new();
@@ -117,7 +119,7 @@ impl<D: Datastore> Blockstore<D> {
         Ok((fresh, stale.len()))
     }
 
-    /// Zapamiętuje, że węzeł ogłasza ten CID w DHT (przestrzeń nazw `Provides`).
+    /// Remembers that the node announces this CID in the DHT (`Provides` namespace).
     pub fn add_provide(&self, cid: &Cid) -> Result<(), StoreError> {
         validate_cid(cid)?;
         let key = get_namespaced_multihash_key(Namespace::Provides, &cid.multihash);
@@ -130,7 +132,7 @@ impl<D: Datastore> Blockstore<D> {
         self.datastore.delete(&key)
     }
 
-    /// Czy węzeł ogłasza ten CID; tylko takie bloki wolno wydawać innym peerom.
+    /// Whether the node announces this CID; only such blocks may be served to other peers.
     pub fn has_provide(&self, cid: &Cid) -> Result<bool, StoreError> {
         validate_cid(cid)?;
         self.datastore.has(&get_namespaced_multihash_key(
@@ -139,7 +141,7 @@ impl<D: Datastore> Blockstore<D> {
         ))
     }
 
-    /// CID, które należy ponownie ogłosić w DHT po restarcie węzła.
+    /// CIDs to announce in the DHT again after a restart.
     pub fn list_provides(&self) -> Result<Vec<Cid>, StoreError> {
         self.datastore
             .entries_with_prefix(Namespace::Provides.prefix())?
@@ -148,20 +150,68 @@ impl<D: Datastore> Blockstore<D> {
             .collect()
     }
 
-    /// Zapisuje rekord „peer ma blok” otrzymany z DHT (przestrzeń `RemoteProviders`).
-    /// Ponowny zapis tej samej pary multihash + peer odświeża termin ważności.
+    /// A pinned block survives garbage collection (like `ipfs pin add` in Kubo).
+    pub fn pin(&self, cid: &Cid) -> Result<(), StoreError> {
+        validate_cid(cid)?;
+        let key = get_namespaced_multihash_key(Namespace::Pins, &cid.multihash);
+        self.datastore.put(&key, &cid.to_bytes())
+    }
+
+    /// Kubo-style GC: when blocks take more than `max_bytes`, every unpinned block is deleted.
+    /// Provide records of deleted blocks are removed too; the returned CIDs are the ones the
+    /// caller must also stop announcing in the DHT.
+    pub fn collect_garbage(&self, max_bytes: u64) -> Result<Vec<Cid>, StoreError> {
+        let blocks_prefix = Namespace::Blocks.prefix();
+        let blocks = self.datastore.key_sizes_with_prefix(blocks_prefix)?;
+        let total_bytes: u64 = blocks.iter().map(|(_, size)| *size as u64).sum();
+        if total_bytes <= max_bytes {
+            return Ok(Vec::new());
+        }
+        let pins: HashSet<Vec<u8>> = self
+            .datastore
+            .key_sizes_with_prefix(Namespace::Pins.prefix())?
+            .into_iter()
+            .map(|(key, _)| key[Namespace::Pins.prefix().len()..].to_vec())
+            .collect();
+        let provided: HashMap<Vec<u8>, Cid> = self
+            .list_provides()?
+            .into_iter()
+            .map(|cid| (multihash_bytes(&cid.multihash), cid))
+            .collect();
+        let (mut removed_blocks, mut freed_bytes, mut stopped) = (0, 0, Vec::new());
+        for (key, size) in blocks {
+            let multihash = &key[blocks_prefix.len()..];
+            if pins.contains(multihash) {
+                continue;
+            }
+            self.datastore.delete(&key)?;
+            removed_blocks += 1;
+            freed_bytes += size as u64;
+            if let Some(cid) = provided.get(multihash) {
+                self.remove_provide(cid)?;
+                stopped.push(cid.clone());
+            }
+        }
+        eprintln!(
+            "[ipfs-store] GC total_bytes={total_bytes} removed={removed_blocks} freed_bytes={freed_bytes}"
+        );
+        Ok(stopped)
+    }
+
+    /// Saves a "peer has block" record received from the DHT (`RemoteProviders` namespace).
+    /// Saving the same multihash + peer pair again refreshes its expiry.
     pub fn save_remote_provider(&self, provider: &RemoteProvider) -> Result<(), StoreError> {
         validate_remote_provider(provider)?;
         let key = get_remote_provider_key(&provider.multihash, &provider.peer_id);
         self.datastore.put(&key, &encode_remote_provider(provider))
     }
 
-    /// Ważne rekordy providerów; `now_utc` to sekundy od epoki Unix (UTC).
+    /// Valid provider records; `now_utc` is seconds since the Unix epoch (UTC).
     pub fn load_remote_providers(&self, now_utc: u64) -> Result<Vec<RemoteProvider>, StoreError> {
         Ok(self.scan_remote_providers(now_utc, false)?.0)
     }
 
-    /// Jednym przejściem usuwa przeterminowane rekordy i zwraca (ważne, liczba usuniętych).
+    /// One pass removes expired records and returns (valid records, number removed).
     pub fn prune_remote_providers(
         &self,
         now_utc: u64,
@@ -202,7 +252,7 @@ impl Blockstore<LevelDbDatastore> {
         Ok(Self::new_blockstore(datastore))
     }
 
-    /// Dla testów integracyjnych. EHR-CLI używa open_default()
+    /// Database inside `base_directory` (EHR profile folders, tests).
     pub fn open_in(base_directory: &Path) -> Result<Self, StoreError> {
         let datastore = LevelDbDatastore::open(base_directory.join(LEVELDB_DIR_NAME))?;
         Ok(Self::new_blockstore(datastore))

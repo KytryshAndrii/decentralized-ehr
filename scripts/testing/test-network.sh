@@ -61,8 +61,8 @@ else
   KUBO_USED=true
   ready=false
   for _ in $(seq 1 60); do
-    # Bez pliku `api` demon jeszcze nie działa, a komenda otworzyłaby repo sama
-    # i zabrała demonowi blokadę repozytorium.
+    # Without the `api` file the daemon is not up yet, and the command would open the repo
+    # itself and take the repository lock from the daemon.
     if [[ -f "$IPFS_PATH/api" ]] && IPFS_PATH="$IPFS_PATH" timeout 3s ipfs swarm addrs listen >/dev/null 2>&1; then
       ready=true
       break

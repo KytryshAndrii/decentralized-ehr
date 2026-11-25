@@ -33,13 +33,12 @@ pub struct Wantlist {
 
 #[derive(Clone, PartialEq, prost::Message)]
 pub struct WantlistEntry {
-    /// CID w postaci binarnej.
     #[prost(bytes = "vec", tag = "1")]
     pub block: Vec<u8>,
-    /// Serwer go nie używa (jest bezstanowy); klient w M7 ustawia kolejność żądań.
+    /// Unused by the server (it is stateless); the M7 client sets the request order.
     #[prost(int32, tag = "2")]
     pub priority: i32,
-    /// Serwer pomija takie wpisy bez odpowiedzi; nie ma wantlisty, z której można je usunąć.
+    /// The server skips such entries without an answer; there is no wantlist to remove them from.
     #[prost(bool, tag = "3")]
     pub cancel: bool,
     #[prost(enumeration = "WantType", tag = "4")]
@@ -50,7 +49,7 @@ pub struct WantlistEntry {
 
 #[derive(Clone, PartialEq, prost::Message)]
 pub struct Block {
-    /// Wersja CID, kodek, kod i długość multihasha (bez digestu).
+    /// CID version, codec, multihash code and length (without the digest).
     #[prost(bytes = "vec", tag = "1")]
     pub prefix: Vec<u8>,
     #[prost(bytes = "vec", tag = "2")]
@@ -86,7 +85,7 @@ pub struct BitswapLimits {
     pub max_response_bytes: usize,
 }
 
-/// Blok zaplanowany do wysłania w odpowiedzi na Want-Block.
+/// Block planned to be sent in answer to a Want-Block.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PlannedBlock {
     pub cid: Cid,
@@ -97,12 +96,12 @@ pub struct PlannedBlock {
 pub struct ResponsePlan {
     pub presences: Vec<BlockPresence>,
     pub blocks: VecDeque<PlannedBlock>,
-    /// CID bloków już umieszczonych w wiadomościach.
+    /// CIDs of the blocks already placed in messages.
     pub sent_blocks: Vec<Cid>,
     pub sent_block_bytes: usize,
-    /// Wpisy ponad limit wantlisty, pominięte bez odpowiedzi.
+    /// Entries over the wantlist limit, skipped without an answer.
     pub ignored_entries: usize,
-    /// Bloki pominięte po przekroczeniu łącznego limitu odpowiedzi.
+    /// Blocks skipped after the total answer limit was reached.
     pub dropped_blocks: usize,
     pub(crate) carried: Option<(Cid, Block)>,
 }
@@ -112,19 +111,19 @@ pub struct BitswapServer<S> {
     pub(crate) limits: BitswapLimits,
 }
 
-/// Źródło bloków oparte o Blockstore; wydaje tylko bloki ogłoszone (`provide`).
-/// Baza jest otwierana na czas jednego wywołania.
+/// Blockstore-backed block source; serves only announced blocks (`provide`).
+/// The database is opened for one call.
 #[derive(Clone, Debug)]
 pub struct ProvidedBlockSource {
     pub(crate) directory: PathBuf,
 }
 
-/// Oczekiwane odpowiedzi: (dostawca, binarny CID) -> blok albo `None` dla DontHave.
+/// Expected answers: (provider, binary CID) -> block, or `None` for DontHave.
 pub(crate) type WantMap = HashMap<(PeerId, Vec<u8>), oneshot::Sender<Option<Vec<u8>>>>;
 pub(crate) type PendingWants = Arc<Mutex<WantMap>>;
 
-/// Klient Bitswap: wysyła Want-Block i zapisuje zweryfikowany blok w Blockstore.
-/// Odpowiedzi przychodzą strumieniami, które odbiera `BitswapServer`.
+/// Bitswap client: sends Want-Block and stores the verified block in the Blockstore.
+/// Answers arrive on streams received by `BitswapServer`.
 #[derive(Clone)]
 pub struct BitswapClient {
     pub(crate) control: BitswapControl,

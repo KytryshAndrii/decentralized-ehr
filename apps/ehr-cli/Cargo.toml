@@ -3,7 +3,7 @@ name = "ehr-cli"
 version = "0.1.0"
 edition = "2024"
 
-# Jeden kod, dwie binarki: rola jest ustalana przy kompilacji (lekarz = placówka, pacjent).
+# One code base, two binaries: the role is fixed at compile time (doctor = facility, patient).
 [lib]
 path = "src/lib.rs"
 

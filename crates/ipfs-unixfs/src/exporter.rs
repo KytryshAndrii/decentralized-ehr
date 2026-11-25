@@ -8,7 +8,7 @@ use prost::Message;
 use std::collections::HashSet;
 use std::io::Write;
 
-/// CID bloków, do których linkuje dany blok. Blok raw i nieznane kodeki nie mają linków.
+/// CIDs the block links to. Raw blocks and unknown codecs have no links.
 pub fn block_links(cid: &Cid, block: &[u8]) -> Result<Vec<Cid>, UnixfsError> {
     if cid.codec != CODEC_DAG_PB {
         return Ok(Vec::new());
@@ -16,11 +16,11 @@ pub fn block_links(cid: &Cid, block: &[u8]) -> Result<Vec<Cid>, UnixfsError> {
     PbNode::decode(block)?.link_cids()
 }
 
-/// Zawartość jednego bloku pliku: własne dane, dzieci oraz rozmiary deklarowane w UnixFS.
+/// One file block: its own data, its children and the sizes declared in UnixFS.
 struct FileBlock {
     data: Vec<u8>,
     links: Vec<Cid>,
-    /// Rozmiar całej treści pod tym blokiem (własne dane + dzieci).
+    /// Size of all content under this block (own data + children).
     declared: u64,
     blocksizes: Vec<u64>,
 }
@@ -61,15 +61,14 @@ fn file_block(cid: &Cid, block: Vec<u8>) -> Result<FileBlock, UnixfsError> {
     }
 }
 
-/// Odtwarza plik z DAG i zapisuje go do `output`; zwraca liczbę bajtów.
-/// Czyta w głąb w kolejności linków, więc obsługuje też DAG trickle i liście dag-pb z Kubo.
-/// Każdy blok jest weryfikowany względem CID przez `Blockstore::get_block`.
+/// Rebuilds the file from the DAG into `output` and returns the number of bytes.
+/// Depth-first in link order, so trickle DAGs and Kubo dag-pb leaves work too.
+/// Every block is checked against its CID by `Blockstore::get_block`.
 ///
-/// Ochrona przed spreparowanym DAG (np. 174 linki do tego samego bloku na każdym poziomie):
-/// rozmiar z korzenia jest limitem (i nie może przekraczać `MAX_EXPORT_BYTES`), każde dziecko
-/// musi mieć niezerowy rozmiar zgodny z `blocksizes` rodzica, a suma rozmiarów dzieci i własnych
-/// danych musi równać się deklarowanemu rozmiarowi węzła. Przekroczenie przerywa odczyt, zanim
-/// plik urośnie ponad deklarację.
+/// Protection against a crafted DAG (e.g. 174 links to the same block on every level):
+/// the root size is the limit (at most `MAX_EXPORT_BYTES`), every child must have a non-zero
+/// size equal to the parent's `blocksizes`, and children plus own data must add up to the
+/// declared node size. Going over stops the read before the file grows past the declaration.
 pub fn cat<D: Datastore>(
     store: &Blockstore<D>,
     root: &Cid,
@@ -77,7 +76,7 @@ pub fn cat<D: Datastore>(
 ) -> Result<u64, UnixfsError> {
     let mut written = 0;
     let mut budget = None;
-    // Jawny stos zamiast rekurencji: głębokość DAG z sieci nie może przepełnić stosu wywołań.
+    // An explicit stack instead of recursion: a DAG from the network cannot overflow the call stack.
     let mut pending: Vec<(Cid, Option<u64>)> = vec![(root.clone(), None)];
     while let Some((cid, expected)) = pending.pop() {
         let block = store
@@ -129,7 +128,7 @@ pub fn cat<D: Datastore>(
     Ok(written)
 }
 
-/// Wszystkie bloki DAG (korzeń pierwszy, bez powtórzeń); błąd, gdy któregoś brakuje lokalnie.
+/// All DAG blocks (root first, no repeats); an error when one is missing locally.
 pub fn dag_cids<D: Datastore>(store: &Blockstore<D>, root: &Cid) -> Result<Vec<Cid>, UnixfsError> {
     let mut seen = HashSet::new();
     let mut cids = Vec::new();

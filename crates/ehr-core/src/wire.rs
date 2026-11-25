@@ -1,4 +1,4 @@
-//! Ramka protokołów EHR: długość (u32, big-endian) + JSON, z limitem rozmiaru.
+//! EHR protocol frame: length (u32, big-endian) + JSON, with a size limit.
 use crate::consts::MAX_WIRE_MESSAGE_BYTES;
 use crate::error::EhrError;
 use futures::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt};

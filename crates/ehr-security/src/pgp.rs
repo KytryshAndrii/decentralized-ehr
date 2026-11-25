@@ -1,5 +1,5 @@
-//! OpenPGP (RFC 9580, rPGP): podpis wystawcy wewnątrz szyfrogramu, szyfr hybrydowy
-//! (losowy klucz sesji AES-256, SEIPD v1) opakowany dla każdego odbiorcy. Format czyta GnuPG.
+//! OpenPGP (RFC 9580, rPGP): the issuer's signature inside the ciphertext, hybrid encryption
+//! (random AES-256 session key, SEIPD v1) wrapped for every recipient. GnuPG reads the format.
 use crate::error::SecurityError;
 use crate::models::Identity;
 use pgp::composed::{Deserializable, Message, MessageBuilder, SignedPublicKey};
@@ -13,13 +13,13 @@ pub fn parse_public_key(armored: &str) -> Result<SignedPublicKey, SecurityError>
     Ok(key)
 }
 
-/// Odcisk klucza OpenPGP (hex), np. do wyświetlenia przy sprawdzaniu wizytówki.
+/// OpenPGP key fingerprint (hex), e.g. to show when checking a contact card.
 pub fn fingerprint(key: &SignedPublicKey) -> String {
     format!("{:X}", key.fingerprint())
 }
 
-/// Podpisuje kluczem `signer` i szyfruje dla każdego z `recipients`.
-/// shortcut: cały plik w pamięci (MessageBuilder z bajtów), przy plikach >~1 GB przejść na from_reader.
+/// Signs with `signer` and encrypts for each of `recipients`.
+/// shortcut: the whole file is in memory (MessageBuilder from bytes); for files over ~1 GB move to from_reader.
 pub fn encrypt_and_sign(
     plaintext: &[u8],
     signer: &Identity,
@@ -47,7 +47,7 @@ pub fn encrypt_and_sign(
     Ok(builder.to_vec(&mut rng)?)
 }
 
-/// Odszyfrowuje własnym kluczem i wymaga poprawnego podpisu `expected_signer`.
+/// Decrypts with the own key and requires a valid signature of `expected_signer`.
 pub fn decrypt_and_verify(
     ciphertext: &[u8],
     me: &Identity,

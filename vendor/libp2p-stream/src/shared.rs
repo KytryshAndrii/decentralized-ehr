@@ -6,7 +6,7 @@ use std::{
 
 use futures::channel::mpsc;
 
-/// Ile przychodzących strumieni może czekać na odbiór (EHR patch).
+/// How many incoming streams may wait to be accepted (EHR patch).
 const INBOUND_STREAM_BACKLOG: usize = 256;
 use libp2p_identity::PeerId;
 use libp2p_swarm::{ConnectionId, Stream, StreamProtocol};

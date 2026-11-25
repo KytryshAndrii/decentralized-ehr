@@ -1,5 +1,5 @@
-//! Dodatki dla warstwy EHR (M9): gotowy klucz w konfiguracji, `AddPeer` w trakcie pracy,
-//! `FetchWithReply` z wynikiem w kanale i uchwyt strumieni obok Bitswap.
+//! Additions for the EHR layer (M9): a ready key in the config, `AddPeer` while running,
+//! `FetchWithReply` with the result on a channel and a stream handle next to Bitswap.
 use futures::{AsyncReadExt, AsyncWriteExt, StreamExt};
 use ipfs_network::{BootstrapPeer, DhtMode, NetworkCommand, NetworkConfig, NetworkNode};
 use ipfs_store::PersistentBlockstore;
@@ -17,11 +17,16 @@ fn free_port() -> u16 {
         .port()
 }
 
-fn config(dir: &std::path::Path, port: u16, keypair: Keypair, mode: DhtMode) -> NetworkConfig {
+fn config(
+    directory: &std::path::Path,
+    port: u16,
+    keypair: Keypair,
+    mode: DhtMode,
+) -> NetworkConfig {
     NetworkConfig {
         listen: format!("/ip4/127.0.0.1/tcp/{port}").parse().unwrap(),
-        identity_path: dir.join("unused-node-key.pb"),
-        state_directory: Some(dir.to_path_buf()),
+        identity_path: directory.join("unused-node-key.pb"),
+        state_directory: Some(directory.to_path_buf()),
         keypair: Some(keypair),
         dht_mode: mode,
         ..NetworkConfig::default()
@@ -60,7 +65,7 @@ async fn added_peer_serves_fetch_with_reply_and_application_streams() {
     )
     .unwrap();
 
-    // Węzeł A: gotowy klucz z konfiguracji, a nie z pliku.
+    // Node A: a ready key from the config, not from a file.
     let node_a =
         NetworkNode::new_network_node(config(dir_a.path(), port_a, key_a, DhtMode::Server))
             .unwrap();
@@ -82,7 +87,7 @@ async fn added_peer_serves_fetch_with_reply_and_application_streams() {
         .send(NetworkCommand::StartProviding(cid.clone()))
         .unwrap();
 
-    // Węzeł B startuje bez bootstrapu i dostaje adres A dopiero w trakcie pracy.
+    // Node B starts without bootstrap and gets the address of A only while running.
     let node_b =
         NetworkNode::new_network_node(config(dir_b.path(), free_port(), key_b, DhtMode::Client))
             .unwrap();
@@ -97,7 +102,7 @@ async fn added_peer_serves_fetch_with_reply_and_application_streams() {
         }))
         .unwrap();
 
-    // Strumień własnego protokołu na tym samym połączeniu co Bitswap.
+    // A stream of an own protocol on the same connection as Bitswap.
     let mut stream = None;
     for _ in 0..50 {
         if let Ok(opened) = control_b.open_stream(id_a, ECHO).await {

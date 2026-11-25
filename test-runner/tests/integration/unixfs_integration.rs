@@ -9,20 +9,20 @@ const WAIT_SECS: u64 = 60;
 
 fn patient_text(lines: u32) -> Vec<u8> {
     (0..lines)
-        .flat_map(|i| {
+        .flat_map(|index| {
             format!(
-                "Patient {}: observation {i}, value {} mmHg\n",
-                i % 97,
-                i * 37 % 200
+                "Patient {}: observation {index}, value {} mmHg\n",
+                index % 97,
+                index * 37 % 200
             )
             .into_bytes()
         })
         .collect()
 }
 
-fn run_cli(cwd: &Path, args: &[&str]) -> String {
+fn run_cli(working_dir: &Path, args: &[&str]) -> String {
     let output = Command::new(cli())
-        .current_dir(cwd)
+        .current_dir(working_dir)
         .args(args)
         .output()
         .unwrap();
@@ -34,7 +34,7 @@ fn run_cli(cwd: &Path, args: &[&str]) -> String {
     String::from_utf8(output.stdout).unwrap()
 }
 
-/// Wartość pola `nazwa=` z linii `[UNIXFS] ADDED ...`.
+/// Value of the `name=` field of an `[UNIXFS] ADDED ...` line.
 fn field(line: &str, name: &str) -> String {
     line.split_whitespace()
         .find_map(|part| part.strip_prefix(&format!("{name}=")))
@@ -42,8 +42,8 @@ fn field(line: &str, name: &str) -> String {
         .to_owned()
 }
 
-fn add(cwd: &Path, file: &Path) -> String {
-    let output = run_cli(cwd, &["add", file.to_str().unwrap()]);
+fn add(working_dir: &Path, file: &Path) -> String {
+    let output = run_cli(working_dir, &["add", file.to_str().unwrap()]);
     output
         .lines()
         .find(|line| line.starts_with("[UNIXFS] ADDED"))
@@ -51,60 +51,67 @@ fn add(cwd: &Path, file: &Path) -> String {
         .to_owned()
 }
 
-fn get(cwd: &Path, cid: &str, output: &Path) -> Vec<u8> {
-    run_cli(cwd, &["get", cid, output.to_str().unwrap()]);
+fn get(working_dir: &Path, cid: &str, output: &Path) -> Vec<u8> {
+    run_cli(working_dir, &["get", cid, output.to_str().unwrap()]);
     fs::read(output).unwrap()
 }
 
 #[test]
 fn add_and_get_round_trip_with_fixed_chunks() {
     let workspace = tempfile::tempdir().unwrap();
-    let dir = workspace.path();
+    let directory = workspace.path();
 
-    // Tekst: stałe kawałki 256 KiB, kilka bloków.
+    // Text: fixed 256 KiB chunks, several blocks.
     let text = patient_text(40_000);
-    let text_path = dir.join("record.txt");
+    let text_path = directory.join("record.txt");
     fs::write(&text_path, &text).unwrap();
-    let added = add(dir, &text_path);
+    let added = add(directory, &text_path);
     assert_eq!(field(&added, "chunker"), "size-262144");
     assert_eq!(field(&added, "bytes"), text.len().to_string());
     assert!(field(&added, "CID").starts_with("bafybei"), "{added}");
     let first_blocks: usize = field(&added, "new_blocks").parse().unwrap();
     assert!(first_blocks > 3, "{added}");
-    // Ten sam plik dodany drugi raz: wszystkie bloki już są w Blockstore.
-    let again = add(dir, &text_path);
+    // The same file added twice: every block is already in the Blockstore.
+    let again = add(directory, &text_path);
     assert_eq!(field(&again, "new_blocks"), "0", "{again}");
     assert_eq!(
-        get(dir, &field(&added, "CID"), &dir.join("record.out")),
+        get(
+            directory,
+            &field(&added, "CID"),
+            &directory.join("record.out")
+        ),
         text
     );
 
-    // Wideo: stałe kawałki 256 KiB, ostatni krótszy.
-    let video: Vec<u8> = (0..700_000u32).map(|i| (i % 251) as u8).collect();
-    let video_path = dir.join("ekg.mp4");
+    // Video: fixed 256 KiB chunks, the last one shorter.
+    let video: Vec<u8> = (0..700_000u32).map(|index| (index % 251) as u8).collect();
+    let video_path = directory.join("ekg.mp4");
     fs::write(&video_path, &video).unwrap();
-    let added = add(dir, &video_path);
+    let added = add(directory, &video_path);
     assert_eq!(field(&added, "chunker"), "size-262144");
     assert_eq!(field(&added, "new_blocks"), "4");
-    assert_eq!(get(dir, &field(&added, "CID"), &dir.join("ekg.out")), video);
-
-    // Mały plik to jeden blok raw: ten sam CID co `put`.
-    let note_path = dir.join("note.txt");
-    fs::write(&note_path, b"small EHR note\n").unwrap();
     assert_eq!(
-        field(&add(dir, &note_path), "CID"),
-        put_file(dir, &note_path)
+        get(directory, &field(&added, "CID"), &directory.join("ekg.out")),
+        video
     );
 
-    // `get` nie nadpisuje istniejącego pliku.
+    // A small file is one raw block: the same CID as `put`.
+    let note_path = directory.join("note.txt");
+    fs::write(&note_path, b"small EHR note\n").unwrap();
+    assert_eq!(
+        field(&add(directory, &note_path), "CID"),
+        put_file(directory, &note_path)
+    );
+
+    // `get` does not overwrite an existing file.
     let status = Command::new(cli())
-        .current_dir(dir)
-        .args(["get", &put_file(dir, &note_path)])
-        .arg(dir.join("ekg.out"))
+        .current_dir(directory)
+        .args(["get", &put_file(directory, &note_path)])
+        .arg(directory.join("ekg.out"))
         .status()
         .unwrap();
     assert!(!status.success());
-    assert_eq!(fs::read(dir.join("ekg.out")).unwrap(), video);
+    assert_eq!(fs::read(directory.join("ekg.out")).unwrap(), video);
 }
 
 #[test]
@@ -143,7 +150,7 @@ fn node_fetches_whole_file_from_another_node() {
     );
     fetcher.until("DHT_BOOTSTRAP_PROGRESS", WAIT_SECS);
 
-    // Korzeń jest ogłaszany jako ostatni, po wszystkich blokach pliku.
+    // The root is announced last, after every block of the file.
     provider.send(&format!("provide {cid}"));
     provider.until(&format!("DHT_PROVIDE_REQUESTED {cid}"), WAIT_SECS);
 
@@ -158,7 +165,7 @@ fn node_fetches_whole_file_from_another_node() {
     fetcher.send(&format!("fetch {cid}"));
     fetcher.until("BITSWAP_ALREADY_LOCAL", WAIT_SECS);
 
-    // `stop` wycofuje wszystkie bloki pliku, nie tylko korzeń.
+    // `stop` withdraws every block of the file, not only the root.
     provider.send(&format!("stop {cid}"));
     for _ in 0..blocks {
         provider.until("DHT_STOPPED", WAIT_SECS);

@@ -2,7 +2,7 @@ use crate::consts::ENVELOPE_VERSION;
 use crate::error::SecurityError;
 use crate::identity::{did_from_public, public_from_did};
 use crate::models::Signed;
-use crate::utils::{b64, unb64};
+use crate::utils::{base64_decode, base64_encode};
 use libp2p::identity::Keypair;
 use serde::{Serialize, de::DeserializeOwned};
 
@@ -15,12 +15,12 @@ impl Signed {
         Ok(Self {
             v: ENVELOPE_VERSION,
             signer: did_from_public(&keypair.public())?,
-            payload: b64(&payload),
-            signature: b64(&signature),
+            payload: base64_encode(&payload),
+            signature: base64_encode(&signature),
         })
     }
 
-    /// Sprawdza podpis kluczem z `signer` i zwraca ładunek. Kto podpisał, mówi `self.signer`.
+    /// Checks the signature with the key in `signer` and returns the payload; `self.signer` says who signed.
     pub fn open<T: DeserializeOwned>(&self) -> Result<T, SecurityError> {
         if self.v != ENVELOPE_VERSION {
             return Err(SecurityError::Encoding(format!(
@@ -28,15 +28,15 @@ impl Signed {
                 self.v
             )));
         }
-        let payload = unb64(&self.payload)?;
-        let signature = unb64(&self.signature)?;
+        let payload = base64_decode(&self.payload)?;
+        let signature = base64_decode(&self.signature)?;
         if !public_from_did(&self.signer)?.verify(&payload, &signature) {
             return Err(SecurityError::BadSignature);
         }
         Ok(serde_json::from_slice(&payload)?)
     }
 
-    /// Jak `open`, ale podpisać musiał wskazany DID.
+    /// Like `open`, but the given DID must be the signer.
     pub fn open_from<T: DeserializeOwned>(&self, signer: &str) -> Result<T, SecurityError> {
         if self.signer != signer {
             return Err(SecurityError::BadSignature);

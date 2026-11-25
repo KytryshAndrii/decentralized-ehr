@@ -1,9 +1,9 @@
-//Kodowanie algorytmów haszujących w formacie multihash
+// Multihash codes of the hash algorithms.
 
 pub const SHA2_256: u64 = 0x12;
 pub const SHA2_512: u64 = 0x13;
 
-// Wersja CID oraz kodowanie multicodec dla różnych typów danych
+// CID version and multicodec codes of the data types.
 pub const CID_V0: u64 = 0x00;
 pub const CID_V1: u64 = 0x01;
 pub const CODEC_RAW: u64 = 0x55;

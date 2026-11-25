@@ -1,6 +1,6 @@
-//! Dzielenie pliku na kawałki stałej długości (`size-N` w Kubo).
-//! Rabin został usunięty: dokumenty EHR są szyfrogramami, w których granice zależne od treści
-//! nie dają reużycia bloków (uzasadnienie: `docs/security-ucan-gpg-integration.md`, sekcja 8).
+//! Splits a file into fixed-size chunks (`size-N` in Kubo).
+//! Rabin was removed: EHR documents are ciphertext, where content-defined boundaries give
+//! no block reuse (reasoning: `docs/security-ucan-gpg-integration.md`, section 8).
 use crate::consts::DEFAULT_CHUNK_BYTES;
 use crate::error::UnixfsError;
 use crate::models::{Chunker, Chunks};
@@ -14,7 +14,7 @@ impl Chunker {
         }
     }
 
-    /// Nazwa w notacji Kubo (`ipfs add --chunker=...`).
+    /// Name in Kubo notation (`ipfs add --chunker=...`).
     pub fn kubo_name(&self) -> String {
         match self {
             Self::Fixed { size } => format!("size-{size}"),

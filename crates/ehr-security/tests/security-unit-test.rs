@@ -1,5 +1,5 @@
-//! Testy warstwy bezpieczeństwa: did:key, magazyn kluczy z hasłem, OpenPGP (T01–T09
-//! z `docs/phase-1.1-planning-role-models.md`), zgodność z GnuPG i tokeny UCAN (U01–U11).
+//! Security layer tests: did:key, password key store, OpenPGP (T01–T09 from
+//! `docs/phase-1.1-planning-role-models.md`), GnuPG compatibility and UCAN tokens (U01–U11).
 use ehr_security::consts::{CMD_DOC_ISSUE, CMD_DOC_READ};
 use ehr_security::pgp::{decrypt_and_verify, encrypt_and_sign, fingerprint, parse_public_key};
 use ehr_security::{
@@ -20,7 +20,7 @@ struct People {
     other: Identity,
 }
 
-/// Tworzenie kluczy (Argon2) jest kosztowne, więc tożsamości są wspólne dla testów.
+/// Creating keys (Argon2) is expensive, so the identities are shared by the tests.
 fn people() -> &'static People {
     static PEOPLE: OnceLock<People> = OnceLock::new();
     PEOPLE.get_or_init(|| {
@@ -48,8 +48,8 @@ fn did_key_round_trips_to_the_peer_id() {
 
 #[test]
 fn keystore_needs_the_password_and_never_overwrites() {
-    let dir = tempfile::tempdir().unwrap();
-    let keys = dir.path().join("keys");
+    let temp_dir = tempfile::tempdir().unwrap();
+    let keys = temp_dir.path().join("keys");
     assert!(matches!(
         Identity::create(&keys, "short"),
         Err(SecurityError::WeakPassword(_))
@@ -73,7 +73,7 @@ fn keystore_needs_the_password_and_never_overwrites() {
         fingerprint(&unlocked.pgp_public),
         fingerprint(&created.pgp_public)
     );
-    // Klucz węzła nie leży na dysku jawnie.
+    // The node key is not stored in plain text.
     let sealed = std::fs::read(keys.join("node-key.enc")).unwrap();
     let plain = created.keypair.to_protobuf_encoding().unwrap();
     assert!(
@@ -114,20 +114,20 @@ fn document_is_readable_only_by_recipients_and_signed_by_the_doctor() {
         decrypt_and_verify(&sealed, doctor, &doctor.pgp_public).unwrap(),
         plain
     );
-    // T06: inny pacjent ma szyfrogram, ale nie klucz.
+    // T06: another patient has the ciphertext but not the key.
     assert!(matches!(
         decrypt_and_verify(&sealed, other, &doctor.pgp_public),
         Err(SecurityError::DocumentRejected(_))
     ));
-    // T08: plik podpisany przez pacjenta nie przejdzie jako podpis lekarza.
+    // T08: a file signed by the patient does not pass as the doctor's signature.
     let by_patient = encrypt_and_sign(plain, patient, &[&patient.pgp_public]).unwrap();
     assert!(decrypt_and_verify(&by_patient, patient, &doctor.pgp_public).is_err());
-    // T09: zmiana jednego bajtu szyfrogramu jest wykryta.
+    // T09: changing one ciphertext byte is detected.
     let mut tampered = sealed.clone();
     let middle = tampered.len() / 2;
     tampered[middle] ^= 1;
     assert!(decrypt_and_verify(&tampered, patient, &doctor.pgp_public).is_err());
-    // Losowy klucz sesji: ten sam plik daje inny szyfrogram (a więc inny CID).
+    // Random session key: the same file gives another ciphertext (so another CID).
     let again = encrypt_and_sign(plain, doctor, &[&patient.pgp_public]).unwrap();
     assert_ne!(again, sealed);
 }
@@ -165,7 +165,7 @@ fn gpg(home: &Path, args: &[&str], input: Option<&[u8]>) -> Vec<u8> {
     output.stdout
 }
 
-/// Szyfrogram aplikacji odszyfrowuje `gpg --decrypt` i odwrotnie (zgodność z GnuPG).
+/// `gpg --decrypt` decrypts the app ciphertext and the other way round (GnuPG compatibility).
 #[test]
 fn ciphertext_interoperates_with_gnupg() {
     if Command::new("gpg").arg("--version").output().is_err() {
@@ -232,7 +232,7 @@ fn card_binds_the_pgp_key_and_address_to_the_did() {
     let read = ContactCard::from_text(&card.to_text().unwrap()).unwrap();
     assert_eq!(read.payload, payload);
 
-    // Podmieniony klucz OpenPGP (inny DID niż podpis): odrzucony.
+    // A swapped OpenPGP key (another DID than the signature): rejected.
     let mut forged = card.signed.clone();
     let mut changed = payload.clone();
     changed.pgp_public = people().other.pgp_public_armored().unwrap();
@@ -241,7 +241,7 @@ fn card_binds_the_pgp_key_and_address_to_the_did() {
         .payload;
     assert!(ContactCard::verify(forged).is_err());
 
-    // Adres z cudzym PeerId: odrzucony.
+    // An address with someone else's PeerId: rejected.
     let mut wrong_address = payload;
     wrong_address.multiaddr = Some(format!(
         "/ip4/127.0.0.1/tcp/1/p2p/{}",
@@ -291,7 +291,7 @@ fn ucan_read_token_is_accepted_only_in_its_scope() {
         (CMD_DOC_READ, NOW + TWENTY_YEARS)
     );
 
-    // U01: po terminie `exp` (20 lat) i przed `nbf`.
+    // U01: after `exp` (20 years) and before `nbf`.
     for now in [NOW + TWENTY_YEARS, NOW - 1] {
         let late = Verifier { now, ..verifier };
         assert!(rejected(late.verify_read(
@@ -300,20 +300,20 @@ fn ucan_read_token_is_accepted_only_in_its_scope() {
             "bafydoc"
         )));
     }
-    // U02: inny odbiorca.
+    // U02: another audience.
     assert!(rejected(verifier.verify_read(
         &token,
         &other.did(),
         "bafydoc"
     )));
-    // U03: token `read` użyty jako `issue`; dokument spoza `pol`.
+    // U03: a `read` token used as `issue`; a document outside `pol`.
     assert!(rejected(verifier.verify_issue(&token)));
     assert!(rejected(verifier.verify_read(
         &token,
         &patient.did(),
         "bafyother"
     )));
-    // U06: podpis zmieniony o jeden bajt.
+    // U06: signature changed by one byte.
     let mut forged = token.clone();
     let mut signature = forged.signature.into_bytes();
     signature[3] = if signature[3] == b'A' { b'B' } else { b'A' };
@@ -323,7 +323,7 @@ fn ucan_read_token_is_accepted_only_in_its_scope() {
             .verify_read(&forged, &patient.did(), "bafydoc")
             .is_err()
     );
-    // U07: unieważniony token.
+    // U07: revoked token.
     let nonce = token.open::<Token>().unwrap().nonce;
     let revoked = [nonce];
     let with_revocation = Verifier {
@@ -353,14 +353,14 @@ fn ucan_chain_must_start_at_a_trusted_doctor() {
     };
     let root = Token::issue_root(doctor, NOW, NOW + TWENTY_YEARS).unwrap();
 
-    // U04: przerwany łańcuch — wystawca tokenu nie jest właścicielem korzenia.
+    // U04: broken chain, the token issuer does not own the root.
     let broken = read_token(other, &root, &patient.did(), "bafydoc");
     assert!(rejected(verifier.verify_read(
         &broken,
         &patient.did(),
         "bafydoc"
     )));
-    // U05 / U11: korzeń spoza listy zaufanych.
+    // U05 / U11: a root outside the trusted list.
     let foreign_root = Token::issue_root(other, NOW, NOW + TWENTY_YEARS).unwrap();
     assert!(rejected(verifier.verify_issue(&foreign_root)));
     let foreign = read_token(other, &foreign_root, &patient.did(), "bafydoc");
@@ -369,7 +369,7 @@ fn ucan_chain_must_start_at_a_trusted_doctor() {
         &patient.did(),
         "bafydoc"
     )));
-    // U08 / U09 / U10: pacjent bez łańcucha `issue` nie wystawia ani nie deleguje.
+    // U08 / U09 / U10: a patient without an `issue` chain neither issues nor delegates.
     let patient_root = Token::issue_root(patient, NOW, NOW + TWENTY_YEARS).unwrap();
     let by_patient = read_token(patient, &patient_root, &other.did(), "bafydoc");
     assert!(rejected(verifier.verify_read(
@@ -383,7 +383,7 @@ fn ucan_chain_must_start_at_a_trusted_doctor() {
         &other.did(),
         "bafydoc"
     )));
-    // Koperta podpisana kimś innym niż `iss`.
+    // An envelope signed by someone other than `iss`.
     let token: Token = read_token(doctor, &root, &patient.did(), "bafydoc")
         .open()
         .unwrap();

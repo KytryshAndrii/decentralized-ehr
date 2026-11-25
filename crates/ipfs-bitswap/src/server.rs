@@ -42,8 +42,8 @@ impl<S: BlockSource> BitswapServer<S> {
         self.limits
     }
 
-    /// Rozstrzyga każdy wpis wantlisty: Have, DontHave albo blok do wysłania.
-    /// `cancel` i priorytet są pomijane, bo serwer nie trzyma stanu.
+    /// Decides every wantlist entry: Have, DontHave or a block to send.
+    /// `cancel` and priority are ignored, because the server keeps no state.
     pub fn plan(&self, request: &BitswapMessage) -> Result<ResponsePlan, BitswapError> {
         let mut plan = ResponsePlan::default();
         let Some(wantlist) = &request.wantlist else {
@@ -86,8 +86,8 @@ impl<S: BlockSource> BitswapServer<S> {
         Ok(plan)
     }
 
-    /// Kolejna wiadomość odpowiedzi, nie większa niż limit wiadomości;
-    /// `None`, gdy plan został wysłany w całości. Źródło jest otwierane raz na wiadomość.
+    /// Next answer message, no larger than the message limit; `None` once the whole plan
+    /// was sent. The source is opened once per message.
     pub fn next_message(
         &self,
         plan: &mut ResponsePlan,
@@ -115,7 +115,7 @@ impl<S: BlockSource> BitswapServer<S> {
             let needed = 1 + prost::length_delimiter_len(field_bytes) + field_bytes;
             if message.encoded_len() + needed > self.limits.max_message_bytes {
                 if message.is_empty() {
-                    // Sam blok nie mieści się w wiadomości: nie da się go wydać.
+                    // The block alone does not fit in a message, so it cannot be served.
                     plan.dropped_blocks += 1;
                     if send_dont_have {
                         message
@@ -131,13 +131,13 @@ impl<S: BlockSource> BitswapServer<S> {
             plan.sent_blocks.push(cid);
             message.payload.push(block);
         }
-        // DontHave za bloki, które zniknęły po zaplanowaniu odpowiedzi.
+        // DontHave for blocks that disappeared after the answer was planned.
         message.block_presences.append(&mut plan.presences);
         Ok((!message.is_empty()).then_some(message))
     }
 }
 
-/// Następny blok z planu; brakujący blok zamienia się w DontHave.
+/// Next block of the plan; a missing block turns into DontHave.
 fn next_block(
     plan: &mut ResponsePlan,
     read: &ReadBlock<'_>,

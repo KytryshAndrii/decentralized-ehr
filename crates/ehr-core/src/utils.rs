@@ -1,5 +1,5 @@
-//! Czas zawsze w UTC (D-26). Kalendarz gregoriański bez zależności: algorytm
-//! `days_from_civil` / `civil_from_days` (H. Hinnant).
+//! Time is always UTC (D-26). Gregorian calendar without dependencies: the
+//! `days_from_civil` / `civil_from_days` algorithm (H. Hinnant).
 pub use ehr_security::peer_id_from_did;
 pub use ipfs_store::utils::utc_now_secs;
 
@@ -39,7 +39,7 @@ fn split(secs: u64) -> ((i64, i64, i64), i64) {
     )
 }
 
-/// Ten sam dzień i godzina `years` lat później; 29 lutego przechodzi na 28 lutego.
+/// The same day and hour `years` later; 29 February becomes 28 February.
 pub fn add_years(secs: u64, years: i64) -> u64 {
     let ((year, month, day), time) = split(secs);
     let target = year + years;
@@ -63,13 +63,13 @@ pub fn iso8601(secs: u64) -> String {
     )
 }
 
-/// Data do wyświetlenia, np. `18.11.2026`.
+/// Date to show, e.g. `18.11.2026`.
 pub fn date_text(secs: u64) -> String {
     let ((year, month, day), _) = split(secs);
     format!("{day:02}.{month:02}.{year:04}")
 }
 
-/// Rozmiar do wyświetlenia (`218 KB`, `1,4 MB`).
+/// Size to show (`218 KB`, `1,4 MB`).
 pub fn size_text(bytes: u64) -> String {
     match bytes {
         0..1024 => format!("{bytes} B"),
@@ -78,7 +78,7 @@ pub fn size_text(bytes: u64) -> String {
     }
 }
 
-/// Typ MIME po rozszerzeniu, dla `contentType` i podglądu w UI.
+/// MIME type from the extension, for `contentType` and the UI preview.
 pub fn media_type_for(file_name: &str) -> &'static str {
     let extension = file_name
         .rsplit_once('.')
@@ -96,15 +96,50 @@ pub fn media_type_for(file_name: &str) -> &'static str {
     }
 }
 
-/// Nazwa pliku od wystawcy jest tylko podpowiedzią: bez ścieżek, `..` i znaków sterujących.
+/// Display name with the extension of the source file, so a downloaded document opens in the
+/// right program: an empty name takes the source name, a known wrong extension is replaced,
+/// a missing one is appended.
+pub fn file_name_with_extension(name: &str, source: &std::path::Path) -> String {
+    let name = name.trim();
+    let source_name = source
+        .file_name()
+        .map(|file_name| file_name.to_string_lossy().into_owned())
+        .unwrap_or_default();
+    let Some((_, extension)) = source_name
+        .rsplit_once('.')
+        .filter(|(stem, _)| !stem.is_empty())
+    else {
+        return if name.is_empty() {
+            source_name
+        } else {
+            name.to_owned()
+        };
+    };
+    if name.is_empty() {
+        return source_name;
+    }
+    if name
+        .to_lowercase()
+        .ends_with(&format!(".{}", extension.to_lowercase()))
+    {
+        return name.to_owned();
+    }
+    let stem = match name.rsplit_once('.') {
+        Some((stem, _)) if media_type_for(name) != "application/octet-stream" => stem,
+        _ => name,
+    };
+    format!("{stem}.{extension}")
+}
+
+/// The issuer's file name is only a hint: no paths, `..` or control characters.
 pub fn safe_file_name(name: &str) -> String {
     let cleaned: String = name
         .chars()
-        .map(|c| {
-            if c == '/' || c == '\\' || c.is_control() {
+        .map(|character| {
+            if character == '/' || character == '\\' || character.is_control() {
                 '_'
             } else {
-                c
+                character
             }
         })
         .collect();
@@ -114,4 +149,35 @@ pub fn safe_file_name(name: &str) -> String {
     } else {
         cleaned
     }
+}
+
+/// Patient DHT mode from the battery: below 33% client (also while charging), from 40% or while
+/// charging server, in between unchanged; without a readable battery always client.
+pub fn patient_dht_server(battery: Option<crate::models::Battery>, current: bool) -> bool {
+    use crate::consts::{BATTERY_CLIENT_BELOW_PERCENT, BATTERY_SERVER_FROM_PERCENT};
+    match battery {
+        None => false,
+        Some(battery) if battery.percent < BATTERY_CLIENT_BELOW_PERCENT => false,
+        Some(battery) if battery.percent >= BATTERY_SERVER_FROM_PERCENT || battery.charging => true,
+        Some(_) => current,
+    }
+}
+
+/// First battery in `/sys/class/power_supply`; "Full" means plugged in, so it counts as charging.
+/// shortcut: Linux and WSL2 only, other systems read no battery (patient stays DHT client).
+pub fn read_battery() -> Option<crate::models::Battery> {
+    let read = |path: std::path::PathBuf| std::fs::read_to_string(path).ok();
+    std::fs::read_dir(crate::consts::POWER_SUPPLY_DIR)
+        .ok()?
+        .flatten()
+        .map(|entry| entry.path())
+        .find(|path| read(path.join("type")).is_some_and(|kind| kind.trim() == "Battery"))
+        .and_then(|path| {
+            let percent = read(path.join("capacity"))?.trim().parse().ok()?;
+            let status = read(path.join("status")).unwrap_or_default();
+            Some(crate::models::Battery {
+                percent,
+                charging: matches!(status.trim(), "Charging" | "Full"),
+            })
+        })
 }

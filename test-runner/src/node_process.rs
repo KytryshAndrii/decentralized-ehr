@@ -1,4 +1,4 @@
-//! Uruchamianie węzła CLI (`ehr-cli-patient`, `ehr-cli-doctor`) jako procesu w testach.
+//! Runs a CLI node (`ehr-cli-patient`, `ehr-cli-doctor`) as a process in tests.
 use std::{
     ffi::OsStr,
     fs,
@@ -11,13 +11,13 @@ use std::{
     time::{Duration, Instant},
 };
 
-/// Binarka CLI do testów IPFS (`EHR_CLI_BIN` albo `ehr-cli-patient` z katalogu target).
-/// Komendy IPFS są takie same w obu binarkach ról.
+/// CLI binary for IPFS tests (`EHR_CLI_BIN` or `ehr-cli-patient` from the target folder).
+/// The IPFS commands are the same in both role binaries.
 pub fn cli() -> PathBuf {
     role_cli("ehr-cli-patient")
 }
 
-/// `ehr-cli-doctor` albo `ehr-cli-patient` z katalogu target testu.
+/// `ehr-cli-doctor` or `ehr-cli-patient` from the test target folder.
 pub fn role_cli(name: &str) -> PathBuf {
     if name == "ehr-cli-patient"
         && let Some(path) = std::env::var_os("EHR_CLI_BIN")
@@ -43,10 +43,10 @@ pub fn free_port() -> u16 {
         .port()
 }
 
-/// `put <plik>` w katalogu węzła; zwraca CID jako tekst.
-pub fn put_file(cwd: &Path, file: &Path) -> String {
+/// `put <file>` in the node folder; returns the CID as text.
+pub fn put_file(working_dir: &Path, file: &Path) -> String {
     let output = Command::new(cli())
-        .current_dir(cwd)
+        .current_dir(working_dir)
         .arg("put")
         .arg(file)
         .output()
@@ -71,20 +71,20 @@ pub struct NodeProcess {
 }
 
 impl NodeProcess {
-    pub fn start<S: AsRef<OsStr>>(cwd: &Path, port: u16, args: &[S]) -> Self {
-        Self::start_with(&cli(), cwd, port, args, &[])
+    pub fn start<S: AsRef<OsStr>>(working_dir: &Path, port: u16, args: &[S]) -> Self {
+        Self::start_with(&cli(), working_dir, port, args, &[])
     }
 
-    /// Wybrana binarka (np. `role_cli("ehr-cli-doctor")`) i dodatkowe zmienne środowiska.
+    /// The given binary (e.g. `role_cli("ehr-cli-doctor")`) and extra environment variables.
     pub fn start_with<S: AsRef<OsStr>>(
         binary: &Path,
-        cwd: &Path,
+        working_dir: &Path,
         port: u16,
         args: &[S],
         envs: &[(&str, &str)],
     ) -> Self {
         let mut child = Command::new(binary)
-            .current_dir(cwd)
+            .current_dir(working_dir)
             .env("EHR_LISTEN_PORT", port.to_string())
             .envs(envs.iter().copied())
             .args(args)
@@ -94,9 +94,9 @@ impl NodeProcess {
             .spawn()
             .expect("launch the CLI");
         let stdin = child.stdin.take();
-        let (tx, rx) = mpsc::channel();
+        let (sender, receiver) = mpsc::channel();
         let stdout = child.stdout.take().unwrap();
-        let out_tx = tx.clone();
+        let out_tx = sender.clone();
         thread::spawn(move || {
             for line in BufReader::new(stdout).lines().map_while(Result::ok) {
                 println!("[node] {line}");
@@ -107,12 +107,12 @@ impl NodeProcess {
         thread::spawn(move || {
             for line in BufReader::new(stderr).lines().map_while(Result::ok) {
                 eprintln!("[node-err] {line}");
-                let _ = tx.send(line);
+                let _ = sender.send(line);
             }
         });
         Self {
             child,
-            lines: rx,
+            lines: receiver,
             stdin,
         }
     }
@@ -123,7 +123,7 @@ impl NodeProcess {
         stdin.flush().expect("flush node command");
     }
 
-    /// Czeka na linię stdout zawierającą `text` i ją zwraca.
+    /// Waits for a stdout line containing `text` and returns it.
     pub fn until(&self, text: &str, secs: u64) -> String {
         let deadline = Instant::now() + Duration::from_secs(secs);
         while Instant::now() < deadline {
@@ -149,7 +149,7 @@ impl NodeProcess {
             for (index, pattern) in patterns.iter().enumerate() {
                 seen[index] |= line.contains(pattern);
             }
-            if seen.iter().all(|v| *v) {
+            if seen.iter().all(|found| *found) {
                 return;
             }
         }

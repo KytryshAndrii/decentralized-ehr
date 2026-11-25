@@ -7,7 +7,7 @@ pub fn load_or_create(path: &Path) -> Result<Keypair, NetworkError> {
     if path.exists() {
         let data = fs::read(path)?;
         return Keypair::from_protobuf_encoding(&data)
-            .map_err(|e| NetworkError::Identity(e.to_string()));
+            .map_err(|error| NetworkError::Identity(error.to_string()));
     }
     if let Some(parent) = path.parent()
         && !parent.as_os_str().is_empty()
@@ -17,7 +17,7 @@ pub fn load_or_create(path: &Path) -> Result<Keypair, NetworkError> {
     let identity = Keypair::generate_ed25519();
     let bytes = identity
         .to_protobuf_encoding()
-        .map_err(|e| NetworkError::Identity(e.to_string()))?;
+        .map_err(|error| NetworkError::Identity(error.to_string()))?;
 
     // create_new prevents overwriting another identity. Do not silently rotate keys.
     let mut options = fs::OpenOptions::new();
@@ -32,7 +32,7 @@ pub fn load_or_create(path: &Path) -> Result<Keypair, NetworkError> {
         Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {
             let data = fs::read(path)?;
             return Keypair::from_protobuf_encoding(&data)
-                .map_err(|e| NetworkError::Identity(e.to_string()));
+                .map_err(|error| NetworkError::Identity(error.to_string()));
         }
         Err(e) => return Err(e.into()),
     };

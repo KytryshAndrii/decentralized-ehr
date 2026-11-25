@@ -4,11 +4,7 @@ use crate::models::Multihash;
 use sha2::{Digest, Sha256, Sha512};
 
 impl Multihash {
-    /// Generuje Multihash z podanych bajtów używając wybranego algorytmu.
-    ///
-    /// # Argumenty
-    /// * `data` - Surowe bajty do zahashowania.
-    /// * `code` - Kod algorytmu (np. `SHA2_256``).
+    /// Multihash of `data` with the hash algorithm `code` (e.g. `SHA2_256`).
     pub fn compute(data: &[u8], code: u64) -> Result<Self, CidError> {
         let digest = match code {
             SHA2_256 => {

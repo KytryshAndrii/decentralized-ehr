@@ -1,0 +1,94 @@
+import { Palette, DocRow } from "widgets.slint";
+
+// Details and preview of the selected document.
+export component DocumentDetails inherits Rectangle {
+    in property <bool> is-doctor;
+    in property <[DocRow]> docs;
+    in property <int> selected-doc;
+    in property <bool> preview-ready;
+    in property <bool> has-preview-image;
+    in property <image> preview-image;
+    in property <string> preview-text;
+    in property <bool> doc-verified;
+    width: 290px;
+    Rectangle {
+        width: 1px;
+        x: 0;
+        background: Palette.line;
+    }
+    if root.selected-doc >= 0 && root.selected-doc < root.docs.length: VerticalLayout {
+        padding: 20px;
+        spacing: 12px;
+        alignment: start;
+        Text {
+            text: root.docs[root.selected-doc].title;
+            font-size: 15px;
+            font-weight: 700;
+            wrap: word-wrap;
+        }
+        Rectangle {
+            height: 170px;
+            background: Palette.block;
+            border-radius: Palette.radius;
+            clip: true;
+            if root.has-preview-image: Image {
+                source: root.preview-image;
+                width: parent.width;
+                height: parent.height;
+                image-fit: contain;
+            }
+            if !root.has-preview-image: Text {
+                x: 12px;
+                y: 10px;
+                width: parent.width - 24px;
+                height: parent.height - 20px;
+                text: root.preview-ready ? root.preview-text : "Odszyfrowywanie…";
+                color: #555;
+                font-size: 12px;
+                wrap: word-wrap;
+                overflow: elide;
+            }
+        }
+        GridLayout {
+            spacing: 6px;
+            Row {
+                Text { text: "Dodał"; color: Palette.muted; font-size: 13.5px; }
+                Text { text: root.docs[root.selected-doc].issuer; font-size: 13.5px; wrap: word-wrap; }
+            }
+            Row {
+                Text { text: "Data"; color: Palette.muted; font-size: 13.5px; }
+                Text { text: root.docs[root.selected-doc].date; font-size: 13.5px; }
+            }
+            Row {
+                Text { text: "Rozmiar"; color: Palette.muted; font-size: 13.5px; }
+                Text { text: root.docs[root.selected-doc].size; font-size: 13.5px; }
+            }
+            Row {
+                Text { text: "Kategoria"; color: Palette.muted; font-size: 13.5px; }
+                Text { text: root.docs[root.selected-doc].category; font-size: 13.5px; }
+            }
+            Row {
+                Text { text: "Wersja"; color: Palette.muted; font-size: 13.5px; }
+                Text { text: root.docs[root.selected-doc].version; font-size: 13.5px; }
+            }
+            Row {
+                Text { text: "Ważny do"; color: Palette.muted; font-size: 13.5px; }
+                Text { text: root.docs[root.selected-doc].valid-until + " (UTC)"; font-size: 13.5px; }
+            }
+            Row {
+                Text { text: "Stan"; color: Palette.muted; font-size: 13.5px; }
+                Text { text: !root.preview-ready ? "zaszyfrowany, weryfikacja…" : root.doc-verified ? "zaszyfrowany, podpis zweryfikowany" : "zaszyfrowany, weryfikacja nieudana"; font-size: 13.5px; wrap: word-wrap; }
+            }
+        }
+        Rectangle {
+            height: 1px;
+            background: Palette.line;
+        }
+        Text {
+            text: root.is-doctor ? "Twoje uprawnienia: podgląd, pobranie, udostępnianie, edycja." : "Twoje uprawnienia: podgląd i pobranie.";
+            color: Palette.muted;
+            font-size: 13px;
+            wrap: word-wrap;
+        }
+    }
+}

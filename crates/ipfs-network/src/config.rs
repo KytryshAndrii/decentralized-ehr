@@ -10,10 +10,13 @@ use libp2p::{Multiaddr, multiaddr::Protocol};
 use std::{path::PathBuf, time::Duration};
 impl BootstrapPeer {
     pub fn parse(value: &str) -> Result<Self, NetworkError> {
-        let mut address: Multiaddr = value.parse().map_err(|e| NetworkError::InvalidAddress {
-            value: value.into(),
-            reason: format!("{e}"),
-        })?;
+        let mut address: Multiaddr =
+            value
+                .parse()
+                .map_err(|error| NetworkError::InvalidAddress {
+                    value: value.into(),
+                    reason: format!("{error}"),
+                })?;
         let peer_id = match address.pop() {
             Some(Protocol::P2p(peer_id)) => peer_id,
             _ => {
@@ -54,10 +57,12 @@ impl NetworkConfig {
         let Ok(value) = std::env::var(LISTEN_PORT_ENV) else {
             return Ok(address);
         };
-        let port: u16 = value.parse().map_err(|e| NetworkError::InvalidAddress {
-            value: format!("{LISTEN_PORT_ENV}={value}"),
-            reason: format!("{e}"),
-        })?;
+        let port: u16 = value
+            .parse()
+            .map_err(|error| NetworkError::InvalidAddress {
+                value: format!("{LISTEN_PORT_ENV}={value}"),
+                reason: format!("{error}"),
+            })?;
         address.pop();
         address.push(Protocol::Tcp(port));
         Ok(address)

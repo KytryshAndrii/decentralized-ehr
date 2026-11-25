@@ -1,5 +1,5 @@
-//! Magazyn kluczy chroniony hasłem: `keys/node-key.enc` (klucz węzła, Argon2id +
-//! XChaCha20-Poly1305) i `keys/pgp-secret.asc` (klucz OpenPGP chroniony natywnie, S2K).
+//! Password-protected key store: `keys/node-key.enc` (node key, Argon2id +
+//! XChaCha20-Poly1305) and `keys/pgp-secret.asc` (OpenPGP key with its native S2K protection).
 use crate::consts::{
     ARGON2_SALT_BYTES, ENVELOPE_VERSION, MIN_PASSWORD_CHARS, NODE_KEY_FILE, PGP_PUBLIC_FILE,
     PGP_SECRET_FILE, XCHACHA_NONCE_BYTES,
@@ -7,7 +7,7 @@ use crate::consts::{
 use crate::error::SecurityError;
 use crate::identity::did_from_public;
 use crate::models::{EncryptedKeyFile, Identity};
-use crate::utils::{b64, unb64};
+use crate::utils::{base64_decode, base64_encode};
 use chacha20poly1305::aead::{Aead, KeyInit};
 use chacha20poly1305::{XChaCha20Poly1305, XNonce};
 use libp2p::PeerId;
@@ -29,7 +29,7 @@ impl Identity {
         directory.join(NODE_KEY_FILE).is_file()
     }
 
-    /// Tworzy klucz węzła i klucz OpenPGP; nie nadpisuje istniejących.
+    /// Creates the node key and the OpenPGP key; never overwrites existing ones.
     pub fn create(directory: &Path, password: &str) -> Result<Self, SecurityError> {
         if password.chars().count() < MIN_PASSWORD_CHARS {
             return Err(SecurityError::WeakPassword(MIN_PASSWORD_CHARS));
@@ -54,7 +54,7 @@ impl Identity {
                 .to_armored_string(ArmorOptions::default())?
                 .as_bytes(),
         )?;
-        // Klucz węzła na końcu: jego obecność oznacza kompletny magazyn (`exists`).
+        // The node key last: its presence means a complete store (`exists`).
         write_private(
             &directory.join(NODE_KEY_FILE),
             &serde_json::to_vec(&seal(&keypair, password)?)?,
@@ -77,7 +77,7 @@ impl Identity {
         let armored = fs::read_to_string(directory.join(PGP_SECRET_FILE))?;
         let (pgp_secret, _) = SignedSecretKey::from_armor_single(armored.as_bytes())?;
         pgp_secret.verify_bindings()?;
-        // Hasło klucza OpenPGP sprawdza próbne odblokowanie klucza głównego.
+        // A trial unlock of the primary key checks the OpenPGP password.
         pgp_secret
             .primary_key
             .unlock(&password.into(), |_, _| Ok(()))
@@ -105,7 +105,7 @@ impl Identity {
     }
 }
 
-/// Ed25519 (podpis) + Curve25519 ECDH (szyfrowanie), klucze v4: format, który czyta GnuPG.
+/// Ed25519 (signing) + Curve25519 ECDH (encryption), v4 keys: a format GnuPG reads.
 fn generate_pgp(user_id: &str, password: &str) -> Result<SignedSecretKey, SecurityError> {
     let build_error = |error: &dyn std::fmt::Display| SecurityError::Key(error.to_string());
     let mut encryption = SubkeyParamsBuilder::default();
@@ -121,7 +121,7 @@ fn generate_pgp(user_id: &str, password: &str) -> Result<SignedSecretKey, Securi
         .can_sign(true)
         .can_encrypt(EncryptionCaps::None)
         .primary_user_id(user_id.to_owned())
-        // Bez preferencji GnuPG podpisuje SHA-1, którego rPGP nie przyjmuje dla Ed25519.
+        // Without preferences GnuPG signs with SHA-1, which rPGP rejects for Ed25519.
         .preferred_hash_algorithms(
             [HashAlgorithm::Sha256, HashAlgorithm::Sha512]
                 .into_iter()
@@ -133,8 +133,10 @@ fn generate_pgp(user_id: &str, password: &str) -> Result<SignedSecretKey, Securi
                 .collect(),
         )
         .passphrase(Some(password.to_owned()))
-        .subkeys(vec![encryption.build().map_err(|e| build_error(&e))?]);
-    let params = params.build().map_err(|e| build_error(&e))?;
+        .subkeys(vec![
+            encryption.build().map_err(|error| build_error(&error))?,
+        ]);
+    let params = params.build().map_err(|error| build_error(&error))?;
     Ok(params.generate(rand::thread_rng())?)
 }
 
@@ -161,23 +163,23 @@ fn seal(keypair: &Keypair, password: &str) -> Result<EncryptedKeyFile, SecurityE
     Ok(EncryptedKeyFile {
         v: ENVELOPE_VERSION,
         kdf: "argon2id".into(),
-        salt: b64(&salt),
-        nonce: b64(&nonce),
-        ciphertext: b64(&ciphertext),
+        salt: base64_encode(&salt),
+        nonce: base64_encode(&nonce),
+        ciphertext: base64_encode(&ciphertext),
     })
 }
 
 fn open(sealed: &EncryptedKeyFile, password: &str) -> Result<Keypair, SecurityError> {
-    let nonce = unb64(&sealed.nonce)?;
+    let nonce = base64_decode(&sealed.nonce)?;
     if sealed.kdf != "argon2id" || nonce.len() != XCHACHA_NONCE_BYTES {
         return Err(SecurityError::WrongPassword);
     }
-    let key = derive_key(password, &unb64(&sealed.salt)?)?;
+    let key = derive_key(password, &base64_decode(&sealed.salt)?)?;
     let plain = Zeroizing::new(
         XChaCha20Poly1305::new(key.as_ref().into())
             .decrypt(
                 XNonce::from_slice(&nonce),
-                unb64(&sealed.ciphertext)?.as_slice(),
+                base64_decode(&sealed.ciphertext)?.as_slice(),
             )
             .map_err(|_| SecurityError::WrongPassword)?,
     );

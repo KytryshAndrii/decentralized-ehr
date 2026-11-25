@@ -1,14 +1,14 @@
-//! Minimalny podzbiór UCAN 1.0 (nazwy pól jak w specyfikacji Delegation), bez gwarancji
-//! zgodności z innymi implementacjami UCAN. Podpisy: Ed25519 klucza węzła (`libp2p-identity`).
-//! Reguła pracy: pacjent tylko czyta; token `read` jest ważny wyłącznie, gdy jego wystawca
-//! ma własny łańcuch `issue` od zaufanego korzenia (lekarz = placówka, token wystawiony sobie).
+//! Minimal subset of UCAN 1.0 (field names as in the Delegation specification), with no promise
+//! of compatibility with other UCAN implementations. Signatures: Ed25519 node key (`libp2p-identity`).
+//! Rule: the patient only reads; a `read` token is valid only when its issuer has its own
+//! `issue` chain from a trusted root (doctor = facility, a token issued to itself).
 use crate::consts::{CMD_DOC_ISSUE, CMD_DOC_READ};
 use crate::error::SecurityError;
 use crate::models::{Identity, Signed, Token, Verifier};
 use crate::utils::random_id;
 
 impl Token {
-    /// Korzeń uprawnienia lekarza: `iss = aud = sub` = DID węzła lekarza.
+    /// Root of the doctor's permission: `iss = aud = sub` = the DID of the doctor's node.
     pub fn issue_root(identity: &Identity, now: u64, exp: u64) -> Result<Signed, SecurityError> {
         let did = identity.did();
         Signed::sign(
@@ -27,7 +27,7 @@ impl Token {
         )
     }
 
-    /// Lekarz nadaje pacjentowi odczyt jednego dokumentu (`pol` = CID szyfrogramu).
+    /// The doctor grants the patient reading of one document (`pol` = ciphertext CID).
     pub fn delegate_read(
         identity: &Identity,
         issue_root: &Signed,
@@ -54,7 +54,7 @@ impl Token {
 }
 
 impl Verifier<'_> {
-    /// Podpis zgodny z `iss`, czas, lista unieważnień.
+    /// Signature matching `iss`, time, revocation list.
     fn open(&self, signed: &Signed) -> Result<Token, SecurityError> {
         let token: Token = signed.open()?;
         if signed.signer != token.iss {
@@ -69,7 +69,7 @@ impl Verifier<'_> {
         Ok(token)
     }
 
-    /// Korzeń `/ehr/doc/issue` wystawiony samemu sobie przez zaufanego wystawcę.
+    /// `/ehr/doc/issue` root issued to itself by a trusted issuer.
     pub fn verify_issue(&self, signed: &Signed) -> Result<Token, SecurityError> {
         let token = self.open(signed)?;
         if token.cmd != CMD_DOC_ISSUE {
@@ -86,7 +86,7 @@ impl Verifier<'_> {
         Ok(token)
     }
 
-    /// Odczyt dokumentu `document_cid` przez `audience`.
+    /// Reading of `document_cid` by `audience`.
     pub fn verify_read(
         &self,
         signed: &Signed,
@@ -105,7 +105,7 @@ impl Verifier<'_> {
         if !token.pol.is_empty() && !token.pol.iter().any(|cid| cid == document_cid) {
             return Err(SecurityError::TokenRejected("document outside the policy"));
         }
-        // Ciągłość łańcucha: korzeń `issue` należy do wystawcy tego tokenu.
+        // Chain continuity: the `issue` root belongs to the issuer of this token.
         let chained = token.prf.iter().any(|proof| {
             self.verify_issue(proof)
                 .is_ok_and(|root| root.aud == token.iss)

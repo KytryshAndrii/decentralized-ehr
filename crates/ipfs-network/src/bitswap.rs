@@ -7,8 +7,8 @@ use libp2p::PeerId;
 use std::collections::{HashSet, VecDeque};
 
 impl NetworkNode {
-    /// Uruchamia serwer i klienta Bitswap na wspólnym Swarmie. Bloki leżą w katalogu stanu,
-    /// więc węzeł bez `state_directory` niczego nie udostępnia ani nie pobiera.
+    /// Starts the Bitswap server and client on the shared Swarm. Blocks live in the state folder,
+    /// so a node without `state_directory` neither serves nor fetches anything.
     pub(crate) fn start_bitswap(&mut self) {
         let Some(directory) = self.config.state_directory.clone() else {
             println!("BITSWAP_DISABLED no state directory");
@@ -26,8 +26,8 @@ impl NetworkNode {
         }
     }
 
-    /// Pobiera blok i wszystkie bloki, do których prowadzą jego linki (cały plik UnixFS).
-    /// Działa w tle, żeby nie blokować pętli zdarzeń węzła.
+    /// Fetches the block and every block its links lead to (a whole UnixFS file),
+    /// in the background so the node event loop is not blocked.
     pub(crate) fn fetch_block(&self, cid: Cid, providers: Vec<PeerId>, reply: Option<FetchReply>) {
         let name = cid.to_string_base32();
         let Some(client) = self.bitswap_client.clone() else {
@@ -55,9 +55,9 @@ impl NetworkNode {
     }
 }
 
-/// Zwraca liczbę bloków pobranych z sieci i liczbę bloków, które już były lokalnie.
-/// Bloki idą falami po `FETCH_WINDOW`: jedna wantlista i jedno otwarcie bazy na falę,
-/// a bloki fali są pobierane równolegle.
+/// Returns the number of blocks fetched from the network and of blocks already local.
+/// Blocks go in waves of `FETCH_WINDOW`: one wantlist and one database open per wave,
+/// and the blocks of a wave are fetched in parallel.
 async fn fetch_dag(
     client: &BitswapClient,
     root: Cid,
@@ -71,7 +71,7 @@ async fn fetch_dag(
         while wave.len() < FETCH_WINDOW
             && let Some(cid) = pending.pop_front()
         {
-            // Ten sam blok może wystąpić w pliku wiele razy; wystarczy go mieć raz.
+            // The same block can occur many times in a file; having it once is enough.
             if seen.insert(cid.to_bytes()) {
                 wave.push(cid);
             }

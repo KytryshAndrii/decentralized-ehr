@@ -57,7 +57,7 @@ CID_SHARED="$(put_block "$TMP/shared.txt")"
 CID_LARGE="$(put_block "$TMP/large.bin")"
 CID_PRIVATE="$(put_block "$TMP/private.txt")"
 test -n "$CID_SHARED" && test -n "$CID_LARGE" && test -n "$CID_PRIVATE"
-# CID wyliczony bez zapisu: nie ma go żaden węzeł.
+# CID computed without storing: no node has it.
 printf 'This block exists on no node\n' > "$TMP/nobody.txt"
 CID_NOBODY="$("$BIN" cid "$TMP/nobody.txt" | sed -n 's/.* CID=//p')"
 test -n "$CID_NOBODY"
@@ -100,7 +100,7 @@ if grep -Fq "BITSWAP_BLOCK_SENT $KUBO_ID $CID_PRIVATE" "$TMP/rust.log"; then
   exit 1
 fi
 
-# M7: Rust jako klient Bitswap, Kubo jako dostawca.
+# M7: Rust as the Bitswap client, Kubo as the provider.
 rust_get() {
   (cd "$TMP/rust" && "$BIN" get "$1" "$2" >/dev/null)
 }

@@ -4,7 +4,7 @@ use ipfs_cid::models::{Cid, Multihash};
 use ipfs_cid::unit_test_util::generate_mock_cid_string;
 
 // ==========================================
-// TESTY OBSŁUGI BŁĘDÓW
+// ERROR HANDLING TESTS
 // ==========================================
 
 #[test]
@@ -42,7 +42,7 @@ fn test_multibase_parse_error_on_invalid_string() {
 }
 
 // ==========================================
-// TESTY KRYPTOGRAFICZNE
+// CRYPTOGRAPHIC TESTS
 // ==========================================
 
 #[test]
@@ -51,7 +51,6 @@ fn test_multihash_generation_256() {
     let hash = Multihash::compute(data, SHA2_256).unwrap();
     assert_eq!(hash.code, SHA2_256);
     assert_eq!(hash.size, 32);
-    // Sprawdzenie pierwszych bajtów digestu
     assert_eq!(&hash.digest[0..4], &[0x2c, 0xf2, 0x4d, 0xba]);
 }
 
@@ -61,17 +60,16 @@ fn test_multihash_generation_512() {
     let hash = Multihash::compute(data, SHA2_512).unwrap();
     assert_eq!(hash.code, SHA2_512);
     assert_eq!(hash.size, 64);
-    // Sprawdzenie pierwszych bajtów digestu
     assert_eq!(&hash.digest[0..4], &[0x9b, 0x71, 0xd2, 0x24]);
 }
 
 // ==========================================
-// TESTY GENEROWANIA CID DLA RÓŻNYCH PLIKÓW. SHA2-256
+// CID GENERATION FOR DIFFERENT FILES, SHA2-256
 // ==========================================
 
 #[test]
 fn test_generate_cid_for_json_sha2_256() {
-    // Pliki JSON mogą korzystać z dedykowanego multicodec 0x0200
+    // JSON files may use the dedicated multicodec 0x0200
     let cid_str = generate_mock_cid_string(
         "../../test-runner/mocks/hypr-text/hl7-fhir-patient-example.json",
         CODEC_JSON,
@@ -82,7 +80,7 @@ fn test_generate_cid_for_json_sha2_256() {
 
 #[test]
 fn test_generate_cid_for_json_as_raw_sha2_256() {
-    // Pliki JSON mogą korzystać z dedykowanego multicodec 0x0200
+    // JSON files may use the dedicated multicodec 0x0200
     let cid_str = generate_mock_cid_string(
         "../../test-runner/mocks/hypr-text/hl7-fhir-patient-example.json",
         CODEC_RAW,
@@ -93,7 +91,7 @@ fn test_generate_cid_for_json_as_raw_sha2_256() {
 
 #[test]
 fn test_generate_cid_for_xml_and_ttl_sha2_256() {
-    // Formaty tekstowe traktowane jako surowe dane
+    // Text formats are treated as raw data
     let xml_cid = generate_mock_cid_string(
         "../../test-runner/mocks/hypr-text/hl7-fhir-patient-example.xml",
         CODEC_RAW,
@@ -105,7 +103,7 @@ fn test_generate_cid_for_xml_and_ttl_sha2_256() {
 
 #[test]
 fn test_generate_cid_for_ttl_sha2_256() {
-    // Formaty tekstowe traktowane jako surowe dane
+    // Text formats are treated as raw data
     let ttl_cid = generate_mock_cid_string(
         "../../test-runner/mocks/hypr-text/hl7-fhir-patient-example.ttl",
         CODEC_RAW,
@@ -117,7 +115,7 @@ fn test_generate_cid_for_ttl_sha2_256() {
 
 #[test]
 fn test_unique_cids_for_differrent_xml_and_ttl_sha2_256() {
-    // Formaty tekstowe traktowane jako surowe dane
+    // Text formats are treated as raw data
     let xml_cid = generate_mock_cid_string(
         "../../test-runner/mocks/hypr-text/hl7-fhir-patient-example.xml",
         CODEC_RAW,
@@ -129,7 +127,7 @@ fn test_unique_cids_for_differrent_xml_and_ttl_sha2_256() {
         SHA2_256,
     );
 
-    assert_ne!(xml_cid, ttl_cid); // Różna zawartość = różny CID
+    assert_ne!(xml_cid, ttl_cid); // different content = different CID
 }
 
 #[test]
@@ -176,12 +174,12 @@ fn test_generate_cid_for_txt_sha2_256() {
 }
 
 // ==========================================
-// TESTY GENEROWANIA CID DLA RÓŻNYCH PLIKÓW. SHA2-512
+// CID GENERATION FOR DIFFERENT FILES, SHA2-512
 // ==========================================
 
 #[test]
 fn test_generate_cid_for_json_sha2_512() {
-    // Pliki JSON mogą korzystać z dedykowanego multicodec 0x0200
+    // JSON files may use the dedicated multicodec 0x0200
     let cid_str = generate_mock_cid_string(
         "../../test-runner/mocks/hypr-text/hl7-fhir-patient-example.json",
         CODEC_JSON,
@@ -192,7 +190,7 @@ fn test_generate_cid_for_json_sha2_512() {
 
 #[test]
 fn test_generate_cid_for_json_as_raw_sha2_512() {
-    // Pliki JSON mogą korzystać z dedykowanego multicodec 0x0200
+    // JSON files may use the dedicated multicodec 0x0200
     let cid_str = generate_mock_cid_string(
         "../../test-runner/mocks/hypr-text/hl7-fhir-patient-example.json",
         CODEC_RAW,
@@ -203,7 +201,7 @@ fn test_generate_cid_for_json_as_raw_sha2_512() {
 
 #[test]
 fn test_generate_cid_for_xml_and_ttl_sha2_512() {
-    // Formaty tekstowe traktowane jako surowe dane
+    // Text formats are treated as raw data
     let xml_cid = generate_mock_cid_string(
         "../../test-runner/mocks/hypr-text/hl7-fhir-patient-example.xml",
         CODEC_RAW,
@@ -215,7 +213,7 @@ fn test_generate_cid_for_xml_and_ttl_sha2_512() {
 
 #[test]
 fn test_generate_cid_for_ttl_sha2_512() {
-    // Formaty tekstowe traktowane jako surowe dane
+    // Text formats are treated as raw data
     let ttl_cid = generate_mock_cid_string(
         "../../test-runner/mocks/hypr-text/hl7-fhir-patient-example.ttl",
         CODEC_RAW,
@@ -227,7 +225,7 @@ fn test_generate_cid_for_ttl_sha2_512() {
 
 #[test]
 fn test_unique_cids_for_differrent_xml_and_ttl_sha2_512() {
-    // Formaty tekstowe traktowane jako surowe dane
+    // Text formats are treated as raw data
     let xml_cid = generate_mock_cid_string(
         "../../test-runner/mocks/hypr-text/hl7-fhir-patient-example.xml",
         CODEC_RAW,
@@ -239,7 +237,7 @@ fn test_unique_cids_for_differrent_xml_and_ttl_sha2_512() {
         SHA2_512,
     );
 
-    assert_ne!(xml_cid, ttl_cid); // Różna zawartość = różny CID
+    assert_ne!(xml_cid, ttl_cid); // different content = different CID
 }
 
 #[test]

@@ -42,11 +42,14 @@ pub fn validate_cid(cid: &Cid) -> Result<(), StoreError> {
 
 pub fn multihash_bytes(multihash: &Multihash) -> Vec<u8> {
     let mut bytes = Vec::with_capacity(multihash.digest.len() + 4);
-    let mut buf = unsigned_varint::encode::u64_buffer();
-    bytes.extend_from_slice(unsigned_varint::encode::u64(multihash.code, &mut buf));
+    let mut varint_buffer = unsigned_varint::encode::u64_buffer();
+    bytes.extend_from_slice(unsigned_varint::encode::u64(
+        multihash.code,
+        &mut varint_buffer,
+    ));
     bytes.extend_from_slice(unsigned_varint::encode::u64(
         multihash.digest.len() as u64,
-        &mut buf,
+        &mut varint_buffer,
     ));
     bytes.extend_from_slice(&multihash.digest);
     bytes
@@ -60,12 +63,12 @@ pub fn get_namespaced_multihash_key(namespace: Namespace, multihash: &Multihash)
     namespace.key(&multihash_bytes(multihash))
 }
 
-/// Klucz wpisu peera: przestrzeń nazw `Peers` + tekstowy PeerId.
+/// Peer entry key: `Peers` namespace + PeerId text.
 pub fn get_peer_key(peer_id: &str) -> Vec<u8> {
     Namespace::Peers.key(peer_id.as_bytes())
 }
 
-/// PeerId i adresy trafiają do formatu liniowego, więc nie mogą zawierać białych znaków.
+/// PeerIds and addresses go into a line format, so they cannot contain whitespace.
 fn is_token(value: &str) -> bool {
     !value.is_empty() && !value.contains(char::is_whitespace)
 }
@@ -121,8 +124,8 @@ pub fn decode_known_peer(peer_id: &str, value: &[u8]) -> Result<KnownPeer, Store
     })
 }
 
-/// Bieżący czas jako sekundy od epoki Unix. Epoka Unix jest zdefiniowana w UTC,
-/// więc wynik nie zależy od strefy czasowej urządzenia.
+/// Current time as seconds since the Unix epoch. The epoch is defined in UTC,
+/// so the result does not depend on the device time zone.
 pub fn utc_now_secs() -> u64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -130,7 +133,7 @@ pub fn utc_now_secs() -> u64 {
         .unwrap_or_default()
 }
 
-/// Długość kanonicznego multihash na początku `bytes` (varint code + varint len + digest).
+/// Length of the canonical multihash at the start of `bytes` (varint code + varint length + digest).
 pub fn multihash_prefix_len(bytes: &[u8]) -> Option<usize> {
     let (_, rest) = unsigned_varint::decode::u64(bytes).ok()?;
     let (digest_len, rest) = unsigned_varint::decode::u64(rest).ok()?;
@@ -162,8 +165,8 @@ pub fn validate_remote_provider(provider: &RemoteProvider) -> Result<(), StoreEr
     Ok(())
 }
 
-/// Klucz rekordu: przestrzeń `RemoteProviders` + multihash + tekstowy PeerId.
-/// Multihash sam określa swoją długość, więc klucz da się jednoznacznie rozdzielić.
+/// Record key: `RemoteProviders` namespace + multihash + PeerId text.
+/// The multihash encodes its own length, so the key splits unambiguously.
 pub fn get_remote_provider_key(multihash: &[u8], peer_id: &str) -> Vec<u8> {
     let mut id = multihash.to_vec();
     id.extend_from_slice(peer_id.as_bytes());

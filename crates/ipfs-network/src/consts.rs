@@ -28,7 +28,7 @@ pub const REPROVIDE_INTERVAL_SECS: u64 = 12 * 60 * 60;
 pub const BOOTSTRAP_LIST_SEPARATOR: char = ',';
 pub const PROVIDER_RECORD_TTL_SECS: u64 = 48 * 60 * 60;
 pub const PROVIDER_PERSIST_REFRESH_SECS: u64 = 60 * 60;
-/// Znany peer niewidziany tyle czasu jest usuwany przy starcie.
+/// A known peer not seen for this long is removed at start; a peer
 // connected for over a week is dropped on the next restart; refresh on disconnect if that bites.
 pub const KNOWN_PEER_TTL_SECS: u64 = 7 * 24 * 60 * 60;
 pub const KNOWN_PEER_REFRESH_SECS: u64 = 24 * 60 * 60;

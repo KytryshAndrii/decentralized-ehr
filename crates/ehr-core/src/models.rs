@@ -5,8 +5,8 @@ use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use tokio::sync::mpsc::UnboundedSender;
 
-/// Rola węzła. Ustalana przy kompilacji (osobne binarki lekarza i pacjenta);
-/// lekarz i placówka to jeden węzeł (założenie Z1 planu phase-9).
+/// Node role, fixed at compile time (separate doctor and patient binaries);
+/// the doctor and the facility are one node (assumption Z1 of the phase-9 plan).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Role {
@@ -14,7 +14,7 @@ pub enum Role {
     Patient,
 }
 
-/// Kategoria dokumentu (`DocumentReference.category`), widoczna w panelu pacjenta.
+/// Document category (`DocumentReference.category`), shown in the patient's panel.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Category {
@@ -24,7 +24,7 @@ pub enum Category {
     Other,
 }
 
-// ---------- HL7 FHIR R5: minimalne podzbiory zasobów (nazwy pól jak w specyfikacji) ----------
+// ---------- HL7 FHIR R5: minimal resource subsets (field names as in the specification) ----------
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Identifier {
@@ -41,7 +41,7 @@ pub struct HumanName {
     pub given: Vec<String>,
 }
 
-/// `Patient` (u lekarza) albo `Practitioner` (u pacjenta): DID jako identyfikator i nazwa.
+/// `Patient` (on the doctor side) or `Practitioner` (on the patient side): DID as identifier, and a name.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Person {
@@ -89,7 +89,7 @@ pub struct Attachment {
     pub content_type: String,
     /// `ipfs://<CID szyfrogramu>`.
     pub url: String,
-    /// `integer64` w FHIR R5 jest w JSON napisem.
+    /// `integer64` in FHIR R5 is a string in JSON.
     pub size: String,
     pub title: String,
     pub creation: String,
@@ -110,8 +110,8 @@ pub struct Extension {
     pub value_date_time: Option<String>,
 }
 
-/// Manifest dokumentu = zasób FHIR R5 `DocumentReference`. W IPFS leży tylko zaszyfrowany
-/// (OpenPGP dla pacjenta i lekarza), więc nazwa pliku i strony nie są jawne.
+/// Document manifest = FHIR R5 `DocumentReference` resource. IPFS holds it only encrypted
+/// (OpenPGP for the patient and the doctor), so the file name and the parties are not public.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DocumentReference {
@@ -133,7 +133,7 @@ pub struct DocumentReference {
 
 // ---------- Dane lokalne ----------
 
-/// Profil węzła w `data/profile.json` (jawny; klucze leżą osobno, zaszyfrowane hasłem).
+/// Node profile in `<role folder>/profile.json` (plain; the keys are separate, password-encrypted).
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Profile {
     pub name: String,
@@ -142,7 +142,7 @@ pub struct Profile {
     pub created_utc: u64,
 }
 
-/// Kontakt w `contacts.leveldb`: wizytówka (DID, klucz OpenPGP, adres) i zasób FHIR osoby.
+/// Contact in `contacts.leveldb`: contact card (DID, OpenPGP key, address) and the person's FHIR resource.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Contact {
     pub did: String,
@@ -151,15 +151,15 @@ pub struct Contact {
     pub added_utc: u64,
 }
 
-/// Wydane, jeszcze niewykorzystane zaproszenie lekarza.
+/// An issued, not yet used doctor's invitation.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Invite {
     pub code: String,
     pub expires_utc: u64,
 }
 
-/// Wpis rejestru dokumentów: nazwa pliku zamiast CID w interfejsie.
-/// Klucz: `/index/<DID pacjenta>/<DID wystawcy>/<seq big-endian>`.
+/// Document index entry: the UI shows the file name instead of the CID.
+/// Key: `/index/<patient DID>/<issuer DID>/<seq big-endian>`.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct IndexEntry {
     pub seq: u64,
@@ -180,17 +180,16 @@ pub struct IndexEntry {
     pub read_token: Signed,
 }
 
-/// Dokument do wystawienia przez lekarza.
 #[derive(Clone, Debug)]
 pub struct NewDocument {
     pub path: PathBuf,
     pub patient_did: String,
+    /// Display name; the extension and the MIME type come from `path` (see `file_name_with_extension`).
     pub file_name: String,
-    pub media_type: String,
     pub category: Category,
 }
 
-// ---------- Wiadomości protokołów (JSON w kopercie `Signed`) ----------
+// ---------- Protocol messages (JSON inside a `Signed` envelope) ----------
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct InboxRequest {
@@ -217,30 +216,47 @@ pub struct InboxResponse {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ContactRequest {
     pub invite: String,
-    /// Tekst wizytówki pacjenta (`ehr1:...`).
+    /// Text of the patient's contact card (`ehr1:...`).
     pub card: String,
 }
 
+/// Answer to a contact or replication request.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub struct ContactReply {
+pub struct StreamReply {
     pub accepted: bool,
     pub reason: String,
 }
 
-/// Wspólna logika aplikacji lekarza i pacjenta (CLI i UI korzystają z tych samych metod).
+/// The doctor asks a DHT server to keep a copy of a document (ciphertext and manifest).
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ReplicateRequest {
+    pub cids: Vec<String>,
+    pub created_utc: u64,
+}
+
+/// Shared logic of the doctor and patient apps (the CLI and the UI call the same methods).
 pub struct EhrApp {
     pub(crate) role: Role,
     pub(crate) data_dir: PathBuf,
     pub(crate) identity: Identity,
     pub(crate) profile: Profile,
-    /// Kontakty i rejestr otwierane na czas operacji; zamek szereguje operacje w procesie.
+    /// Contacts and index are opened per operation; the lock serializes operations in the process.
     pub(crate) db_lock: Mutex<()>,
 }
 
-/// Uruchomiony węzeł EHR: komendy do węzła IPFS i uchwyt strumieni protokołów EHR.
+/// Running EHR node: commands to the IPFS node and the stream handle of the EHR protocols.
 #[derive(Clone)]
 pub struct EhrNode {
     pub(crate) app: Arc<EhrApp>,
     pub(crate) commands: UnboundedSender<NetworkCommand>,
     pub(crate) control: StreamControl,
+    /// Changes at runtime for a patient on battery (see `watch_battery`).
+    pub(crate) dht_server: Arc<std::sync::atomic::AtomicBool>,
+}
+
+/// Battery state read from the operating system.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Battery {
+    pub percent: u8,
+    pub charging: bool,
 }
