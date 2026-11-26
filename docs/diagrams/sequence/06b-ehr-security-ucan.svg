@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1364" height="1454" viewBox="0 0 1364 1454" font-family="Arial, Helvetica, sans-serif">
+<rect width="1364" height="1454" fill="#fff"/>
+<text x="682" y="26" text-anchor="middle" font-size="15" font-weight="bold">ehr-security – diagram sekwencji: Token (UCAN) – wystawienie i weryfikacja prawa odczytu</text>
+<rect x="928.67578125" y="1088" width="363" height="118" fill="none" stroke="#000"/>
+<rect x="928.67578125" y="1218" width="357.625" height="130" fill="none" stroke="#000"/>
+<line x1="928.67578125" x2="1286.30078125" y1="1284" y2="1284" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="920.67578125" y="816" width="379" height="552" fill="none" stroke="#000"/>
+<line x1="920.67578125" x2="1299.67578125" y1="882" y2="882" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="920.67578125" x2="1299.67578125" y1="944" y2="944" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="920.67578125" x2="1299.67578125" y1="1006" y2="1006" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="920.67578125" x2="1299.67578125" y1="1068" y2="1068" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="90.67578125" x2="90.67578125" y1="118" y2="1424" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="380.67578125" x2="380.67578125" y1="90" y2="1424" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="680.67578125" x2="680.67578125" y1="90" y2="1424" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="970.67578125" x2="970.67578125" y1="90" y2="1424" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1270.67578125" x2="1270.67578125" y1="118" y2="1424" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="380.7" y="178.0" width="10" height="46.0" fill="#fff" stroke="#000"/>
+<rect x="675.7" y="260.0" width="10" height="52.0" fill="#fff" stroke="#000"/>
+<rect x="375.7" y="158.0" width="10" height="206.0" fill="#fff" stroke="#000"/>
+<rect x="380.7" y="436.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="675.7" y="504.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="375.7" y="416.0" width="10" height="164.0" fill="#fff" stroke="#000"/>
+<rect x="1265.7" y="616.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="970.7" y="690.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="675.7" y="744.0" width="10" height="52.0" fill="#fff" stroke="#000"/>
+<rect x="970.7" y="840.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="970.7" y="902.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="970.7" y="964.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="970.7" y="1026.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="970.7" y="1112.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="970.7" y="1162.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="970.7" y="1242.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="970.7" y="1304.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="965.7" y="670.0" width="10" height="728.0" fill="#fff" stroke="#000"/>
+<circle cx="90.67578125" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="90.67578125" x2="90.67578125" y1="70" y2="86" stroke="#000"/><line x1="79.67578125" x2="101.67578125" y1="76" y2="76" stroke="#000"/><line x1="90.67578125" x2="81.67578125" y1="86" y2="98" stroke="#000"/><line x1="90.67578125" x2="99.67578125" y1="86" y2="98" stroke="#000"/><text x="90.67578125" y="112" text-anchor="middle" font-size="12" font-weight="bold">Lekarz (EhrNode)</text>
+<rect x="350.67578125" y="56" width="60" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="380.67578125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">Token</text>
+<rect x="649.6748046875" y="56" width="62.001953125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="680.67578125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">Signed</text>
+<rect x="939.3291015625" y="56" width="62.693359375" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="970.67578125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">Verifier</text>
+<circle cx="1270.67578125" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="1270.67578125" x2="1270.67578125" y1="70" y2="86" stroke="#000"/><line x1="1259.67578125" x2="1281.67578125" y1="76" y2="76" stroke="#000"/><line x1="1270.67578125" x2="1261.67578125" y1="86" y2="98" stroke="#000"/><line x1="1270.67578125" x2="1279.67578125" y1="86" y2="98" stroke="#000"/><text x="1270.67578125" y="112" text-anchor="middle" font-size="12" font-weight="bold">Pacjent (EhrNode)</text>
+<line x1="90.67578125" x2="375.67578125" y1="158" y2="158" stroke="#000"/><polygon points="375.67578125,158 366.67578125,153.5 366.67578125,162.5" fill="#000" stroke="#000"/>
+<text x="233.17578125" y="152" text-anchor="middle" font-size="12">issue_root(identity, now, exp)</text>
+<polyline points="390.67578125,182 418.67578125,182 418.67578125,224 393.17578125,224" fill="none" stroke="#000"/><polygon points="393.17578125,224 402.17578125,219.5 402.17578125,228.5" fill="#000" stroke="#000"/>
+<text x="424.67578125" y="186" font-size="12">Token { iss = aud = sub = did, cmd =</text>
+<text x="424.67578125" y="200" font-size="12">&quot;/ehr/doc/issue&quot;, nonce = random_id(), nbf, exp,</text>
+<text x="424.67578125" y="214" font-size="12">prf = [] }</text>
+<line x1="385.67578125" x2="675.67578125" y1="260" y2="260" stroke="#000"/><polygon points="675.67578125,260 666.67578125,255.5 666.67578125,264.5" fill="#000" stroke="#000"/>
+<text x="530.67578125" y="254" text-anchor="middle" font-size="12">sign(&amp;identity.keypair, &amp;token)</text>
+<line x1="675.67578125" x2="385.67578125" y1="312" y2="312" stroke="#000" stroke-dasharray="6,4"/><polyline points="394.67578125,307.5 385.67578125,312 394.67578125,316.5" fill="none" stroke="#000"/>
+<text x="530.67578125" y="292" text-anchor="middle" font-size="12">Signed { v, signer = did, payload (base64),</text>
+<text x="530.67578125" y="306" text-anchor="middle" font-size="12">signature (base64) }</text>
+<line x1="375.67578125" x2="90.67578125" y1="364" y2="364" stroke="#000" stroke-dasharray="6,4"/><polyline points="99.67578125,359.5 90.67578125,364 99.67578125,368.5" fill="none" stroke="#000"/>
+<text x="233.17578125" y="344" text-anchor="middle" font-size="12">Result&lt;Signed, SecurityError&gt; – korzeń</text>
+<text x="233.17578125" y="358" text-anchor="middle" font-size="12">uprawnień</text>
+<line x1="90.67578125" x2="375.67578125" y1="416" y2="416" stroke="#000"/><polygon points="375.67578125,416 366.67578125,411.5 366.67578125,420.5" fill="#000" stroke="#000"/>
+<text x="233.17578125" y="396" text-anchor="middle" font-size="12">delegate_read(identity, &amp;root, patient_did,</text>
+<text x="233.17578125" y="410" text-anchor="middle" font-size="12">doc_cid, now, exp)</text>
+<polyline points="390.67578125,440 418.67578125,440 418.67578125,468 393.17578125,468" fill="none" stroke="#000"/><polygon points="393.17578125,468 402.17578125,463.5 402.17578125,472.5" fill="#000" stroke="#000"/>
+<text x="424.67578125" y="444" font-size="12">Token { iss = lekarz, aud = sub = pacjent, cmd =</text>
+<text x="424.67578125" y="458" font-size="12">&quot;/ehr/doc/read&quot;, pol = [doc_cid], prf = [root] }</text>
+<line x1="385.67578125" x2="675.67578125" y1="504" y2="504" stroke="#000"/><polygon points="675.67578125,504 666.67578125,499.5 666.67578125,508.5" fill="#000" stroke="#000"/>
+<text x="530.67578125" y="498" text-anchor="middle" font-size="12">sign(&amp;identity.keypair, &amp;token)</text>
+<line x1="675.67578125" x2="385.67578125" y1="542" y2="542" stroke="#000" stroke-dasharray="6,4"/><polyline points="394.67578125,537.5 385.67578125,542 394.67578125,546.5" fill="none" stroke="#000"/>
+<text x="530.67578125" y="536" text-anchor="middle" font-size="12">Signed</text>
+<line x1="375.67578125" x2="90.67578125" y1="580" y2="580" stroke="#000" stroke-dasharray="6,4"/><polyline points="99.67578125,575.5 90.67578125,580 99.67578125,584.5" fill="none" stroke="#000"/>
+<text x="233.17578125" y="574" text-anchor="middle" font-size="12">read_token: Signed (zapisany w manifeście)</text>
+<line x1="90.67578125" x2="1265.67578125" y1="618" y2="618" stroke="#000"/><polyline points="1256.67578125,613.5 1265.67578125,618 1256.67578125,622.5" fill="none" stroke="#000"/>
+<text x="678.17578125" y="612" text-anchor="middle" font-size="12">manifest z read_token (zaszyfrowany OpenPGP, w IPFS)</text>
+<line x1="1270.67578125" x2="975.67578125" y1="670" y2="670" stroke="#000"/><polygon points="975.67578125,670 984.67578125,665.5 984.67578125,674.5" fill="#000" stroke="#000"/>
+<text x="1123.17578125" y="650" text-anchor="middle" font-size="12">verify_read(&amp;read_token, audience = did pacjenta,</text>
+<text x="1123.17578125" y="664" text-anchor="middle" font-size="12">document_cid)</text>
+<polyline points="980.67578125,694 1008.67578125,694 1008.67578125,708 983.17578125,708" fill="none" stroke="#000"/><polygon points="983.17578125,708 992.17578125,703.5 992.17578125,712.5" fill="#000" stroke="#000"/>
+<text x="1014.67578125" y="698" font-size="12">open(signed): Signed::open() → Token</text>
+<line x1="965.67578125" x2="685.67578125" y1="744" y2="744" stroke="#000"/><polygon points="685.67578125,744 694.67578125,739.5 694.67578125,748.5" fill="#000" stroke="#000"/>
+<text x="825.67578125" y="738" text-anchor="middle" font-size="12">open::&lt;Token&gt;()</text>
+<line x1="685.67578125" x2="965.67578125" y1="796" y2="796" stroke="#000" stroke-dasharray="6,4"/><polyline points="956.67578125,791.5 965.67578125,796 956.67578125,800.5" fill="none" stroke="#000"/>
+<text x="825.67578125" y="776" text-anchor="middle" font-size="12">weryfikacja podpisu (klucz publiczny z DID</text>
+<text x="825.67578125" y="790" text-anchor="middle" font-size="12">signer)</text>
+<polyline points="980.67578125,844 1008.67578125,844 1008.67578125,858 983.17578125,858" fill="none" stroke="#000"/><polygon points="983.17578125,858 992.17578125,853.5 992.17578125,862.5" fill="#000" stroke="#000"/>
+<text x="1014.67578125" y="848" font-size="12">Err(BadSignature)</text>
+<polyline points="980.67578125,906 1008.67578125,906 1008.67578125,920 983.17578125,920" fill="none" stroke="#000"/><polygon points="983.17578125,920 992.17578125,915.5 992.17578125,924.5" fill="#000" stroke="#000"/>
+<text x="1014.67578125" y="910" font-size="12">Err(TokenRejected(&quot;expired or not yet valid&quot;))</text>
+<polyline points="980.67578125,968 1008.67578125,968 1008.67578125,982 983.17578125,982" fill="none" stroke="#000"/><polygon points="983.17578125,982 992.17578125,977.5 992.17578125,986.5" fill="#000" stroke="#000"/>
+<text x="1014.67578125" y="972" font-size="12">Err(TokenRejected(&quot;revoked&quot;))</text>
+<polyline points="980.67578125,1030 1008.67578125,1030 1008.67578125,1044 983.17578125,1044" fill="none" stroke="#000"/><polygon points="983.17578125,1044 992.17578125,1039.5 992.17578125,1048.5" fill="#000" stroke="#000"/>
+<text x="1014.67578125" y="1034" font-size="12">Err(TokenRejected(...))</text>
+<polyline points="980.67578125,1116 1008.67578125,1116 1008.67578125,1144 983.17578125,1144" fill="none" stroke="#000"/><polygon points="983.17578125,1144 992.17578125,1139.5 992.17578125,1148.5" fill="#000" stroke="#000"/>
+<text x="1014.67578125" y="1120" font-size="12">verify_issue(proof): cmd = &quot;/ehr/doc/issue&quot;,</text>
+<text x="1014.67578125" y="1134" font-size="12">self-issued, iss należy do trusted_issuers</text>
+<polyline points="980.67578125,1166 1008.67578125,1166 1008.67578125,1180 983.17578125,1180" fill="none" stroke="#000"/><polygon points="983.17578125,1180 992.17578125,1175.5 992.17578125,1184.5" fill="#000" stroke="#000"/>
+<text x="1014.67578125" y="1170" font-size="12">root.aud == token.iss ?</text>
+<polyline points="980.67578125,1246 1008.67578125,1246 1008.67578125,1260 983.17578125,1260" fill="none" stroke="#000"/><polygon points="983.17578125,1260 992.17578125,1255.5 992.17578125,1264.5" fill="#000" stroke="#000"/>
+<text x="1014.67578125" y="1250" font-size="12">Ok(token)</text>
+<polyline points="980.67578125,1308 1008.67578125,1308 1008.67578125,1322 983.17578125,1322" fill="none" stroke="#000"/><polygon points="983.17578125,1322 992.17578125,1317.5 992.17578125,1326.5" fill="#000" stroke="#000"/>
+<text x="1014.67578125" y="1312" font-size="12">Err(TokenRejected(&quot;issuer has no issue chain&quot;))</text>
+<line x1="975.67578125" x2="1270.67578125" y1="1398" y2="1398" stroke="#000" stroke-dasharray="6,4"/><polyline points="1261.67578125,1393.5 1270.67578125,1398 1261.67578125,1402.5" fill="none" stroke="#000"/>
+<text x="1123.17578125" y="1392" text-anchor="middle" font-size="12">Result&lt;Token, SecurityError&gt;</text>
+<polygon points="928.67578125,1088 965.8896484375,1088 965.8896484375,1097 958.8896484375,1104 928.67578125,1104" fill="#fff" stroke="#000"/><text x="934.67578125" y="1100" font-size="11" font-weight="bold">loop</text>
+<rect x="970.8896484375" y="1089" width="129.3779296875" height="14" fill="#fff"/><text x="973.8896484375" y="1101" font-size="11.5">[dla każdego proof z prf]</text>
+<polygon points="928.67578125,1218 955.5126953125,1218 955.5126953125,1227 948.5126953125,1234 928.67578125,1234" fill="#fff" stroke="#000"/><text x="934.67578125" y="1230" font-size="11" font-weight="bold">alt</text>
+<rect x="960.5126953125" y="1219" width="163.894775390625" height="14" fill="#fff"/><text x="963.5126953125" y="1231" font-size="11.5">[łańcuch uprawnień kompletny]</text>
+<rect x="933.67578125" y="1286" width="83.989990234375" height="14" fill="#fff"/><text x="936.67578125" y="1297" font-size="11.5">[brak łańcucha]</text>
+<polygon points="920.67578125,816 947.5126953125,816 947.5126953125,825 940.5126953125,832 920.67578125,832" fill="#fff" stroke="#000"/><text x="926.67578125" y="828" font-size="11" font-weight="bold">alt</text>
+<rect x="952.5126953125" y="817" width="70.468505859375" height="14" fill="#fff"/><text x="955.5126953125" y="829" font-size="11.5">[signer ≠ iss]</text>
+<rect x="925.67578125" y="884" width="136.6552734375" height="14" fill="#fff"/><text x="928.67578125" y="895" font-size="11.5">[now &lt; nbf lub now ≥ exp]</text>
+<rect x="925.67578125" y="946" width="140.254638671875" height="14" fill="#fff"/><text x="928.67578125" y="957" font-size="11.5">[nonce należy do revoked]</text>
+<rect x="925.67578125" y="1008" width="341.965087890625" height="14" fill="#fff"/><text x="928.67578125" y="1019" font-size="11.5">[cmd ≠ &quot;/ehr/doc/read&quot; lub aud ≠ audience lub dokument poza pol]</text>
+<rect x="925.67578125" y="1070" width="93.580810546875" height="14" fill="#fff"/><text x="928.67578125" y="1081" font-size="11.5">[poprawny token]</text>
+</svg>

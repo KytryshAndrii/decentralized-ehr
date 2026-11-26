@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2314" height="690" viewBox="0 0 2314 690" font-family="Arial, Helvetica, sans-serif">
+<rect width="2314" height="690" fill="#fff"/>
+<text x="1157" y="28" text-anchor="middle" font-size="15" font-weight="bold">ehr-cli – diagram klas</text>
+<path d="M1879.4,242.3 C1868.5,268.6 1857.6,294.8 1850.5,311.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1879.4,242.3 1870.4,248.4 1872.5,259.0 1881.5,253.0" fill="#000" stroke="#000" stroke-width="1"/><text x="1865.9" y="304.9" font-size="10.5">1</text>
+<rect x="1862.6" y="269.0" width="53.9" height="14" fill="#fff"/><text x="1889.5" y="280.0" text-anchor="middle" font-size="10.5">blockstore</text>
+<path d="M1024.1,204.1 C1034.8,240.4 1048.3,286.4 1055.8,311.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1057.5,299.9 1055.8,311.8 1047.9,302.7" fill="none" stroke="#000" stroke-width="1"/><path d="M1068.3,204.3 C1109.0,240.6 1160.5,286.5 1189.0,311.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1184.1,300.9 1189.0,311.9 1177.5,308.3" fill="none" stroke="#000" stroke-width="1"/><path d="M1955.5,242.3 C1966.5,268.6 1977.4,294.8 1984.5,311.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1984.9,299.7 1984.5,311.8 1975.7,303.6" fill="none" stroke="#000" stroke-width="1"/><path d="M2019.5,242.3 C2048.8,268.6 2078.0,294.8 2097.0,311.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2092.1,300.7 2097.0,311.8 2085.5,308.2" fill="none" stroke="#000" stroke-width="1"/><path d="M2083.4,242.3 C2131.0,268.5 2178.3,294.6 2209.2,311.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2202.0,301.9 2209.2,311.6 2197.2,310.7" fill="none" stroke="#000" stroke-width="1"/><path d="M1555.4,380.7 C1628.4,334.3 1707.6,284.1 1773.3,242.5" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1761.3,244.2 1773.3,242.5 1766.7,252.6" fill="none" stroke="#000" stroke-width="1"/><path d="M1107.8,408.1 C1076.3,392.1 1054.5,381.1 1054.5,381.1 C1054.5,381.1 992.5,352.1 992.5,352.1 C992.5,352.1 992.5,312.0 992.5,312.0 C992.5,312.0 998.5,251.1 1003.2,204.2" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="997.1,214.6 1003.2,204.2 1007.1,215.6" fill="none" stroke="#000" stroke-width="1"/><path d="M1107.6,387.6 C1069.8,364.8 1042.5,348.4 1042.5,348.4 C1042.5,348.4 518.5,348.4 518.5,348.4 C518.5,348.4 478.3,373.5 428.4,404.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="440.3,403.0 428.4,404.6 435.0,394.5" fill="none" stroke="#000" stroke-width="1"/><path d="M405.4,404.5 C470.8,358.1 530.5,315.7 530.5,315.7 C530.5,315.7 1030.5,315.7 1030.5,315.7 C1030.5,315.7 1072.5,344.6 1125.2,380.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1119.0,370.4 1125.2,380.7 1113.3,378.6" fill="none" stroke="#000" stroke-width="1"/><path d="M453.2,409.1 C484.6,392.6 506.5,381.1 506.5,381.1 C506.5,381.1 743.8,272.3 892.1,204.4" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="880.0,204.4 892.1,204.4 884.1,213.5" fill="none" stroke="#000" stroke-width="1"/><path d="M453.1,641.1 C505.5,641.1 599.8,641.1 599.8,641.1 C599.8,641.1 634.1,618.7 672.8,593.4" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="660.8,595.2 672.8,593.4 666.3,603.6" fill="none" stroke="#000" stroke-width="1"/><path d="M672.8,452.7 C634.1,427.4 599.8,405.0 599.8,405.0 C599.8,405.0 505.5,405.0 453.1,405.0" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="464.1,410.0 453.1,405.0 464.1,400.0" fill="none" stroke="#000" stroke-width="1"/><path d="M1036.9,523.0 C1061.0,523.0 1086.9,523.0 1107.7,523.0" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1096.7,518.0 1107.7,523.0 1096.7,528.0" fill="none" stroke="#000" stroke-width="1"/><path d="M1825.6,242.3 C1789.0,278.7 1755.5,312.0 1755.5,312.0 C1755.5,312.0 1735.6,424.7 1725.0,485.0" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1731.8,475.0 1725.0,485.0 1722.0,473.3" fill="none" stroke="#000" stroke-width="1"/><rect x="24.0" y="405.0" width="429" height="236" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="24.0" x2="453.0" y1="445.0" y2="445.0" stroke="#000"/>
+<line x1="24.0" x2="453.0" y1="457.0" y2="457.0" stroke="#000"/>
+<text x="238.5" y="421.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="238.5" y="437.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_cli::ehr_commands</text>
+<text x="32.0" y="473.0" font-size="12" text-decoration="underline" xml:space="preserve">~usage(role: Role): String</text>
+<text x="32.0" y="489.0" font-size="12" text-decoration="underline" xml:space="preserve">~local_peer_id(role: Role): CliResult&lt;String&gt;</text>
+<text x="32.0" y="505.0" font-size="12" text-decoration="underline" xml:space="preserve">~is_offline_command(command: &amp;str): bool</text>
+<text x="32.0" y="521.0" font-size="12" text-decoration="underline" xml:space="preserve">-is_node_command(command: &amp;str): bool</text>
+<text x="32.0" y="537.0" font-size="12" text-decoration="underline" xml:space="preserve">-password(confirm: bool): CliResult&lt;String&gt;</text>
+<text x="32.0" y="553.0" font-size="12" text-decoration="underline" xml:space="preserve">-open_app(role: Role): CliResult&lt;Arc&lt;EhrApp&gt;&gt;</text>
+<text x="32.0" y="569.0" font-size="12" text-decoration="underline" xml:space="preserve">-split_args(line: &amp;str): Vec&lt;String&gt;</text>
+<text x="32.0" y="585.0" font-size="12" text-decoration="underline" xml:space="preserve">-take_option(words: &amp;mut Vec&lt;String&gt;, flag: &amp;str): CliResult&lt;Option&lt;String&gt;&gt;</text>
+<text x="32.0" y="601.0" font-size="12" text-decoration="underline" xml:space="preserve">~offline(role: Role, args: &amp;[String]): CliResult&lt;()&gt;</text>
+<text x="32.0" y="617.0" font-size="12" text-decoration="underline" xml:space="preserve">-print_profile(app: &amp;EhrApp)</text>
+<text x="32.0" y="633.0" font-size="12" text-decoration="underline" xml:space="preserve">~run_node(role: Role, config: NetworkConfig): CliResult&lt;()&gt;</text>
+<rect x="1108.0" y="381.0" width="449" height="284" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1108.0" x2="1557.0" y1="421.0" y2="421.0" stroke="#000"/>
+<line x1="1108.0" x2="1557.0" y1="433.0" y2="433.0" stroke="#000"/>
+<text x="1332.5" y="397.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1332.5" y="413.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_cli::cli</text>
+<text x="1116.0" y="449.0" font-size="12" text-decoration="underline" xml:space="preserve">-usage(role: Role)</text>
+<text x="1116.0" y="465.0" font-size="12" text-decoration="underline" xml:space="preserve">~binary_name(role: Role): &amp;'static str</text>
+<text x="1116.0" y="481.0" font-size="12" text-decoration="underline" xml:space="preserve">-argument_at(args: &amp;'a [String], index: usize, description: &amp;str): CliResult&lt;&amp;'a str&gt;</text>
+<text x="1116.0" y="497.0" font-size="12" text-decoration="underline" xml:space="preserve">-exact_args(args: &amp;[String], expected: usize): CliResult&lt;()&gt;</text>
+<text x="1116.0" y="513.0" font-size="12" text-decoration="underline" xml:space="preserve">~store_dir(role: Role): PathBuf</text>
+<text x="1116.0" y="529.0" font-size="12" text-decoration="underline" xml:space="preserve">-local_dag(store: &amp;Path, cid: &amp;ipfs_cid::models::Cid):</text>
+<text x="1116.0" y="545.0" font-size="12" text-decoration="underline" xml:space="preserve">    crate::services::ipfs_service::ServiceResult&lt;Vec&lt;ipfs_cid::models::Cid&gt;&gt;</text>
+<text x="1116.0" y="561.0" font-size="12" text-decoration="underline" xml:space="preserve">~ipfs_line(store: &amp;Path, line: &amp;str, sender:</text>
+<text x="1116.0" y="577.0" font-size="12" text-decoration="underline" xml:space="preserve">    &amp;tokio::sync::mpsc::UnboundedSender&lt;NetworkCommand&gt;): bool</text>
+<text x="1116.0" y="593.0" font-size="12" text-decoration="underline" xml:space="preserve">-stdin_commands(store: PathBuf, sender:</text>
+<text x="1116.0" y="609.0" font-size="12" text-decoration="underline" xml:space="preserve">    tokio::sync::mpsc::UnboundedSender&lt;NetworkCommand&gt;)</text>
+<text x="1116.0" y="625.0" font-size="12" text-decoration="underline" xml:space="preserve">-node_command(role: Role, args: &amp;[String]): CliResult&lt;()&gt;</text>
+<text x="1116.0" y="641.0" font-size="12" text-decoration="underline" xml:space="preserve">-storage_command(role: Role, args: &amp;[String]): CliResult&lt;()&gt;</text>
+<text x="1116.0" y="657.0" font-size="12" text-decoration="underline" xml:space="preserve">+run(role: Role): CliResult&lt;()&gt;</text>
+<rect x="524.5" y="453.0" width="512" height="140" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="524.5" x2="1036.5" y1="493.0" y2="493.0" stroke="#000"/>
+<line x1="524.5" x2="1036.5" y1="505.0" y2="505.0" stroke="#000"/>
+<text x="780.5" y="469.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="780.5" y="485.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_cli::execute</text>
+<text x="532.5" y="521.0" font-size="12" text-decoration="underline" xml:space="preserve">-require_node(node: Option&lt;&amp;EhrNode&gt;): CliResult&lt;&amp;EhrNode&gt;</text>
+<text x="532.5" y="537.0" font-size="12" text-decoration="underline" xml:space="preserve">-absolute(path: &amp;str): CliResult&lt;PathBuf&gt;</text>
+<text x="532.5" y="553.0" font-size="12" text-decoration="underline" xml:space="preserve">-documents(app: &amp;EhrApp, words: &amp;mut Vec&lt;String&gt;): CliResult&lt;Vec&lt;IndexEntry&gt;&gt;</text>
+<text x="532.5" y="569.0" font-size="12" text-decoration="underline" xml:space="preserve">-print_documents(app: &amp;EhrApp, list: &amp;[IndexEntry])</text>
+<text x="532.5" y="585.0" font-size="12" text-decoration="underline" xml:space="preserve">~execute(app: &amp;Arc&lt;EhrApp&gt;, node: Option&lt;&amp;EhrNode&gt;, words: Vec&lt;String&gt;): CliResult&lt;()&gt;</text>
+<rect x="1561.5" y="485.0" width="314" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1561.5" x2="1875.5" y1="525.0" y2="525.0" stroke="#000"/>
+<line x1="1561.5" x2="1875.5" y1="537.0" y2="537.0" stroke="#000"/>
+<text x="1718.5" y="501.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1718.5" y="517.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_cli::ipfs_service</text>
+<text x="1569.5" y="553.0" font-size="12" text-decoration="underline" xml:space="preserve">-read_block_file(path: &amp;Path): ServiceResult&lt;Vec&lt;u8&gt;&gt;</text>
+<rect x="775.5" y="96.0" width="466" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="775.5" x2="1241.5" y1="120.0" y2="120.0" stroke="#000"/>
+<line x1="775.5" x2="1241.5" y1="132.0" y2="132.0" stroke="#000"/>
+<text x="1008.5" y="112.0" text-anchor="middle" font-size="12" font-weight="bold">NetworkService</text>
+<text x="783.5" y="148.0" font-size="12" text-decoration="underline" xml:space="preserve">+local_peer_id(): ServiceResult&lt;String&gt;</text>
+<text x="783.5" y="164.0" font-size="12" text-decoration="underline" xml:space="preserve">+node_config(dht_server: bool, bootstrap: &amp;[String]): ServiceResult&lt;NetworkConfig&gt;</text>
+<text x="783.5" y="180.0" font-size="12" text-decoration="underline" xml:space="preserve">+run(config: NetworkConfig, commands: UnboundedReceiver&lt;NetworkCommand&gt;):</text>
+<text x="783.5" y="196.0" font-size="12" text-decoration="underline" xml:space="preserve">    ServiceResult&lt;()&gt;</text>
+<rect x="1727.5" y="58.0" width="380" height="184" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1727.5" x2="2107.5" y1="82.0" y2="82.0" stroke="#000"/>
+<line x1="1727.5" x2="2107.5" y1="106.0" y2="106.0" stroke="#000"/>
+<text x="1917.5" y="74.0" text-anchor="middle" font-size="12" font-weight="bold">IpfsService</text>
+<text x="1735.5" y="98.0" font-size="12" xml:space="preserve">-blockstore: PersistentBlockstore</text>
+<text x="1735.5" y="122.0" font-size="12" text-decoration="underline" xml:space="preserve">+new(directory: &amp;Path): ServiceResult&lt;Self&gt;</text>
+<text x="1735.5" y="138.0" font-size="12" text-decoration="underline" xml:space="preserve">+create_cid(file_path: &amp;Path): ServiceResult&lt;Cid&gt;</text>
+<text x="1735.5" y="154.0" font-size="12" xml:space="preserve">+put_file(file_path: &amp;Path): ServiceResult&lt;Cid&gt;</text>
+<text x="1735.5" y="170.0" font-size="12" xml:space="preserve">+add_file(file_path: &amp;Path): ServiceResult&lt;(ImportedFile, Chunker)&gt;</text>
+<text x="1735.5" y="186.0" font-size="12" xml:space="preserve">+dag_cids(cid: &amp;Cid): ServiceResult&lt;Vec&lt;Cid&gt;&gt;</text>
+<text x="1735.5" y="202.0" font-size="12" text-decoration="underline" xml:space="preserve">+parse_cid(text: &amp;str): ServiceResult&lt;Cid&gt;</text>
+<text x="1735.5" y="218.0" font-size="12" xml:space="preserve">+has_block(cid: &amp;Cid): ServiceResult&lt;bool&gt;</text>
+<text x="1735.5" y="234.0" font-size="12" xml:space="preserve">+export_file(cid: &amp;Cid, output_path: &amp;Path): ServiceResult&lt;bool&gt;</text>
+<rect x="1774.0" y="312.0" width="137" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1842.5" y="328.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-store»</text>
+<text x="1842.5" y="344.0" text-anchor="middle" font-size="12" font-weight="bold">PersistentBlockstore</text>
+<rect x="1010.5" y="312.0" width="102" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1061.5" y="328.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-network»</text>
+<text x="1061.5" y="344.0" text-anchor="middle" font-size="12" font-weight="bold">NetworkConfig</text>
+<rect x="1149.0" y="312.0" width="123" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1210.5" y="328.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-network»</text>
+<text x="1210.5" y="344.0" text-anchor="middle" font-size="12" font-weight="bold">NetworkCommand</text>
+<rect x="1947.5" y="312.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1992.5" y="328.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-cid»</text>
+<text x="1992.5" y="344.0" text-anchor="middle" font-size="12" font-weight="bold">Cid</text>
+<rect x="2073.5" y="312.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2118.5" y="328.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-unixfs»</text>
+<text x="2118.5" y="344.0" text-anchor="middle" font-size="12" font-weight="bold">ImportedFile</text>
+<rect x="2199.5" y="312.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2244.5" y="328.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-unixfs»</text>
+<text x="2244.5" y="344.0" text-anchor="middle" font-size="12" font-weight="bold">Chunker</text>
+</svg>

@@ -1,0 +1,247 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2986" height="1521" viewBox="0 0 2986 1521" font-family="Arial, Helvetica, sans-serif">
+<rect width="2986" height="1521" fill="#fff"/>
+<text x="1493" y="28" text-anchor="middle" font-size="15" font-weight="bold">ipfs-bitswap – diagram klas</text>
+<path d="M2039.1,1070.4 C2037.4,1087.0 2036.1,1099.0 2036.1,1099.0 C2036.1,1099.0 2036.1,1191.0 2036.1,1191.0 C2036.1,1191.0 2042.5,1235.5 2046.3,1261.9" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="2049.7,1250.3 2046.3,1261.9 2039.8,1251.8" fill="none" stroke="#000" stroke-width="1"/><rect x="2032.5" y="1137.0" width="31.1" height="14" fill="#fff"/><text x="2048.0" y="1148.0" text-anchor="middle" font-size="10.5">Store</text>
+<path d="M345.9,608.4 C321.0,706.7 280.6,865.9 262.4,937.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="345.9,608.4 337.9,615.6 341.5,625.8 349.5,618.6" fill="#000" stroke="#000" stroke-width="1"/><text x="276.1" y="928.7" font-size="10.5">0..1</text>
+<rect x="332.6" y="737.0" width="41.0" height="14" fill="#fff"/><text x="353.1" y="748.0" text-anchor="middle" font-size="10.5">wantlist</text>
+<path d="M457.9,608.5 C475.7,624.8 489.0,637.0 489.0,637.0 C489.0,637.0 538.0,849.6 558.4,937.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="457.9,608.5 460.5,619.0 471.1,620.6 468.6,610.1" fill="#000" stroke="#000" stroke-width="1"/><text x="564.5" y="923.7" font-size="10.5">0..*</text>
+<rect x="533.4" y="737.0" width="42.8" height="14" fill="#fff"/><text x="554.8" y="748.0" text-anchor="middle" font-size="10.5">payload</text>
+<path d="M377.6,608.2 C390.1,705.4 408.9,853.0 408.9,853.0 C408.9,853.0 415.8,901.9 420.8,937.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="377.6,608.2 372.8,617.9 379.9,626.1 384.7,616.4" fill="#000" stroke="#000" stroke-width="1"/><text x="428.5" y="924.5" font-size="10.5">0..*</text>
+<rect x="404.1" y="737.0" width="84.8" height="14" fill="#fff"/><text x="446.5" y="748.0" text-anchor="middle" font-size="10.5">block_presences</text>
+<path d="M253.0,1014.3 C253.0,1065.5 253.0,1158.3 253.0,1219.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="253.0,1014.3 247.0,1023.3 253.0,1032.3 259.0,1023.3" fill="#000" stroke="#000" stroke-width="1"/><text x="263.0" y="1207.8" font-size="10.5">0..*</text>
+<rect x="249.2" y="1137.0" width="37.5" height="14" fill="#fff"/><text x="268.0" y="1148.0" text-anchor="middle" font-size="10.5">entries</text>
+<path d="M744.8,1014.3 C774.1,1075.6 829.2,1191.0 829.2,1191.0 C829.2,1191.0 931.6,1235.2 993.0,1261.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="744.8,1014.3 743.3,1025.0 752.6,1030.5 754.1,1019.8" fill="#000" stroke="#000" stroke-width="1"/><text x="982.2" y="1250.1" font-size="10.5">1</text>
+<rect x="825.9" y="1137.0" width="19.4" height="14" fill="#fff"/><text x="835.6" y="1148.0" text-anchor="middle" font-size="10.5">cid</text>
+<path d="M766.0,595.8 C755.1,603.2 748.0,608.0 748.0,608.0 C748.0,608.0 633.9,637.0 633.9,637.0 C633.9,637.0 581.0,853.0 581.0,853.0 C581.0,853.0 496.0,882.0 496.0,882.0 C496.0,882.0 473.5,911.9 454.1,937.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="766.0,595.8 755.2,595.9 751.1,605.9 761.9,605.8" fill="#000" stroke="#000" stroke-width="1"/><text x="471.7" y="935.0" font-size="10.5">0..*</text>
+<rect x="629.7" y="737.0" width="54.4" height="14" fill="#fff"/><text x="656.9" y="748.0" text-anchor="middle" font-size="10.5">presences</text>
+<path d="M828.0,608.5 C819.8,624.8 813.6,637.0 813.6,637.0 C813.6,637.0 774.0,853.0 774.0,853.0 C774.0,853.0 755.2,901.9 741.4,937.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="828.0,608.5 818.6,613.8 819.9,624.5 829.3,619.2" fill="#000" stroke="#000" stroke-width="1"/><text x="756.4" y="930.4" font-size="10.5">0..*</text>
+<rect x="809.9" y="737.0" width="35.8" height="14" fill="#fff"/><text x="827.8" y="748.0" text-anchor="middle" font-size="10.5">blocks</text>
+<path d="M874.2,608.4 C881.8,761.1 897.2,1070.0 897.2,1070.0 C897.2,1070.0 967.0,1191.0 967.0,1191.0 C967.0,1191.0 1002.1,1235.5 1022.9,1261.9" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="874.2,608.4 868.6,617.7 875.1,626.4 880.6,617.1" fill="#000" stroke="#000" stroke-width="1"/><text x="1020.9" y="1247.2" font-size="10.5">0..*</text>
+<rect x="892.9" y="968.0" width="61.4" height="14" fill="#fff"/><text x="923.6" y="979.0" text-anchor="middle" font-size="10.5">sent_blocks</text>
+<path d="M899.0,608.5 C904.8,624.8 909.0,637.0 909.0,637.0 C909.0,637.0 1012.7,1154.6 1034.1,1261.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="899.0,608.5 896.3,618.9 905.0,625.5 907.7,615.0" fill="#000" stroke="#000" stroke-width="1"/><text x="1040.8" y="1248.1" font-size="10.5">0..1</text>
+<rect x="990.9" y="968.0" width="38.1" height="14" fill="#fff"/><text x="1009.9" y="979.0" text-anchor="middle" font-size="10.5">carried</text>
+<path d="M769.0,608.5 C749.2,624.8 734.4,637.0 734.4,637.0 C734.4,637.0 689.0,853.0 689.0,853.0 C689.0,853.0 638.0,882.0 638.0,882.0 C638.0,882.0 615.2,911.9 595.5,937.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="769.0,608.5 758.2,609.6 755.1,619.9 765.9,618.8" fill="#000" stroke="#000" stroke-width="1"/><text x="613.1" y="935.1" font-size="10.5">0..1</text>
+<rect x="730.7" y="737.0" width="38.1" height="14" fill="#fff"/><text x="749.7" y="748.0" text-anchor="middle" font-size="10.5">carried</text>
+<path d="M719.5,290.4 C699.6,351.8 676.1,424.1 660.7,471.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="719.5,290.4 711.0,297.1 714.0,307.5 722.5,300.8" fill="#000" stroke="#000" stroke-width="1"/><text x="675.1" y="463.5" font-size="10.5">1</text>
+<rect x="703.7" y="357.0" width="29.9" height="14" fill="#fff"/><text x="718.6" y="368.0" text-anchor="middle" font-size="10.5">limits</text>
+<path d="M1654.1,600.3 C1609.2,697.1 1537.0,853.0 1537.0,853.0 C1537.0,853.0 1499.3,883.3 1461.4,913.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polygon points="1461.4,913.7 1476.7,910.4 1467.9,899.4" fill="#fff" stroke="#000" stroke-width="1"/><path d="M1315.2,1038.2 C1235.8,1107.7 1110.7,1217.3 1060.2,1261.5" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1071.8,1258.0 1060.2,1261.5 1065.2,1250.5" fill="none" stroke="#000" stroke-width="1"/><path d="M860.9,290.5 C952.1,391.9 1083.7,538.1 1172.6,636.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1169.0,625.4 1172.6,636.9 1161.5,632.0" fill="none" stroke="#000" stroke-width="1"/><path d="M627.7,290.4 C573.0,339.2 510.6,394.9 460.5,439.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="472.0,436.0 460.5,439.6 465.4,428.5" fill="none" stroke="#000" stroke-width="1"/><path d="M794.5,290.4 C810.3,339.2 828.4,394.9 842.9,439.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="844.3,427.6 842.9,439.6 834.8,430.7" fill="none" stroke="#000" stroke-width="1"/><path d="M1709.8,600.4 C1739.1,706.9 1791.1,895.5 1807.7,955.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1809.6,943.9 1807.7,955.9 1800.0,946.6" fill="none" stroke="#000" stroke-width="1"/><path d="M1683.9,600.5 C1673.7,750.1 1652.0,1070.0 1652.0,1070.0 C1652.0,1070.0 1224.9,1216.8 1083.1,1265.5" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1095.1,1266.7 1083.1,1265.5 1091.9,1257.2" fill="none" stroke="#000" stroke-width="1"/><path d="M1149.7,853.5 C1131.1,870.2 1118.0,882.0 1118.0,882.0 C1118.0,882.0 1058.0,1181.4 1041.9,1261.5" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1049.0,1251.7 1041.9,1261.5 1039.2,1249.7" fill="none" stroke="#000" stroke-width="1"/><rect x="24.0" y="1381.0" width="458" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="24.0" x2="482.0" y1="1421.0" y2="1421.0" stroke="#000"/>
+<line x1="24.0" x2="482.0" y1="1433.0" y2="1433.0" stroke="#000"/>
+<text x="253.0" y="1397.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="253.0" y="1413.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_bitswap::source</text>
+<text x="32.0" y="1449.0" font-size="12" text-decoration="underline" xml:space="preserve">-unsupported_as_absent(result: Result&lt;T, StoreError&gt;): Result&lt;T, BitswapError&gt;</text>
+<text x="32.0" y="1465.0" font-size="12" text-decoration="underline" xml:space="preserve">-read_provided(store: &amp;PersistentBlockstore, cid: &amp;Cid): Result&lt;Option&lt;Vec&lt;u8&gt;&gt;,</text>
+<text x="32.0" y="1481.0" font-size="12" text-decoration="underline" xml:space="preserve">    BitswapError&gt;</text>
+<rect x="486.5" y="1373.0" width="531" height="124" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="486.5" x2="1017.5" y1="1413.0" y2="1413.0" stroke="#000"/>
+<line x1="486.5" x2="1017.5" y1="1425.0" y2="1425.0" stroke="#000"/>
+<text x="752.0" y="1389.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="752.0" y="1405.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_bitswap::service</text>
+<text x="494.5" y="1441.0" font-size="12" text-decoration="underline" xml:space="preserve">+new_behaviour(): BitswapBehaviour</text>
+<text x="494.5" y="1457.0" font-size="12" text-decoration="underline" xml:space="preserve">~blocking(task: impl FnOnce() -&gt; Result&lt;T, BitswapError&gt; + Send + 'static): Result&lt;T,</text>
+<text x="494.5" y="1473.0" font-size="12" text-decoration="underline" xml:space="preserve">    BitswapError&gt;</text>
+<text x="494.5" y="1489.0" font-size="12" text-decoration="underline" xml:space="preserve">-log_sent(peer: PeerId, message: &amp;BitswapMessage, plan: &amp;ResponsePlan, logged: &amp;mut usize)</text>
+<rect x="1022.5" y="1389.0" width="459" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1022.5" x2="1481.5" y1="1429.0" y2="1429.0" stroke="#000"/>
+<line x1="1022.5" x2="1481.5" y1="1441.0" y2="1441.0" stroke="#000"/>
+<text x="1252.0" y="1405.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1252.0" y="1421.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_bitswap::client</text>
+<text x="1030.5" y="1457.0" font-size="12" text-decoration="underline" xml:space="preserve">~deliver(pending: &amp;PendingWants, peer: PeerId, message: &amp;mut BitswapMessage)</text>
+<text x="1030.5" y="1473.0" font-size="12" text-decoration="underline" xml:space="preserve">-lock(pending: &amp;PendingWants): std::sync::MutexGuard&lt;'_, WantMap&gt;</text>
+<rect x="1486.0" y="1389.0" width="502" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1486.0" x2="1988.0" y1="1429.0" y2="1429.0" stroke="#000"/>
+<line x1="1486.0" x2="1988.0" y1="1441.0" y2="1441.0" stroke="#000"/>
+<text x="1737.0" y="1405.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1737.0" y="1421.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_bitswap::server</text>
+<text x="1494.0" y="1457.0" font-size="12" text-decoration="underline" xml:space="preserve">-next_block(plan: &amp;mut ResponsePlan, read: &amp;ReadBlock&lt;'_&gt;): Result&lt;Option&lt;(Cid, Block,</text>
+<text x="1494.0" y="1473.0" font-size="12" text-decoration="underline" xml:space="preserve">    bool)&gt;, BitswapError&gt;</text>
+<rect x="1992.5" y="1373.0" width="509" height="124" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1992.5" x2="2501.5" y1="1413.0" y2="1413.0" stroke="#000"/>
+<line x1="1992.5" x2="2501.5" y1="1425.0" y2="1425.0" stroke="#000"/>
+<text x="2247.0" y="1389.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="2247.0" y="1405.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_bitswap::codec</text>
+<text x="2000.5" y="1441.0" font-size="12" text-decoration="underline" xml:space="preserve">+read_message(reader: &amp;mut R, max_bytes: usize): Result&lt;Option&lt;BitswapMessage&gt;,</text>
+<text x="2000.5" y="1457.0" font-size="12" text-decoration="underline" xml:space="preserve">    BitswapError&gt;</text>
+<text x="2000.5" y="1473.0" font-size="12" text-decoration="underline" xml:space="preserve">+write_message(writer: &amp;mut W, message: &amp;BitswapMessage, max_bytes: usize): Result&lt;(),</text>
+<text x="2000.5" y="1489.0" font-size="12" text-decoration="underline" xml:space="preserve">    BitswapError&gt;</text>
+<rect x="2506.0" y="1381.0" width="456" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2506.0" x2="2962.0" y1="1421.0" y2="1421.0" stroke="#000"/>
+<line x1="2506.0" x2="2962.0" y1="1433.0" y2="1433.0" stroke="#000"/>
+<text x="2734.0" y="1397.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="2734.0" y="1413.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_bitswap::utils</text>
+<text x="2514.0" y="1449.0" font-size="12" text-decoration="underline" xml:space="preserve">+cid_prefix(cid: &amp;Cid): Vec&lt;u8&gt;</text>
+<text x="2514.0" y="1465.0" font-size="12" text-decoration="underline" xml:space="preserve">+block_presence(cid_bytes: &amp;[u8], presence: BlockPresenceType): BlockPresence</text>
+<text x="2514.0" y="1481.0" font-size="12" text-decoration="underline" xml:space="preserve">+block_cid(prefix: &amp;[u8], data: &amp;[u8]): Option&lt;Cid&gt;</text>
+<rect x="1136.5" y="914.0" width="497" height="124" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1136.5" x2="1633.5" y1="954.0" y2="954.0" stroke="#000"/>
+<line x1="1136.5" x2="1633.5" y1="966.0" y2="966.0" stroke="#000"/>
+<text x="1385.0" y="930.0" text-anchor="middle" font-size="12" font-weight="normal">«interface»</text>
+<text x="1385.0" y="946.0" text-anchor="middle" font-size="12" font-weight="bold">BlockSource</text>
+<text x="1144.5" y="982.0" font-size="12" xml:space="preserve">+has_blocks(cids: &amp;[Cid]): Result&lt;Vec&lt;bool&gt;, BitswapError&gt;</text>
+<text x="1144.5" y="998.0" font-size="12" xml:space="preserve">+get_block(cid: &amp;Cid): Result&lt;Option&lt;Vec&lt;u8&gt;&gt;, BitswapError&gt;</text>
+<text x="1144.5" y="1014.0" font-size="12" xml:space="preserve">+with_reader(task: impl FnOnce(&amp;ReadBlock&lt;'_&gt;) -&gt; Result&lt;R, BitswapError&gt;): Result&lt;R,</text>
+<text x="1144.5" y="1030.0" font-size="12" xml:space="preserve">    BitswapError&gt;</text>
+<rect x="1917.5" y="882.0" width="263" height="188" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1917.5" x2="2180.5" y1="922.0" y2="922.0" stroke="#000"/>
+<line x1="1917.5" x2="2180.5" y1="1058.0" y2="1058.0" stroke="#000"/>
+<text x="2049.0" y="898.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="2049.0" y="914.0" text-anchor="middle" font-size="12" font-weight="bold">BitswapError</text>
+<text x="1925.5" y="938.0" font-size="12" xml:space="preserve">Io(std::io::Error)</text>
+<text x="1925.5" y="954.0" font-size="12" xml:space="preserve">Decode(prost::DecodeError)</text>
+<text x="1925.5" y="970.0" font-size="12" xml:space="preserve">MessageTooLarge { actual: usize, limit: usize }</text>
+<text x="1925.5" y="986.0" font-size="12" xml:space="preserve">Store(ipfs_store::StoreError)</text>
+<text x="1925.5" y="1002.0" font-size="12" xml:space="preserve">Stream(String)</text>
+<text x="1925.5" y="1018.0" font-size="12" xml:space="preserve">Timeout</text>
+<text x="1925.5" y="1034.0" font-size="12" xml:space="preserve">DontHave</text>
+<text x="1925.5" y="1050.0" font-size="12" xml:space="preserve">NoProviders</text>
+<rect x="212.5" y="440.0" width="309" height="168" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="212.5" x2="521.5" y1="464.0" y2="464.0" stroke="#000"/>
+<line x1="212.5" x2="521.5" y1="552.0" y2="552.0" stroke="#000"/>
+<text x="367.0" y="456.0" text-anchor="middle" font-size="12" font-weight="bold">BitswapMessage</text>
+<text x="220.5" y="480.0" font-size="12" xml:space="preserve">+wantlist: Option&lt;Wantlist&gt;</text>
+<text x="220.5" y="496.0" font-size="12" xml:space="preserve">+blocks: Vec&lt;Vec&lt;u8&gt;&gt;</text>
+<text x="220.5" y="512.0" font-size="12" xml:space="preserve">+payload: Vec&lt;Block&gt;</text>
+<text x="220.5" y="528.0" font-size="12" xml:space="preserve">+block_presences: Vec&lt;BlockPresence&gt;</text>
+<text x="220.5" y="544.0" font-size="12" xml:space="preserve">+pending_bytes: i32</text>
+<text x="220.5" y="568.0" font-size="12" xml:space="preserve">+to_frame(): Vec&lt;u8&gt;</text>
+<text x="220.5" y="584.0" font-size="12" text-decoration="underline" xml:space="preserve">+from_frame(frame: &amp;[u8]): Result&lt;Self, BitswapError&gt;</text>
+<text x="220.5" y="600.0" font-size="12" xml:space="preserve">+is_empty(): bool</text>
+<rect x="168.0" y="938.0" width="170" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="168.0" x2="338.0" y1="962.0" y2="962.0" stroke="#000"/>
+<line x1="168.0" x2="338.0" y1="1002.0" y2="1002.0" stroke="#000"/>
+<text x="253.0" y="954.0" text-anchor="middle" font-size="12" font-weight="bold">Wantlist</text>
+<text x="176.0" y="978.0" font-size="12" xml:space="preserve">+entries: Vec&lt;WantlistEntry&gt;</text>
+<text x="176.0" y="994.0" font-size="12" xml:space="preserve">+full: bool</text>
+<rect x="182.0" y="1220.0" width="142" height="124" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="182.0" x2="324.0" y1="1244.0" y2="1244.0" stroke="#000"/>
+<line x1="182.0" x2="324.0" y1="1332.0" y2="1332.0" stroke="#000"/>
+<text x="253.0" y="1236.0" text-anchor="middle" font-size="12" font-weight="bold">WantlistEntry</text>
+<text x="190.0" y="1260.0" font-size="12" xml:space="preserve">+block: Vec&lt;u8&gt;</text>
+<text x="190.0" y="1276.0" font-size="12" xml:space="preserve">+priority: i32</text>
+<text x="190.0" y="1292.0" font-size="12" xml:space="preserve">+cancel: bool</text>
+<text x="190.0" y="1308.0" font-size="12" xml:space="preserve">+want_type: i32</text>
+<text x="190.0" y="1324.0" font-size="12" xml:space="preserve">+send_dont_have: bool</text>
+<rect x="513.5" y="938.0" width="107" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="513.5" x2="620.5" y1="962.0" y2="962.0" stroke="#000"/>
+<line x1="513.5" x2="620.5" y1="1002.0" y2="1002.0" stroke="#000"/>
+<text x="567.0" y="954.0" text-anchor="middle" font-size="12" font-weight="bold">Block</text>
+<text x="521.5" y="978.0" font-size="12" xml:space="preserve">+prefix: Vec&lt;u8&gt;</text>
+<text x="521.5" y="994.0" font-size="12" xml:space="preserve">+data: Vec&lt;u8&gt;</text>
+<rect x="374.5" y="938.0" width="103" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="374.5" x2="477.5" y1="962.0" y2="962.0" stroke="#000"/>
+<line x1="374.5" x2="477.5" y1="1002.0" y2="1002.0" stroke="#000"/>
+<text x="426.0" y="954.0" text-anchor="middle" font-size="12" font-weight="bold">BlockPresence</text>
+<text x="382.5" y="978.0" font-size="12" xml:space="preserve">+cid: Vec&lt;u8&gt;</text>
+<text x="382.5" y="994.0" font-size="12" xml:space="preserve">+type: i32</text>
+<rect x="2077.5" y="1099.0" width="97" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2077.5" x2="2174.5" y1="1139.0" y2="1139.0" stroke="#000"/>
+<line x1="2077.5" x2="2174.5" y1="1179.0" y2="1179.0" stroke="#000"/>
+<text x="2126.0" y="1115.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="2126.0" y="1131.0" text-anchor="middle" font-size="12" font-weight="bold">WantType</text>
+<text x="2085.5" y="1155.0" font-size="12" xml:space="preserve">Block = 0</text>
+<text x="2085.5" y="1171.0" font-size="12" xml:space="preserve">Have = 1</text>
+<rect x="1173.0" y="319.0" width="130" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1173.0" x2="1303.0" y1="359.0" y2="359.0" stroke="#000"/>
+<line x1="1173.0" x2="1303.0" y1="399.0" y2="399.0" stroke="#000"/>
+<text x="1238.0" y="335.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="1238.0" y="351.0" text-anchor="middle" font-size="12" font-weight="bold">BlockPresenceType</text>
+<text x="1181.0" y="375.0" font-size="12" xml:space="preserve">Have = 0</text>
+<text x="1181.0" y="391.0" font-size="12" xml:space="preserve">DontHave = 1</text>
+<rect x="558.0" y="472.0" width="172" height="104" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="558.0" x2="730.0" y1="496.0" y2="496.0" stroke="#000"/>
+<line x1="558.0" x2="730.0" y1="552.0" y2="552.0" stroke="#000"/>
+<text x="644.0" y="488.0" text-anchor="middle" font-size="12" font-weight="bold">BitswapLimits</text>
+<text x="566.0" y="512.0" font-size="12" xml:space="preserve">+max_message_bytes: usize</text>
+<text x="566.0" y="528.0" font-size="12" xml:space="preserve">+max_wantlist_entries: usize</text>
+<text x="566.0" y="544.0" font-size="12" xml:space="preserve">+max_response_bytes: usize</text>
+<text x="566.0" y="568.0" font-size="12" text-decoration="underline" xml:space="preserve">+default(): Self  «Default»</text>
+<rect x="656.0" y="938.0" width="142" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="656.0" x2="798.0" y1="962.0" y2="962.0" stroke="#000"/>
+<line x1="656.0" x2="798.0" y1="1002.0" y2="1002.0" stroke="#000"/>
+<text x="727.0" y="954.0" text-anchor="middle" font-size="12" font-weight="bold">PlannedBlock</text>
+<text x="664.0" y="978.0" font-size="12" xml:space="preserve">+cid: Cid</text>
+<text x="664.0" y="994.0" font-size="12" xml:space="preserve">+send_dont_have: bool</text>
+<rect x="766.5" y="440.0" width="207" height="168" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="766.5" x2="973.5" y1="464.0" y2="464.0" stroke="#000"/>
+<line x1="766.5" x2="973.5" y1="584.0" y2="584.0" stroke="#000"/>
+<text x="870.0" y="456.0" text-anchor="middle" font-size="12" font-weight="bold">ResponsePlan</text>
+<text x="774.5" y="480.0" font-size="12" xml:space="preserve">+presences: Vec&lt;BlockPresence&gt;</text>
+<text x="774.5" y="496.0" font-size="12" xml:space="preserve">+blocks: VecDeque&lt;PlannedBlock&gt;</text>
+<text x="774.5" y="512.0" font-size="12" xml:space="preserve">+sent_blocks: Vec&lt;Cid&gt;</text>
+<text x="774.5" y="528.0" font-size="12" xml:space="preserve">+sent_block_bytes: usize</text>
+<text x="774.5" y="544.0" font-size="12" xml:space="preserve">+ignored_entries: usize</text>
+<text x="774.5" y="560.0" font-size="12" xml:space="preserve">+dropped_blocks: usize</text>
+<text x="774.5" y="576.0" font-size="12" xml:space="preserve">~carried: Option&lt;(Cid, Block)&gt;</text>
+<text x="774.5" y="600.0" font-size="12" xml:space="preserve">+is_empty(): bool</text>
+<rect x="489.5" y="58.0" width="535" height="232" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="489.5" x2="1024.5" y1="82.0" y2="82.0" stroke="#000"/>
+<line x1="489.5" x2="1024.5" y1="122.0" y2="122.0" stroke="#000"/>
+<text x="757.0" y="74.0" text-anchor="middle" font-size="12" font-weight="bold">BitswapServer&lt;S&gt;</text>
+<text x="497.5" y="98.0" font-size="12" xml:space="preserve">~source: Arc&lt;S&gt;</text>
+<text x="497.5" y="114.0" font-size="12" xml:space="preserve">~limits: BitswapLimits</text>
+<text x="497.5" y="138.0" font-size="12" xml:space="preserve">+start(behaviour: &amp;BitswapBehaviour, client: &amp;BitswapClient): Result&lt;(), BitswapError&gt;</text>
+<text x="497.5" y="154.0" font-size="12" xml:space="preserve">-serve_stream(mut control: Control, pending: PendingWants, peer: PeerId, mut stream: Stream)</text>
+<text x="497.5" y="170.0" font-size="12" xml:space="preserve">-answer(control: &amp;mut Control, peer: PeerId, request: BitswapMessage): Result&lt;(), BitswapError&gt;</text>
+<text x="497.5" y="186.0" font-size="12" text-decoration="underline" xml:space="preserve">+new(source: S): Self</text>
+<text x="497.5" y="202.0" font-size="12" text-decoration="underline" xml:space="preserve">+with_limits(source: S, limits: BitswapLimits): Self</text>
+<text x="497.5" y="218.0" font-size="12" xml:space="preserve">+limits(): BitswapLimits</text>
+<text x="497.5" y="234.0" font-size="12" xml:space="preserve">+plan(request: &amp;BitswapMessage): Result&lt;ResponsePlan, BitswapError&gt;</text>
+<text x="497.5" y="250.0" font-size="12" xml:space="preserve">+next_message(plan: &amp;mut ResponsePlan): Result&lt;Option&lt;BitswapMessage&gt;, BitswapError&gt;</text>
+<text x="497.5" y="266.0" font-size="12" xml:space="preserve">-build_message(plan: &amp;mut ResponsePlan, read: &amp;ReadBlock&lt;'_&gt;):</text>
+<text x="497.5" y="282.0" font-size="12" xml:space="preserve">    Result&lt;Option&lt;BitswapMessage&gt;, BitswapError&gt;</text>
+<rect x="1440.5" y="448.0" width="497" height="152" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1440.5" x2="1937.5" y1="472.0" y2="472.0" stroke="#000"/>
+<line x1="1440.5" x2="1937.5" y1="496.0" y2="496.0" stroke="#000"/>
+<text x="1689.0" y="464.0" text-anchor="middle" font-size="12" font-weight="bold">ProvidedBlockSource</text>
+<text x="1448.5" y="488.0" font-size="12" xml:space="preserve">~directory: PathBuf</text>
+<text x="1448.5" y="512.0" font-size="12" text-decoration="underline" xml:space="preserve">+new(directory: impl Into&lt;PathBuf&gt;): Self</text>
+<text x="1448.5" y="528.0" font-size="12" xml:space="preserve">-open(): Result&lt;PersistentBlockstore, BitswapError&gt;</text>
+<text x="1448.5" y="544.0" font-size="12" xml:space="preserve">+has_blocks(cids: &amp;[Cid]): Result&lt;Vec&lt;bool&gt;, BitswapError&gt;</text>
+<text x="1448.5" y="560.0" font-size="12" xml:space="preserve">+get_block(cid: &amp;Cid): Result&lt;Option&lt;Vec&lt;u8&gt;&gt;, BitswapError&gt;</text>
+<text x="1448.5" y="576.0" font-size="12" xml:space="preserve">+with_reader(task: impl FnOnce(&amp;ReadBlock&lt;'_&gt;) -&gt; Result&lt;R, BitswapError&gt;): Result&lt;R,</text>
+<text x="1448.5" y="592.0" font-size="12" xml:space="preserve">    BitswapError&gt;</text>
+<rect x="1019.5" y="637.0" width="499" height="216" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1019.5" x2="1518.5" y1="661.0" y2="661.0" stroke="#000"/>
+<line x1="1019.5" x2="1518.5" y1="717.0" y2="717.0" stroke="#000"/>
+<text x="1269.0" y="653.0" text-anchor="middle" font-size="12" font-weight="bold">BitswapClient</text>
+<text x="1027.5" y="677.0" font-size="12" xml:space="preserve">~control: BitswapControl</text>
+<text x="1027.5" y="693.0" font-size="12" xml:space="preserve">~directory: PathBuf</text>
+<text x="1027.5" y="709.0" font-size="12" xml:space="preserve">~pending: PendingWants</text>
+<text x="1027.5" y="733.0" font-size="12" text-decoration="underline" xml:space="preserve">+new(behaviour: &amp;BitswapBehaviour, directory: impl Into&lt;PathBuf&gt;): Self</text>
+<text x="1027.5" y="749.0" font-size="12" xml:space="preserve">+fetch(cid: &amp;Cid, providers: &amp;[PeerId]): Result&lt;(Option&lt;PeerId&gt;, Vec&lt;u8&gt;), BitswapError&gt;</text>
+<text x="1027.5" y="765.0" font-size="12" xml:space="preserve">+fetch_many(cids: &amp;[Cid], providers: &amp;[PeerId]): Result&lt;Vec&lt;(Option&lt;PeerId&gt;, Vec&lt;u8&gt;)&gt;,</text>
+<text x="1027.5" y="781.0" font-size="12" xml:space="preserve">    BitswapError&gt;</text>
+<text x="1027.5" y="797.0" font-size="12" xml:space="preserve">-fetch_batch_from(peer: PeerId, wanted: &amp;[(usize, &amp;Cid)]): (Vec&lt;(usize, Vec&lt;u8&gt;)&gt;,</text>
+<text x="1027.5" y="813.0" font-size="12" xml:space="preserve">    Option&lt;BitswapError&gt;)</text>
+<text x="1027.5" y="829.0" font-size="12" xml:space="preserve">-wants(): std::sync::MutexGuard&lt;'_, WantMap&gt;</text>
+<text x="1027.5" y="845.0" font-size="12" xml:space="preserve">-send_wants(peer: PeerId, cids: &amp;[&amp;Cid], cancel: bool): Result&lt;(), BitswapError&gt;</text>
+<rect x="2004.0" y="1262.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2049.0" y="1278.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-store»</text>
+<text x="2049.0" y="1294.0" text-anchor="middle" font-size="12" font-weight="bold">StoreError</text>
+<rect x="993.0" y="1262.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1038.0" y="1278.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-cid»</text>
+<text x="1038.0" y="1294.0" text-anchor="middle" font-size="12" font-weight="bold">Cid</text>
+<rect x="1744.5" y="956.0" width="137" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1813.0" y="972.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-store»</text>
+<text x="1813.0" y="988.0" text-anchor="middle" font-size="12" font-weight="bold">PersistentBlockstore</text>
+</svg>

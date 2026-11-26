@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="949" height="1100" viewBox="0 0 949 1100" font-family="Arial, Helvetica, sans-serif">
+<rect width="949" height="1100" fill="#fff"/>
+<text x="474.5" y="26" text-anchor="middle" font-size="15" font-weight="bold">ehr-core – diagram sekwencji: replikacja dokumentu na inny węzeł DHT-server</text>
+<rect x="502.013671875" y="486" width="384" height="194" fill="none" stroke="#000"/>
+<rect x="47.9990234375" y="794" width="363" height="158" fill="none" stroke="#000"/>
+<line x1="47.9990234375" x2="410.9990234375" y1="874" y2="874" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="39.9990234375" y="224" width="854.0146484375" height="748" fill="none" stroke="#000"/>
+<rect x="55.9990234375" y="984" width="235.552734375" height="68" fill="none" stroke="#000"/>
+<line x1="89.9990234375" x2="89.9990234375" y1="90" y2="1070" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="389.9990234375" x2="389.9990234375" y1="90" y2="1070" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="544.013671875" x2="544.013671875" y1="90" y2="1070" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="844.013671875" x2="844.013671875" y1="90" y2="1070" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="85.0" y="112.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="385.0" y="164.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="85.0" y="202.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="85.0" y="248.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="544.0" y="336.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="544.0" y="386.0" width="10" height="46.0" fill="#fff" stroke="#000"/>
+<rect x="544.0" y="450.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="544.0" y="510.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="839.0" y="576.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="544.0" y="614.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="544.0" y="636.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="539.0" y="316.0" width="10" height="394.0" fill="#fff" stroke="#000"/>
+<rect x="85.0" y="730.0" width="10" height="46.0" fill="#fff" stroke="#000"/>
+<rect x="85.0" y="818.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="85.0" y="894.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="85.0" y="1008.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="30" y="56" width="119.998046875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="89.9990234375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">doctor : EhrNode</text>
+<rect x="320.6630859375" y="56" width="138.671875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="389.9990234375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">node : NetworkNode</text>
+<rect x="483.3349609375" y="56" width="121.357421875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="544.013671875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">replica : EhrNode</text>
+<rect x="769.6650390625" y="56" width="148.697265625" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="844.013671875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">replica : NetworkNode</text>
+<polyline points="94.9990234375,116 122.9990234375,116 122.9990234375,130 97.4990234375,130" fill="none" stroke="#000"/><polygon points="97.4990234375,130 106.4990234375,125.5 106.4990234375,134.5" fill="#000" stroke="#000"/>
+<text x="128.9990234375" y="120" font-size="12">replicate(cids, patient) – tokio::spawn</text>
+<line x1="89.9990234375" x2="384.9990234375" y1="166" y2="166" stroke="#000"/><polyline points="375.9990234375,161.5 384.9990234375,166 375.9990234375,170.5" fill="none" stroke="#000"/>
+<text x="237.4990234375" y="160" text-anchor="middle" font-size="12">NetworkCommand::DhtServers(reply)</text>
+<line x1="389.9990234375" x2="94.9990234375" y1="204" y2="204" stroke="#000"/><polyline points="103.9990234375,199.5 94.9990234375,204 103.9990234375,208.5" fill="none" stroke="#000"/>
+<text x="242.4990234375" y="198" text-anchor="middle" font-size="12">Vec&lt;PeerId&gt; (dht_peers: kbuckets)</text>
+<polyline points="94.9990234375,252 122.9990234375,252 122.9990234375,266 97.4990234375,266" fill="none" stroke="#000"/><polygon points="97.4990234375,266 106.4990234375,261.5 106.4990234375,270.5" fill="#000" stroke="#000"/>
+<text x="128.9990234375" y="256" font-size="12">ask_replica(peer, &amp;cids)</text>
+<line x1="89.9990234375" x2="539.013671875" y1="316" y2="316" stroke="#000"/><polygon points="539.013671875,316 530.013671875,311.5 530.013671875,320.5" fill="#000" stroke="#000"/>
+<text x="314.50634765625" y="296" text-anchor="middle" font-size="12">open_stream(peer, REPLICATE_PROTOCOL);</text>
+<text x="314.50634765625" y="310" text-anchor="middle" font-size="12">write_frame(Signed::sign(keypair, ReplicateRequest { cids, created_utc }))</text>
+<polyline points="554.013671875,340 582.013671875,340 582.013671875,368 556.513671875,368" fill="none" stroke="#000"/><polygon points="556.513671875,368 565.513671875,363.5 565.513671875,372.5" fill="#000" stroke="#000"/>
+<text x="588.013671875" y="344" font-size="12">answer_replicate:</text>
+<text x="588.013671875" y="358" font-size="12">Signed.open::&lt;ReplicateRequest&gt;()</text>
+<polyline points="554.013671875,390 582.013671875,390 582.013671875,432 556.513671875,432" fill="none" stroke="#000"/><polygon points="556.513671875,432 565.513671875,427.5 565.513671875,436.5" fill="#000" stroke="#000"/>
+<text x="588.013671875" y="394" font-size="12">signer = peer; |now − created_utc| ≤</text>
+<text x="588.013671875" y="408" font-size="12">REQUEST_MAX_AGE_SECS; 1 ≤ cids.len() ≤</text>
+<text x="588.013671875" y="422" font-size="12">REPLICATE_MAX_CIDS</text>
+<polyline points="554.013671875,454 582.013671875,454 582.013671875,468 556.513671875,468" fill="none" stroke="#000"/><polygon points="556.513671875,468 565.513671875,463.5 565.513671875,472.5" fill="#000" stroke="#000"/>
+<text x="588.013671875" y="458" font-size="12">keep_copy(&amp;cids)</text>
+<polyline points="554.013671875,514 582.013671875,514 582.013671875,528 556.513671875,528" fill="none" stroke="#000"/><polygon points="556.513671875,528 565.513671875,523.5 565.513671875,532.5" fill="#000" stroke="#000"/>
+<text x="588.013671875" y="518" font-size="12">fetch(cid)</text>
+<line x1="549.013671875" x2="839.013671875" y1="578" y2="578" stroke="#000"/><polyline points="830.013671875,573.5 839.013671875,578 830.013671875,582.5" fill="none" stroke="#000"/>
+<text x="694.013671875" y="558" text-anchor="middle" font-size="12">NetworkCommand::FetchWithReply(cid, reply) →</text>
+<text x="694.013671875" y="572" text-anchor="middle" font-size="12">DHT + Bitswap od lekarza</text>
+<line x1="844.013671875" x2="549.013671875" y1="616" y2="616" stroke="#000"/><polyline points="558.013671875,611.5 549.013671875,616 558.013671875,620.5" fill="none" stroke="#000"/>
+<text x="696.513671875" y="610" text-anchor="middle" font-size="12">reply: Ok(())</text>
+<polyline points="554.013671875,640 582.013671875,640 582.013671875,654 556.513671875,654" fill="none" stroke="#000"/><polygon points="556.513671875,654 565.513671875,649.5 565.513671875,658.5" fill="#000" stroke="#000"/>
+<text x="588.013671875" y="644" font-size="12">pin(cid); provide(cids) – jeśli dht_server</text>
+<line x1="539.013671875" x2="89.9990234375" y1="710" y2="710" stroke="#000" stroke-dasharray="6,4"/><polyline points="98.9990234375,705.5 89.9990234375,710 98.9990234375,714.5" fill="none" stroke="#000"/>
+<text x="314.50634765625" y="704" text-anchor="middle" font-size="12">reply_signed(StreamReply { accepted, reason })</text>
+<polyline points="94.9990234375,734 122.9990234375,734 122.9990234375,776 97.4990234375,776" fill="none" stroke="#000"/><polygon points="97.4990234375,776 106.4990234375,771.5 106.4990234375,780.5" fill="#000" stroke="#000"/>
+<text x="128.9990234375" y="738" font-size="12">read_frame (timeout</text>
+<text x="128.9990234375" y="752" font-size="12">REPLICATE_TIMEOUT_SECS); signer</text>
+<text x="128.9990234375" y="766" font-size="12">odpowiedzi = peer</text>
+<polyline points="94.9990234375,822 122.9990234375,822 122.9990234375,850 97.4990234375,850" fill="none" stroke="#000"/><polygon points="97.4990234375,850 106.4990234375,845.5 106.4990234375,854.5" fill="#000" stroke="#000"/>
+<text x="128.9990234375" y="826" font-size="12">println!(&quot;[REPLICA] STORED peer=...&quot;) →</text>
+<text x="128.9990234375" y="840" font-size="12">koniec pętli</text>
+<polyline points="94.9990234375,898 122.9990234375,898 122.9990234375,926 97.4990234375,926" fill="none" stroke="#000"/><polygon points="97.4990234375,926 106.4990234375,921.5 106.4990234375,930.5" fill="#000" stroke="#000"/>
+<text x="128.9990234375" y="902" font-size="12">eprintln!(&quot;[REPLICA_FAILED] ...&quot;); następny</text>
+<text x="128.9990234375" y="916" font-size="12">peer</text>
+<polyline points="94.9990234375,1012 122.9990234375,1012 122.9990234375,1026 97.4990234375,1026" fill="none" stroke="#000"/><polygon points="97.4990234375,1026 106.4990234375,1021.5 106.4990234375,1030.5" fill="#000" stroke="#000"/>
+<text x="128.9990234375" y="1016" font-size="12">println!(&quot;[REPLICA] NONE&quot;)</text>
+<polygon points="502.013671875,486 539.2275390625,486 539.2275390625,495 532.2275390625,502 502.013671875,502" fill="#fff" stroke="#000"/><text x="508.013671875" y="498" font-size="11" font-weight="bold">loop</text>
+<rect x="544.2275390625" y="487" width="92.30615234375" height="14" fill="#fff"/><text x="547.2275390625" y="499" font-size="11.5">[dla każdego cid]</text>
+<polygon points="47.9990234375,794 74.8359375,794 74.8359375,803 67.8359375,810 47.9990234375,810" fill="#fff" stroke="#000"/><text x="53.9990234375" y="806" font-size="11" font-weight="bold">alt</text>
+<rect x="79.8359375" y="795" width="59.06396484375" height="14" fill="#fff"/><text x="82.8359375" y="807" font-size="11.5">[accepted]</text>
+<rect x="52.9990234375" y="876" width="97.421630859375" height="14" fill="#fff"/><text x="55.9990234375" y="887" font-size="11.5">[odrzucono / błąd]</text>
+<polygon points="39.9990234375,224 77.212890625,224 77.212890625,233 70.212890625,240 39.9990234375,240" fill="#fff" stroke="#000"/><text x="45.9990234375" y="236" font-size="11" font-weight="bold">loop</text>
+<rect x="82.212890625" y="225" width="287.194091796875" height="14" fill="#fff"/><text x="85.212890625" y="237" font-size="11.5">[dla każdego peera ≠ pacjent (do pierwszego sukcesu)]</text>
+<polygon points="55.9990234375,984 87.1005859375,984 87.1005859375,993 80.1005859375,1000 55.9990234375,1000" fill="#fff" stroke="#000"/><text x="61.9990234375" y="996" font-size="11" font-weight="bold">opt</text>
+<rect x="92.1005859375" y="985" width="161.35107421875" height="14" fill="#fff"/><text x="95.1005859375" y="997" font-size="11.5">[żaden peer nie zaakceptował]</text>
+</svg>

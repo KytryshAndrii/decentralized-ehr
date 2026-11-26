@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="822" viewBox="0 0 1320 822" font-family="Arial, Helvetica, sans-serif">
+<rect width="1320" height="822" fill="#fff"/>
+<text x="660" y="28" text-anchor="middle" font-size="16" font-weight="bold">Aplikacja EHR (ehr-desktop) – diagram przypadków użycia interfejsu</text>
+<rect x="175" y="150" width="960" height="652" fill="none" stroke="#000" stroke-width="1.4"/>
+<text x="1123" y="168" text-anchor="end" font-size="12.5" font-weight="bold">EHR Desktop: ehr-desktop-doctor / ehr-desktop-patient</text>
+<circle cx="70" cy="416" r="8" fill="#fff" stroke="#000"/><line x1="70" x2="70" y1="424" y2="448" stroke="#000"/><line x1="55" x2="85" y1="432" y2="432" stroke="#000"/><line x1="70" x2="58" y1="448" y2="466" stroke="#000"/><line x1="70" x2="82" y1="448" y2="466" stroke="#000"/><text x="70" y="484" text-anchor="middle" font-size="13" font-weight="bold">Lekarz</text>
+<circle cx="1245" cy="416" r="8" fill="#fff" stroke="#000"/><line x1="1245" x2="1245" y1="424" y2="448" stroke="#000"/><line x1="1230" x2="1260" y1="432" y2="432" stroke="#000"/><line x1="1245" x2="1233" y1="448" y2="466" stroke="#000"/><line x1="1245" x2="1257" y1="448" y2="466" stroke="#000"/><text x="1245" y="484" text-anchor="middle" font-size="13" font-weight="bold">Pacjent</text>
+<circle cx="505" cy="70" r="8" fill="#fff" stroke="#000"/><line x1="505" x2="505" y1="78" y2="102" stroke="#000"/><line x1="490" x2="520" y1="86" y2="86" stroke="#000"/><line x1="505" x2="493" y1="102" y2="120" stroke="#000"/><line x1="505" x2="517" y1="102" y2="120" stroke="#000"/><text x="505" y="138" text-anchor="middle" font-size="13" font-weight="bold" font-style="italic">Użytkownik</text>
+<ellipse cx="320" cy="214" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="320" y="218" text-anchor="middle" font-size="12.5">Wybór pacjenta z listy</text>
+<ellipse cx="320" cy="288" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="320" y="284.5" text-anchor="middle" font-size="12.5">Zaproszenie pacjenta (jednorazowe</text>
+<text x="320" y="299.5" text-anchor="middle" font-size="12.5">zaproszenie, ważne 1 godzinę)</text>
+<ellipse cx="320" cy="362" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="320" y="358.5" text-anchor="middle" font-size="12.5">Akceptacja lub odrzucenie prośby o</text>
+<text x="320" y="373.5" text-anchor="middle" font-size="12.5">kontakt</text>
+<ellipse cx="320" cy="436" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="320" y="432.5" text-anchor="middle" font-size="12.5">Udostępnienie dokumentu pacjentowi</text>
+<text x="320" y="447.5" text-anchor="middle" font-size="12.5">(kategoria, ważność 20 lat)</text>
+<ellipse cx="320" cy="510" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="320" y="514" text-anchor="middle" font-size="12.5">Edycja dokumentu (zapis nowej wersji)</text>
+<ellipse cx="320" cy="584" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="320" y="588" text-anchor="middle" font-size="12.5">Wybór pliku z dysku („Wybierz…”)</text>
+<ellipse cx="650" cy="214" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="650" y="210.5" text-anchor="middle" font-size="12.5">Utworzenie profilu i kluczy (pierwsze</text>
+<text x="650" y="225.5" text-anchor="middle" font-size="12.5">uruchomienie)</text>
+<ellipse cx="650" cy="288" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="650" y="292" text-anchor="middle" font-size="12.5">Logowanie hasłem</text>
+<ellipse cx="650" cy="362" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="650" y="366" text-anchor="middle" font-size="12.5">Wylogowanie</text>
+<ellipse cx="650" cy="436" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="650" y="440" text-anchor="middle" font-size="12.5">Wyszukiwanie w polu „Szukaj…”</text>
+<ellipse cx="650" cy="510" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="650" y="506.5" text-anchor="middle" font-size="12.5">Odświeżenie listy („Odśwież” /</text>
+<text x="650" y="521.5" text-anchor="middle" font-size="12.5">„Sprawdź nowe”)</text>
+<ellipse cx="650" cy="584" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="650" y="588" text-anchor="middle" font-size="12.5">Podgląd dokumentu</text>
+<ellipse cx="650" cy="658" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="650" y="662" text-anchor="middle" font-size="12.5">Weryfikacja podpisu wystawcy</text>
+<ellipse cx="650" cy="732" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="650" y="728.5" text-anchor="middle" font-size="12.5">Pobranie dokumentu do folderu</text>
+<text x="650" y="743.5" text-anchor="middle" font-size="12.5">Downloads</text>
+<ellipse cx="980" cy="214" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="980" y="210.5" text-anchor="middle" font-size="12.5">Połączenie z lekarzem (wklejenie</text>
+<text x="980" y="225.5" text-anchor="middle" font-size="12.5">zaproszenia)</text>
+<ellipse cx="980" cy="288" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="980" y="284.5" text-anchor="middle" font-size="12.5">Filtrowanie dokumentów według</text>
+<text x="980" y="299.5" text-anchor="middle" font-size="12.5">kategorii</text>
+<ellipse cx="980" cy="362" rx="131" ry="26" fill="#fff" stroke="#000"/>
+<text x="980" y="366" text-anchor="middle" font-size="12.5">Przeglądanie listy lekarzy</text>
+<line x1="150" x2="150" y1="214" y2="510" stroke="#000"/>
+<line x1="86" x2="150" y1="432" y2="432" stroke="#000"/>
+<line x1="150" x2="189" y1="214" y2="214" stroke="#000"/>
+<line x1="150" x2="189" y1="288" y2="288" stroke="#000"/>
+<line x1="150" x2="189" y1="362" y2="362" stroke="#000"/>
+<line x1="150" x2="189" y1="436" y2="436" stroke="#000"/>
+<line x1="150" x2="189" y1="510" y2="510" stroke="#000"/>
+<line x1="1160" x2="1160" y1="214" y2="432" stroke="#000"/><line x1="1229" x2="1160" y1="432" y2="432" stroke="#000"/>
+<line x1="1160" x2="1111" y1="214" y2="214" stroke="#000"/>
+<line x1="1160" x2="1111" y1="288" y2="288" stroke="#000"/>
+<line x1="1160" x2="1111" y1="362" y2="362" stroke="#000"/>
+<line x1="505" x2="505" y1="120" y2="732" stroke="#000"/>
+<line x1="505" x2="519" y1="214" y2="214" stroke="#000"/>
+<line x1="505" x2="519" y1="288" y2="288" stroke="#000"/>
+<line x1="505" x2="519" y1="362" y2="362" stroke="#000"/>
+<line x1="505" x2="519" y1="436" y2="436" stroke="#000"/>
+<line x1="505" x2="519" y1="510" y2="510" stroke="#000"/>
+<line x1="505" x2="519" y1="584" y2="584" stroke="#000"/>
+<line x1="505" x2="519" y1="732" y2="732" stroke="#000"/>
+<polyline points="70,406 70,78 469,78" fill="none" stroke="#000"/><polygon points="469,78 455,71 455,85" fill="#fff" stroke="#000"/>
+<polyline points="1245,406 1245,78 541,78" fill="none" stroke="#000"/><polygon points="541,78 555,71 555,85" fill="#fff" stroke="#000"/>
+<polyline points="650,610 650,632" fill="none" stroke="#000" stroke-dasharray="6,4"/><polyline points="655,621 650,632 645,621" fill="none" stroke="#000"/><rect x="663.453125" y="614" width="53.09375" height="14" fill="#fff"/><text x="690" y="625" text-anchor="middle" font-size="11">«include»</text>
+<polyline points="320,558 320,536" fill="none" stroke="#000" stroke-dasharray="6,4"/><polyline points="315,547 320,536 325,547" fill="none" stroke="#000"/><rect x="332.368896484375" y="540" width="51.26220703125" height="14" fill="#fff"/><text x="358" y="551" text-anchor="middle" font-size="11">«extend»</text>
+<polyline points="437,570 465,570 465,436 451,436" fill="none" stroke="#000" stroke-dasharray="6,4"/><polyline points="462,441 451,436 462,431" fill="none" stroke="#000"/><rect x="439.368896484375" y="538" width="51.26220703125" height="14" fill="#fff"/><text x="465" y="549" text-anchor="middle" font-size="11">«extend»</text>
+</svg>

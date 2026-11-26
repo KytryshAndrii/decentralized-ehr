@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1454" height="1188" viewBox="0 0 1454 1188" font-family="Arial, Helvetica, sans-serif">
+<rect width="1454" height="1188" fill="#fff"/>
+<text x="727" y="26" text-anchor="middle" font-size="15" font-weight="bold">ehr-cli – diagram sekwencji: polecenia IPFS bez profilu (add oraz node start + provide)</text>
+<rect x="299.466796875" y="998" width="1096.6962890625" height="70" fill="none" stroke="#000"/>
+<rect x="291.466796875" y="810" width="1112.6962890625" height="278" fill="none" stroke="#000"/>
+<line x1="74.005859375" x2="74.005859375" y1="118" y2="1158" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="341.466796875" x2="341.466796875" y1="90" y2="1158" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="641.466796875" x2="641.466796875" y1="90" y2="1158" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="941.466796875" x2="941.466796875" y1="90" y2="1158" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1064.1630859375" x2="1064.1630859375" y1="90" y2="1158" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1354.1630859375" x2="1354.1630859375" y1="90" y2="1158" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="341.5" y="178.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="636.5" y="246.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="641.5" y="342.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="936.5" y="410.0" width="10" height="52.0" fill="#fff" stroke="#000"/>
+<rect x="636.5" y="322.0" width="10" height="178.0" fill="#fff" stroke="#000"/>
+<rect x="341.5" y="520.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="1059.2" y="626.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="341.5" y="684.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="341.5" y="834.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="936.5" y="940.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="1354.2" y="1038.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="336.5" y="158.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="336.5" y="588.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="636.5" y="902.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="1059.2" y="752.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="1349.2" y="790.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<circle cx="74.005859375" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="74.005859375" x2="74.005859375" y1="70" y2="86" stroke="#000"/><line x1="63.005859375" x2="85.005859375" y1="76" y2="76" stroke="#000"/><line x1="74.005859375" x2="65.005859375" y1="86" y2="98" stroke="#000"/><line x1="74.005859375" x2="83.005859375" y1="86" y2="98" stroke="#000"/><text x="74.005859375" y="112" text-anchor="middle" font-size="12" font-weight="bold">Użytkownik</text>
+<rect x="308.4677734375" y="56" width="65.998046875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="341.466796875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">cli (run)</text>
+<rect x="598.4482421875" y="56" width="86.037109375" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="641.466796875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">IpfsService</text>
+<rect x="898.7939453125" y="56" width="85.345703125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="941.466796875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">ipfs_unixfs</text>
+<rect x="1008.1396484375" y="56" width="112.046875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1064.1630859375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">NetworkService</text>
+<rect x="1284.8271484375" y="56" width="138.671875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1354.1630859375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">node : NetworkNode</text>
+<line x1="74.005859375" x2="336.466796875" y1="158" y2="158" stroke="#000"/><polygon points="336.466796875,158 327.466796875,153.5 327.466796875,162.5" fill="#000" stroke="#000"/>
+<text x="205.236328125" y="152" text-anchor="middle" font-size="12">ehr-cli-patient add &lt;ścieżka-bezwzględna&gt;</text>
+<polyline points="351.466796875,182 379.466796875,182 379.466796875,210 353.966796875,210" fill="none" stroke="#000"/><polygon points="353.966796875,210 362.966796875,205.5 362.966796875,214.5" fill="#000" stroke="#000"/>
+<text x="385.466796875" y="186" font-size="12">storage_command(role, args): store =</text>
+<text x="385.466796875" y="200" font-size="12">store_dir(role)</text>
+<line x1="346.466796875" x2="636.466796875" y1="246" y2="246" stroke="#000"/><polygon points="636.466796875,246 627.466796875,241.5 627.466796875,250.5" fill="#000" stroke="#000"/>
+<text x="491.466796875" y="240" text-anchor="middle" font-size="12">new(&amp;store) – PersistentBlockstore::open_in(store)</text>
+<line x1="636.466796875" x2="346.466796875" y1="284" y2="284" stroke="#000" stroke-dasharray="6,4"/><polyline points="355.466796875,279.5 346.466796875,284 355.466796875,288.5" fill="none" stroke="#000"/>
+<text x="491.466796875" y="278" text-anchor="middle" font-size="12">IpfsService</text>
+<line x1="346.466796875" x2="636.466796875" y1="322" y2="322" stroke="#000"/><polygon points="636.466796875,322 627.466796875,317.5 627.466796875,326.5" fill="#000" stroke="#000"/>
+<text x="491.466796875" y="316" text-anchor="middle" font-size="12">add_file(path)</text>
+<polyline points="651.466796875,346 679.466796875,346 679.466796875,374 653.966796875,374" fill="none" stroke="#000"/><polygon points="653.966796875,374 662.966796875,369.5 662.966796875,378.5" fill="#000" stroke="#000"/>
+<text x="685.466796875" y="350" font-size="12">ścieżka bezwzględna; Chunker::fixed();</text>
+<text x="685.466796875" y="364" font-size="12">File::open(path)</text>
+<line x1="646.466796875" x2="936.466796875" y1="410" y2="410" stroke="#000"/><polygon points="936.466796875,410 927.466796875,405.5 927.466796875,414.5" fill="#000" stroke="#000"/>
+<text x="791.466796875" y="404" text-anchor="middle" font-size="12">add_file(&amp;blockstore, file, chunker)</text>
+<line x1="936.466796875" x2="646.466796875" y1="462" y2="462" stroke="#000" stroke-dasharray="6,4"/><polyline points="655.466796875,457.5 646.466796875,462 655.466796875,466.5" fill="none" stroke="#000"/>
+<text x="791.466796875" y="442" text-anchor="middle" font-size="12">ImportedFile { root, size, new_blocks,</text>
+<text x="791.466796875" y="456" text-anchor="middle" font-size="12">reused_blocks }</text>
+<line x1="636.466796875" x2="346.466796875" y1="500" y2="500" stroke="#000" stroke-dasharray="6,4"/><polyline points="355.466796875,495.5 346.466796875,500 355.466796875,504.5" fill="none" stroke="#000"/>
+<text x="491.466796875" y="494" text-anchor="middle" font-size="12">(ImportedFile, Chunker)</text>
+<polyline points="351.466796875,524 379.466796875,524 379.466796875,552 353.966796875,552" fill="none" stroke="#000"/><polygon points="353.966796875,552 362.966796875,547.5 362.966796875,556.5" fill="#000" stroke="#000"/>
+<text x="385.466796875" y="528" font-size="12">println!(&quot;[UNIXFS] ADDED CID=... bytes=...</text>
+<text x="385.466796875" y="542" font-size="12">chunker=... new_blocks=... reused_blocks=...&quot;)</text>
+<line x1="74.005859375" x2="336.466796875" y1="588" y2="588" stroke="#000"/><polygon points="336.466796875,588 327.466796875,583.5 327.466796875,592.5" fill="#000" stroke="#000"/>
+<text x="205.236328125" y="582" text-anchor="middle" font-size="12">ehr-cli-patient node start [--bootstrap ...]</text>
+<line x1="346.466796875" x2="1059.1630859375" y1="626" y2="626" stroke="#000"/><polygon points="1059.1630859375,626 1050.1630859375,621.5 1050.1630859375,630.5" fill="#000" stroke="#000"/>
+<text x="702.81494140625" y="620" text-anchor="middle" font-size="12">node_config(dht_server, &amp;bootstrap_args)</text>
+<line x1="1059.1630859375" x2="346.466796875" y1="664" y2="664" stroke="#000" stroke-dasharray="6,4"/><polyline points="355.466796875,659.5 346.466796875,664 355.466796875,668.5" fill="none" stroke="#000"/>
+<text x="702.81494140625" y="658" text-anchor="middle" font-size="12">NetworkConfig</text>
+<polyline points="351.466796875,688 379.466796875,688 379.466796875,716 353.966796875,716" fill="none" stroke="#000"/><polygon points="353.966796875,716 362.966796875,711.5 362.966796875,720.5" fill="#000" stroke="#000"/>
+<text x="385.466796875" y="692" font-size="12">std::thread::spawn(stdin_commands(store_dir(role),</text>
+<text x="385.466796875" y="706" font-size="12"> sender))</text>
+<line x1="346.466796875" x2="1059.1630859375" y1="752" y2="752" stroke="#000"/><polygon points="1059.1630859375,752 1050.1630859375,747.5 1050.1630859375,756.5" fill="#000" stroke="#000"/>
+<text x="702.81494140625" y="746" text-anchor="middle" font-size="12">run(config, receiver)</text>
+<line x1="1069.1630859375" x2="1349.1630859375" y1="790" y2="790" stroke="#000"/><polygon points="1349.1630859375,790 1340.1630859375,785.5 1340.1630859375,794.5" fill="#000" stroke="#000"/>
+<text x="1209.1630859375" y="784" text-anchor="middle" font-size="12">new_network_node(config)?.run_with_commands(commands)</text>
+<polyline points="351.466796875,838 379.466796875,838 379.466796875,866 353.966796875,866" fill="none" stroke="#000"/><polygon points="353.966796875,866 362.966796875,861.5 362.966796875,870.5" fill="#000" stroke="#000"/>
+<text x="385.466796875" y="842" font-size="12">ipfs_line(store, line, sender):</text>
+<text x="385.466796875" y="856" font-size="12">IpfsService::parse_cid(cid)</text>
+<line x1="346.466796875" x2="636.466796875" y1="902" y2="902" stroke="#000"/><polygon points="636.466796875,902 627.466796875,897.5 627.466796875,906.5" fill="#000" stroke="#000"/>
+<text x="491.466796875" y="896" text-anchor="middle" font-size="12">new(store).dag_cids(&amp;cid)</text>
+<line x1="646.466796875" x2="936.466796875" y1="940" y2="940" stroke="#000"/><polygon points="936.466796875,940 927.466796875,935.5 927.466796875,944.5" fill="#000" stroke="#000"/>
+<text x="791.466796875" y="934" text-anchor="middle" font-size="12">dag_cids(&amp;blockstore, &amp;cid)</text>
+<line x1="936.466796875" x2="646.466796875" y1="978" y2="978" stroke="#000" stroke-dasharray="6,4"/><polyline points="655.466796875,973.5 646.466796875,978 655.466796875,982.5" fill="none" stroke="#000"/>
+<text x="791.466796875" y="972" text-anchor="middle" font-size="12">Vec&lt;Cid&gt;</text>
+<line x1="346.466796875" x2="1349.1630859375" y1="1040" y2="1040" stroke="#000"/><polyline points="1340.1630859375,1035.5 1349.1630859375,1040 1340.1630859375,1044.5" fill="none" stroke="#000"/>
+<text x="847.81494140625" y="1034" text-anchor="middle" font-size="12">NetworkCommand::StartProviding(cid)</text>
+<polygon points="1235.1220703125,1100 1463.2041015625,1100 1473.2041015625,1110 1473.2041015625,1138 1235.1220703125,1138" fill="#fff" stroke="#000"/><text x="1243.1220703125" y="1116" font-size="12">Dalej: diagramy ipfs-network 05b (Fetch) i</text><text x="1243.1220703125" y="1130" font-size="12">05c (StartProviding)</text>
+<polygon points="299.466796875,998 336.6806640625,998 336.6806640625,1007 329.6806640625,1014 299.466796875,1014" fill="#fff" stroke="#000"/><text x="305.466796875" y="1010" font-size="11" font-weight="bold">loop</text>
+<rect x="341.6806640625" y="999" width="149.834228515625" height="14" fill="#fff"/><text x="344.6806640625" y="1011" font-size="11.5">[dla każdego cid (od końca)]</text>
+<polygon points="291.466796875,810 328.6806640625,810 328.6806640625,819 321.6806640625,826 291.466796875,826" fill="#fff" stroke="#000"/><text x="297.466796875" y="822" font-size="11" font-weight="bold">loop</text>
+<rect x="333.6806640625" y="811" width="157.98193359375" height="14" fill="#fff"/><text x="336.6806640625" y="823" font-size="11.5">[linia z stdin: &quot;provide &lt;CID&gt;&quot;]</text>
+</svg>

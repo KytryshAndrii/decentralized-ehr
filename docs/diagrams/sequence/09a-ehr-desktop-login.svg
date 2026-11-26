@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1891" height="1800" viewBox="0 0 1891 1800" font-family="Arial, Helvetica, sans-serif">
+<rect width="1891" height="1800" fill="#fff"/>
+<text x="945.5" y="26" text-anchor="middle" font-size="15" font-weight="bold">ehr-desktop – diagram sekwencji: uruchomienie aplikacji, tworzenie profilu i logowanie</text>
+<rect x="330.005859375" y="384" width="368" height="134" fill="none" stroke="#000"/>
+<line x1="330.005859375" x2="698.005859375" y1="452" y2="452" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="896.8125" y="944" width="662.099609375" height="132" fill="none" stroke="#000"/>
+<line x1="896.8125" x2="1558.912109375" y1="1012" y2="1012" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="888.8125" y="732" width="678.099609375" height="364" fill="none" stroke="#000"/>
+<line x1="888.8125" x2="1566.912109375" y1="798" y2="798" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="904.8125" y="1336" width="646.099609375" height="132" fill="none" stroke="#000"/>
+<line x1="904.8125" x2="1550.912109375" y1="1404" y2="1404" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="40.005859375" y="632" width="1534.90625" height="856" fill="none" stroke="#000"/>
+<line x1="40.005859375" x2="1574.912109375" y1="1114" y2="1114" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="74.005859375" x2="74.005859375" y1="118" y2="1770" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="364.005859375" x2="364.005859375" y1="90" y2="1770" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="664.005859375" x2="664.005859375" y1="90" y2="1770" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="946.8125" x2="946.8125" y1="90" y2="1770" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1246.8125" x2="1246.8125" y1="90" y2="1770" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1508.912109375" x2="1508.912109375" y1="90" y2="1770" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="364.0" y="230.0" width="10" height="46.0" fill="#fff" stroke="#000"/>
+<rect x="364.0" y="530.0" width="10" height="46.0" fill="#fff" stroke="#000"/>
+<rect x="946.8" y="756.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="946.8" y="818.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="1246.8" y="886.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="946.8" y="1032.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="946.8" y="1210.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="1246.8" y="1278.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="946.8" y="1424.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="1508.9" y="1500.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="1246.8" y="1568.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="1508.9" y="1626.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="1508.9" y="1714.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="359.0" y="172.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="659.0" y="210.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="659.0" y="326.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="659.0" y="426.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="659.0" y="490.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="659.0" y="612.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="659.0" y="674.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="659.0" y="1152.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="659.0" y="1694.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="941.8" y="712.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="941.8" y="1190.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="1241.8" y="364.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="1503.9" y="986.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="1503.9" y="1378.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<circle cx="74.005859375" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="74.005859375" x2="74.005859375" y1="70" y2="86" stroke="#000"/><line x1="63.005859375" x2="85.005859375" y1="76" y2="76" stroke="#000"/><line x1="74.005859375" x2="65.005859375" y1="86" y2="98" stroke="#000"/><line x1="74.005859375" x2="83.005859375" y1="86" y2="98" stroke="#000"/><text x="74.005859375" y="112" text-anchor="middle" font-size="12" font-weight="bold">Użytkownik</text>
+<rect x="323.33984375" y="56" width="81.33203125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="364.005859375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">run (lib.rs)</text>
+<rect x="591.2978515625" y="56" width="145.416015625" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="664.005859375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">window : AppWindow</text>
+<rect x="886.46484375" y="56" width="120.6953125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="946.8125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">profile (callbacki)</text>
+<rect x="1214.1474609375" y="56" width="65.330078125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1246.8125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">EhrApp</text>
+<rect x="1478.912109375" y="56" width="60" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1508.912109375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">view</text>
+<line x1="74.005859375" x2="359.005859375" y1="172" y2="172" stroke="#000"/><polygon points="359.005859375,172 350.005859375,167.5 350.005859375,176.5" fill="#000" stroke="#000"/>
+<text x="216.505859375" y="152" text-anchor="middle" font-size="12">ehr-desktop-doctor | ehr-desktop-patient →</text>
+<text x="216.505859375" y="166" text-anchor="middle" font-size="12">run(role)</text>
+<line x1="369.005859375" x2="659.005859375" y1="210" y2="210" stroke="#000"/><polygon points="659.005859375,210 650.005859375,205.5 650.005859375,214.5" fill="#000" stroke="#000"/>
+<text x="514.005859375" y="204" text-anchor="middle" font-size="12">AppWindow::new()</text>
+<polyline points="374.005859375,234 402.005859375,234 402.005859375,276 376.505859375,276" fill="none" stroke="#000"/><polygon points="376.505859375,276 385.505859375,271.5 385.505859375,280.5" fill="#000" stroke="#000"/>
+<text x="408.005859375" y="238" font-size="12">data_dir = EhrApp::default_data_dir(role);</text>
+<text x="408.005859375" y="252" font-size="12">create_dir_all; State { role, runtime, data_dir,</text>
+<text x="408.005859375" y="266" font-size="12">session = None, view }</text>
+<line x1="369.005859375" x2="659.005859375" y1="326" y2="326" stroke="#000"/><polygon points="659.005859375,326 650.005859375,321.5 650.005859375,330.5" fill="#000" stroke="#000"/>
+<text x="514.005859375" y="306" text-anchor="middle" font-size="12">set_is_doctor(role = Doctor);</text>
+<text x="514.005859375" y="320" text-anchor="middle" font-size="12">set_categories(Category::ALL)</text>
+<line x1="369.005859375" x2="1241.8125" y1="364" y2="364" stroke="#000"/><polygon points="1241.8125,364 1232.8125,359.5 1232.8125,368.5" fill="#000" stroke="#000"/>
+<text x="805.4091796875" y="358" text-anchor="middle" font-size="12">profile_name(&amp;data_dir); profile_exists(&amp;data_dir)</text>
+<line x1="369.005859375" x2="659.005859375" y1="426" y2="426" stroke="#000"/><polygon points="659.005859375,426 650.005859375,421.5 650.005859375,430.5" fill="#000" stroke="#000"/>
+<text x="514.005859375" y="420" text-anchor="middle" font-size="12">set_me_name(name); set_screen(&quot;login&quot;)</text>
+<line x1="369.005859375" x2="659.005859375" y1="490" y2="490" stroke="#000"/><polygon points="659.005859375,490 650.005859375,485.5 650.005859375,494.5" fill="#000" stroke="#000"/>
+<text x="514.005859375" y="484" text-anchor="middle" font-size="12">set_screen(&quot;first&quot;)</text>
+<polyline points="374.005859375,534 402.005859375,534 402.005859375,576 376.505859375,576" fill="none" stroke="#000"/><polygon points="376.505859375,576 385.505859375,571.5 385.505859375,580.5" fill="#000" stroke="#000"/>
+<text x="408.005859375" y="538" font-size="12">profile::register, contacts::register,</text>
+<text x="408.005859375" y="552" font-size="12">documents::register; slint::Timer co</text>
+<text x="408.005859375" y="566" font-size="12">REFRESH_SECS → view::reload</text>
+<line x1="369.005859375" x2="659.005859375" y1="612" y2="612" stroke="#000"/><polygon points="659.005859375,612 650.005859375,607.5 650.005859375,616.5" fill="#000" stroke="#000"/>
+<text x="514.005859375" y="606" text-anchor="middle" font-size="12">run() – pętla zdarzeń okna</text>
+<line x1="74.005859375" x2="659.005859375" y1="674" y2="674" stroke="#000"/><polygon points="659.005859375,674 650.005859375,669.5 650.005859375,678.5" fill="#000" stroke="#000"/>
+<text x="366.505859375" y="668" text-anchor="middle" font-size="12">create-profile(name, password, repeated)</text>
+<line x1="669.005859375" x2="941.8125" y1="712" y2="712" stroke="#000"/><polygon points="941.8125,712 932.8125,707.5 932.8125,716.5" fill="#000" stroke="#000"/>
+<text x="805.4091796875" y="706" text-anchor="middle" font-size="12">on_create_profile(name, password, repeated)</text>
+<polyline points="956.8125,760 984.8125,760 984.8125,774 959.3125,774" fill="none" stroke="#000"/><polygon points="959.3125,774 968.3125,769.5 968.3125,778.5" fill="#000" stroke="#000"/>
+<text x="990.8125" y="764" font-size="12">status(&quot;Hasła się różnią.&quot;)</text>
+<polyline points="956.8125,822 984.8125,822 984.8125,850 959.3125,850" fill="none" stroke="#000"/><polygon points="959.3125,850 968.3125,845.5 968.3125,854.5" fill="#000" stroke="#000"/>
+<text x="990.8125" y="826" font-size="12">status(&quot;Tworzenie kluczy…&quot;);</text>
+<text x="990.8125" y="840" font-size="12">state.runtime.spawn_blocking</text>
+<line x1="951.8125" x2="1241.8125" y1="886" y2="886" stroke="#000"/><polygon points="1241.8125,886 1232.8125,881.5 1232.8125,890.5" fill="#000" stroke="#000"/>
+<text x="1096.8125" y="880" text-anchor="middle" font-size="12">create_profile(&amp;data_dir, role, &amp;name, &amp;password)</text>
+<line x1="1241.8125" x2="951.8125" y1="924" y2="924" stroke="#000" stroke-dasharray="6,4"/><polyline points="960.8125,919.5 951.8125,924 960.8125,928.5" fill="none" stroke="#000"/>
+<text x="1096.8125" y="918" text-anchor="middle" font-size="12">Result&lt;EhrApp, EhrError&gt;</text>
+<line x1="951.8125" x2="1503.912109375" y1="986" y2="986" stroke="#000"/><polygon points="1503.912109375,986 1494.912109375,981.5 1494.912109375,990.5" fill="#000" stroke="#000"/>
+<text x="1227.8623046875" y="980" text-anchor="middle" font-size="12">start_session(&amp;state, &amp;ui, app)</text>
+<polyline points="956.8125,1036 984.8125,1036 984.8125,1050 959.3125,1050" fill="none" stroke="#000"/><polygon points="959.3125,1050 968.3125,1045.5 968.3125,1054.5" fill="#000" stroke="#000"/>
+<text x="990.8125" y="1040" font-size="12">status(&quot;Nie utworzono profilu: ...&quot;)</text>
+<line x1="74.005859375" x2="659.005859375" y1="1152" y2="1152" stroke="#000"/><polygon points="659.005859375,1152 650.005859375,1147.5 650.005859375,1156.5" fill="#000" stroke="#000"/>
+<text x="366.505859375" y="1146" text-anchor="middle" font-size="12">login(password)</text>
+<line x1="669.005859375" x2="941.8125" y1="1190" y2="1190" stroke="#000"/><polygon points="941.8125,1190 932.8125,1185.5 932.8125,1194.5" fill="#000" stroke="#000"/>
+<text x="805.4091796875" y="1184" text-anchor="middle" font-size="12">on_login(password)</text>
+<polyline points="956.8125,1214 984.8125,1214 984.8125,1242 959.3125,1242" fill="none" stroke="#000"/><polygon points="959.3125,1242 968.3125,1237.5 968.3125,1246.5" fill="#000" stroke="#000"/>
+<text x="990.8125" y="1218" font-size="12">status(&quot;Odblokowywanie kluczy…&quot;);</text>
+<text x="990.8125" y="1232" font-size="12">state.runtime.spawn_blocking</text>
+<line x1="951.8125" x2="1241.8125" y1="1278" y2="1278" stroke="#000"/><polygon points="1241.8125,1278 1232.8125,1273.5 1232.8125,1282.5" fill="#000" stroke="#000"/>
+<text x="1096.8125" y="1272" text-anchor="middle" font-size="12">open(&amp;data_dir, role, &amp;password)</text>
+<line x1="1241.8125" x2="951.8125" y1="1316" y2="1316" stroke="#000" stroke-dasharray="6,4"/><polyline points="960.8125,1311.5 951.8125,1316 960.8125,1320.5" fill="none" stroke="#000"/>
+<text x="1096.8125" y="1310" text-anchor="middle" font-size="12">Result&lt;EhrApp, EhrError&gt;</text>
+<line x1="951.8125" x2="1503.912109375" y1="1378" y2="1378" stroke="#000"/><polygon points="1503.912109375,1378 1494.912109375,1373.5 1494.912109375,1382.5" fill="#000" stroke="#000"/>
+<text x="1227.8623046875" y="1372" text-anchor="middle" font-size="12">start_session(&amp;state, &amp;ui, app)</text>
+<polyline points="956.8125,1428 984.8125,1428 984.8125,1442 959.3125,1442" fill="none" stroke="#000"/><polygon points="959.3125,1442 968.3125,1437.5 968.3125,1446.5" fill="#000" stroke="#000"/>
+<text x="990.8125" y="1432" font-size="12">status(&quot;Logowanie nieudane: ...&quot;)</text>
+<polyline points="1518.912109375,1504 1546.912109375,1504 1546.912109375,1532 1521.412109375,1532" fill="none" stroke="#000"/><polygon points="1521.412109375,1532 1530.412109375,1527.5 1530.412109375,1536.5" fill="#000" stroke="#000"/>
+<text x="1552.912109375" y="1508" font-size="12">runtime.spawn:</text>
+<text x="1552.912109375" y="1522" font-size="12">NetworkConfig::listen_from_env()</text>
+<line x1="1503.912109375" x2="1251.8125" y1="1568" y2="1568" stroke="#000"/><polygon points="1251.8125,1568 1260.8125,1563.5 1260.8125,1572.5" fill="#000" stroke="#000"/>
+<text x="1377.8623046875" y="1562" text-anchor="middle" font-size="12">start_node(listen, Vec::new(), false)</text>
+<line x1="1251.8125" x2="1503.912109375" y1="1606" y2="1606" stroke="#000" stroke-dasharray="6,4"/><polyline points="1494.912109375,1601.5 1503.912109375,1606 1494.912109375,1610.5" fill="none" stroke="#000"/>
+<text x="1377.8623046875" y="1600" text-anchor="middle" font-size="12">Result&lt;(EhrNode, JoinHandle), EhrError&gt;</text>
+<polyline points="1518.912109375,1630 1546.912109375,1630 1546.912109375,1658 1521.412109375,1658" fill="none" stroke="#000"/><polygon points="1521.412109375,1658 1530.412109375,1653.5 1530.412109375,1662.5" fill="#000" stroke="#000"/>
+<text x="1552.912109375" y="1634" font-size="12">state.session = Some(Arc::new(Session { app,</text>
+<text x="1552.912109375" y="1648" font-size="12">node }))</text>
+<line x1="1503.912109375" x2="669.005859375" y1="1694" y2="1694" stroke="#000"/><polygon points="669.005859375,1694 678.005859375,1689.5 678.005859375,1698.5" fill="#000" stroke="#000"/>
+<text x="1086.458984375" y="1688" text-anchor="middle" font-size="12">set_me_name(name); set_status(&quot;&quot;); set_screen(&quot;main&quot;)</text>
+<polyline points="1518.912109375,1718 1546.912109375,1718 1546.912109375,1746 1521.412109375,1746" fill="none" stroke="#000"/><polygon points="1521.412109375,1746 1530.412109375,1741.5 1530.412109375,1750.5" fill="#000" stroke="#000"/>
+<text x="1552.912109375" y="1722" font-size="12">reload(&amp;state, &amp;ui) – listy kontaktów i</text>
+<text x="1552.912109375" y="1736" font-size="12">dokumentów</text>
+<polygon points="330.005859375,384 356.8427734375,384 356.8427734375,393 349.8427734375,400 330.005859375,400" fill="#fff" stroke="#000"/><text x="336.005859375" y="396" font-size="11" font-weight="bold">alt</text>
+<rect x="361.8427734375" y="385" width="76.308349609375" height="14" fill="#fff"/><text x="364.8427734375" y="397" font-size="11.5">[profil istnieje]</text>
+<rect x="335.005859375" y="454" width="69.278076171875" height="14" fill="#fff"/><text x="338.005859375" y="465" font-size="11.5">[brak profilu]</text>
+<polygon points="896.8125,944 923.6494140625,944 923.6494140625,953 916.6494140625,960 896.8125,960" fill="#fff" stroke="#000"/><text x="902.8125" y="956" font-size="11" font-weight="bold">alt</text>
+<rect x="928.6494140625" y="945" width="53.931640625" height="14" fill="#fff"/><text x="931.6494140625" y="957" font-size="11.5">[Ok(app)]</text>
+<rect x="901.8125" y="1014" width="57.12109375" height="14" fill="#fff"/><text x="904.8125" y="1025" font-size="11.5">[Err(błąd)]</text>
+<polygon points="888.8125,732 915.6494140625,732 915.6494140625,741 908.6494140625,748 888.8125,748" fill="#fff" stroke="#000"/><text x="894.8125" y="744" font-size="11" font-weight="bold">alt</text>
+<rect x="920.6494140625" y="733" width="119.70849609375" height="14" fill="#fff"/><text x="923.6494140625" y="745" font-size="11.5">[password ≠ repeated]</text>
+<rect x="893.8125" y="800" width="80.80615234375" height="14" fill="#fff"/><text x="896.8125" y="811" font-size="11.5">[hasła zgodne]</text>
+<polygon points="904.8125,1336 931.6494140625,1336 931.6494140625,1345 924.6494140625,1352 904.8125,1352" fill="#fff" stroke="#000"/><text x="910.8125" y="1348" font-size="11" font-weight="bold">alt</text>
+<rect x="936.6494140625" y="1337" width="53.931640625" height="14" fill="#fff"/><text x="939.6494140625" y="1349" font-size="11.5">[Ok(app)]</text>
+<rect x="909.8125" y="1406" width="57.12109375" height="14" fill="#fff"/><text x="912.8125" y="1417" font-size="11.5">[Err(błąd)]</text>
+<polygon points="40.005859375,632 66.8427734375,632 66.8427734375,641 59.8427734375,648 40.005859375,648" fill="#fff" stroke="#000"/><text x="46.005859375" y="644" font-size="11" font-weight="bold">alt</text>
+<rect x="71.8427734375" y="633" width="194.22265625" height="14" fill="#fff"/><text x="74.8427734375" y="645" font-size="11.5">[ekran &quot;first&quot;: przycisk &quot;Utwórz profil&quot;]</text>
+<rect x="45.005859375" y="1116" width="173.811279296875" height="14" fill="#fff"/><text x="48.005859375" y="1127" font-size="11.5">[ekran &quot;login&quot;: przycisk &quot;Zaloguj&quot;]</text>
+</svg>

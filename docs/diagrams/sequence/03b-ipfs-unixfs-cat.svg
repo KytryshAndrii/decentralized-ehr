@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1013" height="1122" viewBox="0 0 1013 1122" font-family="Arial, Helvetica, sans-serif">
+<rect width="1013" height="1122" fill="#fff"/>
+<text x="506.5" y="26" text-anchor="middle" font-size="15" font-weight="bold">ipfs-unixfs – diagram sekwencji: cat (odtworzenie pliku z DAG)</text>
+<rect x="254.6279296875" y="364" width="603.6904296875" height="358" fill="none" stroke="#000"/>
+<line x1="254.6279296875" x2="858.318359375" y1="444" y2="444" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="254.6279296875" x2="858.318359375" y1="658" y2="658" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="254.6279296875" y="734" width="363" height="144" fill="none" stroke="#000"/>
+<line x1="254.6279296875" x2="617.6279296875" y1="814" y2="814" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="246.6279296875" y="214" width="719.912109375" height="822" fill="none" stroke="#000"/>
+<line x1="75.2333984375" x2="75.2333984375" y1="118" y2="1092" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="296.6279296875" x2="296.6279296875" y1="90" y2="1092" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="596.6279296875" x2="596.6279296875" y1="90" y2="1092" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="716.3095703125" x2="716.3095703125" y1="90" y2="1092" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="816.318359375" x2="816.318359375" y1="90" y2="1092" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="932.5400390625" x2="932.5400390625" y1="90" y2="1092" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="296.6" y="178.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="591.6" y="256.0" width="10" height="52.0" fill="#fff" stroke="#000"/>
+<rect x="296.6" y="328.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="296.6" y="388.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="711.3" y="482.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="811.3" y="558.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="296.6" y="616.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="296.6" y="678.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="296.6" y="758.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="296.6" y="834.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="296.6" y="890.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="296.6" y="978.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="291.6" y="158.0" width="10" height="908.0" fill="#fff" stroke="#000"/>
+<rect x="927.5" y="958.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<circle cx="75.2333984375" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="75.2333984375" x2="75.2333984375" y1="70" y2="86" stroke="#000"/><line x1="64.2333984375" x2="86.2333984375" y1="76" y2="76" stroke="#000"/><line x1="75.2333984375" x2="66.2333984375" y1="86" y2="98" stroke="#000"/><line x1="75.2333984375" x2="84.2333984375" y1="86" y2="98" stroke="#000"/><text x="75.2333984375" y="112" text-anchor="middle" font-size="12" font-weight="bold">Wywołujący</text>
+<rect x="261.619140625" y="56" width="70.017578125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="296.6279296875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">exporter</text>
+<rect x="534.61328125" y="56" width="124.029296875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="596.6279296875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">store : Blockstore</text>
+<rect x="682.642578125" y="56" width="67.333984375" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="716.3095703125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">PbNode</text>
+<rect x="773.9765625" y="56" width="84.68359375" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="816.318359375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">UnixfsData</text>
+<rect x="882.66015625" y="56" width="99.759765625" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="932.5400390625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">output : Write</text>
+<line x1="75.2333984375" x2="291.6279296875" y1="158" y2="158" stroke="#000"/><polygon points="291.6279296875,158 282.6279296875,153.5 282.6279296875,162.5" fill="#000" stroke="#000"/>
+<text x="183.4306640625" y="152" text-anchor="middle" font-size="12">cat(store, root, output)</text>
+<polyline points="306.6279296875,182 334.6279296875,182 334.6279296875,196 309.1279296875,196" fill="none" stroke="#000"/><polygon points="309.1279296875,196 318.1279296875,191.5 318.1279296875,200.5" fill="#000" stroke="#000"/>
+<text x="340.6279296875" y="186" font-size="12">pending = [(root, None)]; written = 0</text>
+<line x1="301.6279296875" x2="591.6279296875" y1="256" y2="256" stroke="#000"/><polygon points="591.6279296875,256 582.6279296875,251.5 582.6279296875,260.5" fill="#000" stroke="#000"/>
+<text x="446.6279296875" y="250" text-anchor="middle" font-size="12">get_block(&amp;cid)</text>
+<line x1="591.6279296875" x2="301.6279296875" y1="308" y2="308" stroke="#000" stroke-dasharray="6,4"/><polyline points="310.6279296875,303.5 301.6279296875,308 310.6279296875,312.5" fill="none" stroke="#000"/>
+<text x="446.6279296875" y="288" text-anchor="middle" font-size="12">Result&lt;Option&lt;Vec&lt;u8&gt;&gt;, StoreError&gt; (None →</text>
+<text x="446.6279296875" y="302" text-anchor="middle" font-size="12">Err(MissingBlock))</text>
+<polyline points="306.6279296875,332 334.6279296875,332 334.6279296875,346 309.1279296875,346" fill="none" stroke="#000"/><polygon points="309.1279296875,346 318.1279296875,341.5 318.1279296875,350.5" fill="#000" stroke="#000"/>
+<text x="340.6279296875" y="336" font-size="12">file_block(&amp;cid, block)</text>
+<polyline points="306.6279296875,392 334.6279296875,392 334.6279296875,420 309.1279296875,420" fill="none" stroke="#000"/><polygon points="309.1279296875,420 318.1279296875,415.5 318.1279296875,424.5" fill="#000" stroke="#000"/>
+<text x="340.6279296875" y="396" font-size="12">FileBlock { data = block, links = [], declared =</text>
+<text x="340.6279296875" y="410" font-size="12">block.len() }</text>
+<line x1="301.6279296875" x2="711.3095703125" y1="482" y2="482" stroke="#000"/><polygon points="711.3095703125,482 702.3095703125,477.5 702.3095703125,486.5" fill="#000" stroke="#000"/>
+<text x="506.46875" y="476" text-anchor="middle" font-size="12">decode(block)</text>
+<line x1="711.3095703125" x2="301.6279296875" y1="520" y2="520" stroke="#000" stroke-dasharray="6,4"/><polyline points="310.6279296875,515.5 301.6279296875,520 310.6279296875,524.5" fill="none" stroke="#000"/>
+<text x="506.46875" y="514" text-anchor="middle" font-size="12">PbNode { data, links }</text>
+<line x1="301.6279296875" x2="811.318359375" y1="558" y2="558" stroke="#000"/><polygon points="811.318359375,558 802.318359375,553.5 802.318359375,562.5" fill="#000" stroke="#000"/>
+<text x="556.47314453125" y="552" text-anchor="middle" font-size="12">decode(node.data)</text>
+<line x1="811.318359375" x2="301.6279296875" y1="596" y2="596" stroke="#000" stroke-dasharray="6,4"/><polyline points="310.6279296875,591.5 301.6279296875,596 310.6279296875,600.5" fill="none" stroke="#000"/>
+<text x="556.47314453125" y="590" text-anchor="middle" font-size="12">UnixfsData { type, data, filesize, blocksizes }</text>
+<polyline points="306.6279296875,620 334.6279296875,620 334.6279296875,634 309.1279296875,634" fill="none" stroke="#000"/><polygon points="309.1279296875,634 318.1279296875,629.5 318.1279296875,638.5" fill="#000" stroke="#000"/>
+<text x="340.6279296875" y="624" font-size="12">tylko DataType::File lub Raw; link_cids()</text>
+<polyline points="306.6279296875,682 334.6279296875,682 334.6279296875,696 309.1279296875,696" fill="none" stroke="#000"/><polygon points="309.1279296875,696 318.1279296875,691.5 318.1279296875,700.5" fill="#000" stroke="#000"/>
+<text x="340.6279296875" y="686" font-size="12">Err(Unsupported)</text>
+<polyline points="306.6279296875,762 334.6279296875,762 334.6279296875,790 309.1279296875,790" fill="none" stroke="#000"/><polygon points="309.1279296875,790 318.1279296875,785.5 318.1279296875,794.5" fill="#000" stroke="#000"/>
+<text x="340.6279296875" y="766" font-size="12">declared ≤ MAX_EXPORT_BYTES (inaczej</text>
+<text x="340.6279296875" y="780" font-size="12">Err(FileTooLarge)); budget = declared</text>
+<polyline points="306.6279296875,838 334.6279296875,838 334.6279296875,852 309.1279296875,852" fill="none" stroke="#000"/><polygon points="309.1279296875,852 318.1279296875,847.5 318.1279296875,856.5" fill="#000" stroke="#000"/>
+<text x="340.6279296875" y="842" font-size="12">size = declared (inaczej Err(InvalidDag))</text>
+<polyline points="306.6279296875,894 334.6279296875,894 334.6279296875,922 309.1279296875,922" fill="none" stroke="#000"/><polygon points="309.1279296875,922 318.1279296875,917.5 318.1279296875,926.5" fill="#000" stroke="#000"/>
+<text x="340.6279296875" y="898" font-size="12">blocksizes.len() = links.len(); data.len() + Σ</text>
+<text x="340.6279296875" y="912" font-size="12">blocksizes = declared</text>
+<line x1="301.6279296875" x2="927.5400390625" y1="958" y2="958" stroke="#000"/><polygon points="927.5400390625,958 918.5400390625,953.5 918.5400390625,962.5" fill="#000" stroke="#000"/>
+<text x="614.583984375" y="952" text-anchor="middle" font-size="12">write_all(&amp;node.data)</text>
+<polyline points="306.6279296875,982 334.6279296875,982 334.6279296875,1010 309.1279296875,1010" fill="none" stroke="#000"/><polygon points="309.1279296875,1010 318.1279296875,1005.5 318.1279296875,1014.5" fill="#000" stroke="#000"/>
+<text x="340.6279296875" y="986" font-size="12">written += data.len() (≤ budget);</text>
+<text x="340.6279296875" y="1000" font-size="12">pending.extend(links)</text>
+<line x1="291.6279296875" x2="75.2333984375" y1="1066" y2="1066" stroke="#000" stroke-dasharray="6,4"/><polyline points="84.2333984375,1061.5 75.2333984375,1066 84.2333984375,1070.5" fill="none" stroke="#000"/>
+<text x="183.4306640625" y="1060" text-anchor="middle" font-size="12">Result&lt;u64 (written), UnixfsError&gt;</text>
+<polygon points="254.6279296875,364 281.46484375,364 281.46484375,373 274.46484375,380 254.6279296875,380" fill="#fff" stroke="#000"/><text x="260.6279296875" y="376" font-size="11" font-weight="bold">alt</text>
+<rect x="286.46484375" y="365" width="148.407958984375" height="14" fill="#fff"/><text x="289.46484375" y="377" font-size="11.5">[cid.codec = CODEC_RAW]</text>
+<rect x="259.6279296875" y="446" width="168.662109375" height="14" fill="#fff"/><text x="262.6279296875" y="457" font-size="11.5">[cid.codec = CODEC_DAG_PB]</text>
+<rect x="259.6279296875" y="660" width="67.368896484375" height="14" fill="#fff"/><text x="262.6279296875" y="671" font-size="11.5">[inny kodek]</text>
+<polygon points="254.6279296875,734 281.46484375,734 281.46484375,743 274.46484375,750 254.6279296875,750" fill="#fff" stroke="#000"/><text x="260.6279296875" y="746" font-size="11" font-weight="bold">alt</text>
+<rect x="286.46484375" y="735" width="145.033203125" height="14" fill="#fff"/><text x="289.46484375" y="747" font-size="11.5">[expected = None (korzeń)]</text>
+<rect x="259.6279296875" y="816" width="130.3212890625" height="14" fill="#fff"/><text x="262.6279296875" y="827" font-size="11.5">[expected = Some(size)]</text>
+<polygon points="246.6279296875,214 283.841796875,214 283.841796875,223 276.841796875,230 246.6279296875,230" fill="#fff" stroke="#000"/><text x="252.6279296875" y="226" font-size="11" font-weight="bold">loop</text>
+<rect x="288.841796875" y="215" width="201.60107421875" height="14" fill="#fff"/><text x="291.841796875" y="227" font-size="11.5">[pending.pop() zwraca (cid, expected)]</text>
+</svg>

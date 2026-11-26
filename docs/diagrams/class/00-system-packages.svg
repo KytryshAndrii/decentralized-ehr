@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1358" height="825" viewBox="0 0 1358 825" font-family="Arial, Helvetica, sans-serif">
+<rect width="1358" height="825" fill="#fff"/>
+<text x="679" y="28" text-anchor="middle" font-size="15" font-weight="bold">System EHR – diagram pakietów (workspace Cargo)</text>
+<path d="M878.2,122.3 C896.6,145.5 920.9,176.3 935.3,194.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="932.4,182.8 935.3,194.6 924.5,189.0" fill="none" stroke="#000" stroke-width="1"/><path d="M860.6,122.3 C870.4,164.6 886.5,235.0 886.5,235.0 C886.5,235.0 919.4,282.5 936.9,307.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="934.7,295.8 936.9,307.7 926.5,301.5" fill="none" stroke="#000" stroke-width="1"/><path d="M1065.5,122.3 C1034.2,145.5 992.8,176.3 968.3,194.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="980.1,192.0 968.3,194.6 974.1,184.0" fill="none" stroke="#000" stroke-width="1"/><path d="M1086.0,122.3 C1056.9,164.6 1008.5,235.0 1008.5,235.0 C1008.5,235.0 975.6,282.5 958.1,307.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="968.5,301.5 958.1,307.7 960.3,295.8" fill="none" stroke="#000" stroke-width="1"/><path d="M1138.0,122.3 C1199.7,185.6 1333.5,323.0 1333.5,323.0 C1333.5,323.0 1333.5,323.0 1333.5,438.1 C1333.5,438.1 1193.5,574.1 1193.5,574.1 C1193.5,574.1 1021.0,624.4 936.7,648.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="948.7,650.7 936.7,648.9 945.9,641.1" fill="none" stroke="#000" stroke-width="1"/><path d="M1107.5,122.2 C1107.5,193.9 1107.5,368.0 1107.5,420.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1112.5,409.7 1107.5,420.7 1102.5,409.7" fill="none" stroke="#000" stroke-width="1"/><path d="M1115.9,122.5 C1137.5,203.5 1193.5,413.0 1193.5,413.0 C1193.5,413.0 1193.5,461.1 1193.5,461.1 C1193.5,461.1 1147.1,508.5 1122.5,533.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1133.8,529.4 1122.5,533.8 1126.6,522.4" fill="none" stroke="#000" stroke-width="1"/><path d="M902.0,220.3 C865.6,226.9 820.5,235.0 820.5,235.0 C820.5,235.0 404.5,300.0 404.5,300.0 C404.5,300.0 375.1,306.7 347.8,312.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="359.7,315.3 347.8,312.8 357.5,305.5" fill="none" stroke="#000" stroke-width="1"/><path d="M902.1,223.8 C809.8,247.8 608.5,300.0 608.5,300.0 C608.5,300.0 527.5,526.1 527.5,526.1 C527.5,526.1 527.5,574.1 527.5,574.1 C527.5,574.1 748.5,627.5 846.1,651.1" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="836.6,643.7 846.1,651.1 834.3,653.4" fill="none" stroke="#000" stroke-width="1"/><path d="M965.8,227.4 C995.9,252.6 1052.5,300.0 1052.5,300.0 C1052.5,300.0 1168.5,413.0 1168.5,413.0 C1168.5,413.0 1168.5,461.1 1168.5,461.1 C1168.5,461.1 1135.6,508.5 1118.1,533.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1128.5,527.6 1118.1,533.8 1120.3,521.9" fill="none" stroke="#000" stroke-width="1"/><path d="M958.5,227.4 C987.8,268.4 1067.5,380.0 1096.6,420.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1094.3,409.0 1096.6,420.8 1086.1,414.8" fill="none" stroke="#000" stroke-width="1"/><path d="M947.5,227.5 C947.5,248.7 947.5,286.6 947.5,307.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="952.5,296.7 947.5,307.7 942.5,296.7" fill="none" stroke="#000" stroke-width="1"/><path d="M944.9,340.4 C935.6,396.5 903.4,590.4 894.1,646.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="900.8,636.6 894.1,646.7 890.9,635.0" fill="none" stroke="#000" stroke-width="1"/><path d="M958.5,340.4 C987.8,381.5 1067.5,493.1 1096.6,533.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1094.3,522.0 1096.6,533.9 1086.1,527.8" fill="none" stroke="#000" stroke-width="1"/><path d="M925.2,340.5 C894.7,361.7 840.0,399.6 809.5,420.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="821.4,418.6 809.5,420.8 815.7,410.4" fill="none" stroke="#000" stroke-width="1"/><path d="M969.7,340.5 C1000.3,361.7 1055.0,399.6 1085.4,420.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1079.2,410.4 1085.4,420.8 1073.5,418.6" fill="none" stroke="#000" stroke-width="1"/><path d="M794.6,453.5 C813.7,494.5 865.5,606.1 884.4,646.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="884.3,634.8 884.4,646.9 875.3,639.0" fill="none" stroke="#000" stroke-width="1"/><path d="M832.9,453.5 C907.2,478.7 1046.5,526.1 1046.5,526.1 C1046.5,526.1 1055.4,529.5 1066.5,533.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1058.0,525.1 1066.5,533.6 1054.4,534.4" fill="none" stroke="#000" stroke-width="1"/><path d="M1118.1,453.4 C1135.6,478.6 1168.5,526.1 1168.5,526.1 C1168.5,526.1 1168.5,574.1 1168.5,574.1 C1168.5,574.1 1015.5,622.7 936.9,647.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="948.9,649.1 936.9,647.7 945.9,639.6" fill="none" stroke="#000" stroke-width="1"/><path d="M1107.5,453.5 C1107.5,474.7 1107.5,512.6 1107.5,533.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1112.5,522.8 1107.5,533.8 1102.5,522.8" fill="none" stroke="#000" stroke-width="1"/><path d="M1077.5,566.5 C1036.2,587.7 962.4,625.7 921.3,646.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="933.3,646.2 921.3,646.8 928.8,637.3" fill="none" stroke="#000" stroke-width="1"/><path d="M715.8,348.2 C687.9,374.2 646.5,413.0 646.5,413.0 C646.5,413.0 535.5,526.1 535.5,526.1 C535.5,526.1 535.5,574.1 535.5,574.1 C535.5,574.1 750.1,627.1 846.0,650.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="836.6,643.4 846.0,650.9 834.2,653.1" fill="none" stroke="#000" stroke-width="1"/><path d="M778.7,348.4 C854.0,394.3 1019.5,495.4 1082.5,533.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1075.7,523.8 1082.5,533.8 1070.5,532.4" fill="none" stroke="#000" stroke-width="1"/><path d="M750.3,348.3 C759.5,370.1 773.0,401.9 781.0,420.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="781.3,408.6 781.0,420.7 772.1,412.5" fill="none" stroke="#000" stroke-width="1"/><path d="M902.2,224.1 C811.5,248.2 616.5,300.0 616.5,300.0 C616.5,300.0 616.5,348.0 616.5,348.0 C616.5,348.0 623.3,472.6 626.2,525.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="630.6,514.4 626.2,525.6 620.6,514.9" fill="none" stroke="#000" stroke-width="1"/><path d="M324.8,340.4 C380.7,378.9 526.7,479.6 593.4,525.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="587.2,515.2 593.4,525.6 581.5,523.5" fill="none" stroke="#000" stroke-width="1"/><path d="M908.7,340.5 C845.4,365.7 726.5,413.0 726.5,413.0 C726.5,413.0 672.8,486.8 644.5,525.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="655.0,519.7 644.5,525.7 646.9,513.9" fill="none" stroke="#000" stroke-width="1"/><path d="M765.2,453.5 C738.3,472.2 692.6,503.9 661.3,525.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="673.2,523.5 661.3,525.6 667.5,515.3" fill="none" stroke="#000" stroke-width="1"/><path d="M721.6,348.2 C700.2,374.2 668.5,413.0 668.5,413.0 C668.5,413.0 646.3,486.8 634.5,525.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="642.5,516.6 634.5,525.7 632.9,513.7" fill="none" stroke="#000" stroke-width="1"/><path d="M1107.5,566.5 C1107.5,585.2 1107.5,617.0 1107.5,638.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1112.5,627.7 1107.5,638.7 1102.5,627.7" fill="none" stroke="#000" stroke-width="1"/><path d="M815.0,453.5 C848.4,472.2 904.9,503.9 943.7,525.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="936.5,515.9 943.7,525.6 931.7,524.6" fill="none" stroke="#000" stroke-width="1"/><path d="M1090.5,453.5 C1070.0,472.2 1035.1,503.9 1011.2,525.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1022.7,521.9 1011.2,525.6 1016.0,514.5" fill="none" stroke="#000" stroke-width="1"/><path d="M297.9,340.5 C292.3,359.2 282.9,390.9 276.5,412.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="284.4,403.5 276.5,412.6 274.8,400.7" fill="none" stroke="#000" stroke-width="1"/><path d="M275.5,340.5 C242.8,359.2 187.4,390.9 149.4,412.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="161.5,411.5 149.4,412.6 156.5,402.8" fill="none" stroke="#000" stroke-width="1"/><path d="M828.8,122.3 C812.8,142.5 792.3,168.4 777.8,186.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="788.5,181.3 777.8,186.9 780.7,175.1" fill="none" stroke="#000" stroke-width="1"/><path d="M891.5,679.5 C891.5,698.3 891.5,730.0 891.5,751.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="896.5,740.7 891.5,751.7 886.5,740.7" fill="none" stroke="#000" stroke-width="1"/><rect x="782.0" y="58.0" width="143" height="64" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="782.0" y="44.0" width="71.5" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="853.5" y="74.0" text-anchor="middle" font-size="12" font-weight="bold">ehr-desktop</text>
+<text x="790.0" y="98.0" font-size="12" xml:space="preserve">bin: ehr-desktop-doctor</text>
+<text x="790.0" y="114.0" font-size="12" xml:space="preserve">bin: ehr-desktop-patient</text>
+<rect x="1051.5" y="58.0" width="112" height="64" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="1051.5" y="44.0" width="56.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="1107.5" y="74.0" text-anchor="middle" font-size="12" font-weight="bold">ehr-cli</text>
+<text x="1059.5" y="98.0" font-size="12" xml:space="preserve">bin: ehr-cli-doctor</text>
+<text x="1059.5" y="114.0" font-size="12" xml:space="preserve">bin: ehr-cli-patient</text>
+<rect x="632.5" y="300.0" width="216" height="48" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="632.5" y="286.0" width="83.3" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="740.5" y="316.0" text-anchor="middle" font-size="12" font-weight="bold">test-runner</text>
+<text x="640.5" y="340.0" font-size="12" xml:space="preserve">testy integracyjne i interoperacyjności</text>
+<rect x="902.5" y="195.0" width="90" height="32" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="902.5" y="181.0" width="45.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="947.5" y="211.0" text-anchor="middle" font-size="12" font-weight="bold">ehr-core</text>
+<rect x="257.5" y="308.0" width="90" height="32" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="257.5" y="294.0" width="45.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="302.5" y="324.0" text-anchor="middle" font-size="12" font-weight="bold">ehr-security</text>
+<rect x="902.5" y="308.0" width="90" height="32" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="902.5" y="294.0" width="45.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="947.5" y="324.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs-network</text>
+<rect x="742.5" y="421.1" width="90" height="32" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="742.5" y="407.1" width="45.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="787.5" y="437.1" text-anchor="middle" font-size="12" font-weight="bold">ipfs-bitswap</text>
+<rect x="1062.5" y="421.1" width="90" height="32" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="1062.5" y="407.1" width="45.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="1107.5" y="437.1" text-anchor="middle" font-size="12" font-weight="bold">ipfs-unixfs</text>
+<rect x="1062.5" y="534.1" width="90" height="32" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="1062.5" y="520.1" width="45.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="1107.5" y="550.1" text-anchor="middle" font-size="12" font-weight="bold">ipfs-store</text>
+<rect x="846.5" y="647.1" width="90" height="32" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="846.5" y="633.1" width="45.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="891.5" y="663.1" text-anchor="middle" font-size="12" font-weight="bold">ipfs-cid</text>
+<rect x="551.5" y="526.1" width="152" height="48" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="551.5" y="512.1" width="76.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="627.5" y="542.1" text-anchor="middle" font-size="12" font-weight="normal">«external»</text>
+<text x="627.5" y="558.1" text-anchor="middle" font-size="12" font-weight="bold">libp2p (+ libp2p-stream)</text>
+<rect x="1062.0" y="639.1" width="91" height="48" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="1062.0" y="625.1" width="45.5" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="1107.5" y="655.1" text-anchor="middle" font-size="12" font-weight="normal">«external»</text>
+<text x="1107.5" y="671.1" text-anchor="middle" font-size="12" font-weight="bold">rusty-leveldb</text>
+<rect x="940.5" y="526.1" width="90" height="48" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="940.5" y="512.1" width="45.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="985.5" y="542.1" text-anchor="middle" font-size="12" font-weight="normal">«external»</text>
+<text x="985.5" y="558.1" text-anchor="middle" font-size="12" font-weight="bold">prost</text>
+<rect x="224.5" y="413.1" width="90" height="48" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="224.5" y="399.1" width="45.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="269.5" y="429.1" text-anchor="middle" font-size="12" font-weight="normal">«external»</text>
+<text x="269.5" y="445.1" text-anchor="middle" font-size="12" font-weight="bold">pgp (rPGP)</text>
+<rect x="24.0" y="413.1" width="169" height="48" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="24.0" y="399.1" width="84.5" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="108.5" y="429.1" text-anchor="middle" font-size="12" font-weight="normal">«external»</text>
+<text x="108.5" y="445.1" text-anchor="middle" font-size="12" font-weight="bold">argon2, chacha20poly1305</text>
+<rect x="714.5" y="187.0" width="90" height="48" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="714.5" y="173.0" width="45.0" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="759.5" y="203.0" text-anchor="middle" font-size="12" font-weight="normal">«external»</text>
+<text x="759.5" y="219.0" text-anchor="middle" font-size="12" font-weight="bold">slint, rfd</text>
+<rect x="838.0" y="752.1" width="107" height="48" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<rect x="838.0" y="738.1" width="53.5" height="14" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<text x="891.5" y="768.1" text-anchor="middle" font-size="12" font-weight="normal">«external»</text>
+<text x="891.5" y="784.1" text-anchor="middle" font-size="12" font-weight="bold">sha2, multibase</text>
+</svg>

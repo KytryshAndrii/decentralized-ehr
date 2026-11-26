@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1947" height="1343" viewBox="0 0 1947 1343" font-family="Arial, Helvetica, sans-serif">
+<rect width="1947" height="1343" fill="#fff"/>
+<text x="973.5" y="28" text-anchor="middle" font-size="15" font-weight="bold">ehr-security – diagram klas</text>
+<path d="M545.9,752.3 C525.2,818.4 499.8,899.5 481.6,957.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="545.9,752.3 537.5,759.1 540.5,769.5 548.9,762.7" fill="#000" stroke="#000" stroke-width="1"/><text x="496.0" y="949.2" font-size="10.5">0..*</text>
+<rect x="531.5" y="835.0" width="18.3" height="14" fill="#fff"/><text x="540.6" y="846.0" text-anchor="middle" font-size="10.5">prf</text>
+<path d="M1107.6,712.4 C1122.9,782.1 1145.5,885.1 1161.0,955.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1107.6,712.4 1103.7,722.5 1111.5,730.0 1115.4,719.9" fill="#000" stroke="#000" stroke-width="1"/><text x="1167.3" y="941.7" font-size="10.5">1</text>
+<rect x="1146.0" y="835.0" width="42.8" height="14" fill="#fff"/><text x="1167.4" y="846.0" text-anchor="middle" font-size="10.5">payload</text>
+<path d="M970.5,712.4 C858.0,782.8 691.1,887.1 578.6,957.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="970.5,712.4 959.6,712.1 955.2,721.9 966.0,722.3" fill="#000" stroke="#000" stroke-width="1"/><text x="597.5" y="961.5" font-size="10.5">1</text>
+<rect x="846.1" y="835.0" width="36.9" height="14" fill="#fff"/><text x="864.6" y="846.0" text-anchor="middle" font-size="10.5">signed</text>
+<path d="M742.8,752.2 C766.4,769.1 783.0,781.0 783.0,781.0 C783.0,781.0 810.4,863.2 833.9,933.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="835.2,921.7 833.9,933.7 825.7,924.9" fill="none" stroke="#000" stroke-width="1"/><path d="M1048.4,712.4 C1012.9,775.1 962.1,864.9 923.3,933.5" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="933.0,926.4 923.3,933.5 924.3,921.5" fill="none" stroke="#000" stroke-width="1"/><path d="M292.7,194.5 C296.9,356.1 307.0,752.0 307.0,752.0 C307.0,752.0 372.8,874.4 417.6,957.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="416.7,945.6 417.6,957.7 407.9,950.3" fill="none" stroke="#000" stroke-width="1"/><path d="M329.6,194.5 C377.1,277.3 458.4,419.2 515.9,519.5" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="514.7,507.5 515.9,519.5 506.1,512.5" fill="none" stroke="#000" stroke-width="1"/><rect x="208.5" y="1163.0" width="499" height="156" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="208.5" x2="707.5" y1="1203.0" y2="1203.0" stroke="#000"/>
+<line x1="208.5" x2="707.5" y1="1215.0" y2="1215.0" stroke="#000"/>
+<text x="458.0" y="1179.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="458.0" y="1195.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_security::pgp</text>
+<text x="216.5" y="1231.0" font-size="12" text-decoration="underline" xml:space="preserve">+parse_public_key(armored: &amp;str): Result&lt;SignedPublicKey, SecurityError&gt;</text>
+<text x="216.5" y="1247.0" font-size="12" text-decoration="underline" xml:space="preserve">+fingerprint(key: &amp;SignedPublicKey): String</text>
+<text x="216.5" y="1263.0" font-size="12" text-decoration="underline" xml:space="preserve">+encrypt_and_sign(plaintext: &amp;[u8], signer: &amp;Identity, recipients: &amp;[&amp;SignedPublicKey]):</text>
+<text x="216.5" y="1279.0" font-size="12" text-decoration="underline" xml:space="preserve">    Result&lt;Vec&lt;u8&gt;, SecurityError&gt;</text>
+<text x="216.5" y="1295.0" font-size="12" text-decoration="underline" xml:space="preserve">+decrypt_and_verify(ciphertext: &amp;[u8], me: &amp;Identity, expected_signer: &amp;SignedPublicKey):</text>
+<text x="216.5" y="1311.0" font-size="12" text-decoration="underline" xml:space="preserve">    Result&lt;Vec&lt;u8&gt;, SecurityError&gt;</text>
+<rect x="713.0" y="1163.0" width="478" height="156" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="713.0" x2="1191.0" y1="1203.0" y2="1203.0" stroke="#000"/>
+<line x1="713.0" x2="1191.0" y1="1215.0" y2="1215.0" stroke="#000"/>
+<text x="952.0" y="1179.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="952.0" y="1195.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_security::keystore</text>
+<text x="721.0" y="1231.0" font-size="12" text-decoration="underline" xml:space="preserve">-generate_pgp(user_id: &amp;str, password: &amp;str): Result&lt;SignedSecretKey, SecurityError&gt;</text>
+<text x="721.0" y="1247.0" font-size="12" text-decoration="underline" xml:space="preserve">-derive_key(password: &amp;str, salt: &amp;[u8]): Result&lt;Zeroizing&lt;[u8; 32]&gt;, SecurityError&gt;</text>
+<text x="721.0" y="1263.0" font-size="12" text-decoration="underline" xml:space="preserve">-seal(keypair: &amp;Keypair, password: &amp;str): Result&lt;EncryptedKeyFile, SecurityError&gt;</text>
+<text x="721.0" y="1279.0" font-size="12" text-decoration="underline" xml:space="preserve">-open(sealed: &amp;EncryptedKeyFile, password: &amp;str): Result&lt;Keypair, SecurityError&gt;</text>
+<text x="721.0" y="1295.0" font-size="12" text-decoration="underline" xml:space="preserve">-create_private_dir(directory: &amp;Path): Result&lt;(), SecurityError&gt;</text>
+<text x="721.0" y="1311.0" font-size="12" text-decoration="underline" xml:space="preserve">-write_private(path: &amp;Path, bytes: &amp;[u8]): Result&lt;(), SecurityError&gt;</text>
+<rect x="1196.0" y="1187.0" width="378" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1196.0" x2="1574.0" y1="1227.0" y2="1227.0" stroke="#000"/>
+<line x1="1196.0" x2="1574.0" y1="1239.0" y2="1239.0" stroke="#000"/>
+<text x="1385.0" y="1203.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1385.0" y="1219.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_security::identity</text>
+<text x="1204.0" y="1255.0" font-size="12" text-decoration="underline" xml:space="preserve">+did_from_public(public: &amp;PublicKey): Result&lt;String, SecurityError&gt;</text>
+<text x="1204.0" y="1271.0" font-size="12" text-decoration="underline" xml:space="preserve">+public_from_did(did: &amp;str): Result&lt;PublicKey, SecurityError&gt;</text>
+<text x="1204.0" y="1287.0" font-size="12" text-decoration="underline" xml:space="preserve">+peer_id_from_did(did: &amp;str): Result&lt;PeerId, SecurityError&gt;</text>
+<rect x="1579.5" y="1187.0" width="343" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1579.5" x2="1922.5" y1="1227.0" y2="1227.0" stroke="#000"/>
+<line x1="1579.5" x2="1922.5" y1="1239.0" y2="1239.0" stroke="#000"/>
+<text x="1751.0" y="1203.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1751.0" y="1219.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_security::utils</text>
+<text x="1587.5" y="1255.0" font-size="12" text-decoration="underline" xml:space="preserve">+base64_encode(bytes: &amp;[u8]): String</text>
+<text x="1587.5" y="1271.0" font-size="12" text-decoration="underline" xml:space="preserve">+base64_decode(text: &amp;str): Result&lt;Vec&lt;u8&gt;, SecurityError&gt;</text>
+<text x="1587.5" y="1287.0" font-size="12" text-decoration="underline" xml:space="preserve">+random_id(): String</text>
+<rect x="64.0" y="223.0" width="182" height="268" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="64.0" x2="246.0" y1="263.0" y2="263.0" stroke="#000"/>
+<line x1="64.0" x2="246.0" y1="479.0" y2="479.0" stroke="#000"/>
+<text x="155.0" y="239.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="155.0" y="255.0" text-anchor="middle" font-size="12" font-weight="bold">SecurityError</text>
+<text x="72.0" y="279.0" font-size="12" xml:space="preserve">Io(std::io::Error)</text>
+<text x="72.0" y="295.0" font-size="12" xml:space="preserve">Json(serde_json::Error)</text>
+<text x="72.0" y="311.0" font-size="12" xml:space="preserve">Pgp(pgp::errors::Error)</text>
+<text x="72.0" y="327.0" font-size="12" xml:space="preserve">InvalidDid(String)</text>
+<text x="72.0" y="343.0" font-size="12" xml:space="preserve">Encoding(String)</text>
+<text x="72.0" y="359.0" font-size="12" xml:space="preserve">BadSignature</text>
+<text x="72.0" y="375.0" font-size="12" xml:space="preserve">WrongPassword</text>
+<text x="72.0" y="391.0" font-size="12" xml:space="preserve">WeakPassword(usize)</text>
+<text x="72.0" y="407.0" font-size="12" xml:space="preserve">KeysExist(String)</text>
+<text x="72.0" y="423.0" font-size="12" xml:space="preserve">NoKeys(String)</text>
+<text x="72.0" y="439.0" font-size="12" xml:space="preserve">TokenRejected(&amp;'static str)</text>
+<text x="72.0" y="455.0" font-size="12" xml:space="preserve">DocumentRejected(&amp;'static str)</text>
+<text x="72.0" y="471.0" font-size="12" xml:space="preserve">Key(String)</text>
+<rect x="280.0" y="958.0" width="356" height="152" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="280.0" x2="636.0" y1="982.0" y2="982.0" stroke="#000"/>
+<line x1="280.0" x2="636.0" y1="1054.0" y2="1054.0" stroke="#000"/>
+<text x="458.0" y="974.0" text-anchor="middle" font-size="12" font-weight="bold">Signed</text>
+<text x="288.0" y="998.0" font-size="12" xml:space="preserve">+v: u8</text>
+<text x="288.0" y="1014.0" font-size="12" xml:space="preserve">+signer: String</text>
+<text x="288.0" y="1030.0" font-size="12" xml:space="preserve">+payload: String</text>
+<text x="288.0" y="1046.0" font-size="12" xml:space="preserve">+signature: String</text>
+<text x="288.0" y="1070.0" font-size="12" text-decoration="underline" xml:space="preserve">+sign(keypair: &amp;Keypair, value: &amp;T): Result&lt;Self, SecurityError&gt;</text>
+<text x="288.0" y="1086.0" font-size="12" xml:space="preserve">+open(): Result&lt;T, SecurityError&gt;</text>
+<text x="288.0" y="1102.0" font-size="12" xml:space="preserve">+open_from(signer: &amp;str): Result&lt;T, SecurityError&gt;</text>
+<rect x="325.0" y="520.0" width="514" height="232" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="325.0" x2="839.0" y1="544.0" y2="544.0" stroke="#000"/>
+<line x1="325.0" x2="839.0" y1="696.0" y2="696.0" stroke="#000"/>
+<text x="582.0" y="536.0" text-anchor="middle" font-size="12" font-weight="bold">Token</text>
+<text x="333.0" y="560.0" font-size="12" xml:space="preserve">+iss: String</text>
+<text x="333.0" y="576.0" font-size="12" xml:space="preserve">+aud: String</text>
+<text x="333.0" y="592.0" font-size="12" xml:space="preserve">+sub: String</text>
+<text x="333.0" y="608.0" font-size="12" xml:space="preserve">+cmd: String</text>
+<text x="333.0" y="624.0" font-size="12" xml:space="preserve">+pol: Vec&lt;String&gt;</text>
+<text x="333.0" y="640.0" font-size="12" xml:space="preserve">+nonce: String</text>
+<text x="333.0" y="656.0" font-size="12" xml:space="preserve">+nbf: u64</text>
+<text x="333.0" y="672.0" font-size="12" xml:space="preserve">+exp: u64</text>
+<text x="333.0" y="688.0" font-size="12" xml:space="preserve">+prf: Vec&lt;Signed&gt;</text>
+<text x="333.0" y="712.0" font-size="12" text-decoration="underline" xml:space="preserve">+issue_root(identity: &amp;Identity, now: u64, exp: u64): Result&lt;Signed, SecurityError&gt;</text>
+<text x="333.0" y="728.0" font-size="12" text-decoration="underline" xml:space="preserve">+delegate_read(identity: &amp;Identity, issue_root: &amp;Signed, patient_did: &amp;str, document_cid: &amp;str,</text>
+<text x="333.0" y="744.0" font-size="12" text-decoration="underline" xml:space="preserve">    now: u64, exp: u64): Result&lt;Signed, SecurityError&gt;</text>
+<rect x="1098.0" y="956.0" width="160" height="156" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1098.0" x2="1258.0" y1="980.0" y2="980.0" stroke="#000"/>
+<line x1="1098.0" x2="1258.0" y1="1100.0" y2="1100.0" stroke="#000"/>
+<text x="1178.0" y="972.0" text-anchor="middle" font-size="12" font-weight="bold">CardPayload</text>
+<text x="1106.0" y="996.0" font-size="12" xml:space="preserve">+did: String</text>
+<text x="1106.0" y="1012.0" font-size="12" xml:space="preserve">+name: String</text>
+<text x="1106.0" y="1028.0" font-size="12" xml:space="preserve">+role: String</text>
+<text x="1106.0" y="1044.0" font-size="12" xml:space="preserve">+pgp_public: String</text>
+<text x="1106.0" y="1060.0" font-size="12" xml:space="preserve">+multiaddr: Option&lt;String&gt;</text>
+<text x="1106.0" y="1076.0" font-size="12" xml:space="preserve">+invite: Option&lt;String&gt;</text>
+<text x="1106.0" y="1092.0" font-size="12" xml:space="preserve">+created_utc: u64</text>
+<rect x="875.0" y="560.0" width="432" height="152" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="875.0" x2="1307.0" y1="584.0" y2="584.0" stroke="#000"/>
+<line x1="875.0" x2="1307.0" y1="640.0" y2="640.0" stroke="#000"/>
+<text x="1091.0" y="576.0" text-anchor="middle" font-size="12" font-weight="bold">ContactCard</text>
+<text x="883.0" y="600.0" font-size="12" xml:space="preserve">+payload: CardPayload</text>
+<text x="883.0" y="616.0" font-size="12" xml:space="preserve">+signed: Signed</text>
+<text x="883.0" y="632.0" font-size="12" xml:space="preserve">+pgp: SignedPublicKey</text>
+<text x="883.0" y="656.0" font-size="12" text-decoration="underline" xml:space="preserve">+create(identity: &amp;Identity, payload: CardPayload): Result&lt;Self, SecurityError&gt;</text>
+<text x="883.0" y="672.0" font-size="12" text-decoration="underline" xml:space="preserve">+verify(signed: Signed): Result&lt;Self, SecurityError&gt;</text>
+<text x="883.0" y="688.0" font-size="12" xml:space="preserve">+to_text(): Result&lt;String, SecurityError&gt;</text>
+<text x="883.0" y="704.0" font-size="12" text-decoration="underline" xml:space="preserve">+from_text(text: &amp;str): Result&lt;Self, SecurityError&gt;</text>
+<rect x="672.0" y="934.0" width="390" height="200" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="672.0" x2="1062.0" y1="958.0" y2="958.0" stroke="#000"/>
+<line x1="672.0" x2="1062.0" y1="1030.0" y2="1030.0" stroke="#000"/>
+<text x="867.0" y="950.0" text-anchor="middle" font-size="12" font-weight="bold">Identity</text>
+<text x="680.0" y="974.0" font-size="12" xml:space="preserve">+keypair: Keypair</text>
+<text x="680.0" y="990.0" font-size="12" xml:space="preserve">+pgp_secret: SignedSecretKey</text>
+<text x="680.0" y="1006.0" font-size="12" xml:space="preserve">+pgp_public: SignedPublicKey</text>
+<text x="680.0" y="1022.0" font-size="12" xml:space="preserve">~password: zeroize::Zeroizing&lt;String&gt;</text>
+<text x="680.0" y="1046.0" font-size="12" text-decoration="underline" xml:space="preserve">+exists(directory: &amp;Path): bool</text>
+<text x="680.0" y="1062.0" font-size="12" text-decoration="underline" xml:space="preserve">+create(directory: &amp;Path, password: &amp;str): Result&lt;Self, SecurityError&gt;</text>
+<text x="680.0" y="1078.0" font-size="12" text-decoration="underline" xml:space="preserve">+unlock(directory: &amp;Path, password: &amp;str): Result&lt;Self, SecurityError&gt;</text>
+<text x="680.0" y="1094.0" font-size="12" xml:space="preserve">+did(): String</text>
+<text x="680.0" y="1110.0" font-size="12" xml:space="preserve">+peer_id(): PeerId</text>
+<text x="680.0" y="1126.0" font-size="12" xml:space="preserve">+pgp_public_armored(): Result&lt;String, SecurityError&gt;</text>
+<rect x="1218.0" y="781.0" width="118" height="124" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1218.0" x2="1336.0" y1="805.0" y2="805.0" stroke="#000"/>
+<line x1="1218.0" x2="1336.0" y1="893.0" y2="893.0" stroke="#000"/>
+<text x="1277.0" y="797.0" text-anchor="middle" font-size="12" font-weight="bold">EncryptedKeyFile</text>
+<text x="1226.0" y="821.0" font-size="12" xml:space="preserve">~v: u8</text>
+<text x="1226.0" y="837.0" font-size="12" xml:space="preserve">~kdf: String</text>
+<text x="1226.0" y="853.0" font-size="12" xml:space="preserve">~salt: String</text>
+<text x="1226.0" y="869.0" font-size="12" xml:space="preserve">~nonce: String</text>
+<text x="1226.0" y="885.0" font-size="12" xml:space="preserve">~ciphertext: String</text>
+<rect x="24.0" y="58.0" width="534" height="136" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="24.0" x2="558.0" y1="82.0" y2="82.0" stroke="#000"/>
+<line x1="24.0" x2="558.0" y1="138.0" y2="138.0" stroke="#000"/>
+<text x="291.0" y="74.0" text-anchor="middle" font-size="12" font-weight="bold">Verifier&lt;'a&gt;</text>
+<text x="32.0" y="98.0" font-size="12" xml:space="preserve">+trusted_issuers: &amp;'a [String]</text>
+<text x="32.0" y="114.0" font-size="12" xml:space="preserve">+revoked: &amp;'a [String]</text>
+<text x="32.0" y="130.0" font-size="12" xml:space="preserve">+now: u64</text>
+<text x="32.0" y="154.0" font-size="12" xml:space="preserve">-open(signed: &amp;Signed): Result&lt;Token, SecurityError&gt;</text>
+<text x="32.0" y="170.0" font-size="12" xml:space="preserve">+verify_issue(signed: &amp;Signed): Result&lt;Token, SecurityError&gt;</text>
+<text x="32.0" y="186.0" font-size="12" xml:space="preserve">+verify_read(signed: &amp;Signed, audience: &amp;str, document_cid: &amp;str): Result&lt;Token, SecurityError&gt;</text>
+</svg>

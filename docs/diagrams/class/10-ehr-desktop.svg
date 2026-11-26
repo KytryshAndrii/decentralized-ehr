@@ -1,0 +1,360 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4183" height="1878" viewBox="0 0 4183 1878" font-family="Arial, Helvetica, sans-serif">
+<rect width="4183" height="1878" fill="#fff"/>
+<text x="2091.5" y="28" text-anchor="middle" font-size="15" font-weight="bold">ehr-desktop – diagram klas</text>
+<path d="M3646.2,1471.3 C3629.1,1509.3 3603.1,1566.9 3589.7,1596.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3646.2,1471.3 3637.0,1477.0 3638.8,1487.7 3648.0,1481.9" fill="#fff" stroke="#000" stroke-width="1"/><text x="3605.4" y="1590.2" font-size="10.5">1</text>
+<rect x="3604.1" y="1554.0" width="23.5" height="14" fill="#fff"/><text x="3615.9" y="1565.0" text-anchor="middle" font-size="10.5">app</text>
+<path d="M3672.0,1471.3 C3681.2,1509.3 3695.1,1566.9 3702.3,1596.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3672.0,1471.3 3668.3,1481.4 3676.2,1488.7 3679.9,1478.6" fill="#000" stroke="#000" stroke-width="1"/><text x="3708.3" y="1582.8" font-size="10.5">1</text>
+<rect x="3691.6" y="1554.0" width="29.4" height="14" fill="#fff"/><text x="3706.3" y="1565.0" text-anchor="middle" font-size="10.5">node</text>
+<path d="M3835.9,1495.3 C3824.4,1525.7 3813.0,1556.0 3813.0,1556.0 C3813.0,1556.0 3813.0,1568.0 3813.0,1568.0 C3813.0,1568.0 3829.0,1583.4 3842.9,1596.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3835.9,1495.3 3827.1,1501.6 3829.5,1512.2 3838.3,1505.9" fill="#000" stroke="#000" stroke-width="1"/><text x="3838.3" y="1582.4" font-size="10.5">0..*</text>
+<rect x="3809.2" y="1554.0" width="37.5" height="14" fill="#fff"/><text x="3828.0" y="1565.0" text-anchor="middle" font-size="10.5">people</text>
+<path d="M3860.4,1495.3 C3861.1,1530.6 3862.1,1572.6 3862.6,1596.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3860.4,1495.3 3854.6,1504.5 3860.8,1513.3 3866.6,1504.2" fill="#000" stroke="#000" stroke-width="1"/><text x="3872.3" y="1584.4" font-size="10.5">0..*</text>
+<rect x="3858.0" y="1554.0" width="43.4" height="14" fill="#fff"/><text x="3879.7" y="1565.0" text-anchor="middle" font-size="10.5">pending</text>
+<path d="M3903.5,1495.3 C3929.1,1530.6 3959.5,1572.6 3976.9,1596.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3903.5,1495.3 3903.9,1506.2 3914.1,1509.9 3913.6,1499.1" fill="#000" stroke="#000" stroke-width="1"/><text x="3975.6" y="1581.8" font-size="10.5">0..*</text>
+<rect x="3952.1" y="1554.0" width="28.2" height="14" fill="#fff"/><text x="3966.2" y="1565.0" text-anchor="middle" font-size="10.5">docs</text>
+<path d="M3988.9,1149.0 C4015.3,1191.3 4042.0,1234.0 4042.0,1234.0 C4042.0,1234.0 4088.9,1362.8 4107.0,1412.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3988.9,1149.0 3988.6,1159.8 3998.4,1164.2 3998.8,1153.4" fill="#000" stroke="#000" stroke-width="1"/><text x="4110.9" y="1398.2" font-size="10.5">1</text>
+<rect x="4066.0" y="1264.0" width="23.5" height="14" fill="#fff"/><text x="4077.8" y="1275.0" text-anchor="middle" font-size="10.5">role</text>
+<path d="M3874.8,1149.0 C3817.0,1226.2 3733.6,1337.6 3690.8,1394.9" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3874.8,1149.0 3864.6,1152.6 3864.0,1163.4 3874.2,1159.8" fill="#fff" stroke="#000" stroke-width="1"/><text x="3708.4" y="1392.1" font-size="10.5">0..1</text>
+<rect x="3804.4" y="1264.0" width="41.6" height="14" fill="#fff"/><text x="3825.2" y="1275.0" text-anchor="middle" font-size="10.5">session</text>
+<path d="M3919.3,1149.0 C3904.9,1216.4 3885.0,1309.9 3872.1,1370.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3919.3,1149.0 3911.6,1156.6 3915.5,1166.6 3923.3,1159.1" fill="#000" stroke="#000" stroke-width="1"/><text x="3885.2" y="1361.1" font-size="10.5">1</text>
+<rect x="3896.8" y="1264.0" width="27.0" height="14" fill="#fff"/><text x="3910.3" y="1275.0" text-anchor="middle" font-size="10.5">view</text>
+<path d="M3949.2,1149.3 C3961.0,1229.7 3977.0,1339.0 3977.0,1339.0 C3977.0,1339.0 3986.8,1533.5 3990.0,1596.5" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="3994.4,1585.3 3990.0,1596.5 3984.4,1585.8" fill="none" stroke="#000" stroke-width="1"/><path d="M2547.0,508.8 C2843.0,620.0 3575.0,894.9 3575.0,894.9 C3575.0,894.9 3626.7,1000.2 3648.5,1044.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3648.5,1044.6 3648.6,1028.9 3636.0,1035.1" fill="#fff" stroke="#000" stroke-width="1"/><path d="M2546.9,542.4 C2749.6,674.5 3134.0,924.9 3134.0,924.9 C3134.0,924.9 3134.0,1205.0 3134.0,1205.0 C3134.0,1205.0 3103.3,1276.0 3076.3,1338.7" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="3085.2,1330.5 3076.3,1338.7 3076.1,1326.6" fill="none" stroke="#000" stroke-width="1"/><rect x="3130.5" y="1057.0" width="28.2" height="14" fill="#fff"/><text x="3144.6" y="1068.0" text-anchor="middle" font-size="10.5">docs</text>
+<path d="M2547.0,515.7 C2827.2,636.9 3493.0,924.9 3493.0,924.9 C3493.0,924.9 3516.0,1234.0 3516.0,1234.0 C3516.0,1234.0 3518.4,1328.1 3519.9,1386.5" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="3524.6,1375.4 3519.9,1386.5 3514.6,1375.7" fill="none" stroke="#000" stroke-width="1"/><rect x="3510.0" y="1057.0" width="37.5" height="14" fill="#fff"/><text x="3528.8" y="1068.0" text-anchor="middle" font-size="10.5">people</text>
+<path d="M2303.2,607.7 C2202.1,727.7 2062.5,893.5 1982.4,988.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2303.2,607.7 2292.8,610.7 2291.6,621.5 2302.0,618.4" fill="#000" stroke="#000" stroke-width="1"/><text x="2000.4" y="986.8" font-size="10.5">1</text>
+<path d="M2546.9,529.5 C2768.8,650.7 3216.0,894.9 3216.0,894.9 C3216.0,894.9 3250.3,1138.4 3263.7,1233.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2546.9,529.5 2551.9,539.1 2562.7,538.1 2557.7,528.5" fill="#000" stroke="#000" stroke-width="1"/><text x="3271.4" y="1220.3" font-size="10.5">1</text>
+<path d="M2546.9,523.7 C2785.7,642.7 3292.0,894.9 3292.0,894.9 C3292.0,894.9 3303.3,913.1 3318.5,937.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2546.9,523.7 2552.3,533.1 2563.0,531.7 2557.6,522.3" fill="#000" stroke="#000" stroke-width="1"/><text x="3318.5" y="922.7" font-size="10.5">1</text>
+<path d="M2546.8,629.4 C2643.7,761.8 2763.0,924.9 2763.0,924.9 C2763.0,924.9 2770.1,936.3 2780.2,952.4" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2546.8,629.4 2547.3,640.2 2557.4,643.9 2557.0,633.1" fill="#000" stroke="#000" stroke-width="1"/><text x="2780.2" y="937.5" font-size="10.5">1</text>
+<path d="M2546.9,572.7 C2698.6,709.4 2938.0,924.9 2938.0,924.9 C2938.0,924.9 2952.4,945.3 2970.1,970.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2546.9,572.7 2549.6,583.2 2560.3,584.7 2557.6,574.3" fill="#000" stroke="#000" stroke-width="1"/><text x="2969.1" y="955.6" font-size="10.5">1</text>
+<path d="M2490.1,866.3 C2494.9,895.7 2499.4,923.6 2503.4,948.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2490.1,866.3 2485.6,876.2 2493.0,884.1 2497.5,874.2" fill="#000" stroke="#000" stroke-width="1"/><text x="2510.8" y="935.4" font-size="10.5">1</text>
+<path d="M2546.8,744.5 C2592.6,850.3 2639.7,959.2 2665.4,1018.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2546.8,744.5 2544.9,755.1 2554.0,761.0 2555.9,750.4" fill="#000" stroke="#000" stroke-width="1"/><text x="2668.2" y="1003.9" font-size="10.5">1</text>
+<path d="M2303.1,731.4 C2256.8,833.3 2208.2,940.3 2179.0,1004.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2303.1,731.4 2293.9,737.1 2295.7,747.8 2304.8,742.1" fill="#000" stroke="#000" stroke-width="1"/><text x="2194.7" y="998.1" font-size="10.5">1</text>
+<path d="M2368.6,866.3 C2361.1,920.2 2354.3,969.1 2349.3,1004.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2368.6,866.3 2361.4,874.4 2366.1,884.2 2373.3,876.1" fill="#000" stroke="#000" stroke-width="1"/><text x="2361.4" y="994.3" font-size="10.5">1</text>
+<path d="M1919.0,1141.3 C1919.0,1227.4 1919.0,1362.6 1919.0,1412.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1919.0,1412.5 1926.0,1398.5 1912.0,1398.5" fill="#fff" stroke="#000" stroke-width="1"/><path d="M3259.5,1310.3 C3241.1,1383.1 3200.9,1541.5 3186.9,1596.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3186.9,1596.6 3197.1,1584.8 3183.6,1581.3" fill="#fff" stroke="#000" stroke-width="1"/><path d="M3366.7,1205.4 C3354.8,1260.1 3344.0,1310.0 3344.0,1310.0 C3344.0,1310.0 3257.0,1527.0 3257.0,1527.0 C3257.0,1527.0 3224.0,1568.0 3224.0,1568.0 C3224.0,1568.0 3210.5,1583.4 3198.8,1596.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3198.8,1596.7 3213.3,1590.8 3202.8,1581.6" fill="#fff" stroke="#000" stroke-width="1"/><path d="M3444.2,1205.4 C3466.0,1269.6 3490.3,1341.5 3505.7,1386.7" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="3506.9,1374.7 3505.7,1386.7 3497.4,1377.9" fill="none" stroke="#000" stroke-width="1"/><rect x="3473.6" y="1264.0" width="37.5" height="14" fill="#fff"/><text x="3492.4" y="1275.0" text-anchor="middle" font-size="10.5">people</text>
+<path d="M2850.0,1189.4 C2850.0,1271.3 2850.0,1371.2 2850.0,1412.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2850.0,1412.6 2857.0,1398.6 2843.0,1398.6" fill="#fff" stroke="#000" stroke-width="1"/><path d="M2912.7,1189.4 C2937.5,1238.1 2965.5,1293.3 2988.6,1338.6" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="2988.1,1326.5 2988.6,1338.6 2979.2,1331.1" fill="none" stroke="#000" stroke-width="1"/><rect x="2967.0" y="1264.0" width="28.2" height="14" fill="#fff"/><text x="2981.1" y="1275.0" text-anchor="middle" font-size="10.5">docs</text>
+<path d="M3060.8,1159.3 C3096.1,1292.3 3158.6,1528.0 3176.9,1596.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3176.9,1596.7 3180.1,1581.4 3166.5,1585.0" fill="#fff" stroke="#000" stroke-width="1"/><path d="M3036.0,1159.3 C3036.0,1214.2 3036.0,1283.5 3036.0,1338.5" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="3041.0,1327.5 3036.0,1338.5 3031.0,1327.5" fill="none" stroke="#000" stroke-width="1"/><rect x="3032.5" y="1264.0" width="28.2" height="14" fill="#fff"/><text x="3046.6" y="1275.0" text-anchor="middle" font-size="10.5">docs</text>
+<path d="M2522.0,1181.3 C2522.0,1250.8 2522.0,1335.6 2522.0,1386.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2522.0,1386.6 2529.0,1372.6 2515.0,1372.6" fill="#fff" stroke="#000" stroke-width="1"/><path d="M2664.9,1111.2 C2633.6,1181.5 2573.6,1316.1 2542.2,1386.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2542.2,1386.5 2554.3,1376.6 2541.5,1370.9" fill="#fff" stroke="#000" stroke-width="1"/><path d="M2191.7,1125.3 C2217.0,1163.1 2245.0,1205.0 2245.0,1205.0 C2245.0,1205.0 2385.8,1320.3 2466.6,1386.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2466.6,1386.6 2460.2,1372.3 2451.3,1383.1" fill="#fff" stroke="#000" stroke-width="1"/><path d="M2370.3,1125.2 C2406.4,1198.2 2467.0,1320.8 2499.6,1386.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2499.6,1386.7 2499.7,1371.1 2487.1,1377.3" fill="#fff" stroke="#000" stroke-width="1"/><path d="M2579.4,1454.5 C2656.0,1481.9 2782.0,1527.0 2782.0,1527.0 C2782.0,1527.0 3031.7,1582.5 3136.5,1605.9" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="3136.5,1605.9 3124.4,1596.0 3121.3,1609.7" fill="#fff" stroke="#000" stroke-width="1"/><path d="M151.0,1721.7 C151.0,1664.8 151.0,1563.0 151.0,1563.0 C151.0,1064.0 151.0,1064.0 151.0,1064.0 C151.0,1064.0 527.0,924.9 527.0,924.9 C527.0,924.9 1883.7,594.7 2303.0,492.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2291.1,490.3 2303.0,492.6 2293.5,500.1" fill="none" stroke="#000" stroke-width="1"/><path d="M1760.3,1721.7 C1727.2,1664.8 1668.0,1563.0 1668.0,1563.0 C1668.0,1064.0 1668.0,1064.0 1668.0,1064.0 C1668.0,1064.0 1733.0,924.9 1733.0,924.9 C1733.0,924.9 2104.7,676.8 2303.3,544.2" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2291.4,546.1 2303.3,544.2 2296.9,554.5" fill="none" stroke="#000" stroke-width="1"/><path d="M1480.0,1721.7 C1480.0,1664.8 1480.0,1563.0 1480.0,1563.0 C1480.0,1064.0 1480.0,1064.0 1480.0,1064.0 C1480.0,1064.0 1659.0,924.9 1659.0,924.9 C1659.0,924.9 2087.1,666.8 2303.2,536.4" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2291.2,537.8 2303.2,536.4 2296.4,546.4" fill="none" stroke="#000" stroke-width="1"/><path d="M536.0,1705.7 C536.0,1647.7 536.0,1563.0 536.0,1563.0 C536.0,1064.0 536.0,1064.0 536.0,1064.0 C536.0,1064.0 1885.5,634.6 2303.2,501.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2291.2,500.3 2303.2,501.7 2294.2,509.8" fill="none" stroke="#000" stroke-width="1"/><path d="M2050.0,1713.5 C1931.5,1655.6 1742.0,1563.0 1742.0,1563.0 C1742.0,1064.0 1742.0,1064.0 1742.0,1064.0 C1742.0,1064.0 1779.0,924.9 1779.0,924.9 C1779.0,924.9 2115.9,684.0 2303.1,550.1" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2291.2,552.4 2303.1,550.1 2297.1,560.6" fill="none" stroke="#000" stroke-width="1"/><path d="M1060.0,1665.6 C1060.0,1615.1 1060.0,1563.0 1060.0,1563.0 C1060.0,1064.0 1060.0,1064.0 1060.0,1064.0 C1060.0,1064.0 1968.7,663.9 2303.3,516.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2291.2,516.5 2303.3,516.6 2295.2,525.6" fill="none" stroke="#000" stroke-width="1"/><rect x="24.0" y="1722.0" width="254" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="24.0" x2="278.0" y1="1762.0" y2="1762.0" stroke="#000"/>
+<line x1="24.0" x2="278.0" y1="1774.0" y2="1774.0" stroke="#000"/>
+<text x="151.0" y="1738.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="151.0" y="1754.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_desktop::lib</text>
+<text x="32.0" y="1790.0" font-size="12" text-decoration="underline" xml:space="preserve">+run(role: Role): Result&lt;(), Box&lt;dyn Error&gt;&gt;</text>
+<rect x="283.5" y="1706.0" width="505" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="283.5" x2="788.5" y1="1746.0" y2="1746.0" stroke="#000"/>
+<line x1="283.5" x2="788.5" y1="1758.0" y2="1758.0" stroke="#000"/>
+<text x="536.0" y="1722.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="536.0" y="1738.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_desktop::documents</text>
+<text x="291.5" y="1774.0" font-size="12" text-decoration="underline" xml:space="preserve">~register(window: &amp;AppWindow, state: &amp;Arc&lt;State&gt;)</text>
+<text x="291.5" y="1790.0" font-size="12" text-decoration="underline" xml:space="preserve">-show_preview(state: &amp;Arc&lt;State&gt;, ui: &amp;Weak&lt;AppWindow&gt;, session: Arc&lt;Session&gt;, entry:</text>
+<text x="291.5" y="1806.0" font-size="12" text-decoration="underline" xml:space="preserve">    IndexEntry)</text>
+<rect x="793.5" y="1666.0" width="533" height="188" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="793.5" x2="1326.5" y1="1706.0" y2="1706.0" stroke="#000"/>
+<line x1="793.5" x2="1326.5" y1="1718.0" y2="1718.0" stroke="#000"/>
+<text x="1060.0" y="1682.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1060.0" y="1698.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_desktop::utils</text>
+<text x="801.5" y="1734.0" font-size="12" text-decoration="underline" xml:space="preserve">~status(ui: &amp;Weak&lt;AppWindow&gt;, text: impl Into&lt;String&gt;)</text>
+<text x="801.5" y="1750.0" font-size="12" text-decoration="underline" xml:space="preserve">~strings(items: impl IntoIterator&lt;Item = String&gt;): ModelRc&lt;SharedString&gt;</text>
+<text x="801.5" y="1766.0" font-size="12" text-decoration="underline" xml:space="preserve">~people_rows(contacts: &amp;[Contact]): Vec&lt;PersonRow&gt;</text>
+<text x="801.5" y="1782.0" font-size="12" text-decoration="underline" xml:space="preserve">~doc_row(app: &amp;EhrApp, entry: &amp;IndexEntry): DocRow</text>
+<text x="801.5" y="1798.0" font-size="12" text-decoration="underline" xml:space="preserve">+documents_label(count: usize): String</text>
+<text x="801.5" y="1814.0" font-size="12" text-decoration="underline" xml:space="preserve">~selected_name(people: &amp;[Contact], did: Option&lt;&amp;str&gt;): String</text>
+<text x="801.5" y="1830.0" font-size="12" text-decoration="underline" xml:space="preserve">~download_path(file_name: &amp;str): PathBuf</text>
+<text x="801.5" y="1846.0" font-size="12" text-decoration="underline" xml:space="preserve">~preview(entry: &amp;IndexEntry, bytes: &amp;[u8]): Result&lt;SharedPixelBuffer&lt;slint::Rgba8Pixel&gt;, String&gt;</text>
+<rect x="1331.5" y="1722.0" width="297" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1331.5" x2="1628.5" y1="1762.0" y2="1762.0" stroke="#000"/>
+<line x1="1331.5" x2="1628.5" y1="1774.0" y2="1774.0" stroke="#000"/>
+<text x="1480.0" y="1738.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1480.0" y="1754.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_desktop::contacts</text>
+<text x="1339.5" y="1790.0" font-size="12" text-decoration="underline" xml:space="preserve">~register(window: &amp;AppWindow, state: &amp;Arc&lt;State&gt;)</text>
+<rect x="1633.5" y="1722.0" width="297" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1633.5" x2="1930.5" y1="1762.0" y2="1762.0" stroke="#000"/>
+<line x1="1633.5" x2="1930.5" y1="1774.0" y2="1774.0" stroke="#000"/>
+<text x="1782.0" y="1738.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1782.0" y="1754.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_desktop::profile</text>
+<text x="1641.5" y="1790.0" font-size="12" text-decoration="underline" xml:space="preserve">~register(window: &amp;AppWindow, state: &amp;Arc&lt;State&gt;)</text>
+<rect x="1935.5" y="1714.0" width="415" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1935.5" x2="2350.5" y1="1754.0" y2="1754.0" stroke="#000"/>
+<line x1="1935.5" x2="2350.5" y1="1766.0" y2="1766.0" stroke="#000"/>
+<text x="2143.0" y="1730.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="2143.0" y="1746.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_desktop::view</text>
+<text x="1943.5" y="1782.0" font-size="12" text-decoration="underline" xml:space="preserve">~start_session(state: &amp;Arc&lt;State&gt;, ui: &amp;Weak&lt;AppWindow&gt;, app: EhrApp)</text>
+<text x="1943.5" y="1798.0" font-size="12" text-decoration="underline" xml:space="preserve">~reload(state: &amp;Arc&lt;State&gt;, ui: &amp;Weak&lt;AppWindow&gt;)</text>
+<rect x="3602.0" y="1395.0" width="122" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="3602.0" x2="3724.0" y1="1419.0" y2="1419.0" stroke="#000"/>
+<line x1="3602.0" x2="3724.0" y1="1459.0" y2="1459.0" stroke="#000"/>
+<text x="3663.0" y="1411.0" text-anchor="middle" font-size="12" font-weight="bold">Session</text>
+<text x="3610.0" y="1435.0" font-size="12" xml:space="preserve">~app: Arc&lt;EhrApp&gt;</text>
+<text x="3610.0" y="1451.0" font-size="12" xml:space="preserve">~node: EhrNode</text>
+<rect x="3759.5" y="1371.0" width="199" height="124" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="3759.5" x2="3958.5" y1="1395.0" y2="1395.0" stroke="#000"/>
+<line x1="3759.5" x2="3958.5" y1="1483.0" y2="1483.0" stroke="#000"/>
+<text x="3859.0" y="1387.0" text-anchor="middle" font-size="12" font-weight="bold">View</text>
+<text x="3767.5" y="1411.0" font-size="12" xml:space="preserve">~people: Vec&lt;Contact&gt;</text>
+<text x="3767.5" y="1427.0" font-size="12" xml:space="preserve">~pending: Vec&lt;Contact&gt;</text>
+<text x="3767.5" y="1443.0" font-size="12" xml:space="preserve">~docs: Vec&lt;IndexEntry&gt;</text>
+<text x="3767.5" y="1459.0" font-size="12" xml:space="preserve">~selected_person: Option&lt;String&gt;</text>
+<text x="3767.5" y="1475.0" font-size="12" xml:space="preserve">~selected_doc: Option&lt;String&gt;</text>
+<rect x="3816.0" y="981.0" width="242" height="168" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="3816.0" x2="4058.0" y1="1005.0" y2="1005.0" stroke="#000"/>
+<line x1="3816.0" x2="4058.0" y1="1093.0" y2="1093.0" stroke="#000"/>
+<text x="3937.0" y="997.0" text-anchor="middle" font-size="12" font-weight="bold">State</text>
+<text x="3824.0" y="1021.0" font-size="12" xml:space="preserve">~role: Role</text>
+<text x="3824.0" y="1037.0" font-size="12" xml:space="preserve">~runtime: tokio::runtime::Runtime</text>
+<text x="3824.0" y="1053.0" font-size="12" xml:space="preserve">~data_dir: PathBuf</text>
+<text x="3824.0" y="1069.0" font-size="12" xml:space="preserve">~session: Mutex&lt;Option&lt;Arc&lt;Session&gt;&gt;&gt;</text>
+<text x="3824.0" y="1085.0" font-size="12" xml:space="preserve">~view: Mutex&lt;View&gt;</text>
+<text x="3824.0" y="1109.0" font-size="12" xml:space="preserve">~session(): Option&lt;Arc&lt;Session&gt;&gt;</text>
+<text x="3824.0" y="1125.0" font-size="12" xml:space="preserve">~view(): MutexGuard&lt;'_, View&gt;</text>
+<text x="3824.0" y="1141.0" font-size="12" xml:space="preserve">~doc_at(index: i32): Option&lt;IndexEntry&gt;</text>
+<rect x="2303.5" y="58.0" width="243" height="808" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2303.5" x2="2546.5" y1="98.0" y2="98.0" stroke="#000"/>
+<line x1="2303.5" x2="2546.5" y1="570.0" y2="570.0" stroke="#000"/>
+<text x="2425.0" y="74.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="2425.0" y="90.0" text-anchor="middle" font-size="12" font-weight="bold">AppWindow</text>
+<text x="2311.5" y="114.0" font-size="12" xml:space="preserve">in is-doctor: bool</text>
+<text x="2311.5" y="130.0" font-size="12" xml:space="preserve">in-out screen: string</text>
+<text x="2311.5" y="146.0" font-size="12" xml:space="preserve">in me-name: string</text>
+<text x="2311.5" y="162.0" font-size="12" xml:space="preserve">in status: string</text>
+<text x="2311.5" y="178.0" font-size="12" xml:space="preserve">in people: [PersonRow]</text>
+<text x="2311.5" y="194.0" font-size="12" xml:space="preserve">in pending: [PersonRow]</text>
+<text x="2311.5" y="210.0" font-size="12" xml:space="preserve">in-out selected-person: int</text>
+<text x="2311.5" y="226.0" font-size="12" xml:space="preserve">in header: string</text>
+<text x="2311.5" y="242.0" font-size="12" xml:space="preserve">in header-note: string</text>
+<text x="2311.5" y="258.0" font-size="12" xml:space="preserve">in docs: [DocRow]</text>
+<text x="2311.5" y="274.0" font-size="12" xml:space="preserve">in-out selected-doc: int</text>
+<text x="2311.5" y="290.0" font-size="12" xml:space="preserve">in-out search: string</text>
+<text x="2311.5" y="306.0" font-size="12" xml:space="preserve">in-out category-filter: int</text>
+<text x="2311.5" y="322.0" font-size="12" xml:space="preserve">in categories: [string]</text>
+<text x="2311.5" y="338.0" font-size="12" xml:space="preserve">in preview-ready: bool</text>
+<text x="2311.5" y="354.0" font-size="12" xml:space="preserve">in has-preview-image: bool</text>
+<text x="2311.5" y="370.0" font-size="12" xml:space="preserve">in preview-image: image</text>
+<text x="2311.5" y="386.0" font-size="12" xml:space="preserve">in preview-text: string</text>
+<text x="2311.5" y="402.0" font-size="12" xml:space="preserve">in doc-verified: bool</text>
+<text x="2311.5" y="418.0" font-size="12" xml:space="preserve">in-out modal: string</text>
+<text x="2311.5" y="434.0" font-size="12" xml:space="preserve">in invite-text: string</text>
+<text x="2311.5" y="450.0" font-size="12" xml:space="preserve">in-out connect-text: string</text>
+<text x="2311.5" y="466.0" font-size="12" xml:space="preserve">in-out file-path: string</text>
+<text x="2311.5" y="482.0" font-size="12" xml:space="preserve">in-out file-name: string</text>
+<text x="2311.5" y="498.0" font-size="12" xml:space="preserve">in-out file-category: int</text>
+<text x="2311.5" y="514.0" font-size="12" xml:space="preserve">in-out recipient: string</text>
+<text x="2311.5" y="530.0" font-size="12" xml:space="preserve">in valid-until: string</text>
+<text x="2311.5" y="546.0" font-size="12" xml:space="preserve">in accept-did: string</text>
+<text x="2311.5" y="562.0" font-size="12" xml:space="preserve">in-out accept-name: string</text>
+<text x="2311.5" y="586.0" font-size="12" xml:space="preserve">callback create-profile(string, string, string)</text>
+<text x="2311.5" y="602.0" font-size="12" xml:space="preserve">callback login(string)</text>
+<text x="2311.5" y="618.0" font-size="12" xml:space="preserve">callback logout()</text>
+<text x="2311.5" y="634.0" font-size="12" xml:space="preserve">callback select-person(int)</text>
+<text x="2311.5" y="650.0" font-size="12" xml:space="preserve">callback select-doc(int)</text>
+<text x="2311.5" y="666.0" font-size="12" xml:space="preserve">callback refresh()</text>
+<text x="2311.5" y="682.0" font-size="12" xml:space="preserve">callback download(int)</text>
+<text x="2311.5" y="698.0" font-size="12" xml:space="preserve">callback open-add()</text>
+<text x="2311.5" y="714.0" font-size="12" xml:space="preserve">callback open-edit(int)</text>
+<text x="2311.5" y="730.0" font-size="12" xml:space="preserve">callback pick-file()</text>
+<text x="2311.5" y="746.0" font-size="12" xml:space="preserve">callback confirm-add()</text>
+<text x="2311.5" y="762.0" font-size="12" xml:space="preserve">callback confirm-edit()</text>
+<text x="2311.5" y="778.0" font-size="12" xml:space="preserve">callback new-invite()</text>
+<text x="2311.5" y="794.0" font-size="12" xml:space="preserve">callback connect-doctor()</text>
+<text x="2311.5" y="810.0" font-size="12" xml:space="preserve">callback open-accept(int)</text>
+<text x="2311.5" y="826.0" font-size="12" xml:space="preserve">callback accept-contact()</text>
+<text x="2311.5" y="842.0" font-size="12" xml:space="preserve">callback reject-contact()</text>
+<text x="2311.5" y="858.0" font-size="12" xml:space="preserve">callback filter-changed()</text>
+<rect x="1797.5" y="989.0" width="243" height="152" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1797.5" x2="2040.5" y1="1029.0" y2="1029.0" stroke="#000"/>
+<line x1="1797.5" x2="2040.5" y1="1101.0" y2="1101.0" stroke="#000"/>
+<text x="1919.0" y="1005.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="1919.0" y="1021.0" text-anchor="middle" font-size="12" font-weight="bold">LoginScreen</text>
+<text x="1805.5" y="1045.0" font-size="12" xml:space="preserve">in is-doctor: bool</text>
+<text x="1805.5" y="1061.0" font-size="12" xml:space="preserve">in screen: string</text>
+<text x="1805.5" y="1077.0" font-size="12" xml:space="preserve">in me-name: string</text>
+<text x="1805.5" y="1093.0" font-size="12" xml:space="preserve">in status: string</text>
+<text x="1805.5" y="1117.0" font-size="12" xml:space="preserve">callback create-profile(string, string, string)</text>
+<text x="1805.5" y="1133.0" font-size="12" xml:space="preserve">callback login(string)</text>
+<rect x="3212.0" y="1234.0" width="114" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="3212.0" x2="3326.0" y1="1274.0" y2="1274.0" stroke="#000"/>
+<line x1="3212.0" x2="3326.0" y1="1286.0" y2="1286.0" stroke="#000"/>
+<text x="3269.0" y="1250.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="3269.0" y="1266.0" text-anchor="middle" font-size="12" font-weight="bold">Rail</text>
+<text x="3220.0" y="1302.0" font-size="12" xml:space="preserve">callback logout()</text>
+<rect x="3319.0" y="925.0" width="156" height="280" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="3319.0" x2="3475.0" y1="965.0" y2="965.0" stroke="#000"/>
+<line x1="3319.0" x2="3475.0" y1="1133.0" y2="1133.0" stroke="#000"/>
+<text x="3397.0" y="941.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="3397.0" y="957.0" text-anchor="middle" font-size="12" font-weight="bold">Sidebar</text>
+<text x="3327.0" y="981.0" font-size="12" xml:space="preserve">in is-doctor: bool</text>
+<text x="3327.0" y="997.0" font-size="12" xml:space="preserve">in me-name: string</text>
+<text x="3327.0" y="1013.0" font-size="12" xml:space="preserve">in-out search: string</text>
+<text x="3327.0" y="1029.0" font-size="12" xml:space="preserve">in people: [PersonRow]</text>
+<text x="3327.0" y="1045.0" font-size="12" xml:space="preserve">in pending: [PersonRow]</text>
+<text x="3327.0" y="1061.0" font-size="12" xml:space="preserve">in selected-person: int</text>
+<text x="3327.0" y="1077.0" font-size="12" xml:space="preserve">in-out category-filter: int</text>
+<text x="3327.0" y="1093.0" font-size="12" xml:space="preserve">in categories: [string]</text>
+<text x="3327.0" y="1109.0" font-size="12" xml:space="preserve">in-out connect-text: string</text>
+<text x="3327.0" y="1125.0" font-size="12" xml:space="preserve">in-out modal: string</text>
+<text x="3327.0" y="1149.0" font-size="12" xml:space="preserve">callback filter-changed()</text>
+<text x="3327.0" y="1165.0" font-size="12" xml:space="preserve">callback new-invite()</text>
+<text x="3327.0" y="1181.0" font-size="12" xml:space="preserve">callback select-person(int)</text>
+<text x="3327.0" y="1197.0" font-size="12" xml:space="preserve">callback open-accept(int)</text>
+<rect x="2780.5" y="941.0" width="139" height="248" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2780.5" x2="2919.5" y1="981.0" y2="981.0" stroke="#000"/>
+<line x1="2780.5" x2="2919.5" y1="1101.0" y2="1101.0" stroke="#000"/>
+<text x="2850.0" y="957.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="2850.0" y="973.0" text-anchor="middle" font-size="12" font-weight="bold">DocumentList</text>
+<text x="2788.5" y="997.0" font-size="12" xml:space="preserve">in is-doctor: bool</text>
+<text x="2788.5" y="1013.0" font-size="12" xml:space="preserve">in header: string</text>
+<text x="2788.5" y="1029.0" font-size="12" xml:space="preserve">in header-note: string</text>
+<text x="2788.5" y="1045.0" font-size="12" xml:space="preserve">in docs: [DocRow]</text>
+<text x="2788.5" y="1061.0" font-size="12" xml:space="preserve">in selected-person: int</text>
+<text x="2788.5" y="1077.0" font-size="12" xml:space="preserve">in selected-doc: int</text>
+<text x="2788.5" y="1093.0" font-size="12" xml:space="preserve">in status: string</text>
+<text x="2788.5" y="1117.0" font-size="12" xml:space="preserve">callback open-add()</text>
+<text x="2788.5" y="1133.0" font-size="12" xml:space="preserve">callback refresh()</text>
+<text x="2788.5" y="1149.0" font-size="12" xml:space="preserve">callback select-doc(int)</text>
+<text x="2788.5" y="1165.0" font-size="12" xml:space="preserve">callback download(int)</text>
+<text x="2788.5" y="1181.0" font-size="12" xml:space="preserve">callback open-edit(int)</text>
+<rect x="2956.0" y="971.0" width="160" height="188" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2956.0" x2="3116.0" y1="1011.0" y2="1011.0" stroke="#000"/>
+<line x1="2956.0" x2="3116.0" y1="1147.0" y2="1147.0" stroke="#000"/>
+<text x="3036.0" y="987.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="3036.0" y="1003.0" text-anchor="middle" font-size="12" font-weight="bold">DocumentDetails</text>
+<text x="2964.0" y="1027.0" font-size="12" xml:space="preserve">in is-doctor: bool</text>
+<text x="2964.0" y="1043.0" font-size="12" xml:space="preserve">in docs: [DocRow]</text>
+<text x="2964.0" y="1059.0" font-size="12" xml:space="preserve">in selected-doc: int</text>
+<text x="2964.0" y="1075.0" font-size="12" xml:space="preserve">in preview-ready: bool</text>
+<text x="2964.0" y="1091.0" font-size="12" xml:space="preserve">in has-preview-image: bool</text>
+<text x="2964.0" y="1107.0" font-size="12" xml:space="preserve">in preview-image: image</text>
+<text x="2964.0" y="1123.0" font-size="12" xml:space="preserve">in preview-text: string</text>
+<text x="2964.0" y="1139.0" font-size="12" xml:space="preserve">in doc-verified: bool</text>
+<rect x="2454.5" y="949.0" width="135" height="232" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2454.5" x2="2589.5" y1="989.0" y2="989.0" stroke="#000"/>
+<line x1="2454.5" x2="2589.5" y1="1125.0" y2="1125.0" stroke="#000"/>
+<text x="2522.0" y="965.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="2522.0" y="981.0" text-anchor="middle" font-size="12" font-weight="bold">DocumentDialog</text>
+<text x="2462.5" y="1005.0" font-size="12" xml:space="preserve">in-out modal: string</text>
+<text x="2462.5" y="1021.0" font-size="12" xml:space="preserve">in-out file-path: string</text>
+<text x="2462.5" y="1037.0" font-size="12" xml:space="preserve">in-out file-name: string</text>
+<text x="2462.5" y="1053.0" font-size="12" xml:space="preserve">in-out file-category: int</text>
+<text x="2462.5" y="1069.0" font-size="12" xml:space="preserve">in-out recipient: string</text>
+<text x="2462.5" y="1085.0" font-size="12" xml:space="preserve">in categories: [string]</text>
+<text x="2462.5" y="1101.0" font-size="12" xml:space="preserve">in valid-until: string</text>
+<text x="2462.5" y="1117.0" font-size="12" xml:space="preserve">in status: string</text>
+<text x="2462.5" y="1141.0" font-size="12" xml:space="preserve">callback pick-file()</text>
+<text x="2462.5" y="1157.0" font-size="12" xml:space="preserve">callback confirm-add()</text>
+<text x="2462.5" y="1173.0" font-size="12" xml:space="preserve">callback confirm-edit()</text>
+<rect x="2625.5" y="1019.0" width="119" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2625.5" x2="2744.5" y1="1059.0" y2="1059.0" stroke="#000"/>
+<line x1="2625.5" x2="2744.5" y1="1099.0" y2="1099.0" stroke="#000"/>
+<text x="2685.0" y="1035.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="2685.0" y="1051.0" text-anchor="middle" font-size="12" font-weight="bold">InviteDialog</text>
+<text x="2633.5" y="1075.0" font-size="12" xml:space="preserve">in-out modal: string</text>
+<text x="2633.5" y="1091.0" font-size="12" xml:space="preserve">in invite-text: string</text>
+<rect x="2076.5" y="1005.0" width="151" height="120" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2076.5" x2="2227.5" y1="1045.0" y2="1045.0" stroke="#000"/>
+<line x1="2076.5" x2="2227.5" y1="1101.0" y2="1101.0" stroke="#000"/>
+<text x="2152.0" y="1021.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="2152.0" y="1037.0" text-anchor="middle" font-size="12" font-weight="bold">ConnectDialog</text>
+<text x="2084.5" y="1061.0" font-size="12" xml:space="preserve">in-out modal: string</text>
+<text x="2084.5" y="1077.0" font-size="12" xml:space="preserve">in-out connect-text: string</text>
+<text x="2084.5" y="1093.0" font-size="12" xml:space="preserve">in status: string</text>
+<text x="2084.5" y="1117.0" font-size="12" xml:space="preserve">callback connect-doctor()</text>
+<rect x="2263.5" y="1005.0" width="155" height="120" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2263.5" x2="2418.5" y1="1045.0" y2="1045.0" stroke="#000"/>
+<line x1="2263.5" x2="2418.5" y1="1085.0" y2="1085.0" stroke="#000"/>
+<text x="2341.0" y="1021.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="2341.0" y="1037.0" text-anchor="middle" font-size="12" font-weight="bold">AcceptDialog</text>
+<text x="2271.5" y="1061.0" font-size="12" xml:space="preserve">in-out accept-name: string</text>
+<text x="2271.5" y="1077.0" font-size="12" xml:space="preserve">in accept-did: string</text>
+<text x="2271.5" y="1101.0" font-size="12" xml:space="preserve">callback accept-contact()</text>
+<text x="2271.5" y="1117.0" font-size="12" xml:space="preserve">callback reject-contact()</text>
+<rect x="2465.0" y="1387.0" width="114" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2465.0" x2="2579.0" y1="1427.0" y2="1427.0" stroke="#000"/>
+<line x1="2465.0" x2="2579.0" y1="1467.0" y2="1467.0" stroke="#000"/>
+<text x="2522.0" y="1403.0" text-anchor="middle" font-size="12" font-weight="normal">«slint component»</text>
+<text x="2522.0" y="1419.0" text-anchor="middle" font-size="12" font-weight="bold">Modal</text>
+<text x="2473.0" y="1443.0" font-size="12" xml:space="preserve">in title: string</text>
+<text x="2473.0" y="1459.0" font-size="12" xml:space="preserve">in subtitle: string</text>
+<rect x="2984.5" y="1339.0" width="103" height="188" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2984.5" x2="3087.5" y1="1379.0" y2="1379.0" stroke="#000"/>
+<line x1="2984.5" x2="3087.5" y1="1515.0" y2="1515.0" stroke="#000"/>
+<text x="3036.0" y="1355.0" text-anchor="middle" font-size="12" font-weight="normal">«slint struct»</text>
+<text x="3036.0" y="1371.0" text-anchor="middle" font-size="12" font-weight="bold">DocRow</text>
+<text x="2992.5" y="1395.0" font-size="12" xml:space="preserve">title: string</text>
+<text x="2992.5" y="1411.0" font-size="12" xml:space="preserve">subtitle: string</text>
+<text x="2992.5" y="1427.0" font-size="12" xml:space="preserve">date: string</text>
+<text x="2992.5" y="1443.0" font-size="12" xml:space="preserve">category: string</text>
+<text x="2992.5" y="1459.0" font-size="12" xml:space="preserve">issuer: string</text>
+<text x="2992.5" y="1475.0" font-size="12" xml:space="preserve">size: string</text>
+<text x="2992.5" y="1491.0" font-size="12" xml:space="preserve">valid-until: string</text>
+<text x="2992.5" y="1507.0" font-size="12" xml:space="preserve">version: string</text>
+<rect x="3476.0" y="1387.0" width="90" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="3476.0" x2="3566.0" y1="1427.0" y2="1427.0" stroke="#000"/>
+<line x1="3476.0" x2="3566.0" y1="1467.0" y2="1467.0" stroke="#000"/>
+<text x="3521.0" y="1403.0" text-anchor="middle" font-size="12" font-weight="normal">«slint struct»</text>
+<text x="3521.0" y="1419.0" text-anchor="middle" font-size="12" font-weight="bold">PersonRow</text>
+<text x="3484.0" y="1443.0" font-size="12" xml:space="preserve">name: string</text>
+<text x="3484.0" y="1459.0" font-size="12" xml:space="preserve">did: string</text>
+<rect x="3536.0" y="1597.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="3581.0" y="1613.0" text-anchor="middle" font-size="12" font-weight="normal">«ehr-core»</text>
+<text x="3581.0" y="1629.0" text-anchor="middle" font-size="12" font-weight="bold">EhrApp</text>
+<rect x="3662.0" y="1597.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="3707.0" y="1613.0" text-anchor="middle" font-size="12" font-weight="normal">«ehr-core»</text>
+<text x="3707.0" y="1629.0" text-anchor="middle" font-size="12" font-weight="bold">EhrNode</text>
+<rect x="3818.0" y="1597.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="3863.0" y="1613.0" text-anchor="middle" font-size="12" font-weight="normal">«ehr-core»</text>
+<text x="3863.0" y="1629.0" text-anchor="middle" font-size="12" font-weight="bold">Contact</text>
+<rect x="3946.0" y="1597.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="3991.0" y="1613.0" text-anchor="middle" font-size="12" font-weight="normal">«ehr-core»</text>
+<text x="3991.0" y="1629.0" text-anchor="middle" font-size="12" font-weight="bold">IndexEntry</text>
+<rect x="4069.0" y="1413.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="4114.0" y="1429.0" text-anchor="middle" font-size="12" font-weight="normal">«ehr-core»</text>
+<text x="4114.0" y="1445.0" text-anchor="middle" font-size="12" font-weight="bold">Role</text>
+<rect x="3613.0" y="1045.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="3658.0" y="1061.0" text-anchor="middle" font-size="12" font-weight="normal">«slint built-in»</text>
+<text x="3658.0" y="1077.0" text-anchor="middle" font-size="12" font-weight="bold">Window</text>
+<rect x="1862.0" y="1413.0" width="114" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1919.0" y="1429.0" text-anchor="middle" font-size="12" font-weight="normal">«slint built-in»</text>
+<text x="1919.0" y="1445.0" text-anchor="middle" font-size="12" font-weight="bold">HorizontalLayout</text>
+<rect x="3137.0" y="1597.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="3182.0" y="1613.0" text-anchor="middle" font-size="12" font-weight="normal">«slint built-in»</text>
+<text x="3182.0" y="1629.0" text-anchor="middle" font-size="12" font-weight="bold">Rectangle</text>
+<rect x="2800.5" y="1413.0" width="99" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2850.0" y="1429.0" text-anchor="middle" font-size="12" font-weight="normal">«slint built-in»</text>
+<text x="2850.0" y="1445.0" text-anchor="middle" font-size="12" font-weight="bold">VerticalLayout</text>
+</svg>

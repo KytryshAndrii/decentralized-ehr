@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1541" height="1444" viewBox="0 0 1541 1444" font-family="Arial, Helvetica, sans-serif">
+<rect width="1541" height="1444" fill="#fff"/>
+<text x="770.5" y="28" text-anchor="middle" font-size="15" font-weight="bold">ipfs-store – diagram klas</text>
+<path d="M283.0,754.5 C283.0,835.4 283.0,928.4 283.0,967.8" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="288.0,956.8 283.0,967.8 278.0,956.8" fill="none" stroke="#000" stroke-width="1"/><rect x="279.6" y="859.1" width="21.8" height="14" fill="#fff"/><text x="290.5" y="870.1" text-anchor="middle" font-size="10.5">Cid</text>
+<path d="M1000.9,134.4 C973.0,188.8 919.2,294.0 869.2,391.8" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="878.6,384.3 869.2,391.8 869.7,379.7" fill="none" stroke="#000" stroke-width="1"/><path d="M1039.2,134.4 C1078.5,211.0 1169.5,388.3 1228.8,503.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1228.2,491.6 1228.8,503.7 1219.3,496.2" fill="none" stroke="#000" stroke-width="1"/><path d="M1270.5,720.5 C1263.3,778.0 1254.5,847.9 1247.7,901.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polygon points="1247.7,901.7 1256.4,888.7 1242.5,886.9" fill="#fff" stroke="#000" stroke-width="1"/><path d="M848.5,832.5 C871.9,888.6 893.6,940.6 904.9,967.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="905.3,955.6 904.9,967.7 896.0,959.4" fill="none" stroke="#000" stroke-width="1"/><path d="M757.0,832.5 C757.0,870.3 757.0,906.2 757.0,933.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="762.0,922.9 757.0,933.9 752.0,922.9" fill="none" stroke="#000" stroke-width="1"/><path d="M647.3,832.5 C628.4,870.3 610.4,906.2 596.6,933.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="606.0,926.3 596.6,933.9 597.0,921.8" fill="none" stroke="#000" stroke-width="1"/><path d="M1015.3,818.0 C1026.4,826.9 1033.0,832.1 1033.0,832.1 C1033.0,832.1 1077.2,865.7 1124.5,901.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1118.8,891.0 1124.5,901.6 1112.7,899.0" fill="none" stroke="#000" stroke-width="1"/><rect x="1076.8" y="859.1" width="108.7" height="14" fill="#fff"/><text x="1131.2" y="870.1" text-anchor="middle" font-size="10.5">«bound» D: Datastore</text>
+<rect x="24.0" y="1103.1" width="518" height="316" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="24.0" x2="542.0" y1="1143.1" y2="1143.1" stroke="#000"/>
+<line x1="24.0" x2="542.0" y1="1155.1" y2="1155.1" stroke="#000"/>
+<text x="283.0" y="1119.1" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="283.0" y="1135.1" text-anchor="middle" font-size="12" font-weight="bold">ipfs_store::utils</text>
+<text x="32.0" y="1171.1" font-size="12" text-decoration="underline" xml:space="preserve">+validate_block_size(bytes: &amp;[u8]): Result&lt;(), StoreError&gt;</text>
+<text x="32.0" y="1187.1" font-size="12" text-decoration="underline" xml:space="preserve">+validate_cid(cid: &amp;Cid): Result&lt;(), StoreError&gt;</text>
+<text x="32.0" y="1203.1" font-size="12" text-decoration="underline" xml:space="preserve">+multihash_bytes(multihash: &amp;Multihash): Vec&lt;u8&gt;</text>
+<text x="32.0" y="1219.1" font-size="12" text-decoration="underline" xml:space="preserve">+get_multihash_key(multihash: &amp;Multihash): Vec&lt;u8&gt;</text>
+<text x="32.0" y="1235.1" font-size="12" text-decoration="underline" xml:space="preserve">+get_namespaced_multihash_key(namespace: Namespace, multihash: &amp;Multihash): Vec&lt;u8&gt;</text>
+<text x="32.0" y="1251.1" font-size="12" text-decoration="underline" xml:space="preserve">+get_peer_key(peer_id: &amp;str): Vec&lt;u8&gt;</text>
+<text x="32.0" y="1267.1" font-size="12" text-decoration="underline" xml:space="preserve">-is_token(value: &amp;str): bool</text>
+<text x="32.0" y="1283.1" font-size="12" text-decoration="underline" xml:space="preserve">+validate_known_peer(peer: &amp;KnownPeer): Result&lt;(), StoreError&gt;</text>
+<text x="32.0" y="1299.1" font-size="12" text-decoration="underline" xml:space="preserve">+encode_known_peer(peer: &amp;KnownPeer): Vec&lt;u8&gt;</text>
+<text x="32.0" y="1315.1" font-size="12" text-decoration="underline" xml:space="preserve">+decode_known_peer(peer_id: &amp;str, value: &amp;[u8]): Result&lt;KnownPeer, StoreError&gt;</text>
+<text x="32.0" y="1331.1" font-size="12" text-decoration="underline" xml:space="preserve">+utc_now_secs(): u64</text>
+<text x="32.0" y="1347.1" font-size="12" text-decoration="underline" xml:space="preserve">+multihash_prefix_len(bytes: &amp;[u8]): Option&lt;usize&gt;</text>
+<text x="32.0" y="1363.1" font-size="12" text-decoration="underline" xml:space="preserve">+validate_remote_provider(provider: &amp;RemoteProvider): Result&lt;(), StoreError&gt;</text>
+<text x="32.0" y="1379.1" font-size="12" text-decoration="underline" xml:space="preserve">+get_remote_provider_key(multihash: &amp;[u8], peer_id: &amp;str): Vec&lt;u8&gt;</text>
+<text x="32.0" y="1395.1" font-size="12" text-decoration="underline" xml:space="preserve">+encode_remote_provider(provider: &amp;RemoteProvider): Vec&lt;u8&gt;</text>
+<text x="32.0" y="1411.1" font-size="12" text-decoration="underline" xml:space="preserve">+decode_remote_provider(key: &amp;[u8], value: &amp;[u8]): Result&lt;RemoteProvider, StoreError&gt;</text>
+<rect x="103.5" y="470.1" width="359" height="284" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="103.5" x2="462.5" y1="510.1" y2="510.1" stroke="#000"/>
+<line x1="103.5" x2="462.5" y1="742.1" y2="742.1" stroke="#000"/>
+<text x="283.0" y="486.1" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="283.0" y="502.1" text-anchor="middle" font-size="12" font-weight="bold">StoreError</text>
+<text x="111.5" y="526.1" font-size="12" xml:space="preserve">Database(rusty_leveldb::Status)</text>
+<text x="111.5" y="542.1" font-size="12" xml:space="preserve">Io(std::io::Error)</text>
+<text x="111.5" y="558.1" font-size="12" xml:space="preserve">IntegrityMismatch</text>
+<text x="111.5" y="574.1" font-size="12" xml:space="preserve">CorruptStoredBlock</text>
+<text x="111.5" y="590.1" font-size="12" xml:space="preserve">UnsupportedCidVersion(u64)</text>
+<text x="111.5" y="606.1" font-size="12" xml:space="preserve">UnsupportedHash(u64)</text>
+<text x="111.5" y="622.1" font-size="12" xml:space="preserve">InvalidDigestLength { code: u64, expected: usize, actual: usize, }</text>
+<text x="111.5" y="638.1" font-size="12" xml:space="preserve">BlockTooLarge { actual: usize, limit: usize }</text>
+<text x="111.5" y="654.1" font-size="12" xml:space="preserve">LockPoisoned</text>
+<text x="111.5" y="670.1" font-size="12" xml:space="preserve">Cid(ipfs_cid::error::CidError)</text>
+<text x="111.5" y="686.1" font-size="12" xml:space="preserve">ConcurrentModification</text>
+<text x="111.5" y="702.1" font-size="12" xml:space="preserve">CorruptRecord(String)</text>
+<text x="111.5" y="718.1" font-size="12" xml:space="preserve">InvalidProvider(String)</text>
+<text x="111.5" y="734.1" font-size="12" xml:space="preserve">InvalidPeer(String)</text>
+<rect x="1010.5" y="902.1" width="453" height="172" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1010.5" x2="1463.5" y1="942.1" y2="942.1" stroke="#000"/>
+<line x1="1010.5" x2="1463.5" y1="954.1" y2="954.1" stroke="#000"/>
+<text x="1237.0" y="918.1" text-anchor="middle" font-size="12" font-weight="normal">«interface»</text>
+<text x="1237.0" y="934.1" text-anchor="middle" font-size="12" font-weight="bold">Datastore</text>
+<text x="1018.5" y="970.1" font-size="12" xml:space="preserve">+get(key: &amp;[u8]): Result&lt;Option&lt;Vec&lt;u8&gt;&gt;, StoreError&gt;</text>
+<text x="1018.5" y="986.1" font-size="12" xml:space="preserve">+put(key: &amp;[u8], value: &amp;[u8]): Result&lt;(), StoreError&gt;</text>
+<text x="1018.5" y="1002.1" font-size="12" xml:space="preserve">+has(key: &amp;[u8]): Result&lt;bool, StoreError&gt;</text>
+<text x="1018.5" y="1018.1" font-size="12" xml:space="preserve">+put_if_absent(key: &amp;[u8], value: &amp;[u8]): Result&lt;bool, StoreError&gt;</text>
+<text x="1018.5" y="1034.1" font-size="12" xml:space="preserve">+delete(key: &amp;[u8]): Result&lt;(), StoreError&gt;</text>
+<text x="1018.5" y="1050.1" font-size="12" xml:space="preserve">+entries_with_prefix(prefix: &amp;[u8]): Result&lt;Vec&lt;Entry&gt;, StoreError&gt;</text>
+<text x="1018.5" y="1066.1" font-size="12" xml:space="preserve">+key_sizes_with_prefix(prefix: &amp;[u8]): Result&lt;Vec&lt;(Vec&lt;u8&gt;, usize)&gt;, StoreError&gt;</text>
+<rect x="499.0" y="392.1" width="516" height="440" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="499.0" x2="1015.0" y1="416.1" y2="416.1" stroke="#000"/>
+<line x1="499.0" x2="1015.0" y1="440.1" y2="440.1" stroke="#000"/>
+<text x="757.0" y="408.1" text-anchor="middle" font-size="12" font-weight="bold">Blockstore&lt;D&gt;</text>
+<text x="507.0" y="432.1" font-size="12" xml:space="preserve">~datastore: D</text>
+<text x="507.0" y="456.1" font-size="12" text-decoration="underline" xml:space="preserve">+new_blockstore(datastore: D): Self</text>
+<text x="507.0" y="472.1" font-size="12" xml:space="preserve">+put(bytes: &amp;[u8]): Result&lt;Cid, StoreError&gt;</text>
+<text x="507.0" y="488.1" font-size="12" xml:space="preserve">+put_with_codec(bytes: &amp;[u8], codec: u64, hash_code: u64): Result&lt;Cid, StoreError&gt;</text>
+<text x="507.0" y="504.1" font-size="12" xml:space="preserve">+put_block(cid: &amp;Cid, bytes: &amp;[u8]): Result&lt;(), StoreError&gt;</text>
+<text x="507.0" y="520.1" font-size="12" xml:space="preserve">+get_block(cid: &amp;Cid): Result&lt;Option&lt;Vec&lt;u8&gt;&gt;, StoreError&gt;</text>
+<text x="507.0" y="536.1" font-size="12" xml:space="preserve">+has(cid: &amp;Cid): Result&lt;bool, StoreError&gt;</text>
+<text x="507.0" y="552.1" font-size="12" xml:space="preserve">+save_peer(peer: &amp;KnownPeer): Result&lt;(), StoreError&gt;</text>
+<text x="507.0" y="568.1" font-size="12" xml:space="preserve">+load_peers(): Result&lt;Vec&lt;KnownPeer&gt;, StoreError&gt;</text>
+<text x="507.0" y="584.1" font-size="12" xml:space="preserve">+remove_peer(peer_id: &amp;str): Result&lt;(), StoreError&gt;</text>
+<text x="507.0" y="600.1" font-size="12" xml:space="preserve">+prune_peers(seen_after_utc: u64): Result&lt;(Vec&lt;KnownPeer&gt;, usize), StoreError&gt;</text>
+<text x="507.0" y="616.1" font-size="12" xml:space="preserve">+add_provide(cid: &amp;Cid): Result&lt;(), StoreError&gt;</text>
+<text x="507.0" y="632.1" font-size="12" xml:space="preserve">+remove_provide(cid: &amp;Cid): Result&lt;(), StoreError&gt;</text>
+<text x="507.0" y="648.1" font-size="12" xml:space="preserve">+has_provide(cid: &amp;Cid): Result&lt;bool, StoreError&gt;</text>
+<text x="507.0" y="664.1" font-size="12" xml:space="preserve">+list_provides(): Result&lt;Vec&lt;Cid&gt;, StoreError&gt;</text>
+<text x="507.0" y="680.1" font-size="12" xml:space="preserve">+pin(cid: &amp;Cid): Result&lt;(), StoreError&gt;</text>
+<text x="507.0" y="696.1" font-size="12" xml:space="preserve">+collect_garbage(max_bytes: u64): Result&lt;Vec&lt;Cid&gt;, StoreError&gt;</text>
+<text x="507.0" y="712.1" font-size="12" xml:space="preserve">+save_remote_provider(provider: &amp;RemoteProvider): Result&lt;(), StoreError&gt;</text>
+<text x="507.0" y="728.1" font-size="12" xml:space="preserve">+load_remote_providers(now_utc: u64): Result&lt;Vec&lt;RemoteProvider&gt;, StoreError&gt;</text>
+<text x="507.0" y="744.1" font-size="12" xml:space="preserve">+prune_remote_providers(now_utc: u64): Result&lt;(Vec&lt;RemoteProvider&gt;, usize), StoreError&gt;</text>
+<text x="507.0" y="760.1" font-size="12" xml:space="preserve">-scan_remote_providers(now_utc: u64, delete_expired: bool): Result&lt;(Vec&lt;RemoteProvider&gt;,</text>
+<text x="507.0" y="776.1" font-size="12" xml:space="preserve">    usize), StoreError&gt;</text>
+<text x="507.0" y="792.1" font-size="12" xml:space="preserve">+datastore(): &amp;D</text>
+<text x="507.0" y="808.1" font-size="12" text-decoration="underline" xml:space="preserve">+open_default(): Result&lt;Self, StoreError&gt;</text>
+<text x="507.0" y="824.1" font-size="12" text-decoration="underline" xml:space="preserve">+open_in(base_directory: &amp;Path): Result&lt;Self, StoreError&gt;</text>
+<rect x="1051.0" y="504.1" width="466" height="216" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1051.0" x2="1517.0" y1="528.1" y2="528.1" stroke="#000"/>
+<line x1="1051.0" x2="1517.0" y1="552.1" y2="552.1" stroke="#000"/>
+<text x="1284.0" y="520.1" text-anchor="middle" font-size="12" font-weight="bold">LevelDbDatastore</text>
+<text x="1059.0" y="544.1" font-size="12" xml:space="preserve">~db: Mutex&lt;DB&gt;</text>
+<text x="1059.0" y="568.1" font-size="12" text-decoration="underline" xml:space="preserve">+open(path: impl AsRef&lt;Path&gt;): Result&lt;Self, StoreError&gt;</text>
+<text x="1059.0" y="584.1" font-size="12" text-decoration="underline" xml:space="preserve">-open_with_lock_retry(path: &amp;Path, options: Options): Result&lt;DB, StoreError&gt;</text>
+<text x="1059.0" y="600.1" font-size="12" xml:space="preserve">+flush(): Result&lt;(), StoreError&gt;</text>
+<text x="1059.0" y="616.1" font-size="12" xml:space="preserve">-scan_prefix(prefix: &amp;[u8], mut visit: impl FnMut(&amp;[u8], &amp;[u8])): Result&lt;(), StoreError&gt;</text>
+<text x="1059.0" y="632.1" font-size="12" xml:space="preserve">+get(key: &amp;[u8]): Result&lt;Option&lt;Vec&lt;u8&gt;&gt;, StoreError&gt;</text>
+<text x="1059.0" y="648.1" font-size="12" xml:space="preserve">+put(key: &amp;[u8], value: &amp;[u8]): Result&lt;(), StoreError&gt;</text>
+<text x="1059.0" y="664.1" font-size="12" xml:space="preserve">+put_if_absent(key: &amp;[u8], value: &amp;[u8]): Result&lt;bool, StoreError&gt;</text>
+<text x="1059.0" y="680.1" font-size="12" xml:space="preserve">+delete(key: &amp;[u8]): Result&lt;(), StoreError&gt;</text>
+<text x="1059.0" y="696.1" font-size="12" xml:space="preserve">+entries_with_prefix(prefix: &amp;[u8]): Result&lt;Vec&lt;Entry&gt;, StoreError&gt;</text>
+<text x="1059.0" y="712.1" font-size="12" xml:space="preserve">+key_sizes_with_prefix(prefix: &amp;[u8]): Result&lt;Vec&lt;(Vec&lt;u8&gt;, usize)&gt;, StoreError&gt;</text>
+<rect x="1187.0" y="163.1" width="148" height="200" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1187.0" x2="1335.0" y1="203.1" y2="203.1" stroke="#000"/>
+<line x1="1187.0" x2="1335.0" y1="307.1" y2="307.1" stroke="#000"/>
+<text x="1261.0" y="179.1" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="1261.0" y="195.1" text-anchor="middle" font-size="12" font-weight="bold">Namespace</text>
+<text x="1195.0" y="219.1" font-size="12" xml:space="preserve">Blocks</text>
+<text x="1195.0" y="235.1" font-size="12" xml:space="preserve">Peers</text>
+<text x="1195.0" y="251.1" font-size="12" xml:space="preserve">Pins</text>
+<text x="1195.0" y="267.1" font-size="12" xml:space="preserve">Cache</text>
+<text x="1195.0" y="283.1" font-size="12" xml:space="preserve">Provides</text>
+<text x="1195.0" y="299.1" font-size="12" xml:space="preserve">RemoteProviders</text>
+<text x="1195.0" y="323.1" font-size="12" xml:space="preserve">+prefix(): &amp;'static [u8]</text>
+<text x="1195.0" y="339.1" font-size="12" xml:space="preserve">+key(id: &amp;[u8]): Vec&lt;u8&gt;</text>
+<text x="1195.0" y="355.1" font-size="12" xml:space="preserve">+owns(key: &amp;[u8]): bool</text>
+<rect x="494.5" y="934.1" width="151" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="494.5" x2="645.5" y1="958.1" y2="958.1" stroke="#000"/>
+<line x1="494.5" x2="645.5" y1="1030.1" y2="1030.1" stroke="#000"/>
+<text x="570.0" y="950.1" text-anchor="middle" font-size="12" font-weight="bold">RemoteProvider</text>
+<text x="502.5" y="974.1" font-size="12" xml:space="preserve">+multihash: Vec&lt;u8&gt;</text>
+<text x="502.5" y="990.1" font-size="12" xml:space="preserve">+peer_id: String</text>
+<text x="502.5" y="1006.1" font-size="12" xml:space="preserve">+addresses: Vec&lt;String&gt;</text>
+<text x="502.5" y="1022.1" font-size="12" xml:space="preserve">+expires_at_utc: u64</text>
+<rect x="681.5" y="934.1" width="151" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="681.5" x2="832.5" y1="958.1" y2="958.1" stroke="#000"/>
+<line x1="681.5" x2="832.5" y1="1030.1" y2="1030.1" stroke="#000"/>
+<text x="757.0" y="950.1" text-anchor="middle" font-size="12" font-weight="bold">KnownPeer</text>
+<text x="689.5" y="974.1" font-size="12" xml:space="preserve">+peer_id: String</text>
+<text x="689.5" y="990.1" font-size="12" xml:space="preserve">+addresses: Vec&lt;String&gt;</text>
+<text x="689.5" y="1006.1" font-size="12" xml:space="preserve">+dht_server: bool</text>
+<text x="689.5" y="1022.1" font-size="12" xml:space="preserve">+last_seen_utc: u64</text>
+<rect x="923.5" y="58.1" width="193" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="923.5" x2="1116.5" y1="98.1" y2="98.1" stroke="#000"/>
+<line x1="923.5" x2="1116.5" y1="122.1" y2="122.1" stroke="#000"/>
+<text x="1020.0" y="74.1" text-anchor="middle" font-size="12" font-weight="normal">«type alias»</text>
+<text x="1020.0" y="90.1" text-anchor="middle" font-size="12" font-weight="bold">PersistentBlockstore</text>
+<text x="931.5" y="114.1" font-size="12" xml:space="preserve">= Blockstore&lt;LevelDbDatastore&gt;</text>
+<rect x="238.0" y="968.1" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="283.0" y="984.1" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-cid»</text>
+<text x="283.0" y="1000.1" text-anchor="middle" font-size="12" font-weight="bold">CidError</text>
+<rect x="868.0" y="968.1" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="913.0" y="984.1" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-cid»</text>
+<text x="913.0" y="1000.1" text-anchor="middle" font-size="12" font-weight="bold">Cid</text>
+</svg>
