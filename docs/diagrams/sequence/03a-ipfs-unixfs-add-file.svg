@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1460" height="1358" viewBox="0 0 1460 1358" font-family="Arial, Helvetica, sans-serif">
+<rect width="1460" height="1358" fill="#fff"/>
+<text x="730" y="26" text-anchor="middle" font-size="15" font-weight="bold">ipfs-unixfs – diagram sekwencji: add_file (import pliku jako DAG UnixFS)</text>
+<rect x="868.912109375" y="558" width="540.904296875" height="206" fill="none" stroke="#000"/>
+<line x1="868.912109375" x2="1409.81640625" y1="624" y2="624" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="331.2333984375" y="268" width="1086.5830078125" height="554" fill="none" stroke="#000"/>
+<rect x="331.2333984375" y="834" width="613.6787109375" height="108" fill="none" stroke="#000"/>
+<rect x="323.2333984375" y="978" width="794.4150390625" height="260" fill="none" stroke="#000"/>
+<rect x="315.2333984375" y="954" width="810.4150390625" height="304" fill="none" stroke="#000"/>
+<line x1="75.2333984375" x2="75.2333984375" y1="118" y2="1328" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="365.2333984375" x2="365.2333984375" y1="90" y2="1328" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="655.2333984375" x2="655.2333984375" y1="90" y2="1328" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="773.91015625" x2="773.91015625" y1="90" y2="1328" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="910.912109375" x2="910.912109375" y1="90" y2="1328" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1075.6484375" x2="1075.6484375" y1="90" y2="1328" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1251.8017578125" x2="1251.8017578125" y1="90" y2="1328" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1367.81640625" x2="1367.81640625" y1="90" y2="1328" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="650.2" y="196.0" width="10" height="52.0" fill="#fff" stroke="#000"/>
+<rect x="768.9" y="310.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="1246.8" y="424.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="1362.8" y="500.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="910.9" y="582.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="1362.8" y="662.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="910.9" y="720.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="905.9" y="386.0" width="10" height="408.0" fill="#fff" stroke="#000"/>
+<rect x="905.9" y="876.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="1070.6" y="1020.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="1070.6" y="1096.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="905.9" y="1172.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="360.2" y="158.0" width="10" height="1144.0" fill="#fff" stroke="#000"/>
+<circle cx="75.2333984375" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="75.2333984375" x2="75.2333984375" y1="70" y2="86" stroke="#000"/><line x1="64.2333984375" x2="86.2333984375" y1="76" y2="76" stroke="#000"/><line x1="75.2333984375" x2="66.2333984375" y1="86" y2="98" stroke="#000"/><line x1="75.2333984375" x2="84.2333984375" y1="86" y2="98" stroke="#000"/><text x="75.2333984375" y="112" text-anchor="middle" font-size="12" font-weight="bold">Wywołujący</text>
+<rect x="329.896484375" y="56" width="70.673828125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="365.2333984375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">importer</text>
+<rect x="619.896484375" y="56" width="70.673828125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="655.2333984375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">Chunker</text>
+<rect x="714.5703125" y="56" width="118.6796875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="773.91015625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">chunks : Chunks</text>
+<rect x="857.25" y="56" width="107.32421875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="910.912109375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">import : Import</text>
+<rect x="1041.9814453125" y="56" width="67.333984375" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1075.6484375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">PbNode</text>
+<rect x="1221.8017578125" y="56" width="60" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1251.8017578125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">Cid</text>
+<rect x="1305.8017578125" y="56" width="124.029296875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1367.81640625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">store : Blockstore</text>
+<line x1="75.2333984375" x2="360.2333984375" y1="158" y2="158" stroke="#000"/><polygon points="360.2333984375,158 351.2333984375,153.5 351.2333984375,162.5" fill="#000" stroke="#000"/>
+<text x="217.7333984375" y="152" text-anchor="middle" font-size="12">add_file(store, reader, chunker)</text>
+<line x1="370.2333984375" x2="650.2333984375" y1="196" y2="196" stroke="#000"/><polygon points="650.2333984375,196 641.2333984375,191.5 641.2333984375,200.5" fill="#000" stroke="#000"/>
+<text x="510.2333984375" y="190" text-anchor="middle" font-size="12">split(reader)</text>
+<line x1="650.2333984375" x2="370.2333984375" y1="248" y2="248" stroke="#000" stroke-dasharray="6,4"/><polyline points="379.2333984375,243.5 370.2333984375,248 379.2333984375,252.5" fill="none" stroke="#000"/>
+<text x="510.2333984375" y="228" text-anchor="middle" font-size="12">Result&lt;Chunks, UnixfsError&gt; (rozmiar</text>
+<text x="510.2333984375" y="242" text-anchor="middle" font-size="12">1..MAX_BLOCK_BYTES)</text>
+<line x1="370.2333984375" x2="768.91015625" y1="310" y2="310" stroke="#000"/><polygon points="768.91015625,310 759.91015625,305.5 759.91015625,314.5" fill="#000" stroke="#000"/>
+<text x="569.57177734375" y="304" text-anchor="middle" font-size="12">next()</text>
+<line x1="768.91015625" x2="370.2333984375" y1="348" y2="348" stroke="#000" stroke-dasharray="6,4"/><polyline points="379.2333984375,343.5 370.2333984375,348 379.2333984375,352.5" fill="none" stroke="#000"/>
+<text x="569.57177734375" y="342" text-anchor="middle" font-size="12">Option&lt;io::Result&lt;Vec&lt;u8&gt;&gt;&gt;</text>
+<line x1="370.2333984375" x2="905.912109375" y1="386" y2="386" stroke="#000"/><polygon points="905.912109375,386 896.912109375,381.5 896.912109375,390.5" fill="#000" stroke="#000"/>
+<text x="638.07275390625" y="380" text-anchor="middle" font-size="12">put(CODEC_RAW, &amp;chunk, chunk.len(), 0)</text>
+<line x1="915.912109375" x2="1246.8017578125" y1="424" y2="424" stroke="#000"/><polygon points="1246.8017578125,424 1237.8017578125,419.5 1237.8017578125,428.5" fill="#000" stroke="#000"/>
+<text x="1081.35693359375" y="418" text-anchor="middle" font-size="12">generate_from_data(block, codec, SHA2_256)</text>
+<line x1="1246.8017578125" x2="915.912109375" y1="462" y2="462" stroke="#000" stroke-dasharray="6,4"/><polyline points="924.912109375,457.5 915.912109375,462 924.912109375,466.5" fill="none" stroke="#000"/>
+<text x="1081.35693359375" y="456" text-anchor="middle" font-size="12">Result&lt;Cid, CidError&gt;</text>
+<line x1="915.912109375" x2="1362.81640625" y1="500" y2="500" stroke="#000"/><polygon points="1362.81640625,500 1353.81640625,495.5 1353.81640625,504.5" fill="#000" stroke="#000"/>
+<text x="1139.3642578125" y="494" text-anchor="middle" font-size="12">has(&amp;cid)</text>
+<line x1="1362.81640625" x2="915.912109375" y1="538" y2="538" stroke="#000" stroke-dasharray="6,4"/><polyline points="924.912109375,533.5 915.912109375,538 924.912109375,542.5" fill="none" stroke="#000"/>
+<text x="1139.3642578125" y="532" text-anchor="middle" font-size="12">Result&lt;bool, StoreError&gt;</text>
+<polyline points="920.912109375,586 948.912109375,586 948.912109375,600 923.412109375,600" fill="none" stroke="#000"/><polygon points="923.412109375,600 932.412109375,595.5 932.412109375,604.5" fill="#000" stroke="#000"/>
+<text x="954.912109375" y="590" font-size="12">reused_blocks += 1</text>
+<line x1="915.912109375" x2="1362.81640625" y1="662" y2="662" stroke="#000"/><polygon points="1362.81640625,662 1353.81640625,657.5 1353.81640625,666.5" fill="#000" stroke="#000"/>
+<text x="1139.3642578125" y="656" text-anchor="middle" font-size="12">put_block(&amp;cid, block)</text>
+<line x1="1362.81640625" x2="915.912109375" y1="700" y2="700" stroke="#000" stroke-dasharray="6,4"/><polyline points="924.912109375,695.5 915.912109375,700 924.912109375,704.5" fill="none" stroke="#000"/>
+<text x="1139.3642578125" y="694" text-anchor="middle" font-size="12">Result&lt;(), StoreError&gt;</text>
+<polyline points="920.912109375,724 948.912109375,724 948.912109375,738 923.412109375,738" fill="none" stroke="#000"/><polygon points="923.412109375,738 932.412109375,733.5 932.412109375,742.5" fill="#000" stroke="#000"/>
+<text x="954.912109375" y="728" font-size="12">new_blocks += 1</text>
+<line x1="905.912109375" x2="370.2333984375" y1="794" y2="794" stroke="#000" stroke-dasharray="6,4"/><polyline points="379.2333984375,789.5 370.2333984375,794 379.2333984375,798.5" fill="none" stroke="#000"/>
+<text x="638.07275390625" y="788" text-anchor="middle" font-size="12">Child { cid, file_bytes, dag_bytes }</text>
+<line x1="370.2333984375" x2="905.912109375" y1="876" y2="876" stroke="#000"/><polygon points="905.912109375,876 896.912109375,871.5 896.912109375,880.5" fill="#000" stroke="#000"/>
+<text x="638.07275390625" y="870" text-anchor="middle" font-size="12">put(CODEC_RAW, &amp;[], 0, 0)</text>
+<line x1="905.912109375" x2="370.2333984375" y1="914" y2="914" stroke="#000" stroke-dasharray="6,4"/><polyline points="379.2333984375,909.5 370.2333984375,914 379.2333984375,918.5" fill="none" stroke="#000"/>
+<text x="638.07275390625" y="908" text-anchor="middle" font-size="12">Child</text>
+<line x1="370.2333984375" x2="1070.6484375" y1="1020" y2="1020" stroke="#000"/><polygon points="1070.6484375,1020 1061.6484375,1015.5 1061.6484375,1024.5" fill="#000" stroke="#000"/>
+<text x="720.44091796875" y="1014" text-anchor="middle" font-size="12">file(children)</text>
+<line x1="1070.6484375" x2="370.2333984375" y1="1058" y2="1058" stroke="#000" stroke-dasharray="6,4"/><polyline points="379.2333984375,1053.5 370.2333984375,1058 379.2333984375,1062.5" fill="none" stroke="#000"/>
+<text x="720.44091796875" y="1052" text-anchor="middle" font-size="12">PbNode { data: UnixfsData File, links }</text>
+<line x1="370.2333984375" x2="1070.6484375" y1="1096" y2="1096" stroke="#000"/><polygon points="1070.6484375,1096 1061.6484375,1091.5 1061.6484375,1100.5" fill="#000" stroke="#000"/>
+<text x="720.44091796875" y="1090" text-anchor="middle" font-size="12">to_canonical_bytes()</text>
+<line x1="1070.6484375" x2="370.2333984375" y1="1134" y2="1134" stroke="#000" stroke-dasharray="6,4"/><polyline points="379.2333984375,1129.5 370.2333984375,1134 379.2333984375,1138.5" fill="none" stroke="#000"/>
+<text x="720.44091796875" y="1128" text-anchor="middle" font-size="12">Vec&lt;u8&gt;</text>
+<line x1="370.2333984375" x2="905.912109375" y1="1172" y2="1172" stroke="#000"/><polygon points="905.912109375,1172 896.912109375,1167.5 896.912109375,1176.5" fill="#000" stroke="#000"/>
+<text x="638.07275390625" y="1166" text-anchor="middle" font-size="12">put(CODEC_DAG_PB, &amp;node, file_bytes, dag_bytes)</text>
+<line x1="905.912109375" x2="370.2333984375" y1="1210" y2="1210" stroke="#000" stroke-dasharray="6,4"/><polyline points="379.2333984375,1205.5 370.2333984375,1210 379.2333984375,1214.5" fill="none" stroke="#000"/>
+<text x="638.07275390625" y="1204" text-anchor="middle" font-size="12">Child (cid, file_bytes, dag_bytes)</text>
+<line x1="360.2333984375" x2="75.2333984375" y1="1302" y2="1302" stroke="#000" stroke-dasharray="6,4"/><polyline points="84.2333984375,1297.5 75.2333984375,1302 84.2333984375,1306.5" fill="none" stroke="#000"/>
+<text x="217.7333984375" y="1282" text-anchor="middle" font-size="12">Result&lt;ImportedFile { root, size, new_blocks,</text>
+<text x="217.7333984375" y="1296" text-anchor="middle" font-size="12">reused_blocks }, UnixfsError&gt;</text>
+<polygon points="868.912109375,558 895.7490234375,558 895.7490234375,567 888.7490234375,574 868.912109375,574" fill="#fff" stroke="#000"/><text x="874.912109375" y="570" font-size="11" font-weight="bold">alt</text>
+<rect x="900.7490234375" y="559" width="90.37451171875" height="14" fill="#fff"/><text x="903.7490234375" y="571" font-size="11.5">[blok już istnieje]</text>
+<rect x="873.912109375" y="626" width="63.528076171875" height="14" fill="#fff"/><text x="876.912109375" y="637" font-size="11.5">[nowy blok]</text>
+<polygon points="331.2333984375,268 368.447265625,268 368.447265625,277 361.447265625,284 331.2333984375,284" fill="#fff" stroke="#000"/><text x="337.2333984375" y="280" font-size="11" font-weight="bold">loop</text>
+<rect x="373.447265625" y="269" width="123.611083984375" height="14" fill="#fff"/><text x="376.447265625" y="281" font-size="11.5">[kolejny fragment pliku]</text>
+<polygon points="331.2333984375,834 362.3349609375,834 362.3349609375,843 355.3349609375,850 331.2333984375,850" fill="#fff" stroke="#000"/><text x="337.2333984375" y="846" font-size="11" font-weight="bold">opt</text>
+<rect x="367.3349609375" y="835" width="151.7041015625" height="14" fill="#fff"/><text x="370.3349609375" y="847" font-size="11.5">[plik pusty (level.is_empty())]</text>
+<polygon points="323.2333984375,978 360.447265625,978 360.447265625,987 353.447265625,994 323.2333984375,994" fill="#fff" stroke="#000"/><text x="329.2333984375" y="990" font-size="11" font-weight="bold">loop</text>
+<rect x="365.447265625" y="979" width="178.5673828125" height="14" fill="#fff"/><text x="368.447265625" y="991" font-size="11.5">[level.chunks(MAX_FILE_LINKS)]</text>
+<polygon points="315.2333984375,954 352.447265625,954 352.447265625,963 345.447265625,970 315.2333984375,970" fill="#fff" stroke="#000"/><text x="321.2333984375" y="966" font-size="11" font-weight="bold">loop</text>
+<rect x="357.447265625" y="955" width="210.860595703125" height="14" fill="#fff"/><text x="360.447265625" y="967" font-size="11.5">[level.len() &gt; 1 – kolejny poziom drzewa]</text>
+</svg>

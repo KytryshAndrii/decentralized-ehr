@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1597" height="1512" viewBox="0 0 1597 1512" font-family="Arial, Helvetica, sans-serif">
+<rect width="1597" height="1512" fill="#fff"/>
+<text x="798.5" y="26" text-anchor="middle" font-size="15" font-weight="bold">ehr-core – diagram sekwencji: EhrNode::issue_document (lekarz wystawia dokument)</text>
+<rect x="349.67578125" y="1062" width="912.8193359375" height="70" fill="none" stroke="#000"/>
+<rect x="349.67578125" y="1180" width="1181.1826171875" height="70" fill="none" stroke="#000"/>
+<line x1="93.67578125" x2="93.67578125" y1="118" y2="1482" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="383.67578125" x2="383.67578125" y1="90" y2="1482" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="683.67578125" x2="683.67578125" y1="90" y2="1482" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="819.6845703125" x2="819.6845703125" y1="90" y2="1482" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="949.7021484375" x2="949.7021484375" y1="90" y2="1482" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1228.4951171875" x2="1228.4951171875" y1="90" y2="1482" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1373.5224609375" x2="1373.5224609375" y1="90" y2="1482" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1496.8583984375" x2="1496.8583984375" y1="90" y2="1482" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="383.7" y="230.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="280.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="683.7" y="334.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="392.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="814.7" y="460.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="944.7" y="536.0" width="10" height="76.0" fill="#fff" stroke="#000"/>
+<rect x="1368.5" y="650.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="1368.5" y="726.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="784.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="814.7" y="852.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="944.7" y="928.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="944.7" y="1004.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="1144.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="1491.9" y="1220.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="683.7" y="1294.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="1352.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="1388.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="378.7" y="172.0" width="10" height="1284.0" fill="#fff" stroke="#000"/>
+<rect x="678.7" y="210.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="1223.5" y="574.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="1223.5" y="1104.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<circle cx="93.67578125" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="93.67578125" x2="93.67578125" y1="70" y2="86" stroke="#000"/><line x1="82.67578125" x2="104.67578125" y1="76" y2="76" stroke="#000"/><line x1="93.67578125" x2="84.67578125" y1="86" y2="98" stroke="#000"/><line x1="93.67578125" x2="102.67578125" y1="86" y2="98" stroke="#000"/><text x="93.67578125" y="112" text-anchor="middle" font-size="12" font-weight="bold">Aplikacja (UI / CLI)</text>
+<rect x="333.0048828125" y="56" width="101.341796875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="383.67578125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">ehr : EhrNode</text>
+<rect x="635.01171875" y="56" width="97.328125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="683.67578125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">app : EhrApp</text>
+<rect x="756.33984375" y="56" width="126.689453125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="819.6845703125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">pgp (ehr_security)</text>
+<rect x="907.029296875" y="56" width="85.345703125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="949.7021484375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">ipfs_unixfs</text>
+<rect x="1137.4677734375" y="56" width="182.0546875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1228.4951171875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">store : PersistentBlockstore</text>
+<rect x="1343.5224609375" y="56" width="60" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1373.5224609375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">Token</text>
+<rect x="1427.5224609375" y="56" width="138.671875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1496.8583984375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">node : NetworkNode</text>
+<line x1="93.67578125" x2="378.67578125" y1="172" y2="172" stroke="#000"/><polygon points="378.67578125,172 369.67578125,167.5 369.67578125,176.5" fill="#000" stroke="#000"/>
+<text x="236.17578125" y="152" text-anchor="middle" font-size="12">issue_document(NewDocument { path,</text>
+<text x="236.17578125" y="166" text-anchor="middle" font-size="12">patient_did, file_name, category })</text>
+<line x1="388.67578125" x2="678.67578125" y1="210" y2="210" stroke="#000"/><polygon points="678.67578125,210 669.67578125,205.5 669.67578125,214.5" fill="#000" stroke="#000"/>
+<text x="533.67578125" y="204" text-anchor="middle" font-size="12">require(Role::Doctor)</text>
+<polyline points="393.67578125,234 421.67578125,234 421.67578125,262 396.17578125,262" fill="none" stroke="#000"/><polygon points="396.17578125,262 405.17578125,257.5 405.17578125,266.5" fill="#000" stroke="#000"/>
+<text x="427.67578125" y="238" font-size="12">IndexEntry { doc_id = random_id(), version = 1,</text>
+<text x="427.67578125" y="252" font-size="12">valid_until = add_years(now, 20), ... }</text>
+<polyline points="393.67578125,284 421.67578125,284 421.67578125,298 396.17578125,298" fill="none" stroke="#000"/><polygon points="396.17578125,298 405.17578125,293.5 405.17578125,302.5" fill="#000" stroke="#000"/>
+<text x="427.67578125" y="288" font-size="12">publish(entry, path) – blocking(spawn_blocking)</text>
+<line x1="388.67578125" x2="678.67578125" y1="334" y2="334" stroke="#000"/><polygon points="678.67578125,334 669.67578125,329.5 669.67578125,338.5" fill="#000" stroke="#000"/>
+<text x="533.67578125" y="328" text-anchor="middle" font-size="12">contact(Patient, patient_did)</text>
+<line x1="678.67578125" x2="388.67578125" y1="372" y2="372" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.67578125,367.5 388.67578125,372 397.67578125,376.5" fill="none" stroke="#000"/>
+<text x="533.67578125" y="366" text-anchor="middle" font-size="12">Contact → ContactCard::from_text(card).pgp</text>
+<polyline points="393.67578125,396 421.67578125,396 421.67578125,424 396.17578125,424" fill="none" stroke="#000"/><polygon points="396.17578125,424 405.17578125,419.5 405.17578125,428.5" fill="#000" stroke="#000"/>
+<text x="427.67578125" y="400" font-size="12">path.is_absolute() &amp;&amp; is_file(); size ≤</text>
+<text x="427.67578125" y="414" font-size="12">MAX_DOCUMENT_BYTES</text>
+<line x1="388.67578125" x2="814.6845703125" y1="460" y2="460" stroke="#000"/><polygon points="814.6845703125,460 805.6845703125,455.5 805.6845703125,464.5" fill="#000" stroke="#000"/>
+<text x="601.68017578125" y="454" text-anchor="middle" font-size="12">encrypt_and_sign(plik, identity, [pgp pacjenta, pgp lekarza])</text>
+<line x1="814.6845703125" x2="388.67578125" y1="498" y2="498" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.67578125,493.5 388.67578125,498 397.67578125,502.5" fill="none" stroke="#000"/>
+<text x="601.68017578125" y="492" text-anchor="middle" font-size="12">sealed: Vec&lt;u8&gt;</text>
+<line x1="388.67578125" x2="944.7021484375" y1="536" y2="536" stroke="#000"/><polygon points="944.7021484375,536 935.7021484375,531.5 935.7021484375,540.5" fill="#000" stroke="#000"/>
+<text x="666.68896484375" y="530" text-anchor="middle" font-size="12">add_file(&amp;store, sealed, Chunker::fixed())</text>
+<line x1="954.7021484375" x2="1223.4951171875" y1="574" y2="574" stroke="#000"/><polygon points="1223.4951171875,574 1214.4951171875,569.5 1214.4951171875,578.5" fill="#000" stroke="#000"/>
+<text x="1089.0986328125" y="568" text-anchor="middle" font-size="12">put_block(cid, block) dla każdego bloku DAG</text>
+<line x1="944.7021484375" x2="388.67578125" y1="612" y2="612" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.67578125,607.5 388.67578125,612 397.67578125,616.5" fill="none" stroke="#000"/>
+<text x="666.68896484375" y="606" text-anchor="middle" font-size="12">ImportedFile { root } → entry.doc_cid</text>
+<line x1="388.67578125" x2="1368.5224609375" y1="650" y2="650" stroke="#000"/><polygon points="1368.5224609375,650 1359.5224609375,645.5 1359.5224609375,654.5" fill="#000" stroke="#000"/>
+<text x="878.59912109375" y="644" text-anchor="middle" font-size="12">issue_root(identity, created_utc, valid_until_utc)</text>
+<line x1="1368.5224609375" x2="388.67578125" y1="688" y2="688" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.67578125,683.5 388.67578125,688 397.67578125,692.5" fill="none" stroke="#000"/>
+<text x="878.59912109375" y="682" text-anchor="middle" font-size="12">root: Signed</text>
+<line x1="388.67578125" x2="1368.5224609375" y1="726" y2="726" stroke="#000"/><polygon points="1368.5224609375,726 1359.5224609375,721.5 1359.5224609375,730.5" fill="#000" stroke="#000"/>
+<text x="878.59912109375" y="720" text-anchor="middle" font-size="12">delegate_read(identity, &amp;root, patient_did, doc_cid, created_utc, valid_until_utc)</text>
+<line x1="1368.5224609375" x2="388.67578125" y1="764" y2="764" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.67578125,759.5 388.67578125,764 397.67578125,768.5" fill="none" stroke="#000"/>
+<text x="878.59912109375" y="758" text-anchor="middle" font-size="12">entry.read_token: Signed</text>
+<polyline points="393.67578125,788 421.67578125,788 421.67578125,816 396.17578125,816" fill="none" stroke="#000"/><polygon points="396.17578125,816 405.17578125,811.5 405.17578125,820.5" fill="#000" stroke="#000"/>
+<text x="427.67578125" y="792" font-size="12">DocumentReference::from_entry(&amp;entry) →</text>
+<text x="427.67578125" y="806" font-size="12">manifest JSON (HL7 FHIR R5)</text>
+<line x1="388.67578125" x2="814.6845703125" y1="852" y2="852" stroke="#000"/><polygon points="814.6845703125,852 805.6845703125,847.5 805.6845703125,856.5" fill="#000" stroke="#000"/>
+<text x="601.68017578125" y="846" text-anchor="middle" font-size="12">encrypt_and_sign(manifest, identity, [pgp pacjenta, pgp lekarza])</text>
+<line x1="814.6845703125" x2="388.67578125" y1="890" y2="890" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.67578125,885.5 388.67578125,890 397.67578125,894.5" fill="none" stroke="#000"/>
+<text x="601.68017578125" y="884" text-anchor="middle" font-size="12">sealed manifest</text>
+<line x1="388.67578125" x2="944.7021484375" y1="928" y2="928" stroke="#000"/><polygon points="944.7021484375,928 935.7021484375,923.5 935.7021484375,932.5" fill="#000" stroke="#000"/>
+<text x="666.68896484375" y="922" text-anchor="middle" font-size="12">add_file(&amp;store, sealed manifest, Chunker::fixed())</text>
+<line x1="944.7021484375" x2="388.67578125" y1="966" y2="966" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.67578125,961.5 388.67578125,966 397.67578125,970.5" fill="none" stroke="#000"/>
+<text x="666.68896484375" y="960" text-anchor="middle" font-size="12">ImportedFile { root } → entry.manifest_cid</text>
+<line x1="388.67578125" x2="944.7021484375" y1="1004" y2="1004" stroke="#000"/><polygon points="944.7021484375,1004 935.7021484375,999.5 935.7021484375,1008.5" fill="#000" stroke="#000"/>
+<text x="666.68896484375" y="998" text-anchor="middle" font-size="12">dag_cids(&amp;store, &amp;document.root), dag_cids(&amp;store, &amp;manifest.root)</text>
+<line x1="944.7021484375" x2="388.67578125" y1="1042" y2="1042" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.67578125,1037.5 388.67578125,1042 397.67578125,1046.5" fill="none" stroke="#000"/>
+<text x="666.68896484375" y="1036" text-anchor="middle" font-size="12">Vec&lt;Cid&gt;</text>
+<line x1="388.67578125" x2="1223.4951171875" y1="1104" y2="1104" stroke="#000"/><polygon points="1223.4951171875,1104 1214.4951171875,1099.5 1214.4951171875,1108.5" fill="#000" stroke="#000"/>
+<text x="806.08544921875" y="1098" text-anchor="middle" font-size="12">pin(cid)</text>
+<polyline points="393.67578125,1148 421.67578125,1148 421.67578125,1162 396.17578125,1162" fill="none" stroke="#000"/><polygon points="396.17578125,1162 405.17578125,1157.5 405.17578125,1166.5" fill="#000" stroke="#000"/>
+<text x="427.67578125" y="1152" font-size="12">provide(cids)</text>
+<line x1="388.67578125" x2="1491.8583984375" y1="1222" y2="1222" stroke="#000"/><polyline points="1482.8583984375,1217.5 1491.8583984375,1222 1482.8583984375,1226.5" fill="none" stroke="#000"/>
+<text x="940.26708984375" y="1216" text-anchor="middle" font-size="12">commands.send(NetworkCommand::StartProviding(cid))</text>
+<line x1="388.67578125" x2="678.67578125" y1="1294" y2="1294" stroke="#000"/><polygon points="678.67578125,1294 669.67578125,1289.5 669.67578125,1298.5" fill="#000" stroke="#000"/>
+<text x="533.67578125" y="1274" text-anchor="middle" font-size="12">save_new_entry(entry) – seq = ostatni seq + 1</text>
+<text x="533.67578125" y="1288" text-anchor="middle" font-size="12">(index.leveldb)</text>
+<line x1="678.67578125" x2="388.67578125" y1="1332" y2="1332" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.67578125,1327.5 388.67578125,1332 397.67578125,1336.5" fill="none" stroke="#000"/>
+<text x="533.67578125" y="1326" text-anchor="middle" font-size="12">IndexEntry</text>
+<polyline points="393.67578125,1356 421.67578125,1356 421.67578125,1370 396.17578125,1370" fill="none" stroke="#000"/><polygon points="396.17578125,1370 405.17578125,1365.5 405.17578125,1374.5" fill="#000" stroke="#000"/>
+<text x="427.67578125" y="1360" font-size="12">println!(&quot;[DOC] ISSUED ...&quot;)</text>
+<polyline points="393.67578125,1392 421.67578125,1392 421.67578125,1420 396.17578125,1420" fill="none" stroke="#000"/><polygon points="396.17578125,1420 405.17578125,1415.5 405.17578125,1424.5" fill="#000" stroke="#000"/>
+<text x="427.67578125" y="1396" font-size="12">replicate(vec![doc_cid, manifest_cid],</text>
+<text x="427.67578125" y="1410" font-size="12">patient_peer) – patrz diagram 07e</text>
+<line x1="378.67578125" x2="93.67578125" y1="1456" y2="1456" stroke="#000" stroke-dasharray="6,4"/><polyline points="102.67578125,1451.5 93.67578125,1456 102.67578125,1460.5" fill="none" stroke="#000"/>
+<text x="236.17578125" y="1450" text-anchor="middle" font-size="12">Result&lt;IndexEntry, EhrError&gt;</text>
+<polygon points="349.67578125,1062 386.8896484375,1062 386.8896484375,1071 379.8896484375,1078 349.67578125,1078" fill="#fff" stroke="#000"/><text x="355.67578125" y="1074" font-size="11" font-weight="bold">loop</text>
+<rect x="391.8896484375" y="1063" width="92.30615234375" height="14" fill="#fff"/><text x="394.8896484375" y="1075" font-size="11.5">[dla każdego cid]</text>
+<polygon points="349.67578125,1180 386.8896484375,1180 386.8896484375,1189 379.8896484375,1196 349.67578125,1196" fill="#fff" stroke="#000"/><text x="355.67578125" y="1192" font-size="11" font-weight="bold">loop</text>
+<rect x="391.8896484375" y="1181" width="149.834228515625" height="14" fill="#fff"/><text x="394.8896484375" y="1193" font-size="11.5">[dla każdego cid (od końca)]</text>
+</svg>

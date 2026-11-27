@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1313" height="1379" viewBox="0 0 1313 1379" font-family="Arial, Helvetica, sans-serif">
+<rect width="1313" height="1379" fill="#fff"/>
+<text x="656.5" y="28" text-anchor="middle" font-size="15" font-weight="bold">ehr-core – diagram klas (modele HL7 FHIR R5)</text>
+<path d="M338.0,1056.2 C373.2,1082.4 412.1,1111.3 442.1,1133.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="338.0,1056.2 341.7,1066.4 352.5,1067.0 348.8,1056.8" fill="#000" stroke="#000" stroke-width="1"/><text x="435.2" y="1120.0" font-size="10.5">0..*</text>
+<rect x="388.0" y="1083.0" width="45.7" height="14" fill="#fff"/><text x="410.8" y="1094.0" text-anchor="middle" font-size="10.5">identifier</text>
+<path d="M247.5,1056.2 C247.5,1079.3 247.5,1104.6 247.5,1125.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="247.5,1056.2 241.5,1065.2 247.5,1074.2 253.5,1065.2" fill="#000" stroke="#000" stroke-width="1"/><text x="257.5" y="1113.5" font-size="10.5">0..*</text>
+<rect x="243.9" y="1083.0" width="32.3" height="14" fill="#fff"/><text x="260.0" y="1094.0" text-anchor="middle" font-size="10.5">name</text>
+<path d="M708.5,818.2 C708.5,850.7 708.5,903.6 708.5,941.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="708.5,818.2 702.5,827.2 708.5,836.2 714.5,827.2" fill="#000" stroke="#000" stroke-width="1"/><text x="718.5" y="929.5" font-size="10.5">0..*</text>
+<rect x="704.7" y="877.0" width="36.9" height="14" fill="#fff"/><text x="723.2" y="888.0" text-anchor="middle" font-size="10.5">coding</text>
+<path d="M492.5,1026.3 C492.5,1057.7 492.5,1102.4 492.5,1133.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="492.5,1026.3 486.5,1035.3 492.5,1044.3 498.5,1035.3" fill="#000" stroke="#000" stroke-width="1"/><text x="502.5" y="1121.8" font-size="10.5">0..1</text>
+<rect x="488.5" y="1083.0" width="45.7" height="14" fill="#fff"/><text x="511.4" y="1094.0" text-anchor="middle" font-size="10.5">identifier</text>
+<path d="M529.1,818.2 C521.6,853.0 508.9,911.4 500.6,949.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="529.1,818.2 521.4,825.7 525.3,835.8 533.1,828.3" fill="#000" stroke="#000" stroke-width="1"/><text x="513.8" y="940.0" font-size="10.5">1</text>
+<rect x="511.2" y="877.0" width="50.4" height="14" fill="#fff"/><text x="536.4" y="888.0" text-anchor="middle" font-size="10.5">reference</text>
+<path d="M604.5,648.3 C628.9,680.9 663.9,727.6 686.4,757.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="604.5,648.3 605.1,659.1 615.3,662.7 614.7,651.9" fill="#000" stroke="#000" stroke-width="1"/><text x="684.8" y="742.8" font-size="10.5">1</text>
+<rect x="635.0" y="683.0" width="28.8" height="14" fill="#fff"/><text x="649.4" y="694.0" text-anchor="middle" font-size="10.5">code</text>
+<path d="M567.8,648.3 C560.2,680.9 549.3,727.6 542.3,757.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="567.8,648.3 559.9,655.7 563.7,665.8 571.6,658.4" fill="#000" stroke="#000" stroke-width="1"/><text x="555.7" y="748.3" font-size="10.5">1</text>
+<rect x="554.8" y="683.0" width="32.8" height="14" fill="#fff"/><text x="571.2" y="694.0" text-anchor="middle" font-size="10.5">target</text>
+<path d="M981.0,640.4 C982.2,663.6 983.9,696.8 985.4,725.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="981.0,640.4 975.5,649.7 981.9,658.4 987.4,649.1" fill="#000" stroke="#000" stroke-width="1"/><text x="994.5" y="713.1" font-size="10.5">1</text>
+<rect x="979.5" y="683.0" width="57.9" height="14" fill="#fff"/><text x="1008.5" y="694.0" text-anchor="middle" font-size="10.5">attachment</text>
+<path d="M944.8,338.3 C970.8,355.4 988.5,367.0 988.5,367.0 C988.5,367.0 1093.7,493.7 1151.9,563.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="944.8,338.3 949.0,348.3 959.8,348.2 955.6,338.2" fill="#000" stroke="#000" stroke-width="1"/><text x="1149.4" y="549.1" font-size="10.5">0..*</text>
+<rect x="1120.4" y="443.0" width="50.9" height="14" fill="#fff"/><text x="1145.9" y="454.0" text-anchor="middle" font-size="10.5">extension</text>
+<path d="M772.3,338.4 C806.2,457.2 849.5,609.0 849.5,609.0 C849.5,609.0 849.5,609.0 849.5,989.0 C849.5,989.0 800.5,1056.0 800.5,1056.0 C800.5,1056.0 629.9,1119.7 542.7,1152.3" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="772.3,338.4 769.0,348.7 777.2,355.7 780.5,345.4" fill="#000" stroke="#000" stroke-width="1"/><text x="561.1" y="1160.0" font-size="10.5">0..*</text>
+<rect x="845.5" y="780.0" width="45.7" height="14" fill="#fff"/><text x="868.4" y="791.0" text-anchor="middle" font-size="10.5">identifier</text>
+<path d="M726.8,338.3 C721.1,477.8 712.8,682.0 709.7,757.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="726.8,338.3 720.4,347.0 726.1,356.3 732.4,347.5" fill="#000" stroke="#000" stroke-width="1"/><text x="720.3" y="745.9" font-size="10.5">0..*</text>
+<rect x="713.4" y="602.0" width="46.3" height="14" fill="#fff"/><text x="736.5" y="613.0" text-anchor="middle" font-size="10.5">category</text>
+<path d="M464.8,328.2 C418.3,350.7 384.5,367.0 384.5,367.0 C384.5,367.0 335.8,685.0 335.8,685.0 C335.8,685.0 335.8,697.0 335.8,697.0 C335.8,697.0 384.5,891.0 384.5,891.0 C384.5,891.0 420.1,922.6 450.4,949.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="464.8,328.2 454.0,326.7 448.6,336.0 459.3,337.5" fill="#000" stroke="#000" stroke-width="1"/><text x="445.1" y="935.5" font-size="10.5">1</text>
+<rect x="332.0" y="683.0" width="39.3" height="14" fill="#fff"/><text x="351.6" y="694.0" text-anchor="middle" font-size="10.5">subject</text>
+<path d="M618.2,338.1 C604.1,355.3 594.5,367.0 594.5,367.0 C594.5,367.0 474.5,564.0 474.5,564.0 C474.5,564.0 449.5,726.0 449.5,726.0 C449.5,726.0 449.5,850.0 449.5,850.0 C449.5,850.0 468.0,909.0 480.7,949.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="618.2,338.1 607.9,341.3 606.8,352.0 617.1,348.9" fill="#000" stroke="#000" stroke-width="1"/><text x="485.5" y="935.3" font-size="10.5">0..*</text>
+<rect x="451.9" y="683.0" width="35.8" height="14" fill="#fff"/><text x="469.8" y="694.0" text-anchor="middle" font-size="10.5">author</text>
+<path d="M672.9,338.1 C665.6,355.3 660.6,367.0 660.6,367.0 C660.6,367.0 613.0,503.8 589.4,571.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="672.9,338.1 663.9,344.0 665.9,354.7 674.9,348.7" fill="#000" stroke="#000" stroke-width="1"/><text x="604.1" y="563.9" font-size="10.5">0..*</text>
+<rect x="656.5" y="443.0" width="52.1" height="14" fill="#fff"/><text x="682.5" y="454.0" text-anchor="middle" font-size="10.5">relates_to</text>
+<path d="M852.6,338.1 C867.4,355.3 877.5,367.0 877.5,367.0 C877.5,367.0 940.1,515.4 967.2,579.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="852.6,338.1 853.9,348.8 864.3,351.7 863.0,341.0" fill="#000" stroke="#000" stroke-width="1"/><text x="970.2" y="565.2" font-size="10.5">0..*</text>
+<rect x="942.7" y="443.0" width="40.4" height="14" fill="#fff"/><text x="962.9" y="454.0" text-anchor="middle" font-size="10.5">content</text>
+<rect x="24.0" y="1247.0" width="447" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="24.0" x2="471.0" y1="1287.0" y2="1287.0" stroke="#000"/>
+<line x1="24.0" x2="471.0" y1="1299.0" y2="1299.0" stroke="#000"/>
+<text x="247.5" y="1263.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="247.5" y="1279.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_core::fhir</text>
+<text x="32.0" y="1315.0" font-size="12" text-decoration="underline" xml:space="preserve">-did_identifier(did: &amp;str): Identifier</text>
+<text x="32.0" y="1331.0" font-size="12" text-decoration="underline" xml:space="preserve">-extension(document: &amp;'a DocumentReference, url: &amp;str): Option&lt;&amp;'a Extension&gt;</text>
+<text x="32.0" y="1347.0" font-size="12" text-decoration="underline" xml:space="preserve">-reference_did(reference: &amp;Reference): Option&lt;&amp;str&gt;</text>
+<rect x="95.0" y="367.0" width="219" height="168" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="95.0" x2="314.0" y1="407.0" y2="407.0" stroke="#000"/>
+<line x1="95.0" x2="314.0" y1="479.0" y2="479.0" stroke="#000"/>
+<text x="204.5" y="383.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="204.5" y="399.0" text-anchor="middle" font-size="12" font-weight="bold">Category</text>
+<text x="103.0" y="423.0" font-size="12" xml:space="preserve">Lab</text>
+<text x="103.0" y="439.0" font-size="12" xml:space="preserve">Imaging</text>
+<text x="103.0" y="455.0" font-size="12" xml:space="preserve">Discharge</text>
+<text x="103.0" y="471.0" font-size="12" xml:space="preserve">Other</text>
+<text x="103.0" y="495.0" font-size="12" xml:space="preserve">+code(): &amp;'static str</text>
+<text x="103.0" y="511.0" font-size="12" xml:space="preserve">+label(): &amp;'static str</text>
+<text x="103.0" y="527.0" font-size="12" text-decoration="underline" xml:space="preserve">+from_code(code: &amp;str): Option&lt;Self&gt;</text>
+<rect x="442.5" y="1134.0" width="100" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="442.5" x2="542.5" y1="1158.0" y2="1158.0" stroke="#000"/>
+<line x1="442.5" x2="542.5" y1="1198.0" y2="1198.0" stroke="#000"/>
+<text x="492.5" y="1150.0" text-anchor="middle" font-size="12" font-weight="bold">Identifier</text>
+<text x="450.5" y="1174.0" font-size="12" xml:space="preserve">+system: String</text>
+<text x="450.5" y="1190.0" font-size="12" xml:space="preserve">+value: String</text>
+<rect x="176.5" y="1126.0" width="142" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="176.5" x2="318.5" y1="1150.0" y2="1150.0" stroke="#000"/>
+<line x1="176.5" x2="318.5" y1="1206.0" y2="1206.0" stroke="#000"/>
+<text x="247.5" y="1142.0" text-anchor="middle" font-size="12" font-weight="bold">HumanName</text>
+<text x="184.5" y="1166.0" font-size="12" xml:space="preserve">+text: String</text>
+<text x="184.5" y="1182.0" font-size="12" xml:space="preserve">+family: Option&lt;String&gt;</text>
+<text x="184.5" y="1198.0" font-size="12" xml:space="preserve">+given: Vec&lt;String&gt;</text>
+<rect x="124.0" y="920.0" width="247" height="136" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="124.0" x2="371.0" y1="944.0" y2="944.0" stroke="#000"/>
+<line x1="124.0" x2="371.0" y1="1016.0" y2="1016.0" stroke="#000"/>
+<text x="247.5" y="936.0" text-anchor="middle" font-size="12" font-weight="bold">Person</text>
+<text x="132.0" y="960.0" font-size="12" xml:space="preserve">+resource_type: String</text>
+<text x="132.0" y="976.0" font-size="12" xml:space="preserve">+identifier: Vec&lt;Identifier&gt;</text>
+<text x="132.0" y="992.0" font-size="12" xml:space="preserve">+active: bool</text>
+<text x="132.0" y="1008.0" font-size="12" xml:space="preserve">+name: Vec&lt;HumanName&gt;</text>
+<text x="132.0" y="1032.0" font-size="12" text-decoration="underline" xml:space="preserve">+new(role: Role, did: &amp;str, name: &amp;str): Self</text>
+<text x="132.0" y="1048.0" font-size="12" xml:space="preserve">+display_name(): &amp;str</text>
+<rect x="634.5" y="942.0" width="148" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="634.5" x2="782.5" y1="966.0" y2="966.0" stroke="#000"/>
+<line x1="634.5" x2="782.5" y1="1022.0" y2="1022.0" stroke="#000"/>
+<text x="708.5" y="958.0" text-anchor="middle" font-size="12" font-weight="bold">Coding</text>
+<text x="642.5" y="982.0" font-size="12" xml:space="preserve">+system: String</text>
+<text x="642.5" y="998.0" font-size="12" xml:space="preserve">+code: String</text>
+<text x="642.5" y="1014.0" font-size="12" xml:space="preserve">+display: Option&lt;String&gt;</text>
+<rect x="639.5" y="758.0" width="138" height="60" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="639.5" x2="777.5" y1="782.0" y2="782.0" stroke="#000"/>
+<line x1="639.5" x2="777.5" y1="806.0" y2="806.0" stroke="#000"/>
+<text x="708.5" y="774.0" text-anchor="middle" font-size="12" font-weight="bold">CodeableConcept</text>
+<text x="647.5" y="798.0" font-size="12" xml:space="preserve">+coding: Vec&lt;Coding&gt;</text>
+<rect x="407.0" y="950.0" width="171" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="407.0" x2="578.0" y1="974.0" y2="974.0" stroke="#000"/>
+<line x1="407.0" x2="578.0" y1="1014.0" y2="1014.0" stroke="#000"/>
+<text x="492.5" y="966.0" text-anchor="middle" font-size="12" font-weight="bold">Reference</text>
+<text x="415.0" y="990.0" font-size="12" xml:space="preserve">+identifier: Option&lt;Identifier&gt;</text>
+<text x="415.0" y="1006.0" font-size="12" xml:space="preserve">+display: Option&lt;String&gt;</text>
+<rect x="467.5" y="758.0" width="136" height="60" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="467.5" x2="603.5" y1="782.0" y2="782.0" stroke="#000"/>
+<line x1="467.5" x2="603.5" y1="806.0" y2="806.0" stroke="#000"/>
+<text x="535.5" y="774.0" text-anchor="middle" font-size="12" font-weight="bold">CodeableReference</text>
+<text x="475.5" y="798.0" font-size="12" xml:space="preserve">+reference: Reference</text>
+<rect x="492.5" y="572.0" width="168" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="492.5" x2="660.5" y1="596.0" y2="596.0" stroke="#000"/>
+<line x1="492.5" x2="660.5" y1="636.0" y2="636.0" stroke="#000"/>
+<text x="576.5" y="588.0" text-anchor="middle" font-size="12" font-weight="bold">RelatesTo</text>
+<text x="500.5" y="612.0" font-size="12" xml:space="preserve">+code: CodeableConcept</text>
+<text x="500.5" y="628.0" font-size="12" xml:space="preserve">+target: CodeableReference</text>
+<rect x="923.5" y="726.0" width="130" height="124" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="923.5" x2="1053.5" y1="750.0" y2="750.0" stroke="#000"/>
+<line x1="923.5" x2="1053.5" y1="838.0" y2="838.0" stroke="#000"/>
+<text x="988.5" y="742.0" text-anchor="middle" font-size="12" font-weight="bold">Attachment</text>
+<text x="931.5" y="766.0" font-size="12" xml:space="preserve">+content_type: String</text>
+<text x="931.5" y="782.0" font-size="12" xml:space="preserve">+url: String</text>
+<text x="931.5" y="798.0" font-size="12" xml:space="preserve">+size: String</text>
+<text x="931.5" y="814.0" font-size="12" xml:space="preserve">+title: String</text>
+<text x="931.5" y="830.0" font-size="12" xml:space="preserve">+creation: String</text>
+<rect x="904.5" y="580.0" width="150" height="60" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="904.5" x2="1054.5" y1="604.0" y2="604.0" stroke="#000"/>
+<line x1="904.5" x2="1054.5" y1="628.0" y2="628.0" stroke="#000"/>
+<text x="979.5" y="596.0" text-anchor="middle" font-size="12" font-weight="bold">Content</text>
+<text x="912.5" y="620.0" font-size="12" xml:space="preserve">+attachment: Attachment</text>
+<rect x="1090.0" y="564.0" width="199" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1090.0" x2="1289.0" y1="588.0" y2="588.0" stroke="#000"/>
+<line x1="1090.0" x2="1289.0" y1="644.0" y2="644.0" stroke="#000"/>
+<text x="1189.5" y="580.0" text-anchor="middle" font-size="12" font-weight="bold">Extension</text>
+<text x="1098.0" y="604.0" font-size="12" xml:space="preserve">+url: String</text>
+<text x="1098.0" y="620.0" font-size="12" xml:space="preserve">+value_string: Option&lt;String&gt;</text>
+<text x="1098.0" y="636.0" font-size="12" xml:space="preserve">+value_date_time: Option&lt;String&gt;</text>
+<rect x="465.0" y="58.0" width="535" height="280" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="465.0" x2="1000.0" y1="82.0" y2="82.0" stroke="#000"/>
+<line x1="465.0" x2="1000.0" y1="282.0" y2="282.0" stroke="#000"/>
+<text x="732.5" y="74.0" text-anchor="middle" font-size="12" font-weight="bold">DocumentReference</text>
+<text x="473.0" y="98.0" font-size="12" xml:space="preserve">+resource_type: String</text>
+<text x="473.0" y="114.0" font-size="12" xml:space="preserve">+extension: Vec&lt;Extension&gt;</text>
+<text x="473.0" y="130.0" font-size="12" xml:space="preserve">+identifier: Vec&lt;Identifier&gt;</text>
+<text x="473.0" y="146.0" font-size="12" xml:space="preserve">+version: String</text>
+<text x="473.0" y="162.0" font-size="12" xml:space="preserve">+status: String</text>
+<text x="473.0" y="178.0" font-size="12" xml:space="preserve">+doc_status: String</text>
+<text x="473.0" y="194.0" font-size="12" xml:space="preserve">+category: Vec&lt;CodeableConcept&gt;</text>
+<text x="473.0" y="210.0" font-size="12" xml:space="preserve">+subject: Reference</text>
+<text x="473.0" y="226.0" font-size="12" xml:space="preserve">+date: String</text>
+<text x="473.0" y="242.0" font-size="12" xml:space="preserve">+author: Vec&lt;Reference&gt;</text>
+<text x="473.0" y="258.0" font-size="12" xml:space="preserve">+relates_to: Vec&lt;RelatesTo&gt;</text>
+<text x="473.0" y="274.0" font-size="12" xml:space="preserve">+content: Vec&lt;Content&gt;</text>
+<text x="473.0" y="298.0" font-size="12" text-decoration="underline" xml:space="preserve">+from_entry(entry: &amp;IndexEntry): Result&lt;Self, EhrError&gt;</text>
+<text x="473.0" y="314.0" font-size="12" xml:space="preserve">+to_entry(seq: u64, manifest_cid: &amp;str, created_utc: u64, valid_until_utc: u64): Result&lt;IndexEntry,</text>
+<text x="473.0" y="330.0" font-size="12" xml:space="preserve">     EhrError&gt;</text>
+</svg>

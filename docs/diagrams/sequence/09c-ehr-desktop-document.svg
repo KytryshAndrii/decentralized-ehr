@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1189" height="1548" viewBox="0 0 1189 1548" font-family="Arial, Helvetica, sans-serif">
+<rect width="1189" height="1548" fill="#fff"/>
+<text x="594.5" y="26" text-anchor="middle" font-size="15" font-weight="bold">ehr-desktop – diagram sekwencji: podgląd, pobranie, edycja dokumentu i odświeżanie</text>
+<rect x="40.005859375" y="140" width="1122.419921875" height="1360" fill="none" stroke="#000"/>
+<line x1="40.005859375" x2="1162.42578125" y1="592" y2="592" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="40.005859375" x2="1162.42578125" y1="912" y2="912" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="40.005859375" x2="1162.42578125" y1="1244" y2="1244" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="74.005859375" x2="74.005859375" y1="118" y2="1518" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="344.759765625" x2="344.759765625" y1="90" y2="1518" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="634.759765625" x2="634.759765625" y1="90" y2="1518" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="934.759765625" x2="934.759765625" y1="90" y2="1518" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1044.42578125" x2="1044.42578125" y1="90" y2="1518" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1128.42578125" x2="1128.42578125" y1="90" y2="1518" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="634.8" y="240.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="634.8" y="290.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="929.8" y="372.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="1039.4" y="462.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="1039.4" y="720.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="929.8" y="796.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="634.8" y="1008.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="929.8" y="1090.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="929.8" y="1358.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="339.8" y="182.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="339.8" y="566.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="339.8" y="630.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="339.8" y="886.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="339.8" y="950.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="339.8" y="1180.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="339.8" y="1282.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="339.8" y="1434.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="629.8" y="220.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="629.8" y="668.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="629.8" y="988.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="629.8" y="1320.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="1123.4" y="1218.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="1123.4" y="1472.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<circle cx="74.005859375" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="74.005859375" x2="74.005859375" y1="70" y2="86" stroke="#000"/><line x1="63.005859375" x2="85.005859375" y1="76" y2="76" stroke="#000"/><line x1="74.005859375" x2="65.005859375" y1="86" y2="98" stroke="#000"/><line x1="74.005859375" x2="83.005859375" y1="86" y2="98" stroke="#000"/><text x="74.005859375" y="112" text-anchor="middle" font-size="12" font-weight="bold">Użytkownik</text>
+<rect x="272.0517578125" y="56" width="145.416015625" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="344.759765625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">window : AppWindow</text>
+<rect x="531.0673828125" y="56" width="207.384765625" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="634.759765625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">documents / contacts (callbacki)</text>
+<rect x="879.09375" y="56" width="111.33203125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="934.759765625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">node : EhrNode</text>
+<rect x="1014.42578125" y="56" width="60" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1044.42578125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">utils</text>
+<rect x="1098.42578125" y="56" width="60" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1128.42578125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">view</text>
+<line x1="74.005859375" x2="339.759765625" y1="182" y2="182" stroke="#000"/><polygon points="339.759765625,182 330.759765625,177.5 330.759765625,186.5" fill="#000" stroke="#000"/>
+<text x="206.8828125" y="176" text-anchor="middle" font-size="12">select-doc(index)</text>
+<line x1="349.759765625" x2="629.759765625" y1="220" y2="220" stroke="#000"/><polygon points="629.759765625,220 620.759765625,215.5 620.759765625,224.5" fill="#000" stroke="#000"/>
+<text x="489.759765625" y="214" text-anchor="middle" font-size="12">on_select_doc(index)</text>
+<polyline points="644.759765625,244 672.759765625,244 672.759765625,272 647.259765625,272" fill="none" stroke="#000"/><polygon points="647.259765625,272 656.259765625,267.5 656.259765625,276.5" fill="#000" stroke="#000"/>
+<text x="678.759765625" y="248" font-size="12">entry = state.doc_at(index); view.selected_doc</text>
+<text x="678.759765625" y="262" font-size="12">= Some(manifest_cid)</text>
+<polyline points="644.759765625,294 672.759765625,294 672.759765625,322 647.259765625,322" fill="none" stroke="#000"/><polygon points="647.259765625,322 656.259765625,317.5 656.259765625,326.5" fill="#000" stroke="#000"/>
+<text x="678.759765625" y="298" font-size="12">show_preview: set_preview_ready(false);</text>
+<text x="678.759765625" y="312" font-size="12">set_doc_verified(false)</text>
+<line x1="639.759765625" x2="929.759765625" y1="372" y2="372" stroke="#000"/><polygon points="929.759765625,372 920.759765625,367.5 920.759765625,376.5" fill="#000" stroke="#000"/>
+<text x="784.759765625" y="352" text-anchor="middle" font-size="12">open_document(&amp;entry) – odszyfrowanie i</text>
+<text x="784.759765625" y="366" text-anchor="middle" font-size="12">weryfikacja podpisu (ehr-core 07f)</text>
+<line x1="929.759765625" x2="639.759765625" y1="410" y2="410" stroke="#000" stroke-dasharray="6,4"/><polyline points="648.759765625,405.5 639.759765625,410 648.759765625,414.5" fill="none" stroke="#000"/>
+<text x="784.759765625" y="404" text-anchor="middle" font-size="12">Result&lt;Vec&lt;u8&gt;, EhrError&gt;</text>
+<line x1="639.759765625" x2="1039.42578125" y1="462" y2="462" stroke="#000"/><polygon points="1039.42578125,462 1030.42578125,457.5 1030.42578125,466.5" fill="#000" stroke="#000"/>
+<text x="839.5927734375" y="442" text-anchor="middle" font-size="12">preview(&amp;entry, &amp;bytes) – obraz PNG/JPEG lub tekst</text>
+<text x="839.5927734375" y="456" text-anchor="middle" font-size="12">(PREVIEW_TEXT_CHARS)</text>
+<line x1="1039.42578125" x2="639.759765625" y1="500" y2="500" stroke="#000" stroke-dasharray="6,4"/><polyline points="648.759765625,495.5 639.759765625,500 648.759765625,504.5" fill="none" stroke="#000"/>
+<text x="839.5927734375" y="494" text-anchor="middle" font-size="12">Ok(pixels) lub Err(tekst)</text>
+<line x1="629.759765625" x2="349.759765625" y1="566" y2="566" stroke="#000"/><polygon points="349.759765625,566 358.759765625,561.5 358.759765625,570.5" fill="#000" stroke="#000"/>
+<text x="489.759765625" y="532" text-anchor="middle" font-size="12">set_doc_verified(result.is_ok());</text>
+<text x="489.759765625" y="546" text-anchor="middle" font-size="12">set_preview_image / set_preview_text;</text>
+<text x="489.759765625" y="560" text-anchor="middle" font-size="12">set_preview_ready(true)</text>
+<line x1="74.005859375" x2="339.759765625" y1="630" y2="630" stroke="#000"/><polygon points="339.759765625,630 330.759765625,625.5 330.759765625,634.5" fill="#000" stroke="#000"/>
+<text x="206.8828125" y="624" text-anchor="middle" font-size="12">download(index)</text>
+<line x1="349.759765625" x2="629.759765625" y1="668" y2="668" stroke="#000"/><polygon points="629.759765625,668 620.759765625,663.5 620.759765625,672.5" fill="#000" stroke="#000"/>
+<text x="489.759765625" y="662" text-anchor="middle" font-size="12">on_download(index)</text>
+<line x1="639.759765625" x2="1039.42578125" y1="720" y2="720" stroke="#000"/><polygon points="1039.42578125,720 1030.42578125,715.5 1030.42578125,724.5" fill="#000" stroke="#000"/>
+<text x="839.5927734375" y="700" text-anchor="middle" font-size="12">download_path(&amp;entry.file_name) – $HOME/Downloads, &quot;(n) nazwa&quot;</text>
+<text x="839.5927734375" y="714" text-anchor="middle" font-size="12">gdy plik istnieje</text>
+<line x1="1039.42578125" x2="639.759765625" y1="758" y2="758" stroke="#000" stroke-dasharray="6,4"/><polyline points="648.759765625,753.5 639.759765625,758 648.759765625,762.5" fill="none" stroke="#000"/>
+<text x="839.5927734375" y="752" text-anchor="middle" font-size="12">PathBuf</text>
+<line x1="639.759765625" x2="929.759765625" y1="796" y2="796" stroke="#000"/><polygon points="929.759765625,796 920.759765625,791.5 920.759765625,800.5" fill="#000" stroke="#000"/>
+<text x="784.759765625" y="790" text-anchor="middle" font-size="12">save_document(&amp;entry, &amp;path)</text>
+<line x1="929.759765625" x2="639.759765625" y1="834" y2="834" stroke="#000" stroke-dasharray="6,4"/><polyline points="648.759765625,829.5 639.759765625,834 648.759765625,838.5" fill="none" stroke="#000"/>
+<text x="784.759765625" y="828" text-anchor="middle" font-size="12">Result&lt;(), EhrError&gt;</text>
+<line x1="629.759765625" x2="349.759765625" y1="886" y2="886" stroke="#000"/><polygon points="349.759765625,886 358.759765625,881.5 358.759765625,890.5" fill="#000" stroke="#000"/>
+<text x="489.759765625" y="866" text-anchor="middle" font-size="12">status(&quot;Zapisano: {path}&quot;) lub status(&quot;Nie</text>
+<text x="489.759765625" y="880" text-anchor="middle" font-size="12">zapisano: ...&quot;)</text>
+<line x1="74.005859375" x2="339.759765625" y1="950" y2="950" stroke="#000"/><polygon points="339.759765625,950 330.759765625,945.5 330.759765625,954.5" fill="#000" stroke="#000"/>
+<text x="206.8828125" y="944" text-anchor="middle" font-size="12">open-edit(index); wybór pliku; confirm-edit()</text>
+<line x1="349.759765625" x2="629.759765625" y1="988" y2="988" stroke="#000"/><polygon points="629.759765625,988 620.759765625,983.5 620.759765625,992.5" fill="#000" stroke="#000"/>
+<text x="489.759765625" y="982" text-anchor="middle" font-size="12">on_confirm_edit()</text>
+<polyline points="644.759765625,1012 672.759765625,1012 672.759765625,1040 647.259765625,1040" fill="none" stroke="#000"/><polygon points="647.259765625,1040 656.259765625,1035.5 656.259765625,1044.5" fill="#000" stroke="#000"/>
+<text x="678.759765625" y="1016" font-size="12">entry = dokument wybrany w widoku; path musi</text>
+<text x="678.759765625" y="1030" font-size="12">być istniejącym plikiem (ścieżka bezwzględna)</text>
+<line x1="639.759765625" x2="929.759765625" y1="1090" y2="1090" stroke="#000"/><polygon points="929.759765625,1090 920.759765625,1085.5 920.759765625,1094.5" fill="#000" stroke="#000"/>
+<text x="784.759765625" y="1070" text-anchor="middle" font-size="12">update_document(&amp;entry, &amp;path) – nowa wersja,</text>
+<text x="784.759765625" y="1084" text-anchor="middle" font-size="12">prev_manifest_cid</text>
+<line x1="929.759765625" x2="639.759765625" y1="1128" y2="1128" stroke="#000" stroke-dasharray="6,4"/><polyline points="648.759765625,1123.5 639.759765625,1128 648.759765625,1132.5" fill="none" stroke="#000"/>
+<text x="784.759765625" y="1122" text-anchor="middle" font-size="12">Result&lt;IndexEntry, EhrError&gt;</text>
+<line x1="629.759765625" x2="349.759765625" y1="1180" y2="1180" stroke="#000"/><polygon points="349.759765625,1180 358.759765625,1175.5 358.759765625,1184.5" fill="#000" stroke="#000"/>
+<text x="489.759765625" y="1160" text-anchor="middle" font-size="12">show_preview(nowa wersja); set_modal(&quot;none&quot;);</text>
+<text x="489.759765625" y="1174" text-anchor="middle" font-size="12">status(&quot;Zapisano wersję {n} pliku ...&quot;)</text>
+<line x1="639.759765625" x2="1123.42578125" y1="1218" y2="1218" stroke="#000"/><polygon points="1123.42578125,1218 1114.42578125,1213.5 1114.42578125,1222.5" fill="#000" stroke="#000"/>
+<text x="881.5927734375" y="1212" text-anchor="middle" font-size="12">reload(&amp;state, &amp;ui)</text>
+<line x1="74.005859375" x2="339.759765625" y1="1282" y2="1282" stroke="#000"/><polygon points="339.759765625,1282 330.759765625,1277.5 330.759765625,1286.5" fill="#000" stroke="#000"/>
+<text x="206.8828125" y="1276" text-anchor="middle" font-size="12">refresh()</text>
+<line x1="349.759765625" x2="629.759765625" y1="1320" y2="1320" stroke="#000"/><polygon points="629.759765625,1320 620.759765625,1315.5 620.759765625,1324.5" fill="#000" stroke="#000"/>
+<text x="489.759765625" y="1314" text-anchor="middle" font-size="12">on_refresh()</text>
+<line x1="639.759765625" x2="929.759765625" y1="1358" y2="1358" stroke="#000"/><polygon points="929.759765625,1358 920.759765625,1353.5 920.759765625,1362.5" fill="#000" stroke="#000"/>
+<text x="784.759765625" y="1352" text-anchor="middle" font-size="12">sync_inbox() (ehr-core 07d)</text>
+<line x1="929.759765625" x2="639.759765625" y1="1396" y2="1396" stroke="#000" stroke-dasharray="6,4"/><polyline points="648.759765625,1391.5 639.759765625,1396 648.759765625,1400.5" fill="none" stroke="#000"/>
+<text x="784.759765625" y="1390" text-anchor="middle" font-size="12">Result&lt;Vec&lt;IndexEntry&gt;, EhrError&gt;</text>
+<line x1="629.759765625" x2="349.759765625" y1="1434" y2="1434" stroke="#000"/><polygon points="349.759765625,1434 358.759765625,1429.5 358.759765625,1438.5" fill="#000" stroke="#000"/>
+<text x="489.759765625" y="1428" text-anchor="middle" font-size="12">status(&quot;Nowe dokumenty: {n}&quot;)</text>
+<line x1="639.759765625" x2="1123.42578125" y1="1472" y2="1472" stroke="#000"/><polygon points="1123.42578125,1472 1114.42578125,1467.5 1114.42578125,1476.5" fill="#000" stroke="#000"/>
+<text x="881.5927734375" y="1466" text-anchor="middle" font-size="12">reload(&amp;state, &amp;ui)</text>
+<polygon points="40.005859375,140 66.8427734375,140 66.8427734375,149 59.8427734375,156 40.005859375,156" fill="#fff" stroke="#000"/><text x="46.005859375" y="152" font-size="11" font-weight="bold">alt</text>
+<rect x="71.8427734375" y="141" width="267.282470703125" height="14" fill="#fff"/><text x="74.8427734375" y="153" font-size="11.5">[wiersz dokumentu: &quot;Podgląd&quot; → select-doc(index)]</text>
+<rect x="45.005859375" y="594" width="260.892333984375" height="14" fill="#fff"/><text x="48.005859375" y="605" font-size="11.5">[wiersz dokumentu: &quot;Pobierz&quot; → download(index)]</text>
+<rect x="45.005859375" y="914" width="321.43017578125" height="14" fill="#fff"/><text x="48.005859375" y="925" font-size="11.5">[lekarz: &quot;Edytuj&quot; → open-edit(index) → &quot;Zapisz&quot; confirm-edit()]</text>
+<rect x="45.005859375" y="1246" width="249.987548828125" height="14" fill="#fff"/><text x="48.005859375" y="1257" font-size="11.5">[przycisk &quot;Sprawdź nowe&quot; (pacjent) → refresh()]</text>
+</svg>

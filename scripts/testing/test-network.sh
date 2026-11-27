@@ -4,7 +4,7 @@ set -euo pipefail
 # Rust <-> Kubo interoperability. This test ALWAYS shuts down the Kubo daemon
 # associated with IPFS_PATH on exit, including an already running daemon.
 # Use a dedicated test repo, never your everyday ~/.ipfs.
-CLI="${EHR_CLI_BIN:-target/debug/ehr-cli}"
+CLI="${EHR_CLI_BIN:-target/debug/ehr-cli-patient}"
 CLI="$(realpath "$CLI")"
 : "${IPFS_PATH:?Set IPFS_PATH to a dedicated Kubo test repository}"
 command -v ipfs >/dev/null || { echo 'ERROR: ipfs missing' >&2; exit 1; }
@@ -61,8 +61,8 @@ else
   KUBO_USED=true
   ready=false
   for _ in $(seq 1 60); do
-    # Bez pliku `api` demon jeszcze nie działa, a komenda otworzyłaby repo sama
-    # i zabrała demonowi blokadę repozytorium.
+    # Without the `api` file the daemon is not up yet, and the command would open the repo
+    # itself and take the repository lock from the daemon.
     if [[ -f "$IPFS_PATH/api" ]] && IPFS_PATH="$IPFS_PATH" timeout 3s ipfs swarm addrs listen >/dev/null 2>&1; then
       ready=true
       break

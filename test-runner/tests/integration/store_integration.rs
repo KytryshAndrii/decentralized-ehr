@@ -36,7 +36,7 @@ fn database_backend_rejects_corrupted_existing_entry() {
     let store = isolated_store(root.path());
     let cid = store.put(b"Hi!").unwrap();
     let key = ipfs_store::utils::get_multihash_key(&cid.multihash);
-    // Celowe obejście walidacji tylko w teście awarii backendu.
+    // Validation is bypassed on purpose, only in the backend failure test.
     store.datastore().put(&key, b"corrupted").unwrap();
     assert!(matches!(
         store.get_block(&cid),
@@ -56,7 +56,7 @@ fn leveldb_put_if_absent_is_atomic_for_shared_handle() {
         .collect();
     let ids: Vec<_> = handles
         .into_iter()
-        .map(|h| h.join().unwrap().unwrap())
+        .map(|handle| handle.join().unwrap().unwrap())
         .collect();
     assert!(ids.iter().all(|cid| cid == &ids[0]));
     assert_eq!(store.get_block(&ids[0]).unwrap().unwrap(), b"Hi!");
@@ -88,11 +88,11 @@ fn fixture_bytes_roundtrip_without_parsing() {
     fn visit(root: &std::path::Path, files: &mut Vec<std::path::PathBuf>) {
         if let Ok(entries) = std::fs::read_dir(root) {
             for entry in entries.flatten() {
-                let p = entry.path();
-                if p.is_dir() {
-                    visit(&p, files);
-                } else if p.is_file() {
-                    files.push(p);
+                let entry_path = entry.path();
+                if entry_path.is_dir() {
+                    visit(&entry_path, files);
+                } else if entry_path.is_file() {
+                    files.push(entry_path);
                 }
             }
         }
@@ -100,9 +100,11 @@ fn fixture_bytes_roundtrip_without_parsing() {
     let mut files = Vec::new();
     visit(&fixture_root, &mut files);
     let mut checked = 0;
-    for path in files.into_iter().filter(|p| {
+    for path in files.into_iter().filter(|entry_path| {
         matches!(
-            p.extension().and_then(|e| e.to_str()),
+            entry_path
+                .extension()
+                .and_then(|extension| extension.to_str()),
             Some(
                 "json"
                     | "xml"

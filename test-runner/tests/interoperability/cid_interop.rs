@@ -3,7 +3,7 @@ use serial_test::serial;
 use test_runner::cid_interop_utils::verify_file_interoperability;
 
 // ==========================================
-// TESTY PLIKÓW HYPR-TEXT
+// HYPERTEXT FILE TESTS
 // ==========================================
 #[test]
 #[serial]
@@ -36,7 +36,7 @@ fn test_kubo_interop_ttl() {
 }
 
 // ==========================================
-// TESTY PLIKÓW GRAFICZNYCH
+// IMAGE FILE TESTS
 // ==========================================
 #[test]
 #[serial]

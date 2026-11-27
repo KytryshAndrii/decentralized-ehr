@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1388" height="1414" viewBox="0 0 1388 1414" font-family="Arial, Helvetica, sans-serif">
+<rect width="1388" height="1414" fill="#fff"/>
+<text x="694" y="26" text-anchor="middle" font-size="15" font-weight="bold">ipfs-bitswap – diagram sekwencji: BitswapServer (obsługa Wantlist)</text>
+<rect x="38.34765625" y="968" width="1286" height="300" fill="none" stroke="#000"/>
+<rect x="30.34765625" y="806" width="1302" height="520" fill="none" stroke="#000"/>
+<line x1="30.34765625" x2="1332.34765625" y1="872" y2="872" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="22.34765625" y="358" width="1318" height="988" fill="none" stroke="#000"/>
+<rect x="14.34765625" y="230" width="1334" height="1136" fill="none" stroke="#000"/>
+<line x1="96.34765625" x2="96.34765625" y1="118" y2="1384" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="386.34765625" x2="386.34765625" y1="90" y2="1384" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="676.34765625" x2="676.34765625" y1="90" y2="1384" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="976.34765625" x2="976.34765625" y1="90" y2="1384" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1266.34765625" x2="1266.34765625" y1="90" y2="1384" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="381.3" y="172.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="671.3" y="336.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="671.3" y="382.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="671.3" y="418.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="671.3" y="468.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="671.3" y="504.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="671.3" y="540.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="1261.3" y="646.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="971.3" y="608.0" width="10" height="114.0" fill="#fff" stroke="#000"/>
+<rect x="671.3" y="742.0" width="10" height="46.0" fill="#fff" stroke="#000"/>
+<rect x="671.3" y="830.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="386.3" y="910.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="1261.3" y="1062.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="971.3" y="1010.0" width="10" height="142.0" fill="#fff" stroke="#000"/>
+<rect x="671.3" y="1210.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="91.3" y="1190.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="91.3" y="1298.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="381.3" y="286.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<circle cx="96.34765625" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="96.34765625" x2="96.34765625" y1="70" y2="86" stroke="#000"/><line x1="85.34765625" x2="107.34765625" y1="76" y2="76" stroke="#000"/><line x1="96.34765625" x2="87.34765625" y1="86" y2="98" stroke="#000"/><line x1="96.34765625" x2="105.34765625" y1="86" y2="98" stroke="#000"/><text x="96.34765625" y="112" text-anchor="middle" font-size="12" font-weight="bold">Zdalny węzeł (peer)</text>
+<rect x="328.35546875" y="56" width="115.984375" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="386.34765625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">control : Control</text>
+<rect x="600.3115234375" y="56" width="152.072265625" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="676.34765625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">server : BitswapServer</text>
+<rect x="877.9873046875" y="56" width="196.720703125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="976.34765625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">source : ProvidedBlockSource</text>
+<rect x="1175.3203125" y="56" width="182.0546875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1266.34765625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">store : PersistentBlockstore</text>
+<line x1="676.34765625" x2="391.34765625" y1="172" y2="172" stroke="#000"/><polygon points="391.34765625,172 400.34765625,167.5 400.34765625,176.5" fill="#000" stroke="#000"/>
+<text x="533.84765625" y="152" text-anchor="middle" font-size="12">start():</text>
+<text x="533.84765625" y="166" text-anchor="middle" font-size="12">accept(StreamProtocol(&quot;/ipfs/bitswap/1.2.0&quot;))</text>
+<line x1="391.34765625" x2="676.34765625" y1="210" y2="210" stroke="#000" stroke-dasharray="6,4"/><polyline points="667.34765625,205.5 676.34765625,210 667.34765625,214.5" fill="none" stroke="#000"/>
+<text x="533.84765625" y="204" text-anchor="middle" font-size="12">IncomingStreams</text>
+<line x1="96.34765625" x2="381.34765625" y1="286" y2="286" stroke="#000"/><polygon points="381.34765625,286 372.34765625,281.5 372.34765625,290.5" fill="#000" stroke="#000"/>
+<text x="238.84765625" y="266" text-anchor="middle" font-size="12">open_stream; write_message(BitswapMessage {</text>
+<text x="238.84765625" y="280" text-anchor="middle" font-size="12">wantlist })</text>
+<line x1="391.34765625" x2="671.34765625" y1="338" y2="338" stroke="#000"/><polyline points="662.34765625,333.5 671.34765625,338 662.34765625,342.5" fill="none" stroke="#000"/>
+<text x="531.34765625" y="318" text-anchor="middle" font-size="12">tokio::spawn(serve_stream(control, pending,</text>
+<text x="531.34765625" y="332" text-anchor="middle" font-size="12">peer, stream))</text>
+<polyline points="681.34765625,386 709.34765625,386 709.34765625,400 683.84765625,400" fill="none" stroke="#000"/><polygon points="683.84765625,400 692.84765625,395.5 692.84765625,404.5" fill="#000" stroke="#000"/>
+<text x="715.34765625" y="390" font-size="12">deliver(&amp;pending, peer, &amp;mut request)</text>
+<polyline points="681.34765625,422 709.34765625,422 709.34765625,450 683.84765625,450" fill="none" stroke="#000"/><polygon points="683.84765625,450 692.84765625,445.5 692.84765625,454.5" fill="#000" stroke="#000"/>
+<text x="715.34765625" y="426" font-size="12">answer(control, peer, request) – entries = 0 →</text>
+<text x="715.34765625" y="440" font-size="12">return</text>
+<polyline points="681.34765625,472 709.34765625,472 709.34765625,486 683.84765625,486" fill="none" stroke="#000"/><polygon points="683.84765625,486 692.84765625,481.5 692.84765625,490.5" fill="#000" stroke="#000"/>
+<text x="715.34765625" y="476" font-size="12">println!(&quot;BITSWAP_REQUEST peer entries=...&quot;)</text>
+<polyline points="681.34765625,508 709.34765625,508 709.34765625,522 683.84765625,522" fill="none" stroke="#000"/><polygon points="683.84765625,522 692.84765625,517.5 692.84765625,526.5" fill="#000" stroke="#000"/>
+<text x="715.34765625" y="512" font-size="12">blocking(|| plan(&amp;request)) – spawn_blocking</text>
+<polyline points="681.34765625,544 709.34765625,544 709.34765625,572 683.84765625,572" fill="none" stroke="#000"/><polygon points="683.84765625,572 692.84765625,567.5 692.84765625,576.5" fill="#000" stroke="#000"/>
+<text x="715.34765625" y="548" font-size="12">plan: pominięcie wpisów cancel, obcięcie do</text>
+<text x="715.34765625" y="562" font-size="12">max_wantlist_entries</text>
+<line x1="676.34765625" x2="971.34765625" y1="608" y2="608" stroke="#000"/><polygon points="971.34765625,608 962.34765625,603.5 962.34765625,612.5" fill="#000" stroke="#000"/>
+<text x="823.84765625" y="602" text-anchor="middle" font-size="12">has_blocks(&amp;cids)</text>
+<line x1="981.34765625" x2="1261.34765625" y1="646" y2="646" stroke="#000"/><polygon points="1261.34765625,646 1252.34765625,641.5 1252.34765625,650.5" fill="#000" stroke="#000"/>
+<text x="1121.34765625" y="640" text-anchor="middle" font-size="12">open_in(directory); has_provide(cid) i has(cid)</text>
+<line x1="1261.34765625" x2="981.34765625" y1="684" y2="684" stroke="#000" stroke-dasharray="6,4"/><polyline points="990.34765625,679.5 981.34765625,684 990.34765625,688.5" fill="none" stroke="#000"/>
+<text x="1121.34765625" y="678" text-anchor="middle" font-size="12">bool dla każdego cid</text>
+<line x1="971.34765625" x2="676.34765625" y1="722" y2="722" stroke="#000" stroke-dasharray="6,4"/><polyline points="685.34765625,717.5 676.34765625,722 685.34765625,726.5" fill="none" stroke="#000"/>
+<text x="823.84765625" y="716" text-anchor="middle" font-size="12">Vec&lt;bool&gt;</text>
+<polyline points="681.34765625,746 709.34765625,746 709.34765625,788 683.84765625,788" fill="none" stroke="#000"/><polygon points="683.84765625,788 692.84765625,783.5 692.84765625,792.5" fill="#000" stroke="#000"/>
+<text x="715.34765625" y="750" font-size="12">ResponsePlan: Have → presence, Block →</text>
+<text x="715.34765625" y="764" font-size="12">PlannedBlock, brak → DontHave (jeśli</text>
+<text x="715.34765625" y="778" font-size="12">send_dont_have)</text>
+<polyline points="681.34765625,834 709.34765625,834 709.34765625,848 683.84765625,848" fill="none" stroke="#000"/><polygon points="683.84765625,848 692.84765625,843.5 692.84765625,852.5" fill="#000" stroke="#000"/>
+<text x="715.34765625" y="838" font-size="12">return Ok(())</text>
+<line x1="676.34765625" x2="391.34765625" y1="910" y2="910" stroke="#000"/><polygon points="391.34765625,910 400.34765625,905.5 400.34765625,914.5" fill="#000" stroke="#000"/>
+<text x="533.84765625" y="904" text-anchor="middle" font-size="12">open_stream(peer, &quot;/ipfs/bitswap/1.2.0&quot;)</text>
+<line x1="391.34765625" x2="676.34765625" y1="948" y2="948" stroke="#000" stroke-dasharray="6,4"/><polyline points="667.34765625,943.5 676.34765625,948 667.34765625,952.5" fill="none" stroke="#000"/>
+<text x="533.84765625" y="942" text-anchor="middle" font-size="12">Stream</text>
+<line x1="676.34765625" x2="971.34765625" y1="1010" y2="1010" stroke="#000"/><polygon points="971.34765625,1010 962.34765625,1005.5 962.34765625,1014.5" fill="#000" stroke="#000"/>
+<text x="823.84765625" y="1004" text-anchor="middle" font-size="12">with_reader(|read| build_message(plan, read))</text>
+<line x1="981.34765625" x2="1261.34765625" y1="1062" y2="1062" stroke="#000"/><polygon points="1261.34765625,1062 1252.34765625,1057.5 1252.34765625,1066.5" fill="#000" stroke="#000"/>
+<text x="1121.34765625" y="1042" text-anchor="middle" font-size="12">open_in(directory); read_provided(cid) –</text>
+<text x="1121.34765625" y="1056" text-anchor="middle" font-size="12">has_provide + get_block</text>
+<line x1="1261.34765625" x2="981.34765625" y1="1100" y2="1100" stroke="#000" stroke-dasharray="6,4"/><polyline points="990.34765625,1095.5 981.34765625,1100 990.34765625,1104.5" fill="none" stroke="#000"/>
+<text x="1121.34765625" y="1094" text-anchor="middle" font-size="12">Option&lt;Vec&lt;u8&gt;&gt;</text>
+<line x1="971.34765625" x2="676.34765625" y1="1152" y2="1152" stroke="#000" stroke-dasharray="6,4"/><polyline points="685.34765625,1147.5 676.34765625,1152 685.34765625,1156.5" fill="none" stroke="#000"/>
+<text x="823.84765625" y="1132" text-anchor="middle" font-size="12">Option&lt;BitswapMessage&gt; (limity:</text>
+<text x="823.84765625" y="1146" text-anchor="middle" font-size="12">max_message_bytes, max_response_bytes)</text>
+<line x1="676.34765625" x2="101.34765625" y1="1190" y2="1190" stroke="#000"/><polygon points="101.34765625,1190 110.34765625,1185.5 110.34765625,1194.5" fill="#000" stroke="#000"/>
+<text x="388.84765625" y="1184" text-anchor="middle" font-size="12">write_message(stream, message, max_message_bytes) – timeout STREAM_WRITE_TIMEOUT_SECS</text>
+<polyline points="681.34765625,1214 709.34765625,1214 709.34765625,1242 683.84765625,1242" fill="none" stroke="#000"/><polygon points="683.84765625,1242 692.84765625,1237.5 692.84765625,1246.5" fill="#000" stroke="#000"/>
+<text x="715.34765625" y="1218" font-size="12">log_sent: BITSWAP_PRESENCE_SENT /</text>
+<text x="715.34765625" y="1232" font-size="12">BITSWAP_BLOCK_SENT</text>
+<line x1="676.34765625" x2="101.34765625" y1="1298" y2="1298" stroke="#000"/><polygon points="101.34765625,1298 110.34765625,1293.5 110.34765625,1302.5" fill="#000" stroke="#000"/>
+<text x="388.84765625" y="1292" text-anchor="middle" font-size="12">stream.close()</text>
+<polygon points="38.34765625,968 75.5615234375,968 75.5615234375,977 68.5615234375,984 38.34765625,984" fill="#fff" stroke="#000"/><text x="44.34765625" y="980" font-size="11" font-weight="bold">loop</text>
+<rect x="80.5615234375" y="969" width="273.8017578125" height="14" fill="#fff"/><text x="83.5615234375" y="981" font-size="11.5">[next_message(&amp;mut plan) zwraca Some(message)]</text>
+<polygon points="30.34765625,806 57.1845703125,806 57.1845703125,815 50.1845703125,822 30.34765625,822" fill="#fff" stroke="#000"/><text x="36.34765625" y="818" font-size="11" font-weight="bold">alt</text>
+<rect x="62.1845703125" y="807" width="91.00341796875" height="14" fill="#fff"/><text x="65.1845703125" y="819" font-size="11.5">[plan.is_empty()]</text>
+<rect x="35.34765625" y="874" width="88.46533203125" height="14" fill="#fff"/><text x="38.34765625" y="885" font-size="11.5">[jest odpowiedź]</text>
+<polygon points="22.34765625,358 59.5615234375,358 59.5615234375,367 52.5615234375,374 22.34765625,374" fill="#fff" stroke="#000"/><text x="28.34765625" y="370" font-size="11" font-weight="bold">loop</text>
+<rect x="64.5615234375" y="359" width="335.49072265625" height="14" fill="#fff"/><text x="67.5615234375" y="371" font-size="11.5">[read_message(stream, max_message_bytes) = Some(request)]</text>
+<polygon points="14.34765625,230 51.5615234375,230 51.5615234375,239 44.5615234375,246 14.34765625,246" fill="#fff" stroke="#000"/><text x="20.34765625" y="242" font-size="11" font-weight="bold">loop</text>
+<rect x="56.5615234375" y="231" width="186.8779296875" height="14" fill="#fff"/><text x="59.5615234375" y="243" font-size="11.5">[incoming.next() – kolejny strumień]</text>
+</svg>

@@ -18,8 +18,8 @@ pub fn new_behaviour() -> BitswapBehaviour {
 }
 
 impl<S: BlockSource> BitswapServer<S> {
-    /// Rejestruje protokół i uruchamia obsługę strumieni w tle (wymaga runtime tokio).
-    /// Protokół ma jeden odbiornik strumieni, więc odpowiedzi dla `client` też przechodzą tędy.
+    /// Registers the protocol and handles streams in the background (needs a tokio runtime).
+    /// The protocol has one stream receiver, so answers for `client` pass here too.
     pub fn start(
         self,
         behaviour: &BitswapBehaviour,
@@ -40,7 +40,7 @@ impl<S: BlockSource> BitswapServer<S> {
         Ok(())
     }
 
-    /// Jeden strumień przychodzący może nieść wiele wiadomości z wantlistą.
+    /// One incoming stream can carry many wantlist messages.
     async fn serve_stream(
         self: Arc<Self>,
         mut control: Control,
@@ -65,14 +65,17 @@ impl<S: BlockSource> BitswapServer<S> {
         }
     }
 
-    /// Odpowiedź idzie nowym strumieniem otwartym przez ten węzeł, jak wymaga specyfikacja.
+    /// The answer goes on a new stream opened by this node, as the specification requires.
     async fn answer(
         self: Arc<Self>,
         control: &mut Control,
         peer: PeerId,
         request: BitswapMessage,
     ) -> Result<(), BitswapError> {
-        let entries = request.wantlist.as_ref().map_or(0, |w| w.entries.len());
+        let entries = request
+            .wantlist
+            .as_ref()
+            .map_or(0, |wantlist| wantlist.entries.len());
         if entries == 0 {
             return Ok(());
         }
@@ -119,7 +122,7 @@ impl<S: BlockSource> BitswapServer<S> {
     }
 }
 
-/// Dostęp do LevelDB jest blokujący, więc nie może działać w wątku pętli sieciowej.
+/// LevelDB access blocks, so it cannot run on the network loop thread.
 pub(crate) async fn blocking<T: Send + 'static>(
     task: impl FnOnce() -> Result<T, BitswapError> + Send + 'static,
 ) -> Result<T, BitswapError> {

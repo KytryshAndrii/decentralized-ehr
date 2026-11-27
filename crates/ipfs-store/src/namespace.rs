@@ -26,7 +26,7 @@ impl Namespace {
         prefix.as_bytes()
     }
 
-    /// Buduje pełny klucz bazy: prefiks + identyfikator wpisu.
+    /// Full database key: prefix + entry id.
     pub fn key(&self, id: &[u8]) -> Vec<u8> {
         let prefix = self.prefix();
         let mut key = Vec::with_capacity(prefix.len() + id.len());
@@ -35,7 +35,6 @@ impl Namespace {
         key
     }
 
-    /// Sprawdza, czy pełny klucz bazy należy do tej przestrzeni nazw.
     pub fn owns(&self, key: &[u8]) -> bool {
         key.starts_with(self.prefix())
     }

@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1519" height="1476" viewBox="0 0 1519 1476" font-family="Arial, Helvetica, sans-serif">
+<rect width="1519" height="1476" fill="#fff"/>
+<text x="759.5" y="26" text-anchor="middle" font-size="15" font-weight="bold">ehr-core – diagram sekwencji: EhrNode::sync_inbox (pacjent odbiera nowe dokumenty)</text>
+<rect x="333.6787109375" y="844" width="1020.328125" height="220" fill="none" stroke="#000"/>
+<line x1="333.6787109375" x2="1354.0068359375" y1="1000" y2="1000" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="325.6787109375" y="748" width="1173.677734375" height="622" fill="none" stroke="#000"/>
+<rect x="317.6787109375" y="268" width="1189.677734375" height="1122" fill="none" stroke="#000"/>
+<line x1="93.6787109375" x2="93.6787109375" y1="118" y2="1446" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="383.6787109375" x2="383.6787109375" y1="90" y2="1446" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="683.6787109375" x2="683.6787109375" y1="90" y2="1446" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="825.341796875" x2="825.341796875" y1="90" y2="1446" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1125.341796875" x2="1125.341796875" y1="90" y2="1446" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1304.0068359375" x2="1304.0068359375" y1="90" y2="1446" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1457.3564453125" x2="1457.3564453125" y1="90" y2="1446" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="678.7" y="210.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="678.7" y="310.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="368.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="825.3" y="456.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="825.3" y="492.0" width="10" height="46.0" fill="#fff" stroke="#000"/>
+<rect x="1120.3" y="588.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="820.3" y="436.0" width="10" height="242.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="698.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="772.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="808.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="1299.0" y="884.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="922.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="944.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="1020.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="1076.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="1112.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="1162.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="1452.4" y="1230.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="383.7" y="1326.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="378.7" y="172.0" width="10" height="1248.0" fill="#fff" stroke="#000"/>
+<rect x="678.7" y="1306.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<circle cx="93.6787109375" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="93.6787109375" x2="93.6787109375" y1="70" y2="86" stroke="#000"/><line x1="82.6787109375" x2="104.6787109375" y1="76" y2="76" stroke="#000"/><line x1="93.6787109375" x2="84.6787109375" y1="86" y2="98" stroke="#000"/><line x1="93.6787109375" x2="102.6787109375" y1="86" y2="98" stroke="#000"/><text x="93.6787109375" y="112" text-anchor="middle" font-size="12" font-weight="bold">Pacjent (UI / timer)</text>
+<rect x="322.677734375" y="56" width="122.001953125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="383.6787109375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">patient : EhrNode</text>
+<rect x="626.0146484375" y="56" width="115.328125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="683.6787109375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">patient : EhrApp</text>
+<rect x="765.3427734375" y="56" width="119.998046875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="825.341796875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">doctor : EhrNode</text>
+<rect x="1068.6796875" y="56" width="113.32421875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1125.341796875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">doctor : EhrApp</text>
+<rect x="1206.00390625" y="56" width="196.005859375" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1304.0068359375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">node : NetworkNode (Bitswap)</text>
+<rect x="1426.009765625" y="56" width="62.693359375" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1457.3564453125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">Verifier</text>
+<line x1="93.6787109375" x2="378.6787109375" y1="172" y2="172" stroke="#000"/><polygon points="378.6787109375,172 369.6787109375,167.5 369.6787109375,176.5" fill="#000" stroke="#000"/>
+<text x="236.1787109375" y="152" text-anchor="middle" font-size="12">sync_inbox() – także co INBOX_POLL_SECS</text>
+<text x="236.1787109375" y="166" text-anchor="middle" font-size="12">(30 s)</text>
+<line x1="388.6787109375" x2="678.6787109375" y1="210" y2="210" stroke="#000"/><polygon points="678.6787109375,210 669.6787109375,205.5 669.6787109375,214.5" fill="#000" stroke="#000"/>
+<text x="533.6787109375" y="204" text-anchor="middle" font-size="12">contacts(Doctor)</text>
+<line x1="678.6787109375" x2="388.6787109375" y1="248" y2="248" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.6787109375,243.5 388.6787109375,248 397.6787109375,252.5" fill="none" stroke="#000"/>
+<text x="533.6787109375" y="242" text-anchor="middle" font-size="12">Vec&lt;Contact&gt;</text>
+<line x1="388.6787109375" x2="678.6787109375" y1="310" y2="310" stroke="#000"/><polygon points="678.6787109375,310 669.6787109375,305.5 669.6787109375,314.5" fill="#000" stroke="#000"/>
+<text x="533.6787109375" y="304" text-anchor="middle" font-size="12">last_seq(patient_did, doctor.did)</text>
+<line x1="678.6787109375" x2="388.6787109375" y1="348" y2="348" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.6787109375,343.5 388.6787109375,348 397.6787109375,352.5" fill="none" stroke="#000"/>
+<text x="533.6787109375" y="342" text-anchor="middle" font-size="12">since: u64</text>
+<polyline points="393.6787109375,372 421.6787109375,372 421.6787109375,400 396.1787109375,400" fill="none" stroke="#000"/><polygon points="396.1787109375,400 405.1787109375,395.5 405.1787109375,404.5" fill="#000" stroke="#000"/>
+<text x="427.6787109375" y="376" font-size="12">InboxRequest { patient, since_seq, nonce =</text>
+<text x="427.6787109375" y="390" font-size="12">random_id(), created_utc }</text>
+<line x1="388.6787109375" x2="820.341796875" y1="436" y2="436" stroke="#000"/><polygon points="820.341796875,436 811.341796875,431.5 811.341796875,440.5" fill="#000" stroke="#000"/>
+<text x="604.51025390625" y="430" text-anchor="middle" font-size="12">open(peer, INBOX_PROTOCOL); write_frame(Signed::sign(keypair, request))</text>
+<polyline points="835.341796875,460 863.341796875,460 863.341796875,474 837.841796875,474" fill="none" stroke="#000"/><polygon points="837.841796875,474 846.841796875,469.5 846.841796875,478.5" fill="#000" stroke="#000"/>
+<text x="869.341796875" y="464" font-size="12">answer_inbox: Signed.open::&lt;InboxRequest&gt;()</text>
+<polyline points="835.341796875,496 863.341796875,496 863.341796875,538 837.841796875,538" fill="none" stroke="#000"/><polygon points="837.841796875,538 846.841796875,533.5 846.841796875,542.5" fill="#000" stroke="#000"/>
+<text x="869.341796875" y="500" font-size="12">signer = request.patient &amp;&amp;</text>
+<text x="869.341796875" y="514" font-size="12">peer_id_from_did(patient) = peer; |now −</text>
+<text x="869.341796875" y="528" font-size="12">created_utc| ≤ REQUEST_MAX_AGE_SECS</text>
+<line x1="830.341796875" x2="1120.341796875" y1="588" y2="588" stroke="#000"/><polygon points="1120.341796875,588 1111.341796875,583.5 1111.341796875,592.5" fill="#000" stroke="#000"/>
+<text x="975.341796875" y="568" text-anchor="middle" font-size="12">contact(Patient, patient); entries_since(patient,</text>
+<text x="975.341796875" y="582" text-anchor="middle" font-size="12">issuer, since)</text>
+<line x1="1120.341796875" x2="830.341796875" y1="626" y2="626" stroke="#000" stroke-dasharray="6,4"/><polyline points="839.341796875,621.5 830.341796875,626 839.341796875,630.5" fill="none" stroke="#000"/>
+<text x="975.341796875" y="620" text-anchor="middle" font-size="12">Vec&lt;IndexEntry&gt;</text>
+<line x1="820.341796875" x2="388.6787109375" y1="678" y2="678" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.6787109375,673.5 388.6787109375,678 397.6787109375,682.5" fill="none" stroke="#000"/>
+<text x="604.51025390625" y="658" text-anchor="middle" font-size="12">reply_signed(InboxResponse { patient, request_nonce, entries ≤</text>
+<text x="604.51025390625" y="672" text-anchor="middle" font-size="12">MAX_INBOX_ENTRIES })</text>
+<polyline points="393.6787109375,702 421.6787109375,702 421.6787109375,730 396.1787109375,730" fill="none" stroke="#000"/><polygon points="396.1787109375,730 405.1787109375,725.5 405.1787109375,734.5" fill="#000" stroke="#000"/>
+<text x="427.6787109375" y="706" font-size="12">read_frame().open_from(doctor.did); patient i</text>
+<text x="427.6787109375" y="720" font-size="12">nonce zgodne z żądaniem</text>
+<polyline points="393.6787109375,776 421.6787109375,776 421.6787109375,790 396.1787109375,790" fill="none" stroke="#000"/><polygon points="396.1787109375,790 405.1787109375,785.5 405.1787109375,794.5" fill="#000" stroke="#000"/>
+<text x="427.6787109375" y="780" font-size="12">receive(&amp;item, doctor)</text>
+<polyline points="393.6787109375,812 421.6787109375,812 421.6787109375,826 396.1787109375,826" fill="none" stroke="#000"/><polygon points="396.1787109375,826 405.1787109375,821.5 405.1787109375,830.5" fill="#000" stroke="#000"/>
+<text x="427.6787109375" y="816" font-size="12">read_file(manifest_cid) → fetch(cid)</text>
+<line x1="388.6787109375" x2="1299.0068359375" y1="886" y2="886" stroke="#000"/><polyline points="1290.0068359375,881.5 1299.0068359375,886 1290.0068359375,890.5" fill="none" stroke="#000"/>
+<text x="843.8427734375" y="880" text-anchor="middle" font-size="12">NetworkCommand::FetchWithReply(cid, reply) → DHT + Bitswap (diagram 05b)</text>
+<line x1="1304.0068359375" x2="388.6787109375" y1="924" y2="924" stroke="#000"/><polyline points="397.6787109375,919.5 388.6787109375,924 397.6787109375,928.5" fill="none" stroke="#000"/>
+<text x="846.3427734375" y="918" text-anchor="middle" font-size="12">reply: Ok(())</text>
+<polyline points="393.6787109375,948 421.6787109375,948 421.6787109375,976 396.1787109375,976" fill="none" stroke="#000"/><polygon points="396.1787109375,976 405.1787109375,971.5 405.1787109375,980.5" fill="#000" stroke="#000"/>
+<text x="427.6787109375" y="952" font-size="12">pin(cid) dla cid z dag_cids; provide(cids) jeśli</text>
+<text x="427.6787109375" y="966" font-size="12">dht_server</text>
+<polyline points="393.6787109375,1024 421.6787109375,1024 421.6787109375,1038 396.1787109375,1038" fill="none" stroke="#000"/><polygon points="396.1787109375,1038 405.1787109375,1033.5 405.1787109375,1042.5" fill="#000" stroke="#000"/>
+<text x="427.6787109375" y="1028" font-size="12">dag_cids(&amp;store, &amp;cid).is_ok()</text>
+<polyline points="393.6787109375,1080 421.6787109375,1080 421.6787109375,1094 396.1787109375,1094" fill="none" stroke="#000"/><polygon points="396.1787109375,1094 405.1787109375,1089.5 405.1787109375,1098.5" fill="#000" stroke="#000"/>
+<text x="427.6787109375" y="1084" font-size="12">ipfs_unixfs::cat(&amp;store, &amp;cid) → sealed manifest</text>
+<polyline points="393.6787109375,1116 421.6787109375,1116 421.6787109375,1144 396.1787109375,1144" fill="none" stroke="#000"/><polygon points="396.1787109375,1144 405.1787109375,1139.5 405.1787109375,1148.5" fill="#000" stroke="#000"/>
+<text x="427.6787109375" y="1120" font-size="12">decrypt_and_verify(sealed, identity, doctor_pgp)</text>
+<text x="427.6787109375" y="1134" font-size="12">→ DocumentReference → to_entry(...)</text>
+<polyline points="393.6787109375,1166 421.6787109375,1166 421.6787109375,1194 396.1787109375,1194" fill="none" stroke="#000"/><polygon points="396.1787109375,1194 405.1787109375,1189.5 405.1787109375,1198.5" fill="#000" stroke="#000"/>
+<text x="427.6787109375" y="1170" font-size="12">entry.patient_did = mój did &amp;&amp; entry.issuer_did</text>
+<text x="427.6787109375" y="1184" font-size="12">= doctor.did</text>
+<line x1="388.6787109375" x2="1452.3564453125" y1="1230" y2="1230" stroke="#000"/><polygon points="1452.3564453125,1230 1443.3564453125,1225.5 1443.3564453125,1234.5" fill="#000" stroke="#000"/>
+<text x="920.517578125" y="1224" text-anchor="middle" font-size="12">verify_read(&amp;read_token, mój did, doc_cid) – trusted_issuers = [issuer_did]</text>
+<line x1="1452.3564453125" x2="388.6787109375" y1="1268" y2="1268" stroke="#000" stroke-dasharray="6,4"/><polyline points="397.6787109375,1263.5 388.6787109375,1268 397.6787109375,1272.5" fill="none" stroke="#000"/>
+<text x="920.517578125" y="1262" text-anchor="middle" font-size="12">Token → valid_until_utc = token.exp</text>
+<line x1="388.6787109375" x2="678.6787109375" y1="1306" y2="1306" stroke="#000"/><polygon points="678.6787109375,1306 669.6787109375,1301.5 669.6787109375,1310.5" fill="#000" stroke="#000"/>
+<text x="533.6787109375" y="1300" text-anchor="middle" font-size="12">save_entry(&amp;entry) (index.leveldb)</text>
+<polyline points="393.6787109375,1330 421.6787109375,1330 421.6787109375,1344 396.1787109375,1344" fill="none" stroke="#000"/><polygon points="396.1787109375,1344 405.1787109375,1339.5 405.1787109375,1348.5" fill="#000" stroke="#000"/>
+<text x="427.6787109375" y="1334" font-size="12">println!(&quot;[INBOX] NEW ... verified&quot;)</text>
+<line x1="378.6787109375" x2="93.6787109375" y1="1420" y2="1420" stroke="#000" stroke-dasharray="6,4"/><polyline points="102.6787109375,1415.5 93.6787109375,1420 102.6787109375,1424.5" fill="none" stroke="#000"/>
+<text x="236.1787109375" y="1414" text-anchor="middle" font-size="12">Result&lt;Vec&lt;IndexEntry&gt;, EhrError&gt;</text>
+<polygon points="333.6787109375,844 360.515625,844 360.515625,853 353.515625,860 333.6787109375,860" fill="#fff" stroke="#000"/><text x="339.6787109375" y="856" font-size="11" font-weight="bold">alt</text>
+<rect x="365.515625" y="845" width="172.1884765625" height="14" fill="#fff"/><text x="368.515625" y="857" font-size="11.5">[DAG manifestu nie jest lokalnie]</text>
+<rect x="338.6787109375" y="1002" width="79.50341796875" height="14" fill="#fff"/><text x="341.6787109375" y="1013" font-size="11.5">[DAG lokalnie]</text>
+<polygon points="325.6787109375,748 362.892578125,748 362.892578125,757 355.892578125,764 325.6787109375,764" fill="#fff" stroke="#000"/><text x="331.6787109375" y="760" font-size="11" font-weight="bold">loop</text>
+<rect x="367.892578125" y="749" width="221.731689453125" height="14" fill="#fff"/><text x="370.892578125" y="761" font-size="11.5">[dla każdego item z seq &gt; since (rosnąco)]</text>
+<polygon points="317.6787109375,268 354.892578125,268 354.892578125,277 347.892578125,284 317.6787109375,284" fill="#fff" stroke="#000"/><text x="323.6787109375" y="280" font-size="11" font-weight="bold">loop</text>
+<rect x="359.892578125" y="269" width="213.72998046875" height="14" fill="#fff"/><text x="362.892578125" y="281" font-size="11.5">[dla każdego lekarza: sync_from(doctor)]</text>
+</svg>

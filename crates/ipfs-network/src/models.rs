@@ -2,7 +2,7 @@ use crate::behaviour::NetworkBehaviour;
 use crate::dht::DhtMode;
 use ipfs_cid::models::Cid;
 use ipfs_store::KnownPeer;
-use libp2p::{Multiaddr, PeerId, Swarm, kad};
+use libp2p::{Multiaddr, PeerId, Swarm, identity::Keypair, kad};
 use std::collections::{HashMap, HashSet};
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
@@ -26,8 +26,8 @@ pub struct NetworkNode {
     pub(crate) next_reprovide: Instant,
     pub(crate) reprovided_after_bootstrap: bool,
     pub(crate) bitswap_client: Option<ipfs_bitswap::BitswapClient>,
-    /// Zapytania DHT o dostawców, po których blok ma zostać pobrany przez Bitswap.
-    pub(crate) pending_fetches: HashMap<kad::QueryId, Cid>,
+    /// DHT provider queries after which the block is fetched over Bitswap.
+    pub(crate) pending_fetches: HashMap<kad::QueryId, (Cid, Option<FetchReply>)>,
 }
 
 /// Peers from this list are direct addresses, not DHT-discovered peers.
@@ -49,16 +49,34 @@ pub struct NetworkConfig {
     pub dht_mode: DhtMode,
     pub state_directory: Option<PathBuf>,
     pub reprovide_interval: Duration,
+    /// Ready node key (e.g. unlocked with the password by the EHR layer).
+    /// `None`: the key from `identity_path`.
+    pub keypair: Option<Keypair>,
 }
+
+/// Result of fetching a whole file requested with `NetworkCommand::FetchWithReply`.
+pub type FetchReply = tokio::sync::oneshot::Sender<Result<(), String>>;
+
+/// Handle for opening and accepting libp2p streams on the node Swarm
+/// (the same `libp2p-stream` Bitswap uses; other protocols get their own names).
+pub type StreamControl = ipfs_bitswap::BitswapControl;
 
 #[derive(Debug)]
 pub enum NetworkCommand {
     StartProviding(Cid),
     GetProviders(Cid),
     StopProviding(Cid),
-    /// Znajdź dostawców w DHT, pobierz blok przez Bitswap i zapisz go w Blockstore.
+    /// Find providers in the DHT, fetch the block over Bitswap and store it in the Blockstore.
     Fetch(Cid),
+    /// Like `Fetch`, but the result (whole file local, or an error) comes back on a channel.
+    FetchWithReply(Cid, FetchReply),
+    /// Adds a known peer address to the connections the node keeps (like bootstrap).
+    AddPeer(BootstrapPeer),
     Bootstrap,
     ListPeers,
+    /// Peers in the DHT routing table, i.e. DHT servers.
+    DhtServers(tokio::sync::oneshot::Sender<Vec<PeerId>>),
+    /// Switches Kademlia between client and server mode without a restart.
+    SetDhtMode(DhtMode),
     Quit,
 }

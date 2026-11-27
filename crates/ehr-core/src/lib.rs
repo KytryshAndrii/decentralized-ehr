@@ -1,14 +1,23 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+//! EHR layer (M9): patient, document, manifest and a local CID index with file names.
+//! Files are exchanged as HL7 FHIR R5 (`DocumentReference`), documents are encrypted and
+//! signed with OpenPGP, permissions are UCAN (`ehr-security`). Shared by the CLI and the UI.
+pub mod app;
+pub mod consts;
+mod doctor;
+pub mod error;
+pub mod fhir;
+pub mod models;
+pub mod node;
+mod open;
+mod patient;
+mod replica;
+pub mod store;
+pub mod utils;
+pub(crate) mod wire;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use error::EhrError;
+pub use models::{
+    Battery, Category, Contact, DocumentReference, EhrApp, EhrNode, IndexEntry, NewDocument,
+    Person, Profile, Role,
+};
+pub use store::ContactKind;

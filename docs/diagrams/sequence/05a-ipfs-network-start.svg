@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1312" height="1386" viewBox="0 0 1312 1386" font-family="Arial, Helvetica, sans-serif">
+<rect width="1312" height="1386" fill="#fff"/>
+<text x="656" y="26" text-anchor="middle" font-size="15" font-weight="bold">ipfs-network – diagram sekwencji: NetworkNode::new_network_node i run_with_commands</text>
+<rect x="279.3037109375" y="228" width="368" height="170" fill="none" stroke="#000"/>
+<line x1="279.3037109375" x2="647.3037109375" y1="334" y2="334" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="279.3037109375" y="500" width="539.373046875" height="106" fill="none" stroke="#000"/>
+<rect x="271.3037109375" y="1064" width="325.78515625" height="254" fill="none" stroke="#000"/>
+<line x1="271.3037109375" x2="597.0888671875" y1="1130" y2="1130" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="271.3037109375" x2="597.0888671875" y1="1192" y2="1192" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="271.3037109375" x2="597.0888671875" y1="1254" y2="1254" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="263.3037109375" y="1040" width="341.78515625" height="298" fill="none" stroke="#000"/>
+<line x1="75.2333984375" x2="75.2333984375" y1="118" y2="1356" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="313.3037109375" x2="313.3037109375" y1="90" y2="1356" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="613.3037109375" x2="613.3037109375" y1="90" y2="1356" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="784.6767578125" x2="784.6767578125" y1="90" y2="1356" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1014.7431640625" x2="1014.7431640625" y1="90" y2="1356" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="1205.806640625" x2="1205.806640625" y1="90" y2="1356" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="313.3" y="178.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="608.3" y="270.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="354.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="779.7" y="442.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="562.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="308.3" y="158.0" width="10" height="478.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="694.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="768.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="804.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="1009.7" y="858.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="916.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="966.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="1088.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="1150.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="1212.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="313.3" y="1274.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="308.3" y="674.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="779.7" y="542.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="779.7" y="748.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<rect x="1200.8" y="1020.0" width="10" height="14.0" fill="#fff" stroke="#000"/>
+<circle cx="75.2333984375" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="75.2333984375" x2="75.2333984375" y1="70" y2="86" stroke="#000"/><line x1="64.2333984375" x2="86.2333984375" y1="76" y2="76" stroke="#000"/><line x1="75.2333984375" x2="66.2333984375" y1="86" y2="98" stroke="#000"/><line x1="75.2333984375" x2="84.2333984375" y1="86" y2="98" stroke="#000"/><text x="75.2333984375" y="112" text-anchor="middle" font-size="12" font-weight="bold">Wywołujący</text>
+<rect x="243.9677734375" y="56" width="138.671875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="313.3037109375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">node : NetworkNode</text>
+<rect x="580.9697265625" y="56" width="64.66796875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="613.3037109375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">identity</text>
+<rect x="669.6376953125" y="56" width="230.078125" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="784.6767578125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">swarm : Swarm&lt;NetworkBehaviour&gt;</text>
+<rect x="923.7158203125" y="56" width="182.0546875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1014.7431640625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">store : PersistentBlockstore</text>
+<rect x="1129.7705078125" y="56" width="152.072265625" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="1205.806640625" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">server : BitswapServer</text>
+<line x1="75.2333984375" x2="308.3037109375" y1="158" y2="158" stroke="#000"/><polygon points="308.3037109375,158 299.3037109375,153.5 299.3037109375,162.5" fill="#000" stroke="#000"/>
+<text x="191.7685546875" y="152" text-anchor="middle" font-size="12">new_network_node(config)</text>
+<polyline points="323.3037109375,182 351.3037109375,182 351.3037109375,210 325.8037109375,210" fill="none" stroke="#000"/><polygon points="325.8037109375,210 334.8037109375,205.5 334.8037109375,214.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="186" font-size="12">walidacja retry_initial, maintenance_tick,</text>
+<text x="357.3037109375" y="200" font-size="12">retry_max</text>
+<line x1="318.3037109375" x2="608.3037109375" y1="270" y2="270" stroke="#000"/><polygon points="608.3037109375,270 599.3037109375,265.5 599.3037109375,274.5" fill="#000" stroke="#000"/>
+<text x="463.3037109375" y="264" text-anchor="middle" font-size="12">load_or_create(&amp;config.identity_path)</text>
+<line x1="608.3037109375" x2="318.3037109375" y1="308" y2="308" stroke="#000" stroke-dasharray="6,4"/><polyline points="327.3037109375,303.5 318.3037109375,308 327.3037109375,312.5" fill="none" stroke="#000"/>
+<text x="463.3037109375" y="302" text-anchor="middle" font-size="12">Result&lt;Keypair, NetworkError&gt;</text>
+<polyline points="323.3037109375,358 351.3037109375,358 351.3037109375,372 325.8037109375,372" fill="none" stroke="#000"/><polygon points="325.8037109375,372 334.8037109375,367.5 334.8037109375,376.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="362" font-size="12">keypair = config.keypair.clone()</text>
+<line x1="318.3037109375" x2="779.6767578125" y1="442" y2="442" stroke="#000"/><polygon points="779.6767578125,442 770.6767578125,437.5 770.6767578125,446.5" fill="#000" stroke="#000"/>
+<text x="548.990234375" y="422" text-anchor="middle" font-size="12">SwarmBuilder::with_existing_identity(keypair).with_tokio().with_tcp(tcp, noise,</text>
+<text x="548.990234375" y="436" text-anchor="middle" font-size="12">yamux).with_behaviour(identify, ping, kad, bitswap).build()</text>
+<line x1="779.6767578125" x2="318.3037109375" y1="480" y2="480" stroke="#000" stroke-dasharray="6,4"/><polyline points="327.3037109375,475.5 318.3037109375,480 327.3037109375,484.5" fill="none" stroke="#000"/>
+<text x="548.990234375" y="474" text-anchor="middle" font-size="12">Swarm&lt;NetworkBehaviour&gt;</text>
+<line x1="318.3037109375" x2="779.6767578125" y1="542" y2="542" stroke="#000"/><polygon points="779.6767578125,542 770.6767578125,537.5 770.6767578125,546.5" fill="#000" stroke="#000"/>
+<text x="548.990234375" y="536" text-anchor="middle" font-size="12">kad.add_address(peer_id, address)</text>
+<polyline points="323.3037109375,566 351.3037109375,566 351.3037109375,580 325.8037109375,580" fill="none" stroke="#000"/><polygon points="325.8037109375,580 334.8037109375,575.5 334.8037109375,584.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="570" font-size="12">retries.insert(peer_id, RetryState)</text>
+<line x1="308.3037109375" x2="75.2333984375" y1="636" y2="636" stroke="#000" stroke-dasharray="6,4"/><polyline points="84.2333984375,631.5 75.2333984375,636 84.2333984375,640.5" fill="none" stroke="#000"/>
+<text x="191.7685546875" y="630" text-anchor="middle" font-size="12">Result&lt;NetworkNode, NetworkError&gt;</text>
+<line x1="75.2333984375" x2="308.3037109375" y1="674" y2="674" stroke="#000"/><polygon points="308.3037109375,674 299.3037109375,669.5 299.3037109375,678.5" fill="#000" stroke="#000"/>
+<text x="191.7685546875" y="668" text-anchor="middle" font-size="12">run_with_commands(commands)</text>
+<polyline points="323.3037109375,698 351.3037109375,698 351.3037109375,712 325.8037109375,712" fill="none" stroke="#000"/><polygon points="325.8037109375,712 334.8037109375,707.5 334.8037109375,716.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="702" font-size="12">run_inner: listen()</text>
+<line x1="318.3037109375" x2="779.6767578125" y1="748" y2="748" stroke="#000"/><polygon points="779.6767578125,748 770.6767578125,743.5 770.6767578125,752.5" fill="#000" stroke="#000"/>
+<text x="548.990234375" y="742" text-anchor="middle" font-size="12">listen_on(config.listen)</text>
+<polyline points="323.3037109375,772 351.3037109375,772 351.3037109375,786 325.8037109375,786" fill="none" stroke="#000"/><polygon points="325.8037109375,786 334.8037109375,781.5 334.8037109375,790.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="776" font-size="12">println!(&quot;LOCAL_PEER_ID ...&quot;)</text>
+<polyline points="323.3037109375,808 351.3037109375,808 351.3037109375,822 325.8037109375,822" fill="none" stroke="#000"/><polygon points="325.8037109375,822 334.8037109375,817.5 334.8037109375,826.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="812" font-size="12">restore_state()</text>
+<line x1="318.3037109375" x2="1009.7431640625" y1="858" y2="858" stroke="#000"/><polygon points="1009.7431640625,858 1000.7431640625,853.5 1000.7431640625,862.5" fill="#000" stroke="#000"/>
+<text x="664.0234375" y="852" text-anchor="middle" font-size="12">open_in(state_directory); prune_peers(), list_provides(), prune_remote_providers()</text>
+<line x1="1009.7431640625" x2="318.3037109375" y1="896" y2="896" stroke="#000" stroke-dasharray="6,4"/><polyline points="327.3037109375,891.5 318.3037109375,896 327.3037109375,900.5" fill="none" stroke="#000"/>
+<text x="664.0234375" y="890" text-anchor="middle" font-size="12">znane peery, CID-y, rekordy dostawców</text>
+<polyline points="323.3037109375,920 351.3037109375,920 351.3037109375,948 325.8037109375,948" fill="none" stroke="#000"/><polygon points="325.8037109375,948 334.8037109375,943.5 334.8037109375,952.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="924" font-size="12">restore_peer(), restore_remote_provider(),</text>
+<text x="357.3037109375" y="938" font-size="12">reprovide()</text>
+<polyline points="323.3037109375,970 351.3037109375,970 351.3037109375,984 325.8037109375,984" fill="none" stroke="#000"/><polygon points="325.8037109375,984 334.8037109375,979.5 334.8037109375,988.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="974" font-size="12">start_bitswap()</text>
+<line x1="318.3037109375" x2="1200.806640625" y1="1020" y2="1020" stroke="#000"/><polygon points="1200.806640625,1020 1191.806640625,1015.5 1191.806640625,1024.5" fill="#000" stroke="#000"/>
+<text x="759.55517578125" y="1014" text-anchor="middle" font-size="12">BitswapServer::new(ProvidedBlockSource::new(dir)).start(behaviour, &amp;client)</text>
+<polyline points="323.3037109375,1092 351.3037109375,1092 351.3037109375,1106 325.8037109375,1106" fill="none" stroke="#000"/><polygon points="325.8037109375,1106 334.8037109375,1101.5 334.8037109375,1110.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="1096" font-size="12">attempt_connections(); reprovide_if_due()</text>
+<polyline points="323.3037109375,1154 351.3037109375,1154 351.3037109375,1168 325.8037109375,1168" fill="none" stroke="#000"/><polygon points="325.8037109375,1168 334.8037109375,1163.5 334.8037109375,1172.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="1158" font-size="12">on_swarm_event(event)</text>
+<polyline points="323.3037109375,1216 351.3037109375,1216 351.3037109375,1230 325.8037109375,1230" fill="none" stroke="#000"/><polygon points="325.8037109375,1230 334.8037109375,1225.5 334.8037109375,1234.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="1220" font-size="12">on_command(command)</text>
+<polyline points="323.3037109375,1278 351.3037109375,1278 351.3037109375,1292 325.8037109375,1292" fill="none" stroke="#000"/><polygon points="325.8037109375,1292 334.8037109375,1287.5 334.8037109375,1296.5" fill="#000" stroke="#000"/>
+<text x="357.3037109375" y="1282" font-size="12">println!(&quot;Shutdown requested&quot;) → return</text>
+<polygon points="279.3037109375,228 306.140625,228 306.140625,237 299.140625,244 279.3037109375,244" fill="#fff" stroke="#000"/><text x="285.3037109375" y="240" font-size="11" font-weight="bold">alt</text>
+<rect x="311.140625" y="229" width="123.9423828125" height="14" fill="#fff"/><text x="314.140625" y="241" font-size="11.5">[config.keypair = None]</text>
+<rect x="284.3037109375" y="336" width="152.3779296875" height="14" fill="#fff"/><text x="287.3037109375" y="347" font-size="11.5">[klucz podany w konfiguracji]</text>
+<polygon points="279.3037109375,500 316.517578125,500 316.517578125,509 309.517578125,516 279.3037109375,516" fill="#fff" stroke="#000"/><text x="285.3037109375" y="512" font-size="11" font-weight="bold">loop</text>
+<rect x="321.517578125" y="501" width="257.14697265625" height="14" fill="#fff"/><text x="324.517578125" y="513" font-size="11.5">[dla każdego peera z config.bootstrap (≠ lokalny)]</text>
+<polygon points="271.3037109375,1064 298.140625,1064 298.140625,1073 291.140625,1080 271.3037109375,1080" fill="#fff" stroke="#000"/><text x="277.3037109375" y="1076" font-size="11" font-weight="bold">alt</text>
+<rect x="303.140625" y="1065" width="67.335205078125" height="14" fill="#fff"/><text x="306.140625" y="1077" font-size="11.5">[ticker.tick()]</text>
+<rect x="276.3037109375" y="1132" width="149.794921875" height="14" fill="#fff"/><text x="279.3037109375" y="1143" font-size="11.5">[swarm.select_next_some()]</text>
+<rect x="276.3037109375" y="1194" width="101.2119140625" height="14" fill="#fff"/><text x="279.3037109375" y="1205" font-size="11.5">[commands.recv()]</text>
+<rect x="276.3037109375" y="1256" width="47.524658203125" height="14" fill="#fff"/><text x="279.3037109375" y="1267" font-size="11.5">[ctrl_c()]</text>
+<polygon points="263.3037109375,1040 300.517578125,1040 300.517578125,1049 293.517578125,1056 263.3037109375,1056" fill="#fff" stroke="#000"/><text x="269.3037109375" y="1052" font-size="11" font-weight="bold">loop</text>
+<rect x="305.517578125" y="1041" width="159.0712890625" height="14" fill="#fff"/><text x="308.517578125" y="1053" font-size="11.5">[tokio::select! do Quit / Ctrl+C]</text>
+</svg>

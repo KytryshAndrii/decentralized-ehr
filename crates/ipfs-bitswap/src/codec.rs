@@ -5,7 +5,7 @@ use prost::Message;
 use unsigned_varint::{aio, io::ReadError};
 
 impl BitswapMessage {
-    /// Ramka na strumieniu: długość jako varint, potem protobuf.
+    /// Frame on the stream: length as a varint, then protobuf.
     pub fn to_frame(&self) -> Vec<u8> {
         self.encode_length_delimited_to_vec()
     }

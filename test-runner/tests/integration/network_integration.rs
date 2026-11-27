@@ -12,13 +12,13 @@ static SEQ: AtomicU64 = AtomicU64::new(0);
 struct Workspace(PathBuf);
 impl Workspace {
     fn new() -> Self {
-        let dir = std::env::temp_dir().join(format!(
+        let directory = std::env::temp_dir().join(format!(
             "ehr-network-{}-{}",
             std::process::id(),
             SEQ.fetch_add(1, Ordering::Relaxed)
         ));
-        fs::create_dir_all(&dir).unwrap();
-        Self(dir)
+        fs::create_dir_all(&directory).unwrap();
+        Self(directory)
     }
     fn path(&self) -> &Path {
         &self.0
@@ -40,9 +40,9 @@ fn start_args(bootstrap: Option<String>) -> Vec<String> {
     }
     args
 }
-fn identity(dir: &Path) -> String {
+fn identity(directory: &Path) -> String {
     let output = Command::new(cli())
-        .current_dir(dir)
+        .current_dir(directory)
         .args(["node", "identity"])
         .output()
         .expect("failed to run ehr-cli");
@@ -61,20 +61,20 @@ fn identity(dir: &Path) -> String {
 }
 #[test]
 fn identity_persists_between_processes() {
-    let a = Workspace::new();
-    let b = Workspace::new();
-    assert_eq!(identity(a.path()), identity(a.path()));
-    assert_ne!(identity(a.path()), identity(b.path()));
-    assert!(a.path().join("tmp/node-key.pb").is_file());
-    assert!(b.path().join("tmp/node-key.pb").is_file());
+    let workspace_a = Workspace::new();
+    let workspace_b = Workspace::new();
+    assert_eq!(identity(workspace_a.path()), identity(workspace_a.path()));
+    assert_ne!(identity(workspace_a.path()), identity(workspace_b.path()));
+    assert!(workspace_a.path().join("tmp/node-key.pb").is_file());
+    assert!(workspace_b.path().join("tmp/node-key.pb").is_file());
 }
 #[test]
 fn invalid_cli_arguments_fail() {
-    let w = Workspace::new();
-    // Każdy wariant musi zakończyć się błędem, zanim węzeł wystartuje.
+    let workspace = Workspace::new();
+    // Every variant must fail before the node starts.
     let peer = "/ip4/127.0.0.1/tcp/4101/p2p/12D3KooWNSJcGB7bK5Kg1gWvyckQ2LbgXB5bMdTUv3Gnji6n8FUz";
     for args in [
-        // Adres bez flagi nie jest już obsługiwany: tylko "", --bootstrap, --bootstrap-list.
+        // An address without a flag is no longer supported: only "", --bootstrap, --bootstrap-list.
         vec!["node", "start", peer],
         vec!["node", "start", "--bootstrap"],
         vec!["node", "start", "--bootstrap", "invalid-address"],
@@ -109,7 +109,7 @@ fn invalid_cli_arguments_fail() {
     ] {
         assert!(
             !Command::new(cli())
-                .current_dir(w.path())
+                .current_dir(workspace.path())
                 .args(&args)
                 .stderr(Stdio::null())
                 .status()
@@ -121,7 +121,7 @@ fn invalid_cli_arguments_fail() {
     for args in [vec!["help"], vec!["--help"], vec!["-h"]] {
         assert!(
             Command::new(cli())
-                .current_dir(w.path())
+                .current_dir(workspace.path())
                 .args(args)
                 .stdout(Stdio::null())
                 .status()
@@ -130,18 +130,18 @@ fn invalid_cli_arguments_fail() {
         );
     }
 }
-/// Plik ponad limit bloku jest odrzucany po rozmiarze, bez wczytywania go do pamięci.
+/// A file over the block limit is rejected by size, without reading it into memory.
 #[test]
 fn put_and_cid_reject_oversized_file_before_reading_it() {
-    let w = Workspace::new();
-    let file = w.path().join("scan.dcm");
+    let workspace = Workspace::new();
+    let file = workspace.path().join("scan.dcm");
     fs::File::create(&file)
         .unwrap()
         .set_len(8 * 1024 * 1024 * 1024)
         .unwrap();
     for command in ["put", "cid"] {
         let output = Command::new(cli())
-            .current_dir(w.path())
+            .current_dir(workspace.path())
             .arg(command)
             .arg(&file)
             .output()
@@ -152,15 +152,15 @@ fn put_and_cid_reject_oversized_file_before_reading_it() {
 }
 #[test]
 fn two_rust_nodes_connect_identify_and_ping() {
-    let a = Workspace::new();
-    let b = Workspace::new();
-    let a_id = identity(a.path());
+    let workspace_a = Workspace::new();
+    let workspace_b = Workspace::new();
+    let a_id = identity(workspace_a.path());
     let port_a = free_port();
     let port_b = free_port();
-    let host_a = NodeProcess::start(a.path(), port_a, &start_args(None));
+    let host_a = NodeProcess::start(workspace_a.path(), port_a, &start_args(None));
     host_a.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
     let host_b = NodeProcess::start(
-        b.path(),
+        workspace_b.path(),
         port_b,
         &start_args(Some(format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}"))),
     );
@@ -168,35 +168,35 @@ fn two_rust_nodes_connect_identify_and_ping() {
 }
 #[test]
 fn rust_reconnects_after_peer_restart() {
-    let a = Workspace::new();
-    let b = Workspace::new();
-    let a_id = identity(a.path());
+    let workspace_a = Workspace::new();
+    let workspace_b = Workspace::new();
+    let a_id = identity(workspace_a.path());
     let port_a = free_port();
     let port_b = free_port();
-    let host_a = NodeProcess::start(a.path(), port_a, &start_args(None));
+    let host_a = NodeProcess::start(workspace_a.path(), port_a, &start_args(None));
     host_a.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
     let host_b = NodeProcess::start(
-        b.path(),
+        workspace_b.path(),
         port_b,
         &start_args(Some(format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}"))),
     );
     host_b.until("CONNECTED", 15);
     drop(host_a);
     host_b.until("DISCONNECTED", 15);
-    let host_a_again = NodeProcess::start(a.path(), port_a, &start_args(None));
+    let host_a_again = NodeProcess::start(workspace_a.path(), port_a, &start_args(None));
     host_a_again.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
     host_b.until("CONNECTED", 45);
-    assert_eq!(identity(a.path()), a_id);
+    assert_eq!(identity(workspace_a.path()), a_id);
 }
 
-/// Po restarcie: węzeł bez bootstrapu odnajduje sieć z zapisanych peerów,
-/// sam wznawia providing, a klient z listą bootstrap łączy się z oboma serwerami.
+/// After a restart: a node without bootstrap finds the network from the saved peers,
+/// resumes providing by itself, and a client with a bootstrap list connects to both servers.
 #[test]
 fn known_peers_and_providing_survive_restart() {
-    let a = Workspace::new();
-    let b = Workspace::new();
-    let c = Workspace::new();
-    let (a_id, b_id) = (identity(a.path()), identity(b.path()));
+    let workspace_a = Workspace::new();
+    let workspace_b = Workspace::new();
+    let workspace_c = Workspace::new();
+    let (a_id, b_id) = (identity(workspace_a.path()), identity(workspace_b.path()));
     let (port_a, port_b) = (free_port(), free_port());
     let a_addr = format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}");
     let b_addr = format!("/ip4/127.0.0.1/tcp/{port_b}/p2p/{b_id}");
@@ -206,24 +206,25 @@ fn known_peers_and_providing_survive_restart() {
         args
     };
 
-    let file = b.path().join("record.txt");
+    let file = workspace_b.path().join("record.txt");
     std::fs::write(&file, b"synthetic record for reprovide test").unwrap();
-    let cid = put_file(b.path(), &file);
+    let cid = put_file(workspace_b.path(), &file);
 
     {
-        let host_a = NodeProcess::start(a.path(), port_a, &server(None));
+        let host_a = NodeProcess::start(workspace_a.path(), port_a, &server(None));
         host_a.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
-        let mut host_b = NodeProcess::start(b.path(), port_b, &server(Some(a_addr.clone())));
+        let mut host_b =
+            NodeProcess::start(workspace_b.path(), port_b, &server(Some(a_addr.clone())));
         host_b.until(&format!("KNOWN_PEER_SAVED {a_id}"), 30);
         host_a.until(&format!("KNOWN_PEER_SAVED {b_id}"), 30);
         host_b.send(&format!("provide {cid}"));
         host_b.until("DHT_PROVIDING_STARTED", 30);
     }
 
-    let host_a = NodeProcess::start(a.path(), port_a, &server(None));
+    let host_a = NodeProcess::start(workspace_a.path(), port_a, &server(None));
     host_a.until(&format!("KNOWN_PEER_RESTORED {b_id}"), 10);
-    // B startuje BEZ bootstrapu: zna A wyłącznie z magazynu stanu.
-    let host_b = NodeProcess::start(b.path(), port_b, &server(None));
+    // B starts WITHOUT bootstrap: it knows A only from the state store.
+    let host_b = NodeProcess::start(workspace_b.path(), port_b, &server(None));
     host_b.until_all(
         &[
             &format!("KNOWN_PEER_RESTORED {a_id}"),
@@ -235,7 +236,7 @@ fn known_peers_and_providing_survive_restart() {
     host_b.until("DHT_PROVIDING_STARTED", 30);
 
     let mut host_c = NodeProcess::start(
-        c.path(),
+        workspace_c.path(),
         free_port(),
         &[
             "node".into(),
@@ -256,14 +257,14 @@ fn known_peers_and_providing_survive_restart() {
     host_c.until(&format!("DHT_PROVIDER {b_id}"), 30);
 }
 
-/// Serwer DHT pamięta po restarcie rekord „peer B ma blok X”,
-/// nawet gdy B jest już wyłączony i nie może ogłosić go ponownie.
+/// After a restart a DHT server remembers the record "peer B has block X",
+/// even when B is already off and cannot announce it again.
 #[test]
 fn remote_provider_records_survive_server_restart() {
-    let a = Workspace::new();
-    let b = Workspace::new();
-    let c = Workspace::new();
-    let (a_id, b_id) = (identity(a.path()), identity(b.path()));
+    let workspace_a = Workspace::new();
+    let workspace_b = Workspace::new();
+    let workspace_c = Workspace::new();
+    let (a_id, b_id) = (identity(workspace_a.path()), identity(workspace_b.path()));
     let (port_a, port_b) = (free_port(), free_port());
     let a_addr = format!("/ip4/127.0.0.1/tcp/{port_a}/p2p/{a_id}");
     let server = |bootstrap: Option<String>| {
@@ -272,23 +273,24 @@ fn remote_provider_records_survive_server_restart() {
         args
     };
 
-    let file = b.path().join("record.txt");
+    let file = workspace_b.path().join("record.txt");
     std::fs::write(&file, b"synthetic record for provider persistence test").unwrap();
-    let cid = put_file(b.path(), &file);
+    let cid = put_file(workspace_b.path(), &file);
 
     {
-        let host_a = NodeProcess::start(a.path(), port_a, &server(None));
+        let host_a = NodeProcess::start(workspace_a.path(), port_a, &server(None));
         host_a.until("LISTEN /ip4/127.0.0.1/tcp/", 10);
-        let mut host_b = NodeProcess::start(b.path(), port_b, &server(Some(a_addr.clone())));
+        let mut host_b =
+            NodeProcess::start(workspace_b.path(), port_b, &server(Some(a_addr.clone())));
         host_b.until("DHT_BOOTSTRAP_PROGRESS", 30);
         host_b.send(&format!("provide {cid}"));
         host_a.until(&format!("DHT_PROVIDER_RECORD_SAVED {b_id}"), 30);
     }
 
-    // Startuje tylko A; B pozostaje wyłączony.
-    let host_a = NodeProcess::start(a.path(), port_a, &server(None));
+    // Only A starts; B stays off.
+    let host_a = NodeProcess::start(workspace_a.path(), port_a, &server(None));
     host_a.until("DHT_PROVIDER_RECORDS_RESTORED count=1", 10);
-    let mut host_c = NodeProcess::start(c.path(), free_port(), &start_args(Some(a_addr)));
+    let mut host_c = NodeProcess::start(workspace_c.path(), free_port(), &start_args(Some(a_addr)));
     host_c.until("DHT_BOOTSTRAP_STARTED", 30);
     host_c.send(&format!("find {cid}"));
     host_c.until(&format!("DHT_PROVIDER {b_id}"), 30);

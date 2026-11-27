@@ -29,7 +29,7 @@ wait_for() {
 
 command -v ipfs >/dev/null || { echo 'Kubo ipfs binary is missing' >&2; exit 1; }
 (cd "$ROOT" && cargo build -p ehr-cli)
-BIN="$ROOT/target/debug/ehr-cli"
+BIN="$ROOT/target/debug/ehr-cli-patient"
 mkdir -p "$TMP/kubo" "$TMP/rust"
 export IPFS_PATH="$TMP/kubo"
 
@@ -56,7 +56,7 @@ rust_get() {
   (cd "$TMP/rust" && "$BIN" get "$1" "$2" >/dev/null 2>&1)
 }
 
-# Tekst (Rabin), "wideo" (stałe kawałki), mały plik (jeden blok raw) i plik pusty.
+# Text and "video" (fixed 256 KiB chunks), a small file (one raw block) and an empty file.
 for i in $(seq 1 40000); do
   printf 'Patient %d: observation %d, value %d mmHg\n' $((i % 97)) "$i" $((i * 37 % 200))
 done > "$TMP/record.txt"
@@ -67,10 +67,7 @@ printf 'small EHR note\n' > "$TMP/note.txt"
 echo 'A: Rust and Kubo compute the same CID for the same file and chunker'
 declare -A RUST_CID
 for name in record.txt ekg.mp4 note.txt empty.txt; do
-  case "$name" in
-    *.mp4) chunker='size-262144' ;;
-    *) chunker='rabin-16384-65536-262144' ;;
-  esac
+  chunker='size-262144'
   RUST_CID[$name]="$(rust_add "$TMP/$name")"
   kubo_cid="$("${KUBO_ADD[@]}" -n --chunker="$chunker" "$TMP/$name")"
   test -n "${RUST_CID[$name]}"
@@ -95,7 +92,7 @@ for name in record.txt ekg.mp4; do
   cmp "$TMP/$name" "$TMP/$name.kubo"
 done
 
-# Rust pobiera cały DAG z Kubo i odtwarza plik.
+# Rust fetches the whole DAG from Kubo and rebuilds the file.
 rust_fetches() {
   local label="$1" cid="$2" file="$3"
   ipfs routing provide "$cid"
@@ -105,7 +102,8 @@ rust_fetches() {
   cmp "$file" "$TMP/$label.out"
 }
 
-echo 'C: Rust fetches and rebuilds a Kubo file (balanced, raw leaves, rabin)'
+# Rust no longer builds Rabin DAGs, but reading does not depend on the chunker.
+echo 'C: Rust fetches and rebuilds a Kubo file made with the rabin chunker'
 head -c 1300000 /dev/urandom > "$TMP/kubo-rabin.bin"
 rust_fetches kubo-rabin "$("${KUBO_ADD[@]}" --chunker=rabin "$TMP/kubo-rabin.bin")" "$TMP/kubo-rabin.bin"
 

@@ -3,7 +3,7 @@ use ipfs_cid::models::{Cid, Multihash};
 use std::fs;
 use std::process::Command;
 
-/// Wywołuje lokalnego klienta Kubo i zwraca wygenerowany CID.
+/// Runs the local Kubo client and returns the CID it computed.
 pub fn get_kubo_cid(file_path: &str, codec_str: &str) -> String {
     let output = Command::new("ipfs")
         .env("IPFS_PATH", "~/ipfs-lab/node-a")
@@ -27,7 +27,7 @@ pub fn get_kubo_cid(file_path: &str, codec_str: &str) -> String {
     String::from_utf8_lossy(&output.stdout).trim().to_string()
 }
 
-/// Generuje CID z pliku przy użyciu Twojego modułu w Rust.
+/// Computes the CID of a file with the Rust ipfs-cid crate.
 pub fn get_rust_cid(file_path: &str, codec: u64) -> String {
     let data = fs::read(file_path).unwrap_or_else(|_| panic!("Brak pliku: {}", file_path));
     let hash = Multihash::compute(&data, SHA2_256).unwrap();
@@ -35,7 +35,7 @@ pub fn get_rust_cid(file_path: &str, codec: u64) -> String {
     cid.to_string_base32()
 }
 
-/// Walidator porównujący Rust vs Kubo
+/// Compares the Rust and Kubo CIDs.
 pub fn verify_file_interoperability(file_path: &str, rust_codec: u64, kubo_codec_str: &str) {
     let rust_cid = get_rust_cid(file_path, rust_codec);
     let kubo_cid = get_kubo_cid(file_path, kubo_codec_str);

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="527" height="706" viewBox="0 0 527 706" font-family="Arial, Helvetica, sans-serif">
+<rect width="527" height="706" fill="#fff"/>
+<text x="263.5" y="28" text-anchor="middle" font-size="15" font-weight="bold">ipfs-cid – diagram klas</text>
+<path d="M263.0,258.5 C263.0,327.4 263.0,416.4 263.0,471.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="263.0,258.5 257.0,267.5 263.0,276.5 269.0,267.5" fill="#000" stroke="#000" stroke-width="1"/><text x="273.0" y="459.6" font-size="10.5">1</text>
+<rect x="258.9" y="357.0" width="50.9" height="14" fill="#fff"/><text x="284.4" y="368.0" text-anchor="middle" font-size="10.5">multihash</text>
+<rect x="55.5" y="605.0" width="415" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="55.5" x2="470.5" y1="645.0" y2="645.0" stroke="#000"/>
+<line x1="55.5" x2="470.5" y1="657.0" y2="657.0" stroke="#000"/>
+<text x="263.0" y="621.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="263.0" y="637.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_cid::unit_test_util</text>
+<text x="63.5" y="673.0" font-size="12" text-decoration="underline" xml:space="preserve">+generate_mock_cid_string(path: &amp;str, codec: u64, hash_algo: u64): String</text>
+<rect x="30.0" y="287.0" width="192" height="156" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="30.0" x2="222.0" y1="327.0" y2="327.0" stroke="#000"/>
+<line x1="30.0" x2="222.0" y1="431.0" y2="431.0" stroke="#000"/>
+<text x="126.0" y="303.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="126.0" y="319.0" text-anchor="middle" font-size="12" font-weight="bold">CidError</text>
+<text x="38.0" y="343.0" font-size="12" xml:space="preserve">UnsupportedVersion(u64)</text>
+<text x="38.0" y="359.0" font-size="12" xml:space="preserve">UnsupportedMulticodec(u64)</text>
+<text x="38.0" y="375.0" font-size="12" xml:space="preserve">UnsupportedHashAlgorithm(u64)</text>
+<text x="38.0" y="391.0" font-size="12" xml:space="preserve">VarintDecodeError</text>
+<text x="38.0" y="407.0" font-size="12" xml:space="preserve">TrailingBytes</text>
+<text x="38.0" y="423.0" font-size="12" xml:space="preserve">MultibaseParseError(String)</text>
+<rect x="102.0" y="472.0" width="322" height="104" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="102.0" x2="424.0" y1="496.0" y2="496.0" stroke="#000"/>
+<line x1="102.0" x2="424.0" y1="552.0" y2="552.0" stroke="#000"/>
+<text x="263.0" y="488.0" text-anchor="middle" font-size="12" font-weight="bold">Multihash</text>
+<text x="110.0" y="512.0" font-size="12" xml:space="preserve">+code: u64</text>
+<text x="110.0" y="528.0" font-size="12" xml:space="preserve">+size: u8</text>
+<text x="110.0" y="544.0" font-size="12" xml:space="preserve">+digest: Vec&lt;u8&gt;</text>
+<text x="110.0" y="568.0" font-size="12" text-decoration="underline" xml:space="preserve">+compute(data: &amp;[u8], code: u64): Result&lt;Self, CidError&gt;</text>
+<rect x="24.0" y="58.0" width="478" height="200" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="24.0" x2="502.0" y1="82.0" y2="82.0" stroke="#000"/>
+<line x1="24.0" x2="502.0" y1="138.0" y2="138.0" stroke="#000"/>
+<text x="263.0" y="74.0" text-anchor="middle" font-size="12" font-weight="bold">Cid</text>
+<text x="32.0" y="98.0" font-size="12" xml:space="preserve">+version: u64</text>
+<text x="32.0" y="114.0" font-size="12" xml:space="preserve">+codec: u64</text>
+<text x="32.0" y="130.0" font-size="12" xml:space="preserve">+multihash: Multihash</text>
+<text x="32.0" y="154.0" font-size="12" text-decoration="underline" xml:space="preserve">+new_cid(codec: u64, hash: Multihash): Self</text>
+<text x="32.0" y="170.0" font-size="12" xml:space="preserve">+to_bytes(): Vec&lt;u8&gt;</text>
+<text x="32.0" y="186.0" font-size="12" text-decoration="underline" xml:space="preserve">+decode_from_bytes(bytes: &amp;[u8]): Result&lt;Self, CidError&gt;</text>
+<text x="32.0" y="202.0" font-size="12" xml:space="preserve">+to_string_base32(): String</text>
+<text x="32.0" y="218.0" font-size="12" text-decoration="underline" xml:space="preserve">+decode_from_string(cid_str: &amp;str): Result&lt;Self, CidError&gt;</text>
+<text x="32.0" y="234.0" font-size="12" xml:space="preserve">+verify_block(data: &amp;[u8]): bool</text>
+<text x="32.0" y="250.0" font-size="12" text-decoration="underline" xml:space="preserve">+generate_from_data(data: &amp;[u8], codec: u64, hash_algo: u64): Result&lt;Self, CidError&gt;</text>
+</svg>

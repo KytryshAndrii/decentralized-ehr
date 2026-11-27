@@ -1,0 +1,236 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2620" height="1631" viewBox="0 0 2620 1631" font-family="Arial, Helvetica, sans-serif">
+<rect width="2620" height="1631" fill="#fff"/>
+<text x="1310" y="28" text-anchor="middle" font-size="15" font-weight="bold">ipfs-network – diagram klas</text>
+<path d="M317.1,1210.1 C338.7,1259.5 365.5,1321.0 365.5,1321.0 C365.5,1321.0 376.2,1333.9 389.4,1349.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="317.1,1210.1 315.2,1220.7 324.3,1226.6 326.2,1215.9" fill="#000" stroke="#000" stroke-width="1"/><text x="386.9" y="1335.1" font-size="10.5">1</text>
+<rect x="362.0" y="1307.0" width="27.0" height="14" fill="#fff"/><text x="375.5" y="1318.0" text-anchor="middle" font-size="10.5">peer</text>
+<path d="M1476.2,834.3 C1410.9,937.1 1348.3,1035.6 1311.4,1093.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1476.2,834.3 1466.3,838.7 1466.5,849.5 1476.4,845.1" fill="#000" stroke="#000" stroke-width="1"/><text x="1328.4" y="1089.5" font-size="10.5">1</text>
+<rect x="1443.3" y="917.0" width="36.9" height="14" fill="#fff"/><text x="1461.8" y="928.0" text-anchor="middle" font-size="10.5">swarm</text>
+<path d="M1455.0,609.1 C1177.4,777.3 783.5,1016.0 783.5,1016.0 C783.5,1016.0 776.9,1021.1 766.4,1029.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1455.0,609.1 1444.2,608.6 1439.6,618.4 1450.4,618.9" fill="#000" stroke="#000" stroke-width="1"/><text x="785.1" y="1031.4" font-size="10.5">1</text>
+<rect x="1031.7" y="917.0" width="34.0" height="14" fill="#fff"/><text x="1048.7" y="928.0" text-anchor="middle" font-size="10.5">config</text>
+<path d="M1455.3,528.4 C1058.0,649.5 357.7,863.0 357.7,863.0 C357.7,863.0 324.8,1002.2 305.0,1085.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1455.3,528.4 1444.9,525.3 1438.1,533.6 1448.4,536.8" fill="#000" stroke="#000" stroke-width="1"/><text x="318.4" y="1076.4" font-size="10.5">0..*</text>
+<rect x="354.0" y="917.0" width="35.2" height="14" fill="#fff"/><text x="371.6" y="928.0" text-anchor="middle" font-size="10.5">retries</text>
+<path d="M1791.1,834.3 C1813.6,961.3 1834.9,1081.6 1843.0,1127.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1791.1,834.3 1786.8,844.2 1794.2,852.1 1798.6,842.1" fill="#000" stroke="#000" stroke-width="1"/><text x="1850.1" y="1114.0" font-size="10.5">0..*</text>
+<rect x="1812.1" y="917.0" width="68.5" height="14" fill="#fff"/><text x="1846.3" y="928.0" text-anchor="middle" font-size="10.5">known_peers</text>
+<path d="M1874.3,834.4 C1881.3,852.3 1885.5,863.0 1885.5,863.0 C1885.5,863.0 1909.5,1016.0 1909.5,1016.0 C1909.5,1016.0 1909.5,1280.0 1909.5,1280.0 C1909.5,1280.0 1382.3,1372.9 1222.7,1401.0" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1874.3,834.4 1872.0,844.9 1880.8,851.1 1883.2,840.6" fill="#000" stroke="#000" stroke-width="1"/><text x="1240.2" y="1412.1" font-size="10.5">0..*</text>
+<rect x="1905.6" y="1140.0" width="46.3" height="14" fill="#fff"/><text x="1928.7" y="1151.0" text-anchor="middle" font-size="10.5">provided</text>
+<path d="M1989.8,740.4 C2052.6,809.2 2101.5,863.0 2101.5,863.0 C2101.5,863.0 2192.9,1064.2 2221.8,1127.9" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1989.8,740.4 1991.4,751.1 2001.9,753.7 2000.3,743.0" fill="#000" stroke="#000" stroke-width="1"/><text x="2224.3" y="1113.2" font-size="10.5">0..1</text>
+<rect x="2149.9" y="917.0" width="72.0" height="14" fill="#fff"/><text x="2185.9" y="928.0" text-anchor="middle" font-size="10.5">bitswap_client</text>
+<path d="M1909.7,834.4 C1918.3,852.3 1923.5,863.0 1923.5,863.0 C1923.5,863.0 1956.5,1016.0 1956.5,1016.0 C1956.5,1016.0 1956.5,1280.0 1956.5,1280.0 C1956.5,1280.0 1741.5,1321.0 1741.5,1321.0 C1741.5,1321.0 1356.5,1381.0 1222.7,1401.9" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1909.7,834.4 1908.2,845.1 1917.5,850.6 1919.0,839.9" fill="#000" stroke="#000" stroke-width="1"/><text x="1240.1" y="1413.3" font-size="10.5">0..*</text>
+<rect x="1951.7" y="1140.0" width="83.1" height="14" fill="#fff"/><text x="1993.2" y="1151.0" text-anchor="middle" font-size="10.5">pending_fetches</text>
+<path d="M527.2,1280.1 C510.4,1304.5 493.7,1328.8 479.4,1349.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="527.2,1280.1 517.2,1284.1 517.0,1294.9 527.0,1290.9" fill="#000" stroke="#000" stroke-width="1"/><text x="496.7" y="1346.1" font-size="10.5">0..*</text>
+<rect x="502.7" y="1307.0" width="49.8" height="14" fill="#fff"/><text x="527.5" y="1318.0" text-anchor="middle" font-size="10.5">bootstrap</text>
+<path d="M621.7,1280.2 C622.5,1303.8 623.0,1321.0 623.0,1321.0 C623.0,1321.0 655.4,1340.2 689.9,1360.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="621.7,1280.2 616.0,1289.4 622.3,1298.2 628.0,1289.0" fill="#000" stroke="#000" stroke-width="1"/><text x="681.2" y="1347.8" font-size="10.5">1</text>
+<rect x="618.9" y="1307.0" width="52.7" height="14" fill="#fff"/><text x="645.3" y="1318.0" text-anchor="middle" font-size="10.5">dht_mode</text>
+<path d="M1035.2,1266.1 C1054.3,1296.5 1069.7,1321.0 1069.7,1321.0 C1069.7,1321.0 1122.1,1363.8 1153.8,1389.7" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="1148.4,1378.8 1153.8,1389.7 1142.1,1386.6" fill="none" stroke="#000" stroke-width="1"/><rect x="1065.1" y="1307.0" width="71.9" height="14" fill="#fff"/><text x="1101.1" y="1318.0" text-anchor="middle" font-size="10.5">StartProviding</text>
+<path d="M1090.3,1266.1 C1117.2,1290.5 1137.5,1309.0 1137.5,1309.0 C1137.5,1309.0 1158.2,1360.6 1169.8,1389.7" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="1170.4,1377.6 1169.8,1389.7 1161.1,1381.3" fill="none" stroke="#000" stroke-width="1"/><rect x="1137.2" y="1307.0" width="67.3" height="14" fill="#fff"/><text x="1170.8" y="1318.0" text-anchor="middle" font-size="10.5">GetProviders</text>
+<path d="M1121.1,1266.5 C1132.4,1274.8 1139.5,1280.0 1139.5,1280.0 C1139.5,1280.0 1209.5,1309.0 1209.5,1309.0 C1209.5,1309.0 1209.5,1321.0 1209.5,1321.0 C1209.5,1321.0 1193.9,1364.0 1184.4,1389.9" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="1192.9,1381.3 1184.4,1389.9 1183.5,1377.8" fill="none" stroke="#000" stroke-width="1"/><rect x="1204.9" y="1307.0" width="71.4" height="14" fill="#fff"/><text x="1240.6" y="1318.0" text-anchor="middle" font-size="10.5">StopProviding</text>
+<path d="M910.3,1266.1 C899.6,1290.5 891.5,1309.0 891.5,1309.0 C891.5,1309.0 891.5,1321.0 891.5,1321.0 C891.5,1321.0 1051.5,1370.2 1132.2,1395.0" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="1123.2,1387.0 1132.2,1395.0 1120.2,1396.6" fill="none" stroke="#000" stroke-width="1"/><rect x="887.9" y="1307.0" width="32.3" height="14" fill="#fff"/><text x="904.0" y="1318.0" text-anchor="middle" font-size="10.5">Fetch</text>
+<path d="M976.1,1266.1 C979.9,1296.5 982.9,1321.0 982.9,1321.0 C982.9,1321.0 1077.5,1363.8 1134.8,1389.7" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="1126.8,1380.6 1134.8,1389.7 1122.7,1389.7" fill="none" stroke="#000" stroke-width="1"/><rect x="978.2" y="1307.0" width="80.1" height="14" fill="#fff"/><text x="1018.2" y="1318.0" text-anchor="middle" font-size="10.5">FetchWithReply</text>
+<path d="M802.8,1266.5 C791.5,1274.8 784.5,1280.0 784.5,1280.0 C784.5,1280.0 688.8,1315.7 598.1,1349.5" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="610.1,1350.3 598.1,1349.5 606.6,1341.0" fill="none" stroke="#000" stroke-width="1"/><rect x="696.9" y="1307.0" width="46.9" height="14" fill="#fff"/><text x="720.3" y="1318.0" text-anchor="middle" font-size="10.5">AddPeer</text>
+<path d="M839.6,1266.1 C814.1,1290.5 794.9,1309.0 794.9,1309.0 C794.9,1309.0 789.3,1333.0 783.5,1357.5" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="790.9,1347.9 783.5,1357.5 781.2,1345.7" fill="none" stroke="#000" stroke-width="1"/><rect x="790.5" y="1307.0" width="64.4" height="14" fill="#fff"/><text x="822.7" y="1318.0" text-anchor="middle" font-size="10.5">SetDhtMode</text>
+<path d="M1455.3,566.6 C1082.5,733.5 451.5,1016.0 451.5,1016.0 C451.5,1016.0 444.1,1239.9 440.5,1349.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="445.8,1338.9 440.5,1349.7 435.8,1338.6" fill="none" stroke="#000" stroke-width="1"/><path d="M1455.0,693.0 C1330.7,807.3 1188.8,937.9 1089.1,1029.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1100.6,1025.8 1089.1,1029.6 1093.8,1018.5" fill="none" stroke="#000" stroke-width="1"/><path d="M1654.4,834.3 C1639.9,917.2 1625.8,997.3 1615.5,1055.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1622.3,1045.7 1615.5,1055.7 1612.5,1044.0" fill="none" stroke="#000" stroke-width="1"/><path d="M1990.0,667.8 C2110.6,767.3 2226.5,863.0 2226.5,863.0 C2226.5,863.0 2337.0,1064.2 2372.0,1127.9" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2371.1,1115.8 2372.0,1127.9 2362.3,1120.7" fill="none" stroke="#000" stroke-width="1"/><path d="M1989.6,644.0 C2135.4,751.5 2286.5,863.0 2286.5,863.0 C2286.5,863.0 2469.5,1016.0 2469.5,1016.0 C2469.5,1016.0 2510.8,1091.2 2530.9,1127.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2530.0,1115.6 2530.9,1127.6 2521.2,1120.4" fill="none" stroke="#000" stroke-width="1"/><rect x="265.5" y="1515.0" width="346" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="265.5" x2="611.5" y1="1555.0" y2="1555.0" stroke="#000"/>
+<line x1="265.5" x2="611.5" y1="1567.0" y2="1567.0" stroke="#000"/>
+<text x="438.5" y="1531.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="438.5" y="1547.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_network::identity</text>
+<text x="273.5" y="1583.0" font-size="12" text-decoration="underline" xml:space="preserve">+load_or_create(path: &amp;Path): Result&lt;Keypair, NetworkError&gt;</text>
+<rect x="617.0" y="1507.0" width="483" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="617.0" x2="1100.0" y1="1547.0" y2="1547.0" stroke="#000"/>
+<line x1="617.0" x2="1100.0" y1="1559.0" y2="1559.0" stroke="#000"/>
+<text x="858.5" y="1523.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="858.5" y="1539.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_network::bitswap</text>
+<text x="625.0" y="1575.0" font-size="12" text-decoration="underline" xml:space="preserve">-fetch_dag(client: &amp;BitswapClient, root: Cid, providers: &amp;[PeerId]): Result&lt;(usize, usize),</text>
+<text x="625.0" y="1591.0" font-size="12" text-decoration="underline" xml:space="preserve">    Box&lt;dyn std::error::Error + Send + Sync&gt;&gt;</text>
+<rect x="1104.5" y="1507.0" width="428" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1104.5" x2="1532.5" y1="1547.0" y2="1547.0" stroke="#000"/>
+<line x1="1104.5" x2="1532.5" y1="1559.0" y2="1559.0" stroke="#000"/>
+<text x="1318.5" y="1523.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1318.5" y="1539.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_network::dht</text>
+<text x="1112.5" y="1575.0" font-size="12" text-decoration="underline" xml:space="preserve">+build_kademlia(local_peer_id: PeerId, mode: DhtMode): KademliaBehaviour</text>
+<text x="1112.5" y="1591.0" font-size="12" text-decoration="underline" xml:space="preserve">+provider_key(cid: &amp;Cid): Result&lt;kad::RecordKey, &amp;'static str&gt;</text>
+<rect x="1537.5" y="1499.0" width="284" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1537.5" x2="1821.5" y1="1539.0" y2="1539.0" stroke="#000"/>
+<line x1="1537.5" x2="1821.5" y1="1551.0" y2="1551.0" stroke="#000"/>
+<text x="1679.5" y="1515.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1679.5" y="1531.0" text-anchor="middle" font-size="12" font-weight="bold">ipfs_network::utils</text>
+<text x="1545.5" y="1567.0" font-size="12" text-decoration="underline" xml:space="preserve">+peer_id_from_keypair(keypair: &amp;Keypair): PeerId</text>
+<text x="1545.5" y="1583.0" font-size="12" text-decoration="underline" xml:space="preserve">~error_chain(error: &amp;dyn Error): String</text>
+<text x="1545.5" y="1599.0" font-size="12" text-decoration="underline" xml:space="preserve">~is_dialable(address: &amp;Multiaddr): bool</text>
+<rect x="24.0" y="863.0" width="261" height="124" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="24.0" x2="285.0" y1="903.0" y2="903.0" stroke="#000"/>
+<line x1="24.0" x2="285.0" y1="975.0" y2="975.0" stroke="#000"/>
+<text x="154.5" y="879.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="154.5" y="895.0" text-anchor="middle" font-size="12" font-weight="bold">NetworkError</text>
+<text x="32.0" y="919.0" font-size="12" xml:space="preserve">Io(std::io::Error)</text>
+<text x="32.0" y="935.0" font-size="12" xml:space="preserve">InvalidAddress { value: String, reason: String }</text>
+<text x="32.0" y="951.0" font-size="12" xml:space="preserve">Identity(String)</text>
+<text x="32.0" y="967.0" font-size="12" xml:space="preserve">Libp2p(String)</text>
+<rect x="222.5" y="1086.0" width="136" height="124" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="222.5" x2="358.5" y1="1110.0" y2="1110.0" stroke="#000"/>
+<line x1="222.5" x2="358.5" y1="1198.0" y2="1198.0" stroke="#000"/>
+<text x="290.5" y="1102.0" text-anchor="middle" font-size="12" font-weight="bold">RetryState</text>
+<text x="230.5" y="1126.0" font-size="12" xml:space="preserve">~peer: BootstrapPeer</text>
+<text x="230.5" y="1142.0" font-size="12" xml:space="preserve">~connected: bool</text>
+<text x="230.5" y="1158.0" font-size="12" xml:space="preserve">~dialing: bool</text>
+<text x="230.5" y="1174.0" font-size="12" xml:space="preserve">~next_attempt: Instant</text>
+<text x="230.5" y="1190.0" font-size="12" xml:space="preserve">~delay: Duration</text>
+<rect x="1455.5" y="58.0" width="534" height="776" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1455.5" x2="1989.5" y1="82.0" y2="82.0" stroke="#000"/>
+<line x1="1455.5" x2="1989.5" y1="282.0" y2="282.0" stroke="#000"/>
+<text x="1722.5" y="74.0" text-anchor="middle" font-size="12" font-weight="bold">NetworkNode</text>
+<text x="1463.5" y="98.0" font-size="12" xml:space="preserve">~swarm: Swarm&lt;NetworkBehaviour&gt;</text>
+<text x="1463.5" y="114.0" font-size="12" xml:space="preserve">~config: NetworkConfig</text>
+<text x="1463.5" y="130.0" font-size="12" xml:space="preserve">~retries: HashMap&lt;PeerId, RetryState&gt;</text>
+<text x="1463.5" y="146.0" font-size="12" xml:space="preserve">~dht_bootstrap_started: bool</text>
+<text x="1463.5" y="162.0" font-size="12" xml:space="preserve">~pending_provider_queries: HashMap&lt;kad::QueryId, HashSet&lt;PeerId&gt;&gt;</text>
+<text x="1463.5" y="178.0" font-size="12" xml:space="preserve">~known_peers: HashMap&lt;PeerId, KnownPeer&gt;</text>
+<text x="1463.5" y="194.0" font-size="12" xml:space="preserve">~provided: HashMap&lt;Vec&lt;u8&gt;, Cid&gt;</text>
+<text x="1463.5" y="210.0" font-size="12" xml:space="preserve">~remote_providers: HashMap&lt;(Vec&lt;u8&gt;, PeerId), u64&gt;</text>
+<text x="1463.5" y="226.0" font-size="12" xml:space="preserve">~next_reprovide: Instant</text>
+<text x="1463.5" y="242.0" font-size="12" xml:space="preserve">~reprovided_after_bootstrap: bool</text>
+<text x="1463.5" y="258.0" font-size="12" xml:space="preserve">~bitswap_client: Option&lt;ipfs_bitswap::BitswapClient&gt;</text>
+<text x="1463.5" y="274.0" font-size="12" xml:space="preserve">~pending_fetches: HashMap&lt;kad::QueryId, (Cid, Option&lt;FetchReply&gt;)&gt;</text>
+<text x="1463.5" y="298.0" font-size="12" text-decoration="underline" xml:space="preserve">+new_network_node(config: NetworkConfig): Result&lt;Self, NetworkError&gt;</text>
+<text x="1463.5" y="314.0" font-size="12" xml:space="preserve">+local_peer_id(): PeerId</text>
+<text x="1463.5" y="330.0" font-size="12" xml:space="preserve">+stream_control(): StreamControl</text>
+<text x="1463.5" y="346.0" font-size="12" xml:space="preserve">+start_providing(cid: &amp;Cid): Result&lt;kad::QueryId, NetworkError&gt;</text>
+<text x="1463.5" y="362.0" font-size="12" xml:space="preserve">+get_providers(cid: &amp;Cid): Result&lt;kad::QueryId, NetworkError&gt;</text>
+<text x="1463.5" y="378.0" font-size="12" xml:space="preserve">+stop_providing(cid: &amp;Cid): Result&lt;(), NetworkError&gt;</text>
+<text x="1463.5" y="394.0" font-size="12" xml:space="preserve">+listen(): Result&lt;(), NetworkError&gt;</text>
+<text x="1463.5" y="410.0" font-size="12" xml:space="preserve">+add_bootstrap(peer: BootstrapPeer)</text>
+<text x="1463.5" y="426.0" font-size="12" xml:space="preserve">-attempt_connections()</text>
+<text x="1463.5" y="442.0" font-size="12" xml:space="preserve">~schedule_retry(peer_id: PeerId)</text>
+<text x="1463.5" y="458.0" font-size="12" xml:space="preserve">+run(): Result&lt;(), NetworkError&gt;</text>
+<text x="1463.5" y="474.0" font-size="12" xml:space="preserve">+run_with_commands(commands: mpsc::UnboundedReceiver&lt;NetworkCommand&gt;): Result&lt;(),</text>
+<text x="1463.5" y="490.0" font-size="12" xml:space="preserve">    NetworkError&gt;</text>
+<text x="1463.5" y="506.0" font-size="12" xml:space="preserve">-run_inner(mut commands: Option&lt;mpsc::UnboundedReceiver&lt;NetworkCommand&gt;&gt;): Result&lt;(),</text>
+<text x="1463.5" y="522.0" font-size="12" xml:space="preserve">     NetworkError&gt;</text>
+<text x="1463.5" y="538.0" font-size="12" xml:space="preserve">~start_bitswap()</text>
+<text x="1463.5" y="554.0" font-size="12" xml:space="preserve">~fetch_block(cid: Cid, providers: Vec&lt;PeerId&gt;, reply: Option&lt;FetchReply&gt;)</text>
+<text x="1463.5" y="570.0" font-size="12" xml:space="preserve">~on_swarm_event(event: SwarmEvent&lt;NetworkEvent&gt;)</text>
+<text x="1463.5" y="586.0" font-size="12" xml:space="preserve">~start_dht_bootstrap()</text>
+<text x="1463.5" y="602.0" font-size="12" xml:space="preserve">-on_dht_event(event: kad::Event)</text>
+<text x="1463.5" y="618.0" font-size="12" xml:space="preserve">-open_state_store(): Option&lt;PersistentBlockstore&gt;</text>
+<text x="1463.5" y="634.0" font-size="12" xml:space="preserve">~restore_state()</text>
+<text x="1463.5" y="650.0" font-size="12" xml:space="preserve">-restore_peer(peer: KnownPeer): bool</text>
+<text x="1463.5" y="666.0" font-size="12" xml:space="preserve">-restore_remote_provider(provider: RemoteProvider, now_utc: u64): bool</text>
+<text x="1463.5" y="682.0" font-size="12" xml:space="preserve">~accept_remote_provider(record: kad::ProviderRecord)</text>
+<text x="1463.5" y="698.0" font-size="12" xml:space="preserve">~remember_peer(peer_id: PeerId, listen_addresses: &amp;[Multiaddr], dht_server: bool)</text>
+<text x="1463.5" y="714.0" font-size="12" xml:space="preserve">-write_state(write: impl FnOnce(&amp;PersistentBlockstore) -&gt; Result&lt;(), StoreError&gt;): bool</text>
+<text x="1463.5" y="730.0" font-size="12" xml:space="preserve">~remember_provide(cid: &amp;Cid): bool</text>
+<text x="1463.5" y="746.0" font-size="12" xml:space="preserve">~forget_provide(cid: &amp;Cid): bool</text>
+<text x="1463.5" y="762.0" font-size="12" xml:space="preserve">~reprovide()</text>
+<text x="1463.5" y="778.0" font-size="12" xml:space="preserve">~reprovide_if_due()</text>
+<text x="1463.5" y="794.0" font-size="12" xml:space="preserve">-dht_peers(): Vec&lt;PeerId&gt;</text>
+<text x="1463.5" y="810.0" font-size="12" xml:space="preserve">~on_command(command: NetworkCommand)</text>
+<text x="1463.5" y="826.0" font-size="12" xml:space="preserve">-request_fetch(cid: Cid, reply: Option&lt;FetchReply&gt;)</text>
+<rect x="275.5" y="1350.0" width="326" height="120" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="275.5" x2="601.5" y1="1374.0" y2="1374.0" stroke="#000"/>
+<line x1="275.5" x2="601.5" y1="1414.0" y2="1414.0" stroke="#000"/>
+<text x="438.5" y="1366.0" text-anchor="middle" font-size="12" font-weight="bold">BootstrapPeer</text>
+<text x="283.5" y="1390.0" font-size="12" xml:space="preserve">+peer_id: PeerId</text>
+<text x="283.5" y="1406.0" font-size="12" xml:space="preserve">+address: Multiaddr</text>
+<text x="283.5" y="1430.0" font-size="12" text-decoration="underline" xml:space="preserve">+parse(value: &amp;str): Result&lt;Self, NetworkError&gt;</text>
+<text x="283.5" y="1446.0" font-size="12" text-decoration="underline" xml:space="preserve">+parse_list(value: &amp;str): Result&lt;Vec&lt;Self&gt;, NetworkError&gt;</text>
+<text x="283.5" y="1462.0" font-size="12" text-decoration="underline" xml:space="preserve">+default_bootstrap(): Result&lt;Self, NetworkError&gt;</text>
+<rect x="469.0" y="1016.0" width="297" height="264" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="469.0" x2="766.0" y1="1040.0" y2="1040.0" stroke="#000"/>
+<line x1="469.0" x2="766.0" y1="1240.0" y2="1240.0" stroke="#000"/>
+<text x="617.5" y="1032.0" text-anchor="middle" font-size="12" font-weight="bold">NetworkConfig</text>
+<text x="477.0" y="1056.0" font-size="12" xml:space="preserve">+listen: Multiaddr</text>
+<text x="477.0" y="1072.0" font-size="12" xml:space="preserve">+identity_path: PathBuf</text>
+<text x="477.0" y="1088.0" font-size="12" xml:space="preserve">+bootstrap: Vec&lt;BootstrapPeer&gt;</text>
+<text x="477.0" y="1104.0" font-size="12" xml:space="preserve">+retry_initial: Duration</text>
+<text x="477.0" y="1120.0" font-size="12" xml:space="preserve">+retry_max: Duration</text>
+<text x="477.0" y="1136.0" font-size="12" xml:space="preserve">+maintenance_tick: Duration</text>
+<text x="477.0" y="1152.0" font-size="12" xml:space="preserve">+ping_interval: Duration</text>
+<text x="477.0" y="1168.0" font-size="12" xml:space="preserve">+idle_timeout: Duration</text>
+<text x="477.0" y="1184.0" font-size="12" xml:space="preserve">+dht_mode: DhtMode</text>
+<text x="477.0" y="1200.0" font-size="12" xml:space="preserve">+state_directory: Option&lt;PathBuf&gt;</text>
+<text x="477.0" y="1216.0" font-size="12" xml:space="preserve">+reprovide_interval: Duration</text>
+<text x="477.0" y="1232.0" font-size="12" xml:space="preserve">+keypair: Option&lt;Keypair&gt;</text>
+<text x="477.0" y="1256.0" font-size="12" text-decoration="underline" xml:space="preserve">+listen_from_env(): Result&lt;Multiaddr, NetworkError&gt;</text>
+<text x="477.0" y="1272.0" font-size="12" text-decoration="underline" xml:space="preserve">+default(): Self  «Default»</text>
+<rect x="802.0" y="1030.0" width="319" height="236" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="802.0" x2="1121.0" y1="1070.0" y2="1070.0" stroke="#000"/>
+<line x1="802.0" x2="1121.0" y1="1254.0" y2="1254.0" stroke="#000"/>
+<text x="961.5" y="1046.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="961.5" y="1062.0" text-anchor="middle" font-size="12" font-weight="bold">NetworkCommand</text>
+<text x="810.0" y="1086.0" font-size="12" xml:space="preserve">StartProviding(Cid)</text>
+<text x="810.0" y="1102.0" font-size="12" xml:space="preserve">GetProviders(Cid)</text>
+<text x="810.0" y="1118.0" font-size="12" xml:space="preserve">StopProviding(Cid)</text>
+<text x="810.0" y="1134.0" font-size="12" xml:space="preserve">Fetch(Cid)</text>
+<text x="810.0" y="1150.0" font-size="12" xml:space="preserve">FetchWithReply(Cid, FetchReply)</text>
+<text x="810.0" y="1166.0" font-size="12" xml:space="preserve">AddPeer(BootstrapPeer)</text>
+<text x="810.0" y="1182.0" font-size="12" xml:space="preserve">Bootstrap</text>
+<text x="810.0" y="1198.0" font-size="12" xml:space="preserve">ListPeers</text>
+<text x="810.0" y="1214.0" font-size="12" xml:space="preserve">DhtServers(tokio::sync::oneshot::Sender&lt;Vec&lt;PeerId&gt;&gt;)</text>
+<text x="810.0" y="1230.0" font-size="12" xml:space="preserve">SetDhtMode(DhtMode)</text>
+<text x="810.0" y="1246.0" font-size="12" xml:space="preserve">Quit</text>
+<rect x="1157.5" y="1094.0" width="240" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1157.5" x2="1397.5" y1="1118.0" y2="1118.0" stroke="#000"/>
+<line x1="1157.5" x2="1397.5" y1="1190.0" y2="1190.0" stroke="#000"/>
+<text x="1277.5" y="1110.0" text-anchor="middle" font-size="12" font-weight="bold">NetworkBehaviour</text>
+<text x="1165.5" y="1134.0" font-size="12" xml:space="preserve">+identify: identify::Behaviour</text>
+<text x="1165.5" y="1150.0" font-size="12" xml:space="preserve">+ping: ping::Behaviour</text>
+<text x="1165.5" y="1166.0" font-size="12" xml:space="preserve">+kad: crate::dht::KademliaBehaviour</text>
+<text x="1165.5" y="1182.0" font-size="12" xml:space="preserve">+bitswap: ipfs_bitswap::BitswapBehaviour</text>
+<rect x="1433.5" y="1056.0" width="332" height="184" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1433.5" x2="1765.5" y1="1096.0" y2="1096.0" stroke="#000"/>
+<line x1="1433.5" x2="1765.5" y1="1168.0" y2="1168.0" stroke="#000"/>
+<text x="1599.5" y="1072.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="1599.5" y="1088.0" text-anchor="middle" font-size="12" font-weight="bold">NetworkEvent</text>
+<text x="1441.5" y="1112.0" font-size="12" xml:space="preserve">Identify(Box&lt;identify::Event&gt;)</text>
+<text x="1441.5" y="1128.0" font-size="12" xml:space="preserve">Ping(ping::Event)</text>
+<text x="1441.5" y="1144.0" font-size="12" xml:space="preserve">Kad(Box&lt;kad::Event&gt;)</text>
+<text x="1441.5" y="1160.0" font-size="12" xml:space="preserve">Bitswap</text>
+<text x="1441.5" y="1184.0" font-size="12" text-decoration="underline" xml:space="preserve">+from(event: identify::Event): Self  «From&lt;identify::Event&gt;»</text>
+<text x="1441.5" y="1200.0" font-size="12" text-decoration="underline" xml:space="preserve">+from(event: ping::Event): Self  «From&lt;ping::Event&gt;»</text>
+<text x="1441.5" y="1216.0" font-size="12" text-decoration="underline" xml:space="preserve">+from(event: kad::Event): Self  «From&lt;kad::Event&gt;»</text>
+<text x="1441.5" y="1232.0" font-size="12" text-decoration="underline" xml:space="preserve">+from(_: ()): Self  «From&lt;()&gt;»</text>
+<rect x="690.0" y="1358.0" width="163" height="104" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="690.0" x2="853.0" y1="1398.0" y2="1398.0" stroke="#000"/>
+<line x1="690.0" x2="853.0" y1="1438.0" y2="1438.0" stroke="#000"/>
+<text x="771.5" y="1374.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="771.5" y="1390.0" text-anchor="middle" font-size="12" font-weight="bold">DhtMode</text>
+<text x="698.0" y="1414.0" font-size="12" xml:space="preserve">Client</text>
+<text x="698.0" y="1430.0" font-size="12" xml:space="preserve">Server</text>
+<text x="698.0" y="1454.0" font-size="12" xml:space="preserve">+libp2p_mode(): kad::Mode</text>
+<rect x="1801.5" y="1128.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1846.5" y="1144.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-store»</text>
+<text x="1846.5" y="1160.0" text-anchor="middle" font-size="12" font-weight="bold">KnownPeer</text>
+<rect x="1132.5" y="1390.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1177.5" y="1406.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-cid»</text>
+<text x="1177.5" y="1422.0" text-anchor="middle" font-size="12" font-weight="bold">Cid</text>
+<rect x="2182.5" y="1128.0" width="96" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2230.5" y="1144.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-bitswap»</text>
+<text x="2230.5" y="1160.0" text-anchor="middle" font-size="12" font-weight="bold">BitswapClient</text>
+<rect x="2314.0" y="1128.0" width="137" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2382.5" y="1144.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-store»</text>
+<text x="2382.5" y="1160.0" text-anchor="middle" font-size="12" font-weight="bold">PersistentBlockstore</text>
+<rect x="2487.0" y="1128.0" width="109" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2541.5" y="1144.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-store»</text>
+<text x="2541.5" y="1160.0" text-anchor="middle" font-size="12" font-weight="bold">RemoteProvider</text>
+</svg>

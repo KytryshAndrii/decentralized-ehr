@@ -1,0 +1,182 @@
+// Shared look: colours, structs passed from Rust and small widgets.
+import { LineEdit } from "std-widgets.slint";
+
+export struct DocRow {
+    title: string,
+    subtitle: string,
+    date: string,
+    category: string,
+    issuer: string,
+    size: string,
+    valid-until: string,
+    version: string,
+}
+
+export struct PersonRow {
+    name: string,
+    did: string,
+}
+
+export global Palette {
+    out property <color> rail: #2c3438;
+    out property <color> side: #5483b3;
+    out property <color> side-active: #416690;
+    out property <color> side-field: #7a9fc6;
+    out property <color> ink: #111111;
+    out property <color> muted: #666666;
+    out property <color> line: #d9d9d9;
+    out property <color> block: #ebebeb;
+    out property <color> blue: #2062f5;
+    out property <color> navy: #14264a;
+    out property <length> radius: 4px;
+}
+
+export component Btn inherits Rectangle {
+    in property <string> text;
+    in property <bool> primary: false;
+    in property <bool> enabled: true;
+    callback clicked;
+    height: 34px;
+    min-width: label.preferred-width + 28px;
+    border-radius: Palette.radius;
+    border-width: 1px;
+    border-color: primary ? Palette.blue : #b9b9b9;
+    background: !enabled ? #e6e6e6 : primary ? (area.has-hover ? #1a52cc : Palette.blue) : (area.has-hover ? #f2f2f2 : white);
+    label := Text {
+        text: root.text;
+        color: root.primary ? white : Palette.ink;
+        font-size: 14px;
+        vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+    area := TouchArea {
+        enabled: root.enabled;
+        clicked => { root.clicked(); }
+        mouse-cursor: pointer;
+    }
+}
+
+export component Link inherits Text {
+    callback clicked;
+    color: Palette.blue;
+    font-weight: 700;
+    font-size: 14px;
+    TouchArea {
+        clicked => { root.clicked(); }
+        mouse-cursor: pointer;
+    }
+}
+
+export component SideItem inherits Rectangle {
+    in property <string> text;
+    in property <bool> active;
+    in property <string> hint;
+    callback clicked;
+    height: 34px;
+    border-radius: Palette.radius;
+    background: active ? Palette.side-active : (area.has-hover ? #4d78a6 : transparent);
+    HorizontalLayout {
+        padding-left: 10px;
+        padding-right: 10px;
+        Text {
+            text: root.text;
+            color: white;
+            font-weight: root.active ? 700 : 400;
+            vertical-alignment: center;
+            overflow: elide;
+        }
+        Text {
+            text: root.hint;
+            color: #ffe08a;
+            font-size: 12px;
+            vertical-alignment: center;
+            horizontal-alignment: right;
+        }
+    }
+    area := TouchArea {
+        clicked => { root.clicked(); }
+        mouse-cursor: pointer;
+    }
+}
+
+export component Field inherits VerticalLayout {
+    in property <string> label;
+    in-out property <string> text;
+    in property <bool> password: false;
+    in property <string> placeholder;
+    spacing: 5px;
+    Text {
+        text: root.label;
+        font-size: 13px;
+    }
+    LineEdit {
+        text <=> root.text;
+        placeholder-text: root.placeholder;
+        input-type: root.password ? InputType.password : InputType.text;
+    }
+}
+
+export component Backdrop inherits Rectangle {
+    background: Palette.navy;
+    clip: true;
+    for i in 17: Rectangle {
+        y: i * 40px;
+        width: parent.width;
+        height: 1px;
+        background: #1f3a6e;
+    }
+    for i in 10: Rectangle {
+        x: i * 40px;
+        width: 1px;
+        height: parent.height;
+        background: #1f3a6e;
+    }
+    Path {
+        x: parent.width / 2 - 120px;
+        y: 170px;
+        width: 240px;
+        height: 240px;
+        commands: "M 60 0 h 60 v 60 h 60 v 60 h -60 v 60 h -60 v -60 h -60 v -60 h 60 z";
+        stroke: #3d62d8;
+        stroke-width: 2px;
+    }
+    Path {
+        y: parent.height - 260px;
+        width: parent.width;
+        height: 160px;
+        viewbox-width: 400;
+        viewbox-height: 160;
+        commands: "M 0 80 L 110 80 L 128 80 L 144 30 L 164 130 L 186 0 L 208 100 L 224 80 L 400 80";
+        stroke: #8fb0ff;
+        stroke-width: 2.5px;
+    }
+}
+
+export component Modal inherits Rectangle {
+    in property <string> title;
+    in property <string> subtitle;
+    background: #00000066;
+    TouchArea { }
+    Rectangle {
+        width: min(460px, parent.width - 40px);
+        height: content.preferred-height;
+        background: white;
+        border-radius: Palette.radius;
+        content := VerticalLayout {
+            padding: 24px;
+            spacing: 10px;
+            Text {
+                text: root.title;
+                font-size: 18px;
+                font-weight: 700;
+            }
+            if root.subtitle != "": Text {
+                text: root.subtitle;
+                color: Palette.muted;
+                font-size: 13.5px;
+                wrap: word-wrap;
+            }
+            @children
+        }
+    }
+}

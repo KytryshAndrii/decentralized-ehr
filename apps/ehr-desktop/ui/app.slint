@@ -1,0 +1,166 @@
+// EHR window following the mockup docs/mockups/ehr-mockups.html. Only fields handled by the code
+// (ehr-core) are shown; no CID appears anywhere, the user sees file names.
+import { DocRow, PersonRow } from "widgets.slint";
+import { LoginScreen } from "login.slint";
+import { Rail, Sidebar } from "sidebar.slint";
+import { DocumentList } from "documents.slint";
+import { DocumentDetails } from "details.slint";
+import { DocumentDialog, InviteDialog, ConnectDialog, AcceptDialog } from "dialogs.slint";
+
+export { DocRow, PersonRow }
+
+export component AppWindow inherits Window {
+    title: is-doctor ? "EHR – lekarz" : "EHR – pacjent";
+    preferred-width: 1240px;
+    preferred-height: 720px;
+    min-width: 900px;
+    min-height: 600px;
+    background: white;
+    default-font-family: "Helvetica";
+    default-font-size: 15px;
+
+    in property <bool> is-doctor;
+    // "first" | "login" | "main"
+    in-out property <string> screen: "login";
+    in property <string> me-name;
+    in property <string> status;
+
+    // Doctor: patients and contact requests; patient: doctors.
+    in property <[PersonRow]> people;
+    in property <[PersonRow]> pending;
+    in-out property <int> selected-person: -1;
+    in property <string> header;
+    in property <string> header-note;
+
+    in property <[DocRow]> docs;
+    in-out property <int> selected-doc: -1;
+    in-out property <string> search;
+    in-out property <int> category-filter: -1;
+    in property <[string]> categories;
+
+    in property <bool> preview-ready;
+    in property <bool> has-preview-image;
+    in property <image> preview-image;
+    in property <string> preview-text;
+    // true only after decryption and verification of the content signature (open_document).
+    in property <bool> doc-verified;
+
+    // "none" | "add" | "edit" | "invite" | "connect" | "accept"
+    in-out property <string> modal: "none";
+    in property <string> invite-text;
+    in-out property <string> connect-text;
+    in-out property <string> file-path;
+    in-out property <string> file-name;
+    in-out property <int> file-category: 0;
+    in-out property <string> recipient;
+    in property <string> valid-until;
+    in property <string> accept-did;
+    in-out property <string> accept-name;
+
+    callback create-profile(string, string, string);
+    callback login(string);
+    callback logout();
+    callback select-person(int);
+    callback select-doc(int);
+    callback refresh();
+    callback download(int);
+    callback open-add();
+    callback open-edit(int);
+    callback pick-file();
+    callback confirm-add();
+    callback confirm-edit();
+    callback new-invite();
+    callback connect-doctor();
+    callback open-accept(int);
+    callback accept-contact();
+    callback reject-contact();
+    callback filter-changed();
+
+    if root.screen != "main": LoginScreen {
+        is-doctor: root.is-doctor;
+        screen: root.screen;
+        me-name: root.me-name;
+        status: root.status;
+        create-profile(name, password, repeated) => { root.create-profile(name, password, repeated); }
+        login(password) => { root.login(password); }
+    }
+
+    if root.screen == "main": HorizontalLayout {
+        Rail {
+            logout => { root.logout(); }
+        }
+        Sidebar {
+            is-doctor: root.is-doctor;
+            me-name: root.me-name;
+            search <=> root.search;
+            people: root.people;
+            pending: root.pending;
+            selected-person: root.selected-person;
+            category-filter <=> root.category-filter;
+            categories: root.categories;
+            connect-text <=> root.connect-text;
+            modal <=> root.modal;
+            filter-changed => { root.filter-changed(); }
+            new-invite => { root.new-invite(); }
+            select-person(index) => { root.select-person(index); }
+            open-accept(index) => { root.open-accept(index); }
+        }
+        DocumentList {
+            is-doctor: root.is-doctor;
+            header: root.header;
+            header-note: root.header-note;
+            docs: root.docs;
+            selected-person: root.selected-person;
+            selected-doc: root.selected-doc;
+            status: root.status;
+            open-add => { root.open-add(); }
+            refresh => { root.refresh(); }
+            select-doc(index) => { root.select-doc(index); }
+            download(index) => { root.download(index); }
+            open-edit(index) => { root.open-edit(index); }
+        }
+        DocumentDetails {
+            is-doctor: root.is-doctor;
+            docs: root.docs;
+            selected-doc: root.selected-doc;
+            preview-ready: root.preview-ready;
+            has-preview-image: root.has-preview-image;
+            preview-image: root.preview-image;
+            preview-text: root.preview-text;
+            doc-verified: root.doc-verified;
+        }
+    }
+
+    if root.modal == "add" || root.modal == "edit": DocumentDialog {
+        modal <=> root.modal;
+        file-path <=> root.file-path;
+        file-name <=> root.file-name;
+        file-category <=> root.file-category;
+        recipient <=> root.recipient;
+        categories: root.categories;
+        valid-until: root.valid-until;
+        status: root.status;
+        pick-file => { root.pick-file(); }
+        confirm-add => { root.confirm-add(); }
+        confirm-edit => { root.confirm-edit(); }
+    }
+
+    if root.modal == "invite": InviteDialog {
+        modal <=> root.modal;
+        invite-text: root.invite-text;
+    }
+
+    if root.modal == "connect": ConnectDialog {
+        modal <=> root.modal;
+        connect-text <=> root.connect-text;
+        status: root.status;
+        connect-doctor => { root.connect-doctor(); }
+    }
+
+    if root.modal == "accept": AcceptDialog {
+        accept-name <=> root.accept-name;
+        accept-did: root.accept-did;
+        accept-contact => { root.accept-contact(); }
+        reject-contact => { root.reject-contact(); }
+    }
+}

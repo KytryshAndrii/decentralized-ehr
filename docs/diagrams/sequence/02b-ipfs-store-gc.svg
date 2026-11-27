@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="819" height="1240" viewBox="0 0 819 1240" font-family="Arial, Helvetica, sans-serif">
+<rect width="819" height="1240" fill="#fff"/>
+<text x="409.5" y="26" text-anchor="middle" font-size="15" font-weight="bold">ipfs-store – diagram sekwencji: Blockstore::collect_garbage</text>
+<rect x="251.9990234375" y="864" width="416" height="180" fill="none" stroke="#000"/>
+<rect x="243.9990234375" y="666" width="432" height="398" fill="none" stroke="#000"/>
+<line x1="243.9990234375" x2="675.9990234375" y1="732" y2="732" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="235.9990234375" y="642" width="448" height="442" fill="none" stroke="#000"/>
+<rect x="41.2333984375" y="290" width="751.1240234375" height="902" fill="none" stroke="#000"/>
+<line x1="41.2333984375" x2="792.357421875" y1="358" y2="358" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="75.2333984375" x2="75.2333984375" y1="118" y2="1210" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="309.9990234375" x2="309.9990234375" y1="90" y2="1210" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="609.9990234375" x2="609.9990234375" y1="90" y2="1210" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="758.357421875" x2="758.357421875" y1="90" y2="1210" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="605.0" y="196.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="310.0" y="254.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="305.0" y="158.0" width="10" height="174.0" fill="#fff" stroke="#000"/>
+<rect x="605.0" y="396.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="305.0" y="454.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="605.0" y="508.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="753.4" y="584.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="305.0" y="690.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="605.0" y="770.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="305.0" y="828.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="305.0" y="888.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="605.0" y="942.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="305.0" y="1000.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="305.0" y="1096.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<circle cx="75.2333984375" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="75.2333984375" x2="75.2333984375" y1="70" y2="86" stroke="#000"/><line x1="64.2333984375" x2="86.2333984375" y1="76" y2="76" stroke="#000"/><line x1="75.2333984375" x2="66.2333984375" y1="86" y2="98" stroke="#000"/><line x1="75.2333984375" x2="84.2333984375" y1="86" y2="98" stroke="#000"/><text x="75.2333984375" y="112" text-anchor="middle" font-size="12" font-weight="bold">Wywołujący</text>
+<rect x="247.984375" y="56" width="124.029296875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="309.9990234375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">store : Blockstore</text>
+<rect x="515.640625" y="56" width="188.716796875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="609.9990234375" y="77.5" text-anchor="middle" font-size="12" font-weight="bold" text-decoration="underline">datastore : LevelDbDatastore</text>
+<rect x="728.357421875" y="56" width="60" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="758.357421875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">Cid</text>
+<line x1="75.2333984375" x2="304.9990234375" y1="158" y2="158" stroke="#000"/><polygon points="304.9990234375,158 295.9990234375,153.5 295.9990234375,162.5" fill="#000" stroke="#000"/>
+<text x="190.1162109375" y="152" text-anchor="middle" font-size="12">collect_garbage(max_bytes)</text>
+<line x1="314.9990234375" x2="604.9990234375" y1="196" y2="196" stroke="#000"/><polygon points="604.9990234375,196 595.9990234375,191.5 595.9990234375,200.5" fill="#000" stroke="#000"/>
+<text x="459.9990234375" y="190" text-anchor="middle" font-size="12">key_sizes_with_prefix(Namespace::Blocks.prefix())</text>
+<line x1="604.9990234375" x2="314.9990234375" y1="234" y2="234" stroke="#000" stroke-dasharray="6,4"/><polyline points="323.9990234375,229.5 314.9990234375,234 323.9990234375,238.5" fill="none" stroke="#000"/>
+<text x="459.9990234375" y="228" text-anchor="middle" font-size="12">Vec&lt;(key, size)&gt;</text>
+<polyline points="319.9990234375,258 347.9990234375,258 347.9990234375,272 322.4990234375,272" fill="none" stroke="#000"/><polygon points="322.4990234375,272 331.4990234375,267.5 331.4990234375,276.5" fill="#000" stroke="#000"/>
+<text x="353.9990234375" y="262" font-size="12">total_bytes = Σ size</text>
+<line x1="304.9990234375" x2="75.2333984375" y1="332" y2="332" stroke="#000" stroke-dasharray="6,4"/><polyline points="84.2333984375,327.5 75.2333984375,332 84.2333984375,336.5" fill="none" stroke="#000"/>
+<text x="190.1162109375" y="326" text-anchor="middle" font-size="12">Ok(Vec::new())</text>
+<line x1="309.9990234375" x2="604.9990234375" y1="396" y2="396" stroke="#000"/><polygon points="604.9990234375,396 595.9990234375,391.5 595.9990234375,400.5" fill="#000" stroke="#000"/>
+<text x="457.4990234375" y="390" text-anchor="middle" font-size="12">key_sizes_with_prefix(Namespace::Pins.prefix())</text>
+<line x1="604.9990234375" x2="309.9990234375" y1="434" y2="434" stroke="#000" stroke-dasharray="6,4"/><polyline points="318.9990234375,429.5 309.9990234375,434 318.9990234375,438.5" fill="none" stroke="#000"/>
+<text x="457.4990234375" y="428" text-anchor="middle" font-size="12">zbiór przypiętych multihashy (pins)</text>
+<polyline points="314.9990234375,458 342.9990234375,458 342.9990234375,472 317.4990234375,472" fill="none" stroke="#000"/><polygon points="317.4990234375,472 326.4990234375,467.5 326.4990234375,476.5" fill="#000" stroke="#000"/>
+<text x="348.9990234375" y="462" font-size="12">list_provides()</text>
+<line x1="309.9990234375" x2="604.9990234375" y1="508" y2="508" stroke="#000"/><polygon points="604.9990234375,508 595.9990234375,503.5 595.9990234375,512.5" fill="#000" stroke="#000"/>
+<text x="457.4990234375" y="502" text-anchor="middle" font-size="12">entries_with_prefix(Namespace::Provides.prefix())</text>
+<line x1="604.9990234375" x2="309.9990234375" y1="546" y2="546" stroke="#000" stroke-dasharray="6,4"/><polyline points="318.9990234375,541.5 309.9990234375,546 318.9990234375,550.5" fill="none" stroke="#000"/>
+<text x="457.4990234375" y="540" text-anchor="middle" font-size="12">Vec&lt;(key, value)&gt;</text>
+<line x1="309.9990234375" x2="753.357421875" y1="584" y2="584" stroke="#000"/><polygon points="753.357421875,584 744.357421875,579.5 744.357421875,588.5" fill="#000" stroke="#000"/>
+<text x="531.67822265625" y="578" text-anchor="middle" font-size="12">decode_from_bytes(value)</text>
+<line x1="753.357421875" x2="309.9990234375" y1="622" y2="622" stroke="#000" stroke-dasharray="6,4"/><polyline points="318.9990234375,617.5 309.9990234375,622 318.9990234375,626.5" fill="none" stroke="#000"/>
+<text x="531.67822265625" y="616" text-anchor="middle" font-size="12">Result&lt;Cid, CidError&gt;</text>
+<polyline points="314.9990234375,694 342.9990234375,694 342.9990234375,708 317.4990234375,708" fill="none" stroke="#000"/><polygon points="317.4990234375,708 326.4990234375,703.5 326.4990234375,712.5" fill="#000" stroke="#000"/>
+<text x="348.9990234375" y="698" font-size="12">continue – blok przypięty zostaje</text>
+<line x1="309.9990234375" x2="604.9990234375" y1="770" y2="770" stroke="#000"/><polygon points="604.9990234375,770 595.9990234375,765.5 595.9990234375,774.5" fill="#000" stroke="#000"/>
+<text x="457.4990234375" y="764" text-anchor="middle" font-size="12">delete(&amp;key)</text>
+<line x1="604.9990234375" x2="309.9990234375" y1="808" y2="808" stroke="#000" stroke-dasharray="6,4"/><polyline points="318.9990234375,803.5 309.9990234375,808 318.9990234375,812.5" fill="none" stroke="#000"/>
+<text x="457.4990234375" y="802" text-anchor="middle" font-size="12">Result&lt;(), StoreError&gt;</text>
+<polyline points="314.9990234375,832 342.9990234375,832 342.9990234375,846 317.4990234375,846" fill="none" stroke="#000"/><polygon points="317.4990234375,846 326.4990234375,841.5 326.4990234375,850.5" fill="#000" stroke="#000"/>
+<text x="348.9990234375" y="836" font-size="12">removed_blocks += 1; freed_bytes += size</text>
+<polyline points="314.9990234375,892 342.9990234375,892 342.9990234375,906 317.4990234375,906" fill="none" stroke="#000"/><polygon points="317.4990234375,906 326.4990234375,901.5 326.4990234375,910.5" fill="#000" stroke="#000"/>
+<text x="348.9990234375" y="896" font-size="12">remove_provide(cid)</text>
+<line x1="309.9990234375" x2="604.9990234375" y1="942" y2="942" stroke="#000"/><polygon points="604.9990234375,942 595.9990234375,937.5 595.9990234375,946.5" fill="#000" stroke="#000"/>
+<text x="457.4990234375" y="936" text-anchor="middle" font-size="12">delete(provides key)</text>
+<line x1="604.9990234375" x2="309.9990234375" y1="980" y2="980" stroke="#000" stroke-dasharray="6,4"/><polyline points="318.9990234375,975.5 309.9990234375,980 318.9990234375,984.5" fill="none" stroke="#000"/>
+<text x="457.4990234375" y="974" text-anchor="middle" font-size="12">Result&lt;(), StoreError&gt;</text>
+<polyline points="314.9990234375,1004 342.9990234375,1004 342.9990234375,1018 317.4990234375,1018" fill="none" stroke="#000"/><polygon points="317.4990234375,1018 326.4990234375,1013.5 326.4990234375,1022.5" fill="#000" stroke="#000"/>
+<text x="348.9990234375" y="1008" font-size="12">stopped.push(cid)</text>
+<polyline points="314.9990234375,1100 342.9990234375,1100 342.9990234375,1128 317.4990234375,1128" fill="none" stroke="#000"/><polygon points="317.4990234375,1128 326.4990234375,1123.5 326.4990234375,1132.5" fill="#000" stroke="#000"/>
+<text x="348.9990234375" y="1104" font-size="12">eprintln!(&quot;[ipfs-store] GC total_bytes=...</text>
+<text x="348.9990234375" y="1118" font-size="12">removed=... freed_bytes=...&quot;)</text>
+<line x1="309.9990234375" x2="75.2333984375" y1="1164" y2="1164" stroke="#000" stroke-dasharray="6,4"/><polyline points="84.2333984375,1159.5 75.2333984375,1164 84.2333984375,1168.5" fill="none" stroke="#000"/>
+<text x="192.6162109375" y="1158" text-anchor="middle" font-size="12">Ok(stopped) – CID do StopProviding</text>
+<polygon points="251.9990234375,864 283.1005859375,864 283.1005859375,873 276.1005859375,880 251.9990234375,880" fill="#fff" stroke="#000"/><text x="257.9990234375" y="876" font-size="11" font-weight="bold">opt</text>
+<rect x="288.1005859375" y="865" width="160.694091796875" height="14" fill="#fff"/><text x="291.1005859375" y="877" font-size="11.5">[multihash należy do provides]</text>
+<polygon points="243.9990234375,666 270.8359375,666 270.8359375,675 263.8359375,682 243.9990234375,682" fill="#fff" stroke="#000"/><text x="249.9990234375" y="678" font-size="11" font-weight="bold">alt</text>
+<rect x="275.8359375" y="667" width="138.322998046875" height="14" fill="#fff"/><text x="278.8359375" y="679" font-size="11.5">[multihash należy do pins]</text>
+<rect x="248.9990234375" y="734" width="98.044921875" height="14" fill="#fff"/><text x="251.9990234375" y="745" font-size="11.5">[blok nieprzypięty]</text>
+<polygon points="235.9990234375,642 273.212890625,642 273.212890625,651 266.212890625,658 235.9990234375,658" fill="#fff" stroke="#000"/><text x="241.9990234375" y="654" font-size="11" font-weight="bold">loop</text>
+<rect x="278.212890625" y="643" width="156.224365234375" height="14" fill="#fff"/><text x="281.212890625" y="655" font-size="11.5">[dla każdego bloku z /blocks/]</text>
+<polygon points="41.2333984375,290 68.0703125,290 68.0703125,299 61.0703125,306 41.2333984375,306" fill="#fff" stroke="#000"/><text x="47.2333984375" y="302" font-size="11" font-weight="bold">alt</text>
+<rect x="73.0703125" y="291" width="136.318359375" height="14" fill="#fff"/><text x="76.0703125" y="303" font-size="11.5">[total_bytes ≤ max_bytes]</text>
+<rect x="46.2333984375" y="360" width="104.41259765625" height="14" fill="#fff"/><text x="49.2333984375" y="371" font-size="11.5">[przekroczony limit]</text>
+</svg>

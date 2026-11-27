@@ -48,20 +48,20 @@ impl Datastore for MemoryDatastore {
 
 struct SharedDatastore(Arc<MemoryDatastore>);
 impl Datastore for SharedDatastore {
-    fn get(&self, k: &[u8]) -> Result<Option<Vec<u8>>, StoreError> {
-        self.0.get(k)
+    fn get(&self, key: &[u8]) -> Result<Option<Vec<u8>>, StoreError> {
+        self.0.get(key)
     }
-    fn put(&self, k: &[u8], v: &[u8]) -> Result<(), StoreError> {
-        self.0.put(k, v)
+    fn put(&self, key: &[u8], value: &[u8]) -> Result<(), StoreError> {
+        self.0.put(key, value)
     }
-    fn put_if_absent(&self, k: &[u8], v: &[u8]) -> Result<bool, StoreError> {
-        self.0.put_if_absent(k, v)
+    fn put_if_absent(&self, key: &[u8], value: &[u8]) -> Result<bool, StoreError> {
+        self.0.put_if_absent(key, value)
     }
-    fn delete(&self, k: &[u8]) -> Result<(), StoreError> {
-        self.0.delete(k)
+    fn delete(&self, key: &[u8]) -> Result<(), StoreError> {
+        self.0.delete(key)
     }
-    fn entries_with_prefix(&self, p: &[u8]) -> Result<Vec<Entry>, StoreError> {
-        self.0.entries_with_prefix(p)
+    fn entries_with_prefix(&self, prefix: &[u8]) -> Result<Vec<Entry>, StoreError> {
+        self.0.entries_with_prefix(prefix)
     }
 }
 
@@ -103,26 +103,26 @@ fn missing_block_is_not_an_error() {
 #[test]
 fn put_is_idempotent() {
     let store = Blockstore::new_blockstore(MemoryDatastore::default());
-    let a = store.put(b"Hi!").unwrap();
-    let b = store.put(b"Hi!").unwrap();
-    assert_eq!(a, b);
+    let first = store.put(b"Hi!").unwrap();
+    let second = store.put(b"Hi!").unwrap();
+    assert_eq!(first, second);
     assert_eq!(store.datastore().entries.lock().unwrap().len(), 1);
 }
 #[test]
 fn same_content_with_different_codec_is_deduplicated() {
     let store = Blockstore::new_blockstore(MemoryDatastore::default());
-    let a = store.put_with_codec(b"Hi!", CODEC_RAW, SHA2_256).unwrap();
-    let b = store.put_with_codec(b"Hi!", 0x70, SHA2_256).unwrap();
-    assert_ne!(a.codec, b.codec);
+    let raw = store.put_with_codec(b"Hi!", CODEC_RAW, SHA2_256).unwrap();
+    let dag_pb = store.put_with_codec(b"Hi!", 0x70, SHA2_256).unwrap();
+    assert_ne!(raw.codec, dag_pb.codec);
     assert_eq!(store.datastore().entries.lock().unwrap().len(), 1);
-    assert_eq!(store.get_block(&b).unwrap().unwrap(), b"Hi!");
+    assert_eq!(store.get_block(&dag_pb).unwrap().unwrap(), b"Hi!");
 }
 #[test]
 fn different_hash_algorithms_have_different_keys() {
     let store = Blockstore::new_blockstore(MemoryDatastore::default());
-    let a = store.put_with_codec(b"Hi!", CODEC_RAW, SHA2_256).unwrap();
-    let b = store.put_with_codec(b"Hi!", CODEC_RAW, SHA2_512).unwrap();
-    assert_ne!(a.multihash.digest.len(), b.multihash.digest.len());
+    let sha256 = store.put_with_codec(b"Hi!", CODEC_RAW, SHA2_256).unwrap();
+    let sha512 = store.put_with_codec(b"Hi!", CODEC_RAW, SHA2_512).unwrap();
+    assert_ne!(sha256.multihash.digest.len(), sha512.multihash.digest.len());
     assert_eq!(store.datastore().entries.lock().unwrap().len(), 2);
 }
 #[test]
@@ -167,7 +167,7 @@ fn corrupted_stored_bytes_are_detected_on_get() {
     let id = store.put(b"Hi!").unwrap();
     let key = ipfs_store::utils::get_multihash_key(&id.multihash);
     store.datastore().put(&key, b"bad").unwrap();
-    assert!(store.has(&id).unwrap()); // has nie haszuje
+    assert!(store.has(&id).unwrap()); // `has` does not hash
     assert!(matches!(
         store.get_block(&id),
         Err(StoreError::IntegrityMismatch)
@@ -264,10 +264,14 @@ fn namespace_prefixes_match_consts_and_are_disjoint() {
         Namespace::Provides.prefix(),
         ipfs_store::consts::PROVIDES_PREFIX.as_bytes()
     );
-    for a in Namespace::ALL {
-        for b in Namespace::ALL {
-            let key = a.key(b"id");
-            assert_eq!(b.owns(&key), a == b, "{a:?} vs {b:?}");
+    for first in Namespace::ALL {
+        for second in Namespace::ALL {
+            let key = first.key(b"id");
+            assert_eq!(
+                second.owns(&key),
+                first == second,
+                "{first:?} vs {second:?}"
+            );
         }
     }
 }
@@ -332,7 +336,7 @@ fn stale_peers_are_pruned_and_old_records_count_as_seen_now() {
     fresh.last_seen_utc = 200;
     store.save_peer(&old).unwrap();
     store.save_peer(&fresh).unwrap();
-    // Rekord w starym formacie, bez linii `seen_utc=`.
+    // A record in the old format, without the `seen_utc=` line.
     store
         .datastore()
         .put(
@@ -386,8 +390,8 @@ fn provides_are_tracked_separately_from_blocks() {
     let mut expected = vec![first.clone(), second.clone()];
     expected.sort_by_key(|cid| cid.to_string_base32());
     assert_eq!(listed.len(), 2);
-    for (a, b) in listed.iter().zip(&expected) {
-        assert_eq!(a.to_bytes(), b.to_bytes());
+    for (listed_cid, expected_cid) in listed.iter().zip(&expected) {
+        assert_eq!(listed_cid.to_bytes(), expected_cid.to_bytes());
     }
     store.remove_provide(&first).unwrap();
     assert!(!store.has_provide(&first).unwrap());
@@ -420,14 +424,14 @@ fn remote_providers_are_saved_refreshed_and_expire_by_utc_time() {
         .save_remote_provider(&remote_provider(b"y", "12D3KooWA", now + 100))
         .unwrap();
     assert_eq!(store.load_remote_providers(now).unwrap().len(), 3);
-    // Ponowne ogłoszenie odświeża termin tego samego rekordu.
+    // Announcing again refreshes the expiry of the same record.
     store
         .save_remote_provider(&remote_provider(b"x", "12D3KooWA", now + 500))
         .unwrap();
     let loaded = store.load_remote_providers(now + 10).unwrap();
     assert_eq!(loaded.len(), 3);
     assert!(loaded.contains(&remote_provider(b"x", "12D3KooWA", now + 500)));
-    // Po terminie rekord nie jest zwracany, a porządkowanie usuwa go z bazy.
+    // After the expiry the record is not returned and pruning removes it.
     assert_eq!(store.load_remote_providers(now + 100).unwrap().len(), 1);
     let (valid, removed) = store.prune_remote_providers(now + 100).unwrap();
     assert_eq!((valid.len(), removed), (1, 2));
@@ -464,4 +468,26 @@ fn invalid_or_corrupt_remote_provider_is_rejected() {
 fn utc_clock_returns_unix_seconds() {
     // 2026-01-01T00:00:00Z = 1_767_225_600
     assert!(ipfs_store::utils::utc_now_secs() > 1_767_225_600);
+}
+
+#[test]
+fn garbage_collection_keeps_pinned_blocks_and_reports_provided_ones() {
+    let store = Blockstore::new_blockstore(MemoryDatastore::default());
+    let pinned = store.put(b"pinned document").unwrap();
+    let provided = store.put(b"provided copy").unwrap();
+    let cached = store.put(b"cached copy").unwrap();
+    store.pin(&pinned).unwrap();
+    store.add_provide(&provided).unwrap();
+
+    assert!(
+        store.collect_garbage(1024).unwrap().is_empty(),
+        "under the limit nothing is removed"
+    );
+    assert!(store.has(&cached).unwrap());
+
+    let stopped = store.collect_garbage(0).unwrap();
+    assert_eq!(stopped, vec![provided.clone()]);
+    assert!(store.has(&pinned).unwrap());
+    assert!(!store.has(&provided).unwrap());
+    assert!(!store.has(&cached).unwrap());
 }

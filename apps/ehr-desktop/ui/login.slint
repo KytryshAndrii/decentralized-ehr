@@ -1,0 +1,87 @@
+import { Palette, Field, Btn, Backdrop } from "widgets.slint";
+
+// 1a / 1b: first run (profile with password) and login.
+export component LoginScreen inherits HorizontalLayout {
+    in property <bool> is-doctor;
+    in property <string> screen;
+    in property <string> me-name;
+    in property <string> status;
+    callback create-profile(string, string, string);
+    callback login(string);
+    property <string> pw1;
+    property <string> pw2;
+    property <string> new-name;
+    Rectangle {
+        background: Palette.side;
+        HorizontalLayout {
+            padding-left: 38px;
+            padding-right: 38px;
+            alignment: center;
+            VerticalLayout {
+                alignment: center;
+                Rectangle {
+                    background: white;
+                    border-radius: Palette.radius;
+                    max-width: 520px;
+                    min-width: 360px;
+                    VerticalLayout {
+                        padding: 36px;
+                        spacing: 14px;
+                        Text {
+                            text: root.screen == "first" ? "Utwórz profil" : "Zaloguj się";
+                            font-size: 25px;
+                            color: #0d2150;
+                        }
+                        Text {
+                            text: root.screen == "first"
+                                ? "Przy pierwszym uruchomieniu aplikacja tworzy Twój klucz tożsamości (" + (root.is-doctor ? "lekarz" : "pacjent") + "). Hasło go chroni; po jego utracie klucza nie da się odzyskać."
+                                : root.me-name;
+                            color: Palette.muted;
+                            font-size: 13.5px;
+                            wrap: word-wrap;
+                        }
+                        if root.screen == "first": Field {
+                            label: "Imię i nazwisko";
+                            placeholder: "Imię i nazwisko";
+                            text <=> root.new-name;
+                        }
+                        Field {
+                            label: "Hasło";
+                            placeholder: "Hasło";
+                            password: true;
+                            text <=> root.pw1;
+                        }
+                        if root.screen == "first": Field {
+                            label: "Powtórz hasło";
+                            placeholder: "Powtórz hasło";
+                            password: true;
+                            text <=> root.pw2;
+                        }
+                        if root.status != "": Text {
+                            text: root.status;
+                            color: #b00020;
+                            wrap: word-wrap;
+                        }
+                        HorizontalLayout {
+                            alignment: start;
+                            Btn {
+                                primary: true;
+                                text: root.screen == "first" ? "Utwórz profil" : "Zaloguj";
+                                clicked => {
+                                    if (root.screen == "first") {
+                                        root.create-profile(root.new-name, root.pw1, root.pw2);
+                                    } else {
+                                        root.login(root.pw1);
+                                    }
+                                    root.pw1 = "";
+                                    root.pw2 = "";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Backdrop { }
+}

@@ -47,7 +47,7 @@ impl BlockSource for MemorySource {
         Ok(self.blocks.lock().unwrap().get(&cid.to_bytes()).cloned())
     }
 }
-/// Blok znika między planowaniem a wysyłką.
+/// The block disappears between planning and sending.
 struct VanishingSource;
 impl BlockSource for VanishingSource {
     fn has_blocks(&self, cids: &[Cid]) -> Result<Vec<bool>, BitswapError> {
@@ -92,9 +92,12 @@ fn limits(max_message_bytes: usize, max_response_bytes: usize) -> BitswapLimits 
         ..BitswapLimits::default()
     }
 }
-/// Wszystkie wiadomości odpowiedzi na jedno żądanie.
-fn respond<S: BlockSource>(server: &BitswapServer<S>, req: &BitswapMessage) -> Vec<BitswapMessage> {
-    let mut plan = server.plan(req).unwrap();
+/// All answer messages for one request.
+fn respond<S: BlockSource>(
+    server: &BitswapServer<S>,
+    request: &BitswapMessage,
+) -> Vec<BitswapMessage> {
+    let mut plan = server.plan(request).unwrap();
     let mut messages = Vec::new();
     while let Some(message) = server.next_message(&mut plan).unwrap() {
         messages.push(message);
@@ -122,7 +125,7 @@ fn wantlist_frame_matches_protobuf_wire_format() {
         }),
         ..BitswapMessage::default()
     };
-    // varint długości, potem pola: wantlist(1){ entries(1){ block(1) priority(2)
+    // length varint, then the fields: wantlist(1){ entries(1){ block(1) priority(2)
     // wantType(4) sendDontHave(5) } full(2) }.
     let expected = [
         0x10, 0x0a, 0x0e, 0x0a, 0x0a, 0x0a, 0x02, 0x01, 0x02, 0x10, 0x01, 0x20, 0x01, 0x28, 0x01,
@@ -141,7 +144,7 @@ fn response_fields_use_spec_tags() {
         block_presences: vec![presence(vec![0x07], BlockPresenceType::DontHave)],
         ..BitswapMessage::default()
     };
-    // payload = pole 3 { prefix(1) data(2) }, blockPresences = pole 4 { cid(1) type(2) }.
+    // payload = field 3 { prefix(1) data(2) }, blockPresences = field 4 { cid(1) type(2) }.
     let expected = [
         0x1a, 0x06, 0x0a, 0x01, 0x01, 0x12, 0x01, 0xaa, 0x22, 0x05, 0x0a, 0x01, 0x07, 0x10, 0x01,
     ];
@@ -213,8 +216,8 @@ fn cid_prefix_is_cid_without_digest() {
 fn want_block_returns_block_with_prefix() {
     let data = b"ehr test block";
     let server = BitswapServer::new(MemorySource::with(&[data]));
-    let req = request(vec![want(cid(data).to_bytes(), WantType::Block, true)]);
-    let messages = respond(&server, &req);
+    let wantlist_request = request(vec![want(cid(data).to_bytes(), WantType::Block, true)]);
+    let messages = respond(&server, &wantlist_request);
     assert_eq!(messages.len(), 1);
     assert!(messages[0].block_presences.is_empty());
     assert_eq!(
@@ -269,10 +272,10 @@ fn cancel_entries_and_empty_requests_produce_no_response() {
 }
 #[test]
 fn priority_does_not_change_the_response() {
-    let (a, b) = (b"block a".as_slice(), b"block b".as_slice());
-    let server = BitswapServer::new(MemorySource::with(&[a, b]));
-    let mut low = want(cid(a).to_bytes(), WantType::Block, false);
-    let mut high = want(cid(b).to_bytes(), WantType::Block, false);
+    let (first_block, second_block) = (b"block a".as_slice(), b"block b".as_slice());
+    let server = BitswapServer::new(MemorySource::with(&[first_block, second_block]));
+    let mut low = want(cid(first_block).to_bytes(), WantType::Block, false);
+    let mut high = want(cid(second_block).to_bytes(), WantType::Block, false);
     low.priority = 1;
     high.priority = 1000;
     let messages = respond(&server, &request(vec![low, high]));
@@ -281,7 +284,7 @@ fn priority_does_not_change_the_response() {
         .iter()
         .map(|block| block.data.as_slice())
         .collect();
-    assert_eq!(received, vec![a, b]);
+    assert_eq!(received, vec![first_block, second_block]);
 }
 #[test]
 fn priority_and_cancel_survive_encoding() {
@@ -295,14 +298,14 @@ fn priority_and_cancel_survive_encoding() {
 #[test]
 fn undecodable_cid_is_answered_with_dont_have() {
     let server = BitswapServer::new(MemorySource::default());
-    // CIDv0 (sam multihash) nie jest obsługiwany przez ten węzeł.
+    // CIDv0 (bare multihash) is not supported by this node.
     let mut cid_v0 = vec![0x12, 0x20];
     cid_v0.extend_from_slice(&[7; 32]);
-    let req = request(vec![
+    let wantlist_request = request(vec![
         want(cid_v0.clone(), WantType::Block, true),
         want(vec![0xff, 0xff], WantType::Have, false),
     ]);
-    let messages = respond(&server, &req);
+    let messages = respond(&server, &wantlist_request);
     assert_eq!(messages.len(), 1);
     assert_eq!(
         messages[0].block_presences,
@@ -311,22 +314,22 @@ fn undecodable_cid_is_answered_with_dont_have() {
 }
 #[test]
 fn mixed_wantlist_is_answered_in_one_message() {
-    let (a, b) = (b"block a".as_slice(), b"block b".as_slice());
-    let server = BitswapServer::new(MemorySource::with(&[a, b]));
+    let (first_block, second_block) = (b"block a".as_slice(), b"block b".as_slice());
+    let server = BitswapServer::new(MemorySource::with(&[first_block, second_block]));
     let missing = cid(b"missing").to_bytes();
-    let req = request(vec![
-        want(cid(a).to_bytes(), WantType::Block, false),
-        want(cid(b).to_bytes(), WantType::Have, false),
+    let wantlist_request = request(vec![
+        want(cid(first_block).to_bytes(), WantType::Block, false),
+        want(cid(second_block).to_bytes(), WantType::Have, false),
         want(missing.clone(), WantType::Block, true),
     ]);
-    let messages = respond(&server, &req);
+    let messages = respond(&server, &wantlist_request);
     assert_eq!(messages.len(), 1);
     assert_eq!(messages[0].payload.len(), 1);
-    assert_eq!(messages[0].payload[0].data, a);
+    assert_eq!(messages[0].payload[0].data, first_block);
     assert_eq!(
         messages[0].block_presences,
         vec![
-            presence(cid(b).to_bytes(), BlockPresenceType::Have),
+            presence(cid(second_block).to_bytes(), BlockPresenceType::Have),
             presence(missing, BlockPresenceType::DontHave),
         ]
     );
@@ -419,8 +422,8 @@ fn source_failure_is_reported_not_hidden() {
         fail: true,
         ..MemorySource::default()
     });
-    let req = request(vec![want(cid(b"x").to_bytes(), WantType::Block, true)]);
-    assert!(server.plan(&req).is_err());
+    let wantlist_request = request(vec![want(cid(b"x").to_bytes(), WantType::Block, true)]);
+    assert!(server.plan(&wantlist_request).is_err());
 }
 #[test]
 fn provided_block_source_serves_only_provided_blocks() {
@@ -472,9 +475,9 @@ fn received_block_is_matched_to_cid_by_its_own_hash() {
     let wanted = cid(data);
     let prefix = cid_prefix(&wanted);
     assert_eq!(block_cid(&prefix, data), Some(wanted.clone()));
-    // Zmienione bajty dają inny CID, więc nie pasują do żądania.
+    // Changed bytes give another CID, so they match no request.
     assert_ne!(block_cid(&prefix, b"tampered bytes"), Some(wanted));
-    // CIDv0, nieznany hash, zła długość skrótu i ucięty prefiks są odrzucane.
+    // CIDv0, an unknown hash, a wrong digest length and a cut prefix are rejected.
     assert_eq!(block_cid(&[0x00, 0x55, 0x12, 0x20], data), None);
     assert_eq!(block_cid(&[0x01, 0x55, 0x1e, 0x20], data), None);
     assert_eq!(block_cid(&[0x01, 0x55, 0x12, 0x10], data), None);

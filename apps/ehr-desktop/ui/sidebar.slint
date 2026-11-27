@@ -1,0 +1,184 @@
+import { Palette, PersonRow, SideItem, Link } from "widgets.slint";
+
+// Narrow bar with logout.
+export component Rail inherits Rectangle {
+    callback logout();
+    width: 64px;
+    background: Palette.rail;
+    VerticalLayout {
+        padding-top: 14px;
+        padding-bottom: 14px;
+        spacing: 8px;
+        Text {
+            text: "EHR";
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+        Rectangle { }
+        Text {
+            text: "Wyloguj";
+            color: #cfd6dc;
+            font-size: 12px;
+            horizontal-alignment: center;
+            TouchArea {
+                clicked => { root.logout(); }
+                mouse-cursor: pointer;
+            }
+        }
+    }
+}
+
+// Side panel: doctor's patients and contact requests, or patient's categories and doctors.
+export component Sidebar inherits Rectangle {
+    in property <bool> is-doctor;
+    in property <string> me-name;
+    in-out property <string> search;
+    in property <[PersonRow]> people;
+    in property <[PersonRow]> pending;
+    in property <int> selected-person;
+    in-out property <int> category-filter;
+    in property <[string]> categories;
+    in-out property <string> connect-text;
+    in-out property <string> modal;
+    callback filter-changed();
+    callback new-invite();
+    callback select-person(int);
+    callback open-accept(int);
+    width: 250px;
+    background: Palette.side;
+    VerticalLayout {
+        padding: 16px;
+        padding-left: 14px;
+        padding-right: 14px;
+        spacing: 4px;
+        Text {
+            text: "Dokumentacja";
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+        }
+        Rectangle { height: 8px; }
+        Rectangle {
+            height: 36px;
+            border-radius: Palette.radius;
+            background: Palette.side-field;
+            search-edit := TextInput {
+                x: 12px;
+                width: parent.width - 24px;
+                vertical-alignment: center;
+                color: white;
+                text <=> root.search;
+                edited => { root.filter-changed(); }
+            }
+            if root.search == "": Text {
+                text: root.is-doctor ? "Szukaj pacjenta" : "Szukaj dokumentu";
+                color: #eaf1f8;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+        }
+        Rectangle { height: 10px; }
+        if root.is-doctor: VerticalLayout {
+            alignment: start;
+            spacing: 2px;
+            HorizontalLayout {
+                Text {
+                    text: "Pacjenci";
+                    color: #d3e0ee;
+                    font-size: 16px;
+                }
+                Link {
+                    text: "+";
+                    color: white;
+                    font-size: 18px;
+                    horizontal-alignment: right;
+                    clicked => { root.new-invite(); }
+                }
+            }
+            for person[i] in root.people: SideItem {
+                text: person.name;
+                active: i == root.selected-person;
+                clicked => { root.select-person(i); }
+            }
+            if root.pending.length > 0: Text {
+                text: "Prośby o kontakt";
+                color: #d3e0ee;
+                font-size: 16px;
+            }
+            for person[i] in root.pending: SideItem {
+                text: person.name;
+                hint: "nowy";
+                clicked => { root.open-accept(i); }
+            }
+        }
+        if !root.is-doctor: VerticalLayout {
+            alignment: start;
+            spacing: 2px;
+            Text {
+                text: "Moje dokumenty";
+                color: #d3e0ee;
+                font-size: 16px;
+            }
+            SideItem {
+                text: "Wszystkie";
+                active: root.category-filter == -1;
+                clicked => {
+                    root.category-filter = -1;
+                    root.filter-changed();
+                }
+            }
+            for category[i] in root.categories: SideItem {
+                text: category;
+                active: i == root.category-filter;
+                clicked => {
+                    root.category-filter = i;
+                    root.filter-changed();
+                }
+            }
+            Rectangle { height: 12px; }
+            HorizontalLayout {
+                Text {
+                    text: "Lekarze";
+                    color: #d3e0ee;
+                    font-size: 16px;
+                }
+                Link {
+                    text: "+";
+                    color: white;
+                    font-size: 18px;
+                    horizontal-alignment: right;
+                    clicked => {
+                        root.connect-text = "";
+                        root.modal = "connect";
+                    }
+                }
+            }
+            for person in root.people: SideItem {
+                text: person.name;
+            }
+        }
+        Rectangle {
+            vertical-stretch: 1;
+        }
+        Rectangle {
+            height: 1px;
+            background: #ffffff40;
+        }
+        VerticalLayout {
+            padding-top: 10px;
+            Text {
+                text: root.me-name;
+                color: white;
+                font-size: 14px;
+                font-weight: 700;
+            }
+            Text {
+                text: root.is-doctor ? "Lekarz" : "Pacjent";
+                color: #dbe6f1;
+                font-size: 13px;
+            }
+        }
+    }
+}

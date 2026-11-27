@@ -3,27 +3,27 @@ use ipfs_cid::models::{Cid, Multihash};
 use std::fs;
 
 // ==========================================
-// TESTY PEŁNEGO CYKLU ŻYCIA
+// FULL LIFE CYCLE TESTS
 // ==========================================
 
 #[test]
 fn test_full_lifecycle_raw_data() {
-    // 1. Inicjalizacja danych wejściowych
+    // 1. Input data
     let data = b"Integracyjny test przeplywu danych IPFS";
 
-    // 2. Generowanie wewnętrznych struktur
+    // 2. Internal structures
     let hash = Multihash::compute(data, SHA2_256).expect("Błąd obliczania hasha");
     let original_cid = Cid::new_cid(CODEC_RAW, hash);
 
-    // 3. Transformacja do warstw transportowych (bajty i tekst)
+    // 3. Transport forms (bytes and text)
     let binary_format = original_cid.to_bytes();
     let text_format = original_cid.to_string_base32();
 
-    // 4. Rekonstrukcja z warstw transportowych
+    // 4. Rebuild from the transport forms
     let cid_from_bytes = Cid::decode_from_bytes(&binary_format).expect("Błąd dekodowania bajtów");
     let cid_from_text = Cid::decode_from_string(&text_format).expect("Błąd dekodowania multibase");
 
-    // 5. Weryfikacja spójności (wszystkie ścieżki muszą dać ten sam obiekt)
+    // 5. Consistency (every path must give the same object)
     assert_eq!(original_cid, cid_from_bytes);
     assert_eq!(original_cid, cid_from_text);
 
@@ -35,7 +35,7 @@ fn test_full_lifecycle_raw_data() {
 }
 
 // ==========================================
-// TESTY PRZYPADKÓW BRZEGOWYCH I ZABEZPIECZEŃ
+// EDGE CASE AND SAFETY TESTS
 // ==========================================
 
 #[test]
@@ -44,11 +44,11 @@ fn test_edge_case_corrupted_data_verification() {
     let hash = Multihash::compute(data, SHA2_256).unwrap();
     let cid = Cid::new_cid(CODEC_RAW, hash);
 
-    // Symulujemy dane zmienione w tranzycie (np. przez atakującego lub błąd dysku)
+    // Data changed in transit (e.g. by an attacker or a disk error)
     let mut corrupted_data = data.to_vec();
-    corrupted_data[0] = b'X'; // Zmieniamy 'P' na 'X'
+    corrupted_data[0] = b'X'; // 'P' becomes 'X'
 
-    // Struktura CID musi bezwzględnie odrzucić takie dane
+    // The CID must reject such data
     assert!(
         !cid.verify_block(&corrupted_data),
         "CID nie może pozytywnie zweryfikować zmodyfikowanych danych!"
@@ -63,8 +63,7 @@ fn test_multibase_format_agnosticism() {
 
     let binary_data = cid.to_bytes();
 
-    // Kodujemy ten sam identyfikator w dwóch różnych formatach tekstowych
-    // Używamy z i b - standardowych prefiksów w IPFS
+    // The same CID in two text encodings: the standard IPFS prefixes z and b
     let base58btc_str = multibase::encode(multibase::Base::Base58Btc, &binary_data);
     let base32_str = multibase::encode(multibase::Base::Base32Lower, &binary_data);
 
@@ -75,7 +74,7 @@ fn test_multibase_format_agnosticism() {
     assert!(base58btc_str.starts_with('z'));
     assert!(base32_str.starts_with('b'));
 
-    // Niezależnie od formatu tekstu, deserializacja musi dać ten sam obiekt CID
+    // Whatever the text encoding, decoding must give the same CID
     let cid_from_base58 = Cid::decode_from_string(&base58btc_str).unwrap();
     let cid_from_base32 = Cid::decode_from_string(&base32_str).unwrap();
 
@@ -86,7 +85,7 @@ fn test_multibase_format_agnosticism() {
 }
 
 // ==========================================
-// TESTY END-TO-END Z PLIKAMI ZEWNĘTRZNYMI
+// END-TO-END TESTS WITH EXTERNAL FILES
 // ==========================================
 
 #[test]

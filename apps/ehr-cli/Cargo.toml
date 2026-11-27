@@ -3,9 +3,24 @@ name = "ehr-cli"
 version = "0.1.0"
 edition = "2024"
 
+# One code base, two binaries: the role is fixed at compile time (doctor = facility, patient).
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "ehr-cli-doctor"
+path = "src/bin/ehr-cli-doctor.rs"
+
+[[bin]]
+name = "ehr-cli-patient"
+path = "src/bin/ehr-cli-patient.rs"
+
 [dependencies]
+ehr-core = { path = "../../crates/ehr-core" }
 ipfs-network = { path = "../../crates/ipfs-network" }
 ipfs-cid = { path = "../../crates/ipfs-cid" }
 ipfs-unixfs = { path = "../../crates/ipfs-unixfs" }
 ipfs-store = { path = "../../crates/ipfs-store" }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal"] }
+rpassword = "7"
+serde_json = "1"

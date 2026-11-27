@@ -1,0 +1,160 @@
+import { ScrollView } from "std-widgets.slint";
+import { Palette, DocRow, Btn, Link } from "widgets.slint";
+
+// Document list of the selected patient (doctor) or of the patient.
+export component DocumentList inherits VerticalLayout {
+    in property <bool> is-doctor;
+    in property <string> header;
+    in property <string> header-note;
+    in property <[DocRow]> docs;
+    in property <int> selected-person;
+    in property <int> selected-doc;
+    in property <string> status;
+    callback open-add();
+    callback refresh();
+    callback select-doc(int);
+    callback download(int);
+    callback open-edit(int);
+    Rectangle {
+        height: 58px;
+        border-width: 0;
+        HorizontalLayout {
+            padding-left: 24px;
+            padding-right: 24px;
+            Text {
+                text: root.header;
+                font-size: 19px;
+                font-weight: 700;
+                vertical-alignment: center;
+            }
+            Text {
+                text: root.header-note;
+                color: Palette.muted;
+                font-size: 13px;
+                horizontal-alignment: right;
+                vertical-alignment: center;
+            }
+        }
+        Rectangle {
+            y: parent.height - 1px;
+            height: 1px;
+            background: Palette.line;
+        }
+    }
+    HorizontalLayout {
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 14px;
+        spacing: 8px;
+        alignment: start;
+        if root.is-doctor: Btn {
+            primary: true;
+            text: "Dodaj dokument";
+            enabled: root.selected-person >= 0;
+            clicked => { root.open-add(); }
+        }
+        Btn {
+            text: root.is-doctor ? "Odśwież" : "Sprawdź nowe";
+            clicked => { root.refresh(); }
+        }
+    }
+    ScrollView {
+        VerticalLayout {
+            padding: 24px;
+            padding-top: 10px;
+            Rectangle {
+                background: Palette.block;
+                border-radius: Palette.radius;
+                VerticalLayout {
+                    padding-left: 18px;
+                    padding-right: 18px;
+                    padding-top: 6px;
+                    padding-bottom: 6px;
+                    if root.docs.length == 0: Text {
+                        height: 48px;
+                        text: root.is-doctor && root.selected-person < 0 ? "Wybierz pacjenta albo zaproś nowego (+)." : "Brak dokumentów.";
+                        color: Palette.muted;
+                        vertical-alignment: center;
+                    }
+                    for doc[i] in root.docs: Rectangle {
+                        height: 60px;
+                        TouchArea {
+                            clicked => { root.select-doc(i); }
+                        }
+                        HorizontalLayout {
+                            spacing: 16px;
+                            VerticalLayout {
+                                alignment: center;
+                                horizontal-stretch: 1;
+                                Text {
+                                    text: doc.title;
+                                    font-size: 14.5px;
+                                    font-weight: 700;
+                                    overflow: elide;
+                                }
+                                Text {
+                                    text: doc.subtitle;
+                                    font-size: 12.5px;
+                                    color: Palette.muted;
+                                    overflow: elide;
+                                }
+                            }
+                            Text {
+                                text: doc.date;
+                                width: 84px;
+                                font-size: 13px;
+                                color: Palette.muted;
+                                vertical-alignment: center;
+                            }
+                            HorizontalLayout {
+                                spacing: 14px;
+                                width: root.is-doctor ? 210px : 140px;
+                                alignment: end;
+                                Link {
+                                    text: "Podgląd";
+                                    vertical-alignment: center;
+                                    clicked => { root.select-doc(i); }
+                                }
+                                Link {
+                                    text: "Pobierz";
+                                    vertical-alignment: center;
+                                    clicked => { root.download(i); }
+                                }
+                                if root.is-doctor: Link {
+                                    text: "Edytuj";
+                                    vertical-alignment: center;
+                                    clicked => { root.open-edit(i); }
+                                }
+                            }
+                        }
+                        if i < root.docs.length - 1: Rectangle {
+                            y: parent.height - 1px;
+                            height: 1px;
+                            background: #dcdcdc;
+                        }
+                        if i == root.selected-doc: Rectangle {
+                            x: -12px;
+                            width: 4px;
+                            height: parent.height - 16px;
+                            y: 8px;
+                            background: Palette.blue;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if root.status != "": Rectangle {
+        height: 30px;
+        background: #f4f6f8;
+        Text {
+            x: 24px;
+            text: root.status;
+            color: Palette.muted;
+            font-size: 13px;
+            vertical-alignment: center;
+            overflow: elide;
+            width: parent.width - 48px;
+        }
+    }
+}

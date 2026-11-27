@@ -4,3 +4,21 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+ehr-security = { path = "../ehr-security" }
+ipfs-cid = { path = "../ipfs-cid" }
+ipfs-store = { path = "../ipfs-store" }
+ipfs-unixfs = { path = "../ipfs-unixfs" }
+ipfs-network = { path = "../ipfs-network" }
+libp2p = { version = "0.57.1" }
+futures = "0.3"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+
+[dev-dependencies]
+tempfile = "3.3"
+
+[[test]]
+name = "ehr-core-unit-test"
+path = "tests/ehr-core-unit-test.rs"

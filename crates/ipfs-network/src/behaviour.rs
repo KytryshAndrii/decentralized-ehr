@@ -14,7 +14,7 @@ pub enum NetworkEvent {
     Identify(Box<identify::Event>),
     Ping(ping::Event),
     Kad(Box<kad::Event>),
-    /// Strumienie Bitswap obsługuje crate ipfs-bitswap; to zachowanie nie emituje zdarzeń.
+    /// Bitswap streams are handled by the ipfs-bitswap crate; this behaviour emits no events.
     Bitswap,
 }
 

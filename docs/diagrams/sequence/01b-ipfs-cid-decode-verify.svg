@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="736" height="952" viewBox="0 0 736 952" font-family="Arial, Helvetica, sans-serif">
+<rect width="736" height="952" fill="#fff"/>
+<text x="368" y="26" text-anchor="middle" font-size="15" font-weight="bold">ipfs-cid – diagram sekwencji: Cid::decode_from_string i Cid::verify_block</text>
+<rect x="230.6298828125" y="304" width="347" height="268" fill="none" stroke="#000"/>
+<line x1="230.6298828125" x2="577.6298828125" y1="370" y2="370" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="230.6298828125" x2="577.6298828125" y1="432" y2="432" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="230.6298828125" x2="577.6298828125" y1="494" y2="494" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="230.6298828125" y="736" width="315.146484375" height="130" fill="none" stroke="#000"/>
+<line x1="230.6298828125" x2="545.7763671875" y1="802" y2="802" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="75.2333984375" x2="75.2333984375" y1="118" y2="922" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="264.6298828125" x2="264.6298828125" y1="90" y2="922" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="564.6298828125" x2="564.6298828125" y1="90" y2="922" stroke="#000" stroke-dasharray="6,4"/>
+<line x1="666.63671875" x2="666.63671875" y1="90" y2="922" stroke="#000" stroke-dasharray="6,4"/>
+<rect x="559.6" y="196.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="264.6" y="254.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="264.6" y="328.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="264.6" y="390.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="264.6" y="452.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="264.6" y="514.0" width="10" height="32.0" fill="#fff" stroke="#000"/>
+<rect x="259.6" y="158.0" width="10" height="444.0" fill="#fff" stroke="#000"/>
+<rect x="661.6" y="678.0" width="10" height="38.0" fill="#fff" stroke="#000"/>
+<rect x="264.6" y="760.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="264.6" y="822.0" width="10" height="18.0" fill="#fff" stroke="#000"/>
+<rect x="259.6" y="640.0" width="10" height="256.0" fill="#fff" stroke="#000"/>
+<circle cx="75.2333984375" cy="64" r="6" fill="#fff" stroke="#000"/><line x1="75.2333984375" x2="75.2333984375" y1="70" y2="86" stroke="#000"/><line x1="64.2333984375" x2="86.2333984375" y1="76" y2="76" stroke="#000"/><line x1="75.2333984375" x2="66.2333984375" y1="86" y2="98" stroke="#000"/><line x1="75.2333984375" x2="84.2333984375" y1="86" y2="98" stroke="#000"/><text x="75.2333984375" y="112" text-anchor="middle" font-size="12" font-weight="bold">Wywołujący</text>
+<rect x="234.6298828125" y="56" width="60" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="264.6298828125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">Cid</text>
+<rect x="525.6220703125" y="56" width="78.015625" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="564.6298828125" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">multibase</text>
+<rect x="627.6376953125" y="56" width="77.998046875" height="34" fill="#fff" stroke="#000" stroke-width="1.2"/><text x="666.63671875" y="77.5" text-anchor="middle" font-size="12" font-weight="bold">Multihash</text>
+<line x1="75.2333984375" x2="259.6298828125" y1="158" y2="158" stroke="#000"/><polygon points="259.6298828125,158 250.6298828125,153.5 250.6298828125,162.5" fill="#000" stroke="#000"/>
+<text x="167.431640625" y="152" text-anchor="middle" font-size="12">decode_from_string(cid_str)</text>
+<line x1="269.6298828125" x2="559.6298828125" y1="196" y2="196" stroke="#000"/><polygon points="559.6298828125,196 550.6298828125,191.5 550.6298828125,200.5" fill="#000" stroke="#000"/>
+<text x="414.6298828125" y="190" text-anchor="middle" font-size="12">decode(cid_str)</text>
+<line x1="559.6298828125" x2="269.6298828125" y1="234" y2="234" stroke="#000" stroke-dasharray="6,4"/><polyline points="278.6298828125,229.5 269.6298828125,234 278.6298828125,238.5" fill="none" stroke="#000"/>
+<text x="414.6298828125" y="228" text-anchor="middle" font-size="12">Result&lt;(Base, bytes), Error&gt;</text>
+<polyline points="274.6298828125,258 302.6298828125,258 302.6298828125,286 277.1298828125,286" fill="none" stroke="#000"/><polygon points="277.1298828125,286 286.1298828125,281.5 286.1298828125,290.5" fill="#000" stroke="#000"/>
+<text x="308.6298828125" y="262" font-size="12">decode_from_bytes(&amp;bytes) – varint: version,</text>
+<text x="308.6298828125" y="276" font-size="12">codec, hash_code, hash_size</text>
+<polyline points="274.6298828125,332 302.6298828125,332 302.6298828125,346 277.1298828125,346" fill="none" stroke="#000"/><polygon points="277.1298828125,346 286.1298828125,341.5 286.1298828125,350.5" fill="#000" stroke="#000"/>
+<text x="308.6298828125" y="336" font-size="12">Err(UnsupportedVersion(version))</text>
+<polyline points="274.6298828125,394 302.6298828125,394 302.6298828125,408 277.1298828125,408" fill="none" stroke="#000"/><polygon points="277.1298828125,408 286.1298828125,403.5 286.1298828125,412.5" fill="#000" stroke="#000"/>
+<text x="308.6298828125" y="398" font-size="12">Err(VarintDecodeError)</text>
+<polyline points="274.6298828125,456 302.6298828125,456 302.6298828125,470 277.1298828125,470" fill="none" stroke="#000"/><polygon points="277.1298828125,470 286.1298828125,465.5 286.1298828125,474.5" fill="#000" stroke="#000"/>
+<text x="308.6298828125" y="460" font-size="12">Err(TrailingBytes)</text>
+<polyline points="274.6298828125,518 302.6298828125,518 302.6298828125,546 277.1298828125,546" fill="none" stroke="#000"/><polygon points="277.1298828125,546 286.1298828125,541.5 286.1298828125,550.5" fill="#000" stroke="#000"/>
+<text x="308.6298828125" y="522" font-size="12">Cid { version, codec, Multihash { code, size,</text>
+<text x="308.6298828125" y="536" font-size="12">digest } }</text>
+<line x1="259.6298828125" x2="75.2333984375" y1="602" y2="602" stroke="#000" stroke-dasharray="6,4"/><polyline points="84.2333984375,597.5 75.2333984375,602 84.2333984375,606.5" fill="none" stroke="#000"/>
+<text x="167.431640625" y="596" text-anchor="middle" font-size="12">Result&lt;Cid, CidError&gt;</text>
+<line x1="75.2333984375" x2="259.6298828125" y1="640" y2="640" stroke="#000"/><polygon points="259.6298828125,640 250.6298828125,635.5 250.6298828125,644.5" fill="#000" stroke="#000"/>
+<text x="167.431640625" y="634" text-anchor="middle" font-size="12">verify_block(data)</text>
+<line x1="269.6298828125" x2="661.63671875" y1="678" y2="678" stroke="#000"/><polygon points="661.63671875,678 652.63671875,673.5 652.63671875,682.5" fill="#000" stroke="#000"/>
+<text x="465.63330078125" y="672" text-anchor="middle" font-size="12">compute(data, multihash.code)</text>
+<line x1="661.63671875" x2="269.6298828125" y1="716" y2="716" stroke="#000" stroke-dasharray="6,4"/><polyline points="278.6298828125,711.5 269.6298828125,716 278.6298828125,720.5" fill="none" stroke="#000"/>
+<text x="465.63330078125" y="710" text-anchor="middle" font-size="12">Result&lt;Multihash, CidError&gt;</text>
+<polyline points="274.6298828125,764 302.6298828125,764 302.6298828125,778 277.1298828125,778" fill="none" stroke="#000"/><polygon points="277.1298828125,778 286.1298828125,773.5 286.1298828125,782.5" fill="#000" stroke="#000"/>
+<text x="308.6298828125" y="768" font-size="12">computed_hash.digest == multihash.digest</text>
+<polyline points="274.6298828125,826 302.6298828125,826 302.6298828125,840 277.1298828125,840" fill="none" stroke="#000"/><polygon points="277.1298828125,840 286.1298828125,835.5 286.1298828125,844.5" fill="#000" stroke="#000"/>
+<text x="308.6298828125" y="830" font-size="12">false</text>
+<line x1="259.6298828125" x2="75.2333984375" y1="896" y2="896" stroke="#000" stroke-dasharray="6,4"/><polyline points="84.2333984375,891.5 75.2333984375,896 84.2333984375,900.5" fill="none" stroke="#000"/>
+<text x="167.431640625" y="890" text-anchor="middle" font-size="12">bool</text>
+<polygon points="230.6298828125,304 257.466796875,304 257.466796875,313 250.466796875,320 230.6298828125,320" fill="#fff" stroke="#000"/><text x="236.6298828125" y="316" font-size="11" font-weight="bold">alt</text>
+<rect x="262.466796875" y="305" width="102.430419921875" height="14" fill="#fff"/><text x="265.466796875" y="317" font-size="11.5">[version ≠ CID_V1]</text>
+<rect x="235.6298828125" y="372" width="230.671142578125" height="14" fill="#fff"/><text x="238.6298828125" y="383" font-size="11.5">[brak danych digest (rem.len() &lt; hash_size)]</text>
+<rect x="235.6298828125" y="434" width="123.285400390625" height="14" fill="#fff"/><text x="238.6298828125" y="445" font-size="11.5">[rem.len() &gt; hash_size]</text>
+<rect x="235.6298828125" y="496" width="85.25341796875" height="14" fill="#fff"/><text x="238.6298828125" y="507" font-size="11.5">[poprawny CID]</text>
+<polygon points="230.6298828125,736 257.466796875,736 257.466796875,745 250.466796875,752 230.6298828125,752" fill="#fff" stroke="#000"/><text x="236.6298828125" y="748" font-size="11" font-weight="bold">alt</text>
+<rect x="262.466796875" y="737" width="116.580810546875" height="14" fill="#fff"/><text x="265.466796875" y="749" font-size="11.5">[Ok(computed_hash)]</text>
+<rect x="235.6298828125" y="804" width="41.774658203125" height="14" fill="#fff"/><text x="238.6298828125" y="815" font-size="11.5">[Err(_)]</text>
+</svg>

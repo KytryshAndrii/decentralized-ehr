@@ -12,7 +12,7 @@ use libp2p::swarm::dial_opts::DialOpts;
 use libp2p::{Multiaddr, PeerId};
 use std::time::{Duration, Instant};
 
-/// Trwały stan węzła: znane peery i ogłaszane CID.
+/// Persistent node state: known peers and announced CIDs.
 impl NetworkNode {
     fn open_state_store(&self) -> Option<PersistentBlockstore> {
         let directory = self.config.state_directory.as_ref()?;
@@ -112,7 +112,7 @@ impl NetworkNode {
         true
     }
 
-    /// Wkłada zapisany rekord „peer ma blok” z powrotem do MemoryStore Kademlii.
+    /// Puts a saved "peer has block" record back into the Kademlia MemoryStore.
     fn restore_remote_provider(&mut self, provider: RemoteProvider, now_utc: u64) -> bool {
         let Ok(peer_id) = provider.peer_id.parse::<PeerId>() else {
             return false;
@@ -138,7 +138,7 @@ impl NetworkNode {
         true
     }
 
-    /// Obsługa ADD_PROVIDER od innego peera: rekord trafia do MemoryStore i na dysk.
+    /// ADD_PROVIDER from another peer: the record goes to the MemoryStore and to disk.
     pub(crate) fn accept_remote_provider(&mut self, record: kad::ProviderRecord) {
         let peer_id = record.provider;
         let multihash = record.key.to_vec();
@@ -189,7 +189,7 @@ impl NetworkNode {
         }
     }
 
-    /// Zapisuje peera poznanego przez Identify; zapis tylko przy zmianie danych.
+    /// Saves a peer learned through Identify; written only when its data changed.
     pub(crate) fn remember_peer(
         &mut self,
         peer_id: PeerId,
@@ -263,7 +263,7 @@ impl NetworkNode {
         true
     }
 
-    /// Ponownie ogłasza w DHT wszystkie CID tego węzła.
+    /// Announces every CID of this node in the DHT again.
     pub(crate) fn reprovide(&mut self) {
         self.next_reprovide = Instant::now() + self.config.reprovide_interval;
         if self.provided.is_empty() {

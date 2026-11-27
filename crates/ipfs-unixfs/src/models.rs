@@ -1,53 +1,40 @@
 use ipfs_cid::models::Cid;
 use std::io::BufReader;
 
-/// Sposób dzielenia pliku na liście DAG.
+/// How a file is split into DAG leaves.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Chunker {
-    /// Kawałki stałej długości (`size-N` w Kubo); ostatni jest krótszy, bez dopełniania.
+    /// Fixed-size chunks (`size-N` in Kubo); the last one is shorter, without padding.
     Fixed { size: usize },
-    /// Granice zależne od treści (`rabin-min-avg-max` w Kubo).
-    Rabin { min: usize, avg: usize, max: usize },
 }
 
-/// Iterator po kawałkach pliku; czyta strumieniowo, bez ładowania całego pliku do pamięci.
+/// Iterator over the file chunks; streams without loading the whole file into memory.
 pub struct Chunks<R> {
     pub(crate) reader: BufReader<R>,
     pub(crate) chunker: Chunker,
-    pub(crate) rabin: Option<Box<RabinTables>>,
 }
 
-pub(crate) struct RabinTables {
-    pub(crate) out: [u64; 256],
-    pub(crate) modulo: [u64; 256],
-    pub(crate) shift: u32,
-    pub(crate) mask: u64,
-}
-
-/// Wynik importu pliku.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ImportedFile {
     pub root: Cid,
-    /// Rozmiar pliku w bajtach.
     pub size: u64,
-    /// Bloki zapisane przy tym imporcie.
+    /// Blocks stored by this import.
     pub new_blocks: usize,
-    /// Bloki, które już były w Blockstore (deduplikacja).
+    /// Blocks already in the Blockstore (deduplication).
     pub reused_blocks: usize,
 }
 
-/// Dziecko węzła DAG w trakcie budowy.
+/// Child of a DAG node being built.
 pub(crate) struct Child {
     pub(crate) cid: Cid,
-    /// Bajty pliku pod tym dzieckiem (`blocksizes`).
+    /// File bytes under this child (`blocksizes`).
     pub(crate) file_bytes: u64,
-    /// Łączny rozmiar bloków poddrzewa (`Tsize`).
+    /// Total block size of the subtree (`Tsize`).
     pub(crate) dag_bytes: u64,
 }
 
 #[derive(Clone, PartialEq, prost::Message)]
 pub struct PbLink {
-    /// Binarny CID dziecka.
     #[prost(bytes = "vec", optional, tag = "1")]
     pub hash: Option<Vec<u8>>,
     #[prost(string, optional, tag = "2")]
@@ -64,7 +51,7 @@ pub struct PbNode {
     pub links: Vec<PbLink>,
 }
 
-/// Komunikat `Data` z UnixFS v1 (proto2); pola mode i mtime są pomijane przy odczycie.
+/// UnixFS v1 `Data` message (proto2); the mode and mtime fields are ignored when reading.
 #[derive(Clone, PartialEq, prost::Message)]
 pub struct UnixfsData {
     #[prost(enumeration = "DataType", required, tag = "1")]

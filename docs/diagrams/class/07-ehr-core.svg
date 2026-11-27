@@ -1,0 +1,357 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2713" height="2577" viewBox="0 0 2713 2577" font-family="Arial, Helvetica, sans-serif">
+<rect width="2713" height="2577" fill="#fff"/>
+<text x="1356.5" y="28" text-anchor="middle" font-size="15" font-weight="bold">ehr-core – diagram klas (warstwa aplikacji)</text>
+<path d="M408.1,1946.4 C365.5,2028.0 314.1,2126.5 292.7,2167.6" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="302.2,2160.1 292.7,2167.6 293.3,2155.5" fill="none" stroke="#000" stroke-width="1"/><rect x="374.1" y="2029.0" width="43.9" height="14" fill="#fff"/><text x="396.1" y="2040.0" text-anchor="middle" font-size="10.5">Security</text>
+<path d="M451.9,1946.4 C437.9,2028.0 420.9,2126.5 413.9,2167.6" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="420.7,2157.6 413.9,2167.6 410.8,2155.9" fill="none" stroke="#000" stroke-width="1"/><rect x="438.4" y="2029.0" width="31.1" height="14" fill="#fff"/><text x="454.0" y="2040.0" text-anchor="middle" font-size="10.5">Store</text>
+<path d="M495.1,1946.4 C509.1,2028.0 526.1,2126.5 533.2,2167.6" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="536.2,2155.9 533.2,2167.6 526.4,2157.6" fill="none" stroke="#000" stroke-width="1"/><rect x="512.4" y="2029.0" width="35.2" height="14" fill="#fff"/><text x="530.0" y="2040.0" text-anchor="middle" font-size="10.5">Unixfs</text>
+<path d="M538.3,1946.4 C580.4,2028.0 631.3,2126.5 652.5,2167.6" fill="none" stroke="#000" stroke-width="1"/>
+<polyline points="651.9,2155.5 652.5,2167.6 643.0,2160.1" fill="none" stroke="#000" stroke-width="1"/><rect x="598.0" y="2029.0" width="21.8" height="14" fill="#fff"/><text x="608.9" y="2040.0" text-anchor="middle" font-size="10.5">Cid</text>
+<path d="M1306.8,1874.2 C1294.4,1941.6 1273.2,2057.4 1260.4,2127.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1306.8,1874.2 1299.3,1882.0 1303.5,1891.9 1311.1,1884.1" fill="#000" stroke="#000" stroke-width="1"/><text x="1273.1" y="2117.7" font-size="10.5">1</text>
+<rect x="1279.6" y="2029.0" width="23.5" height="14" fill="#fff"/><text x="1291.4" y="2040.0" text-anchor="middle" font-size="10.5">role</text>
+<path d="M958.9,1970.4 C936.8,2015.8 913.3,2064.2 894.1,2103.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="958.9,1970.4 949.5,1975.9 951.0,1986.6 960.3,1981.1" fill="#000" stroke="#000" stroke-width="1"/><text x="910.1" y="2097.6" font-size="10.5">1</text>
+<rect x="938.6" y="2029.0" width="46.3" height="14" fill="#fff"/><text x="961.7" y="2040.0" text-anchor="middle" font-size="10.5">category</text>
+<path d="M1037.2,1970.4 C1040.1,2046.5 1043.4,2130.6 1044.8,2167.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1037.2,1970.4 1031.5,1979.6 1037.9,1988.4 1043.5,1979.2" fill="#000" stroke="#000" stroke-width="1"/><text x="1054.2" y="2155.3" font-size="10.5">1</text>
+<rect x="1036.7" y="2029.0" width="58.5" height="14" fill="#fff"/><text x="1066.0" y="2040.0" text-anchor="middle" font-size="10.5">read_token</text>
+<path d="M881.1,1641.3 C875.7,1657.0 871.2,1670.0 871.2,1670.0 C871.2,1670.0 861.4,1957.4 856.4,2103.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="881.1,1641.3 872.5,1647.8 875.2,1658.3 883.8,1651.8" fill="#000" stroke="#000" stroke-width="1"/><text x="866.9" y="2092.0" font-size="10.5">1</text>
+<rect x="867.2" y="1812.0" width="46.3" height="14" fill="#fff"/><text x="890.3" y="1823.0" text-anchor="middle" font-size="10.5">category</text>
+<path d="M2432.6,388.3 C2429.0,474.9 2421.5,655.0 2421.5,655.0 C2421.5,655.0 2421.5,763.0 2421.5,763.0 C2421.5,763.0 2429.5,1000.3 2433.0,1101.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="2432.6,388.3 2426.2,397.0 2431.9,406.3 2438.2,397.5" fill="#000" stroke="#000" stroke-width="1"/><text x="2442.4" y="1089.5" font-size="10.5">0..*</text>
+<rect x="2417.7" y="701.0" width="37.5" height="14" fill="#fff"/><text x="2436.5" y="712.0" text-anchor="middle" font-size="10.5">entries</text>
+<path d="M1337.6,1504.4 C1275.6,1596.3 1225.8,1670.0 1225.8,1670.0 C1225.8,1670.0 1225.8,1970.0 1225.8,1970.0 C1225.8,1970.0 1236.0,2063.4 1243.0,2127.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1337.6,1504.4 1327.6,1508.5 1327.5,1519.3 1337.5,1515.2" fill="#000" stroke="#000" stroke-width="1"/><text x="1251.2" y="2114.7" font-size="10.5">1</text>
+<rect x="1222.4" y="1812.0" width="23.5" height="14" fill="#fff"/><text x="1234.2" y="1823.0" text-anchor="middle" font-size="10.5">role</text>
+<path d="M1674.0,1504.1 C1708.4,1630.8 1741.8,1753.6 1754.3,1799.8" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1674.0,1504.1 1670.6,1514.4 1678.7,1521.5 1682.1,1511.2" fill="#000" stroke="#000" stroke-width="1"/><text x="1759.8" y="1785.7" font-size="10.5">1</text>
+<rect x="1706.9" y="1579.0" width="39.3" height="14" fill="#fff"/><text x="1726.5" y="1590.0" text-anchor="middle" font-size="10.5">identity</text>
+<path d="M1439.2,1504.1 C1399.2,1606.6 1360.3,1706.6 1337.3,1765.5" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1439.2,1504.1 1430.3,1510.3 1432.7,1520.9 1441.5,1514.7" fill="#000" stroke="#000" stroke-width="1"/><text x="1352.4" y="1758.2" font-size="10.5">1</text>
+<rect x="1420.0" y="1579.0" width="34.6" height="14" fill="#fff"/><text x="1437.3" y="1590.0" text-anchor="middle" font-size="10.5">profile</text>
+<path d="M1857.9,626.4 C1829.1,679.9 1798.6,736.4 1768.8,791.7" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1857.9,626.4 1848.4,631.5 1849.4,642.2 1858.9,637.2" fill="#fff" stroke="#000" stroke-width="1"/><text x="1785.2" y="786.4" font-size="10.5">1</text>
+<rect x="1829.3" y="701.0" width="23.5" height="14" fill="#fff"/><text x="1841.1" y="712.0" text-anchor="middle" font-size="10.5">app</text>
+<path d="M1986.5,626.4 C1970.0,822.2 1949.9,1059.1 1944.2,1127.6" fill="none" stroke="#000" stroke-width="1"/>
+<polygon points="1986.5,626.4 1979.8,634.9 1985.0,644.3 1991.7,635.9" fill="#000" stroke="#000" stroke-width="1"/><text x="1955.5" y="1116.5" font-size="10.5">1</text>
+<rect x="1978.4" y="701.0" width="57.4" height="14" fill="#fff"/><text x="2007.1" y="712.0" text-anchor="middle" font-size="10.5">commands</text>
+<path d="M1746.0,1504.4 C1789.6,1596.3 1824.5,1670.0 1824.5,1670.0 C1824.5,1670.0 1864.6,1759.1 1882.8,1799.5" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1882.8,1787.4 1882.8,1799.5 1873.7,1791.5" fill="none" stroke="#000" stroke-width="1"/><path d="M1838.1,1504.4 C1905.5,1596.3 1959.5,1670.0 1959.5,1670.0 C1959.5,1670.0 2005.6,1759.1 2026.4,1799.5" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2025.8,1787.4 2026.4,1799.5 2016.9,1792.0" fill="none" stroke="#000" stroke-width="1"/><path d="M1598.7,1504.1 C1604.6,1603.3 1610.4,1700.2 1614.0,1759.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1618.3,1748.4 1614.0,1759.7 1608.3,1749.0" fill="none" stroke="#000" stroke-width="1"/><path d="M1845.4,1481.5 C1856.8,1495.6 1863.5,1504.0 1863.5,1504.0 C1863.5,1504.0 2029.5,1533.0 2029.5,1533.0 C2029.5,1533.0 2243.5,1670.0 2243.5,1670.0 C2243.5,1670.0 2268.7,1722.8 2289.1,1765.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2288.9,1753.5 2289.1,1765.6 2279.9,1757.8" fill="none" stroke="#000" stroke-width="1"/><path d="M1518.2,1504.1 C1499.3,1616.7 1481.0,1726.2 1471.8,1781.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1478.5,1771.5 1471.8,1781.6 1468.7,1769.9" fill="none" stroke="#000" stroke-width="1"/><path d="M1309.6,1407.5 C1237.7,1476.8 1179.5,1533.0 1179.5,1533.0 C1179.5,1533.0 1144.7,1600.3 1108.8,1669.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1118.3,1662.2 1108.8,1669.7 1109.4,1657.6" fill="none" stroke="#000" stroke-width="1"/><path d="M1845.4,1481.5 C1856.8,1495.6 1863.5,1504.0 1863.5,1504.0 C1863.5,1504.0 1928.5,1533.0 1928.5,1533.0 C1928.5,1533.0 2114.5,1670.0 2114.5,1670.0 C2114.5,1670.0 2152.8,1759.1 2170.1,1799.5" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2170.4,1787.4 2170.1,1799.5 2161.2,1791.4" fill="none" stroke="#000" stroke-width="1"/><path d="M1767.0,420.1 C1475.3,512.5 1025.5,655.0 1025.5,655.0 C1025.5,655.0 933.5,1334.7 906.7,1532.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="913.2,1522.4 906.7,1532.6 903.3,1521.0" fill="none" stroke="#000" stroke-width="1"/><path d="M1767.1,495.0 C1558.5,625.2 1291.5,792.0 1291.5,792.0 C1291.5,792.0 1141.4,1384.8 1069.3,1669.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="1076.8,1660.2 1069.3,1669.6 1067.2,1657.7" fill="none" stroke="#000" stroke-width="1"/><path d="M2037.8,626.4 C2039.5,644.1 2040.5,655.0 2040.5,655.0 C2040.5,655.0 2074.7,1036.7 2082.8,1127.7" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2086.8,1116.3 2082.8,1127.7 2076.8,1117.2" fill="none" stroke="#000" stroke-width="1"/><path d="M2179.0,626.4 C2232.3,715.9 2277.5,792.0 2277.5,792.0 C2277.5,792.0 2305.0,1554.8 2312.6,1765.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2317.2,1754.4 2312.6,1765.6 2307.2,1754.8" fill="none" stroke="#000" stroke-width="1"/><path d="M2254.0,571.8 C2304.4,619.1 2342.5,655.0 2342.5,655.0 C2342.5,655.0 2403.3,979.8 2426.0,1101.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2428.9,1089.9 2426.0,1101.6 2419.1,1091.7" fill="none" stroke="#000" stroke-width="1"/><path d="M2097.0,626.4 C2124.3,715.9 2147.5,792.0 2147.5,792.0 C2147.5,792.0 2195.4,1053.5 2209.0,1127.6" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="6,4"/>
+<polyline points="2211.9,1115.9 2209.0,1127.6 2202.1,1117.7" fill="none" stroke="#000" stroke-width="1"/><rect x="24.0" y="2365.0" width="517" height="124" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="24.0" x2="541.0" y1="2405.0" y2="2405.0" stroke="#000"/>
+<line x1="24.0" x2="541.0" y1="2417.0" y2="2417.0" stroke="#000"/>
+<text x="282.5" y="2381.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="282.5" y="2397.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_core::node</text>
+<text x="32.0" y="2433.0" font-size="12" text-decoration="underline" xml:space="preserve">~blocking(app: &amp;Arc&lt;EhrApp&gt;, work: impl FnOnce(&amp;EhrApp) -&gt; Result&lt;T, EhrError&gt; + Send +</text>
+<text x="32.0" y="2449.0" font-size="12" text-decoration="underline" xml:space="preserve">    'static): Result&lt;T, EhrError&gt;</text>
+<text x="32.0" y="2465.0" font-size="12" text-decoration="underline" xml:space="preserve">~network(error: impl std::fmt::Display): EhrError</text>
+<text x="32.0" y="2481.0" font-size="12" text-decoration="underline" xml:space="preserve">-doctor_address(doctor: &amp;Contact): Result&lt;Option&lt;BootstrapPeer&gt;, EhrError&gt;</text>
+<rect x="546.0" y="2381.0" width="421" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="546.0" x2="967.0" y1="2421.0" y2="2421.0" stroke="#000"/>
+<line x1="546.0" x2="967.0" y1="2433.0" y2="2433.0" stroke="#000"/>
+<text x="756.5" y="2397.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="756.5" y="2413.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_core::store</text>
+<text x="554.0" y="2449.0" font-size="12" text-decoration="underline" xml:space="preserve">-index_key(patient: &amp;str, issuer: &amp;str, seq: u64): Vec&lt;u8&gt;</text>
+<text x="554.0" y="2465.0" font-size="12" text-decoration="underline" xml:space="preserve">-decode_all(entries: Vec&lt;(Vec&lt;u8&gt;, Vec&lt;u8&gt;)&gt;): Result&lt;Vec&lt;T&gt;, EhrError&gt;</text>
+<rect x="972.0" y="2381.0" width="413" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="972.0" x2="1385.0" y1="2421.0" y2="2421.0" stroke="#000"/>
+<line x1="972.0" x2="1385.0" y1="2433.0" y2="2433.0" stroke="#000"/>
+<text x="1178.5" y="2397.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1178.5" y="2413.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_core::wire</text>
+<text x="980.0" y="2449.0" font-size="12" text-decoration="underline" xml:space="preserve">~write_frame(stream: &amp;mut S, value: &amp;impl Serialize): Result&lt;(), EhrError&gt;</text>
+<text x="980.0" y="2465.0" font-size="12" text-decoration="underline" xml:space="preserve">~read_frame(stream: &amp;mut S): Result&lt;T, EhrError&gt;</text>
+<rect x="1390.0" y="2301.0" width="443" height="252" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1390.0" x2="1833.0" y1="2341.0" y2="2341.0" stroke="#000"/>
+<line x1="1390.0" x2="1833.0" y1="2353.0" y2="2353.0" stroke="#000"/>
+<text x="1611.5" y="2317.0" text-anchor="middle" font-size="12" font-weight="normal">«utility»</text>
+<text x="1611.5" y="2333.0" text-anchor="middle" font-size="12" font-weight="bold">ehr_core::utils</text>
+<text x="1398.0" y="2369.0" font-size="12" text-decoration="underline" xml:space="preserve">-days_from_civil(year: i64, month: i64, day: i64): i64</text>
+<text x="1398.0" y="2385.0" font-size="12" text-decoration="underline" xml:space="preserve">-civil_from_days(days: i64): (i64, i64, i64)</text>
+<text x="1398.0" y="2401.0" font-size="12" text-decoration="underline" xml:space="preserve">-split(secs: u64): ((i64, i64, i64), i64)</text>
+<text x="1398.0" y="2417.0" font-size="12" text-decoration="underline" xml:space="preserve">+add_years(secs: u64, years: i64): u64</text>
+<text x="1398.0" y="2433.0" font-size="12" text-decoration="underline" xml:space="preserve">+iso8601(secs: u64): String</text>
+<text x="1398.0" y="2449.0" font-size="12" text-decoration="underline" xml:space="preserve">+date_text(secs: u64): String</text>
+<text x="1398.0" y="2465.0" font-size="12" text-decoration="underline" xml:space="preserve">+size_text(bytes: u64): String</text>
+<text x="1398.0" y="2481.0" font-size="12" text-decoration="underline" xml:space="preserve">+media_type_for(file_name: &amp;str): &amp;'static str</text>
+<text x="1398.0" y="2497.0" font-size="12" text-decoration="underline" xml:space="preserve">+file_name_with_extension(name: &amp;str, source: &amp;std::path::Path): String</text>
+<text x="1398.0" y="2513.0" font-size="12" text-decoration="underline" xml:space="preserve">+safe_file_name(name: &amp;str): String</text>
+<text x="1398.0" y="2529.0" font-size="12" text-decoration="underline" xml:space="preserve">+patient_dht_server(battery: Option&lt;crate::models::Battery&gt;, current: bool): bool</text>
+<text x="1398.0" y="2545.0" font-size="12" text-decoration="underline" xml:space="preserve">+read_battery(): Option&lt;crate::models::Battery&gt;</text>
+<rect x="368.5" y="1694.0" width="210" height="252" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="368.5" x2="578.5" y1="1734.0" y2="1734.0" stroke="#000"/>
+<line x1="368.5" x2="578.5" y1="1934.0" y2="1934.0" stroke="#000"/>
+<text x="473.5" y="1710.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="473.5" y="1726.0" text-anchor="middle" font-size="12" font-weight="bold">EhrError</text>
+<text x="376.5" y="1750.0" font-size="12" xml:space="preserve">Security(ehr_security::SecurityError)</text>
+<text x="376.5" y="1766.0" font-size="12" xml:space="preserve">Store(ipfs_store::StoreError)</text>
+<text x="376.5" y="1782.0" font-size="12" xml:space="preserve">Unixfs(ipfs_unixfs::UnixfsError)</text>
+<text x="376.5" y="1798.0" font-size="12" xml:space="preserve">Cid(ipfs_cid::error::CidError)</text>
+<text x="376.5" y="1814.0" font-size="12" xml:space="preserve">Io(std::io::Error)</text>
+<text x="376.5" y="1830.0" font-size="12" xml:space="preserve">Json(serde_json::Error)</text>
+<text x="376.5" y="1846.0" font-size="12" xml:space="preserve">Network(String)</text>
+<text x="376.5" y="1862.0" font-size="12" xml:space="preserve">Role(&amp;'static str)</text>
+<text x="376.5" y="1878.0" font-size="12" xml:space="preserve">NotFound(String)</text>
+<text x="376.5" y="1894.0" font-size="12" xml:space="preserve">Ambiguous(Vec&lt;String&gt;)</text>
+<text x="376.5" y="1910.0" font-size="12" xml:space="preserve">Rejected(String)</text>
+<text x="376.5" y="1926.0" font-size="12" xml:space="preserve">Invalid(String)</text>
+<rect x="1190.5" y="2128.0" width="118" height="120" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1190.5" x2="1308.5" y1="2168.0" y2="2168.0" stroke="#000"/>
+<line x1="1190.5" x2="1308.5" y1="2208.0" y2="2208.0" stroke="#000"/>
+<text x="1249.5" y="2144.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="1249.5" y="2160.0" text-anchor="middle" font-size="12" font-weight="bold">Role</text>
+<text x="1198.5" y="2184.0" font-size="12" xml:space="preserve">Doctor</text>
+<text x="1198.5" y="2200.0" font-size="12" xml:space="preserve">Patient</text>
+<text x="1198.5" y="2224.0" font-size="12" xml:space="preserve">+label(): &amp;'static str</text>
+<text x="1198.5" y="2240.0" font-size="12" xml:space="preserve">-code(): &amp;'static str</text>
+<rect x="744.0" y="2104.0" width="219" height="168" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="744.0" x2="963.0" y1="2144.0" y2="2144.0" stroke="#000"/>
+<line x1="744.0" x2="963.0" y1="2216.0" y2="2216.0" stroke="#000"/>
+<text x="853.5" y="2120.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="853.5" y="2136.0" text-anchor="middle" font-size="12" font-weight="bold">Category</text>
+<text x="752.0" y="2160.0" font-size="12" xml:space="preserve">Lab</text>
+<text x="752.0" y="2176.0" font-size="12" xml:space="preserve">Imaging</text>
+<text x="752.0" y="2192.0" font-size="12" xml:space="preserve">Discharge</text>
+<text x="752.0" y="2208.0" font-size="12" xml:space="preserve">Other</text>
+<text x="752.0" y="2232.0" font-size="12" xml:space="preserve">+code(): &amp;'static str</text>
+<text x="752.0" y="2248.0" font-size="12" xml:space="preserve">+label(): &amp;'static str</text>
+<text x="752.0" y="2264.0" font-size="12" text-decoration="underline" xml:space="preserve">+from_code(code: &amp;str): Option&lt;Self&gt;</text>
+<rect x="1260.0" y="1766.0" width="113" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1260.0" x2="1373.0" y1="1790.0" y2="1790.0" stroke="#000"/>
+<line x1="1260.0" x2="1373.0" y1="1862.0" y2="1862.0" stroke="#000"/>
+<text x="1316.5" y="1782.0" text-anchor="middle" font-size="12" font-weight="bold">Profile</text>
+<text x="1268.0" y="1806.0" font-size="12" xml:space="preserve">+name: String</text>
+<text x="1268.0" y="1822.0" font-size="12" xml:space="preserve">+role: Role</text>
+<text x="1268.0" y="1838.0" font-size="12" xml:space="preserve">+did: String</text>
+<text x="1268.0" y="1854.0" font-size="12" xml:space="preserve">+created_utc: u64</text>
+<rect x="2261.5" y="1766.0" width="106" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2261.5" x2="2367.5" y1="1790.0" y2="1790.0" stroke="#000"/>
+<line x1="2261.5" x2="2367.5" y1="1862.0" y2="1862.0" stroke="#000"/>
+<text x="2314.5" y="1782.0" text-anchor="middle" font-size="12" font-weight="bold">Contact</text>
+<text x="2269.5" y="1806.0" font-size="12" xml:space="preserve">+did: String</text>
+<text x="2269.5" y="1822.0" font-size="12" xml:space="preserve">+card: String</text>
+<text x="2269.5" y="1838.0" font-size="12" xml:space="preserve">+person: Person</text>
+<text x="2269.5" y="1854.0" font-size="12" xml:space="preserve">+added_utc: u64</text>
+<rect x="1409.5" y="1782.0" width="112" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1409.5" x2="1521.5" y1="1806.0" y2="1806.0" stroke="#000"/>
+<line x1="1409.5" x2="1521.5" y1="1846.0" y2="1846.0" stroke="#000"/>
+<text x="1465.5" y="1798.0" text-anchor="middle" font-size="12" font-weight="bold">Invite</text>
+<text x="1417.5" y="1822.0" font-size="12" xml:space="preserve">+code: String</text>
+<text x="1417.5" y="1838.0" font-size="12" xml:space="preserve">+expires_utc: u64</text>
+<rect x="927.5" y="1670.0" width="208" height="300" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="927.5" x2="1135.5" y1="1694.0" y2="1694.0" stroke="#000"/>
+<line x1="927.5" x2="1135.5" y1="1958.0" y2="1958.0" stroke="#000"/>
+<text x="1031.5" y="1686.0" text-anchor="middle" font-size="12" font-weight="bold">IndexEntry</text>
+<text x="935.5" y="1710.0" font-size="12" xml:space="preserve">+seq: u64</text>
+<text x="935.5" y="1726.0" font-size="12" xml:space="preserve">+doc_id: String</text>
+<text x="935.5" y="1742.0" font-size="12" xml:space="preserve">+version: u32</text>
+<text x="935.5" y="1758.0" font-size="12" xml:space="preserve">+file_name: String</text>
+<text x="935.5" y="1774.0" font-size="12" xml:space="preserve">+media_type: String</text>
+<text x="935.5" y="1790.0" font-size="12" xml:space="preserve">+size: u64</text>
+<text x="935.5" y="1806.0" font-size="12" xml:space="preserve">+category: Category</text>
+<text x="935.5" y="1822.0" font-size="12" xml:space="preserve">+manifest_cid: String</text>
+<text x="935.5" y="1838.0" font-size="12" xml:space="preserve">+doc_cid: String</text>
+<text x="935.5" y="1854.0" font-size="12" xml:space="preserve">+patient_did: String</text>
+<text x="935.5" y="1870.0" font-size="12" xml:space="preserve">+issuer_did: String</text>
+<text x="935.5" y="1886.0" font-size="12" xml:space="preserve">+issuer_name: String</text>
+<text x="935.5" y="1902.0" font-size="12" xml:space="preserve">+created_utc: u64</text>
+<text x="935.5" y="1918.0" font-size="12" xml:space="preserve">+valid_until_utc: u64</text>
+<text x="935.5" y="1934.0" font-size="12" xml:space="preserve">+prev_manifest_cid: Option&lt;String&gt;</text>
+<text x="935.5" y="1950.0" font-size="12" xml:space="preserve">+read_token: Signed</text>
+<rect x="837.0" y="1533.0" width="125" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="837.0" x2="962.0" y1="1557.0" y2="1557.0" stroke="#000"/>
+<line x1="837.0" x2="962.0" y1="1629.0" y2="1629.0" stroke="#000"/>
+<text x="899.5" y="1549.0" text-anchor="middle" font-size="12" font-weight="bold">NewDocument</text>
+<text x="845.0" y="1573.0" font-size="12" xml:space="preserve">+path: PathBuf</text>
+<text x="845.0" y="1589.0" font-size="12" xml:space="preserve">+patient_did: String</text>
+<text x="845.0" y="1605.0" font-size="12" xml:space="preserve">+file_name: String</text>
+<text x="845.0" y="1621.0" font-size="12" xml:space="preserve">+category: Category</text>
+<rect x="2469.0" y="655.0" width="113" height="108" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2469.0" x2="2582.0" y1="679.0" y2="679.0" stroke="#000"/>
+<line x1="2469.0" x2="2582.0" y1="751.0" y2="751.0" stroke="#000"/>
+<text x="2525.5" y="671.0" text-anchor="middle" font-size="12" font-weight="bold">InboxRequest</text>
+<text x="2477.0" y="695.0" font-size="12" xml:space="preserve">+patient: String</text>
+<text x="2477.0" y="711.0" font-size="12" xml:space="preserve">+since_seq: u64</text>
+<text x="2477.0" y="727.0" font-size="12" xml:space="preserve">+nonce: String</text>
+<text x="2477.0" y="743.0" font-size="12" xml:space="preserve">+created_utc: u64</text>
+<rect x="2370.0" y="1102.0" width="129" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2370.0" x2="2499.0" y1="1126.0" y2="1126.0" stroke="#000"/>
+<line x1="2370.0" x2="2499.0" y1="1182.0" y2="1182.0" stroke="#000"/>
+<text x="2434.5" y="1118.0" text-anchor="middle" font-size="12" font-weight="bold">InboxItem</text>
+<text x="2378.0" y="1142.0" font-size="12" xml:space="preserve">+seq: u64</text>
+<text x="2378.0" y="1158.0" font-size="12" xml:space="preserve">+manifest_cid: String</text>
+<text x="2378.0" y="1174.0" font-size="12" xml:space="preserve">+created_utc: u64</text>
+<rect x="2358.0" y="296.0" width="153" height="92" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2358.0" x2="2511.0" y1="320.0" y2="320.0" stroke="#000"/>
+<line x1="2358.0" x2="2511.0" y1="376.0" y2="376.0" stroke="#000"/>
+<text x="2434.5" y="312.0" text-anchor="middle" font-size="12" font-weight="bold">InboxResponse</text>
+<text x="2366.0" y="336.0" font-size="12" xml:space="preserve">+patient: String</text>
+<text x="2366.0" y="352.0" font-size="12" xml:space="preserve">+request_nonce: String</text>
+<text x="2366.0" y="368.0" font-size="12" xml:space="preserve">+entries: Vec&lt;InboxItem&gt;</text>
+<rect x="1313.0" y="1999.0" width="109" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1313.0" x2="1422.0" y1="2023.0" y2="2023.0" stroke="#000"/>
+<line x1="1313.0" x2="1422.0" y1="2063.0" y2="2063.0" stroke="#000"/>
+<text x="1367.5" y="2015.0" text-anchor="middle" font-size="12" font-weight="bold">ContactRequest</text>
+<text x="1321.0" y="2039.0" font-size="12" xml:space="preserve">+invite: String</text>
+<text x="1321.0" y="2055.0" font-size="12" xml:space="preserve">+card: String</text>
+<rect x="2586.5" y="671.0" width="102" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2586.5" x2="2688.5" y1="695.0" y2="695.0" stroke="#000"/>
+<line x1="2586.5" x2="2688.5" y1="735.0" y2="735.0" stroke="#000"/>
+<text x="2637.5" y="687.0" text-anchor="middle" font-size="12" font-weight="bold">StreamReply</text>
+<text x="2594.5" y="711.0" font-size="12" xml:space="preserve">+accepted: bool</text>
+<text x="2594.5" y="727.0" font-size="12" xml:space="preserve">+reason: String</text>
+<rect x="2339.0" y="1549.0" width="117" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="2339.0" x2="2456.0" y1="1573.0" y2="1573.0" stroke="#000"/>
+<line x1="2339.0" x2="2456.0" y1="1613.0" y2="1613.0" stroke="#000"/>
+<text x="2397.5" y="1565.0" text-anchor="middle" font-size="12" font-weight="bold">ReplicateRequest</text>
+<text x="2347.0" y="1589.0" font-size="12" xml:space="preserve">+cids: Vec&lt;String&gt;</text>
+<text x="2347.0" y="1605.0" font-size="12" xml:space="preserve">+created_utc: u64</text>
+<rect x="1310.0" y="792.0" width="535" height="712" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1310.0" x2="1845.0" y1="816.0" y2="816.0" stroke="#000"/>
+<line x1="1310.0" x2="1845.0" y1="904.0" y2="904.0" stroke="#000"/>
+<text x="1577.5" y="808.0" text-anchor="middle" font-size="12" font-weight="bold">EhrApp</text>
+<text x="1318.0" y="832.0" font-size="12" xml:space="preserve">~role: Role</text>
+<text x="1318.0" y="848.0" font-size="12" xml:space="preserve">~data_dir: PathBuf</text>
+<text x="1318.0" y="864.0" font-size="12" xml:space="preserve">~identity: Identity</text>
+<text x="1318.0" y="880.0" font-size="12" xml:space="preserve">~profile: Profile</text>
+<text x="1318.0" y="896.0" font-size="12" xml:space="preserve">~db_lock: Mutex&lt;()&gt;</text>
+<text x="1318.0" y="920.0" font-size="12" xml:space="preserve">+start_node(listen: Multiaddr, mut bootstrap: Vec&lt;BootstrapPeer&gt;, dht_server: bool):</text>
+<text x="1318.0" y="936.0" font-size="12" xml:space="preserve">    Result&lt;(EhrNode, JoinHandle&lt;Result&lt;(), String&gt;&gt;), EhrError&gt;</text>
+<text x="1318.0" y="952.0" font-size="12" text-decoration="underline" xml:space="preserve">+node_address(listen: &amp;Multiaddr): Result&lt;String, EhrError&gt;</text>
+<text x="1318.0" y="968.0" font-size="12" xml:space="preserve">-database(name: &amp;str, work: impl FnOnce(&amp;LevelDbDatastore) -&gt; Result&lt;T, EhrError&gt;): Result&lt;T,</text>
+<text x="1318.0" y="984.0" font-size="12" xml:space="preserve">     EhrError&gt;</text>
+<text x="1318.0" y="1000.0" font-size="12" text-decoration="underline" xml:space="preserve">-put_json(database: &amp;LevelDbDatastore, key: &amp;[u8], value: &amp;impl Serialize): Result&lt;(), EhrError&gt;</text>
+<text x="1318.0" y="1016.0" font-size="12" xml:space="preserve">~save_contact(kind: ContactKind, contact: &amp;Contact): Result&lt;(), EhrError&gt;</text>
+<text x="1318.0" y="1032.0" font-size="12" xml:space="preserve">~remove_contact(kind: ContactKind, did: &amp;str): Result&lt;(), EhrError&gt;</text>
+<text x="1318.0" y="1048.0" font-size="12" xml:space="preserve">+contact(kind: ContactKind, did: &amp;str): Result&lt;Option&lt;Contact&gt;, EhrError&gt;</text>
+<text x="1318.0" y="1064.0" font-size="12" xml:space="preserve">+contacts(kind: ContactKind): Result&lt;Vec&lt;Contact&gt;, EhrError&gt;</text>
+<text x="1318.0" y="1080.0" font-size="12" xml:space="preserve">~save_invite(invite: &amp;Invite): Result&lt;(), EhrError&gt;</text>
+<text x="1318.0" y="1096.0" font-size="12" xml:space="preserve">~take_invite(code: &amp;str, now: u64): Result&lt;bool, EhrError&gt;</text>
+<text x="1318.0" y="1112.0" font-size="12" xml:space="preserve">~save_entry(entry: &amp;IndexEntry): Result&lt;(), EhrError&gt;</text>
+<text x="1318.0" y="1128.0" font-size="12" xml:space="preserve">~save_new_entry(mut entry: IndexEntry): Result&lt;IndexEntry, EhrError&gt;</text>
+<text x="1318.0" y="1144.0" font-size="12" xml:space="preserve">~all_entries(patient: &amp;str): Result&lt;Vec&lt;IndexEntry&gt;, EhrError&gt;</text>
+<text x="1318.0" y="1160.0" font-size="12" xml:space="preserve">~entries_since(patient: &amp;str, issuer: &amp;str, since: u64): Result&lt;Vec&lt;IndexEntry&gt;, EhrError&gt;</text>
+<text x="1318.0" y="1176.0" font-size="12" xml:space="preserve">~last_seq(patient: &amp;str, issuer: &amp;str): Result&lt;u64, EhrError&gt;</text>
+<text x="1318.0" y="1192.0" font-size="12" xml:space="preserve">+documents(patient: Option&lt;&amp;str&gt;): Result&lt;Vec&lt;IndexEntry&gt;, EhrError&gt;</text>
+<text x="1318.0" y="1208.0" font-size="12" text-decoration="underline" xml:space="preserve">+default_data_dir(role: Role): PathBuf</text>
+<text x="1318.0" y="1224.0" font-size="12" text-decoration="underline" xml:space="preserve">+profile_exists(data_dir: &amp;Path): bool</text>
+<text x="1318.0" y="1240.0" font-size="12" text-decoration="underline" xml:space="preserve">+create_profile(data_dir: &amp;Path, role: Role, name: &amp;str, password: &amp;str): Result&lt;Self, EhrError&gt;</text>
+<text x="1318.0" y="1256.0" font-size="12" text-decoration="underline" xml:space="preserve">+open(data_dir: &amp;Path, role: Role, password: &amp;str): Result&lt;Self, EhrError&gt;</text>
+<text x="1318.0" y="1272.0" font-size="12" text-decoration="underline" xml:space="preserve">+profile_name(data_dir: &amp;Path): Option&lt;String&gt;</text>
+<text x="1318.0" y="1288.0" font-size="12" text-decoration="underline" xml:space="preserve">-assemble(role: Role, data_dir: &amp;Path, identity: Identity, profile: Profile): Self</text>
+<text x="1318.0" y="1304.0" font-size="12" xml:space="preserve">+role(): Role</text>
+<text x="1318.0" y="1320.0" font-size="12" xml:space="preserve">+profile(): &amp;Profile</text>
+<text x="1318.0" y="1336.0" font-size="12" xml:space="preserve">+identity(): &amp;Identity</text>
+<text x="1318.0" y="1352.0" font-size="12" xml:space="preserve">+data_dir(): &amp;Path</text>
+<text x="1318.0" y="1368.0" font-size="12" xml:space="preserve">~require(role: Role): Result&lt;(), EhrError&gt;</text>
+<text x="1318.0" y="1384.0" font-size="12" xml:space="preserve">~card(multiaddr: Option&lt;String&gt;, invite: Option&lt;String&gt;): Result&lt;ContactCard, EhrError&gt;</text>
+<text x="1318.0" y="1400.0" font-size="12" xml:space="preserve">+create_invite(address: &amp;str): Result&lt;String, EhrError&gt;</text>
+<text x="1318.0" y="1416.0" font-size="12" xml:space="preserve">+accept_contact(did: &amp;str, name: Option&lt;&amp;str&gt;): Result&lt;Contact, EhrError&gt;</text>
+<text x="1318.0" y="1432.0" font-size="12" xml:space="preserve">+reject_contact(did: &amp;str): Result&lt;(), EhrError&gt;</text>
+<text x="1318.0" y="1448.0" font-size="12" xml:space="preserve">+find_patient(query: &amp;str): Result&lt;Contact, EhrError&gt;</text>
+<text x="1318.0" y="1464.0" font-size="12" text-decoration="underline" xml:space="preserve">+resolve_document(documents: &amp;[IndexEntry], selector: &amp;str): Result&lt;IndexEntry, EhrError&gt;</text>
+<text x="1318.0" y="1480.0" font-size="12" xml:space="preserve">+display_name(did: &amp;str): String</text>
+<text x="1318.0" y="1496.0" font-size="12" text-decoration="underline" xml:space="preserve">~contact_from_card(card: &amp;ContactCard, role: Role): Result&lt;Contact, EhrError&gt;</text>
+<rect x="1767.5" y="58.0" width="486" height="568" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1767.5" x2="2253.5" y1="82.0" y2="82.0" stroke="#000"/>
+<line x1="1767.5" x2="2253.5" y1="154.0" y2="154.0" stroke="#000"/>
+<text x="2010.5" y="74.0" text-anchor="middle" font-size="12" font-weight="bold">EhrNode</text>
+<text x="1775.5" y="98.0" font-size="12" xml:space="preserve">~app: Arc&lt;EhrApp&gt;</text>
+<text x="1775.5" y="114.0" font-size="12" xml:space="preserve">~commands: UnboundedSender&lt;NetworkCommand&gt;</text>
+<text x="1775.5" y="130.0" font-size="12" xml:space="preserve">~control: StreamControl</text>
+<text x="1775.5" y="146.0" font-size="12" xml:space="preserve">~dht_server: Arc&lt;std::sync::atomic::AtomicBool&gt;</text>
+<text x="1775.5" y="170.0" font-size="12" xml:space="preserve">+issue_document(document: NewDocument): Result&lt;IndexEntry, EhrError&gt;</text>
+<text x="1775.5" y="186.0" font-size="12" xml:space="preserve">+update_document(previous: &amp;IndexEntry, path: &amp;Path): Result&lt;IndexEntry, EhrError&gt;</text>
+<text x="1775.5" y="202.0" font-size="12" xml:space="preserve">-publish(entry: IndexEntry, path: PathBuf): Result&lt;IndexEntry, EhrError&gt;</text>
+<text x="1775.5" y="218.0" font-size="12" xml:space="preserve">~answer_inbox(peer: PeerId, mut stream: Stream): Result&lt;(), EhrError&gt;</text>
+<text x="1775.5" y="234.0" font-size="12" xml:space="preserve">~answer_contact(peer: PeerId, mut stream: Stream): Result&lt;(), EhrError&gt;</text>
+<text x="1775.5" y="250.0" font-size="12" xml:space="preserve">+open_document(entry: &amp;IndexEntry): Result&lt;Vec&lt;u8&gt;, EhrError&gt;</text>
+<text x="1775.5" y="266.0" font-size="12" xml:space="preserve">+save_document(entry: &amp;IndexEntry, output: &amp;Path): Result&lt;(), EhrError&gt;</text>
+<text x="1775.5" y="282.0" font-size="12" xml:space="preserve">+app(): &amp;Arc&lt;EhrApp&gt;</text>
+<text x="1775.5" y="298.0" font-size="12" xml:space="preserve">+dht_server(): bool</text>
+<text x="1775.5" y="314.0" font-size="12" xml:space="preserve">+commands(): &amp;mpsc::UnboundedSender&lt;NetworkCommand&gt;</text>
+<text x="1775.5" y="330.0" font-size="12" xml:space="preserve">~send(command: NetworkCommand): Result&lt;(), EhrError&gt;</text>
+<text x="1775.5" y="346.0" font-size="12" xml:space="preserve">-serve(protocol: StreamProtocol): Result&lt;(), EhrError&gt;</text>
+<text x="1775.5" y="362.0" font-size="12" xml:space="preserve">~open(peer: PeerId, protocol: StreamProtocol): Result&lt;Stream, EhrError&gt;</text>
+<text x="1775.5" y="378.0" font-size="12" xml:space="preserve">~fetch(cid: &amp;str): Result&lt;Cid, EhrError&gt;</text>
+<text x="1775.5" y="394.0" font-size="12" xml:space="preserve">~reply_signed(stream: &amp;mut Stream, value: &amp;impl serde::Serialize): Result&lt;(), EhrError&gt;</text>
+<text x="1775.5" y="410.0" font-size="12" xml:space="preserve">~provide(cids: Vec&lt;Cid&gt;): Result&lt;(), EhrError&gt;</text>
+<text x="1775.5" y="426.0" font-size="12" xml:space="preserve">~read_file(cid: &amp;str): Result&lt;Vec&lt;u8&gt;, EhrError&gt;</text>
+<text x="1775.5" y="442.0" font-size="12" xml:space="preserve">~replicate(cids: Vec&lt;String&gt;, patient: PeerId)</text>
+<text x="1775.5" y="458.0" font-size="12" xml:space="preserve">-ask_replica(peer: PeerId, cids: &amp;[String]): Result&lt;(), EhrError&gt;</text>
+<text x="1775.5" y="474.0" font-size="12" xml:space="preserve">~answer_replicate(peer: PeerId, mut stream: Stream): Result&lt;(), EhrError&gt;</text>
+<text x="1775.5" y="490.0" font-size="12" xml:space="preserve">-keep_copy(cids: &amp;[String]): Result&lt;(), EhrError&gt;</text>
+<text x="1775.5" y="506.0" font-size="12" xml:space="preserve">+connect_doctor(invitation: &amp;str): Result&lt;Contact, EhrError&gt;</text>
+<text x="1775.5" y="522.0" font-size="12" xml:space="preserve">~poll_inbox()</text>
+<text x="1775.5" y="538.0" font-size="12" xml:space="preserve">~collect_garbage_periodically()</text>
+<text x="1775.5" y="554.0" font-size="12" xml:space="preserve">~watch_battery()</text>
+<text x="1775.5" y="570.0" font-size="12" xml:space="preserve">+sync_inbox(): Result&lt;Vec&lt;IndexEntry&gt;, EhrError&gt;</text>
+<text x="1775.5" y="586.0" font-size="12" xml:space="preserve">-sync_from(doctor: &amp;Contact): Result&lt;Vec&lt;IndexEntry&gt;, EhrError&gt;</text>
+<text x="1775.5" y="602.0" font-size="12" xml:space="preserve">-receive(item: &amp;InboxItem, doctor: &amp;Contact): Result&lt;IndexEntry, EhrError&gt;</text>
+<text x="1775.5" y="618.0" font-size="12" xml:space="preserve">~verify_read(entry: &amp;IndexEntry): Result&lt;Token, EhrError&gt;</text>
+<rect x="1427.0" y="1999.0" width="99" height="76" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1427.0" x2="1526.0" y1="2023.0" y2="2023.0" stroke="#000"/>
+<line x1="1427.0" x2="1526.0" y1="2063.0" y2="2063.0" stroke="#000"/>
+<text x="1476.5" y="2015.0" text-anchor="middle" font-size="12" font-weight="bold">Battery</text>
+<text x="1435.0" y="2039.0" font-size="12" xml:space="preserve">+percent: u8</text>
+<text x="1435.0" y="2055.0" font-size="12" xml:space="preserve">+charging: bool</text>
+<rect x="1558.0" y="1760.0" width="119" height="120" fill="#fff" stroke="#000" stroke-width="1.2"/>
+<line x1="1558.0" x2="1677.0" y1="1800.0" y2="1800.0" stroke="#000"/>
+<line x1="1558.0" x2="1677.0" y1="1856.0" y2="1856.0" stroke="#000"/>
+<text x="1617.5" y="1776.0" text-anchor="middle" font-size="12" font-weight="normal">«enumeration»</text>
+<text x="1617.5" y="1792.0" text-anchor="middle" font-size="12" font-weight="bold">ContactKind</text>
+<text x="1566.0" y="1816.0" font-size="12" xml:space="preserve">Patient</text>
+<text x="1566.0" y="1832.0" font-size="12" xml:space="preserve">Doctor</text>
+<text x="1566.0" y="1848.0" font-size="12" xml:space="preserve">Pending</text>
+<text x="1566.0" y="1872.0" font-size="12" xml:space="preserve">-prefix(): &amp;'static str</text>
+<rect x="236.0" y="2168.0" width="93" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="282.5" y="2184.0" text-anchor="middle" font-size="12" font-weight="normal">«ehr-security»</text>
+<text x="282.5" y="2200.0" text-anchor="middle" font-size="12" font-weight="bold">SecurityError</text>
+<rect x="365.5" y="2168.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="410.5" y="2184.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-store»</text>
+<text x="410.5" y="2200.0" text-anchor="middle" font-size="12" font-weight="bold">StoreError</text>
+<rect x="491.5" y="2168.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="536.5" y="2184.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-unixfs»</text>
+<text x="536.5" y="2200.0" text-anchor="middle" font-size="12" font-weight="bold">UnixfsError</text>
+<rect x="617.5" y="2168.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="662.5" y="2184.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-cid»</text>
+<text x="662.5" y="2200.0" text-anchor="middle" font-size="12" font-weight="bold">CidError</text>
+<rect x="999.0" y="2168.0" width="93" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1045.5" y="2184.0" text-anchor="middle" font-size="12" font-weight="normal">«ehr-security»</text>
+<text x="1045.5" y="2200.0" text-anchor="middle" font-size="12" font-weight="bold">Signed</text>
+<rect x="1713.0" y="1800.0" width="93" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1759.5" y="1816.0" text-anchor="middle" font-size="12" font-weight="normal">«ehr-security»</text>
+<text x="1759.5" y="1832.0" text-anchor="middle" font-size="12" font-weight="bold">Identity</text>
+<rect x="1881.0" y="1128.0" width="123" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1942.5" y="1144.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-network»</text>
+<text x="1942.5" y="1160.0" text-anchor="middle" font-size="12" font-weight="bold">NetworkCommand</text>
+<rect x="1842.0" y="1800.0" width="99" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="1891.5" y="1816.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-network»</text>
+<text x="1891.5" y="1832.0" text-anchor="middle" font-size="12" font-weight="bold">BootstrapPeer</text>
+<rect x="1977.0" y="1800.0" width="119" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2036.5" y="1816.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-store»</text>
+<text x="2036.5" y="1832.0" text-anchor="middle" font-size="12" font-weight="bold">LevelDbDatastore</text>
+<rect x="2132.0" y="1800.0" width="93" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2178.5" y="1816.0" text-anchor="middle" font-size="12" font-weight="normal">«ehr-security»</text>
+<text x="2178.5" y="1832.0" text-anchor="middle" font-size="12" font-weight="bold">ContactCard</text>
+<rect x="2039.5" y="1128.0" width="90" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2084.5" y="1144.0" text-anchor="middle" font-size="12" font-weight="normal">«ipfs-cid»</text>
+<text x="2084.5" y="1160.0" text-anchor="middle" font-size="12" font-weight="bold">Cid</text>
+<rect x="2166.0" y="1128.0" width="93" height="40" fill="#fff" stroke="#000" stroke-width="1.2" stroke-dasharray="5,3"/>
+<text x="2212.5" y="1144.0" text-anchor="middle" font-size="12" font-weight="normal">«ehr-security»</text>
+<text x="2212.5" y="1160.0" text-anchor="middle" font-size="12" font-weight="bold">Token</text>
+</svg>

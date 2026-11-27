@@ -13,6 +13,9 @@ ipfs-store = { path = "../ipfs-store" }
 ipfs-bitswap = { path = "../ipfs-bitswap" }
 ipfs-unixfs = { path = "../ipfs-unixfs" }
 
+[dev-dependencies]
+tempfile = "3.3"
+
 [[test]]
 name = "network-unit-test"
 path = "tests/network-unit-test.rs"
@@ -20,3 +23,7 @@ path = "tests/network-unit-test.rs"
 [[test]]
 name = "dht-unit-test"
 path = "tests/dht-unit-test.rs"
+
+[[test]]
+name = "node-commands-test"
+path = "tests/node-commands-test.rs"
